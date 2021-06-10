@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +26,7 @@ import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
 internal class OtherAppsAdapter
-internal constructor(private val callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit) :
+internal constructor(private val owner: LifecycleOwner, private val callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit) :
     ListAdapter<OtherAppsItemViewState, OtherAppsViewHolder>(DIFFER), PopupTextProvider {
 
   init {
@@ -34,7 +35,7 @@ internal constructor(private val callback: (event: OtherAppsItemViewEvent, index
 
   override fun getPopupText(position: Int): String {
     val item = getItem(position)
-    return item.app.name.first().toUpperCase().toString()
+    return item.app.name.first().uppercaseChar().toString()
   }
 
   override fun getItemId(position: Int): Long {
@@ -43,17 +44,12 @@ internal constructor(private val callback: (event: OtherAppsItemViewEvent, index
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OtherAppsViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    return OtherAppsViewHolder.create(inflater, parent, callback)
+    return OtherAppsViewHolder.create(inflater, parent, owner, callback)
   }
 
   override fun onBindViewHolder(holder: OtherAppsViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView)
-    teardownAdapter(recyclerView)
   }
 
   companion object {

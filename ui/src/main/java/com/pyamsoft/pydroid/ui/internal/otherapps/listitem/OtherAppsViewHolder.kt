@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
@@ -27,10 +28,12 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
 import com.pyamsoft.pydroid.ui.util.layout
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class OtherAppsViewHolder
 private constructor(
     binding: AdapterItemOtherAppsBinding,
+    owner: LifecycleOwner,
     callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<OtherAppsItemViewState> {
 
@@ -79,6 +82,8 @@ private constructor(
         constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
       }
     }
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: OtherAppsItemViewState) {
@@ -99,10 +104,11 @@ private constructor(
     fun create(
         inflater: LayoutInflater,
         container: ViewGroup,
+        owner: LifecycleOwner,
         callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
     ): OtherAppsViewHolder {
       val binding = AdapterItemOtherAppsBinding.inflate(inflater, container, false)
-      return OtherAppsViewHolder(binding, callback)
+      return OtherAppsViewHolder(binding, owner, callback)
     }
   }
 }

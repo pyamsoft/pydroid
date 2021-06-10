@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
@@ -30,7 +31,7 @@ import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-internal class ChangeLogList internal constructor(parent: ViewGroup) :
+internal class ChangeLogList internal constructor(owner: LifecycleOwner, parent: ViewGroup) :
     BaseUiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangelogListBinding>(parent) {
 
   override val viewBinding = ChangelogListBinding::inflate
@@ -40,7 +41,7 @@ internal class ChangeLogList internal constructor(parent: ViewGroup) :
   private var changeLogAdapter: ChangeLogAdapter? = null
 
   init {
-    doOnInflate { setupListView() }
+    doOnInflate { setupListView(owner) }
 
     doOnTeardown {
       binding.changelogList.adapter = null
@@ -57,8 +58,8 @@ internal class ChangeLogList internal constructor(parent: ViewGroup) :
     doOnTeardown { binding.changelogList.removeAllItemDecorations() }
   }
 
-  private fun setupListView() {
-    changeLogAdapter = ChangeLogAdapter()
+  private fun setupListView(owner: LifecycleOwner) {
+    changeLogAdapter = ChangeLogAdapter(owner)
 
     binding.changelogList.apply {
       adapter = changeLogAdapter

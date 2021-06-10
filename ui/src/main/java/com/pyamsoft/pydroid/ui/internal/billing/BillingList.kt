@@ -63,7 +63,7 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
   }
 
   private fun setupListView() {
-    billingAdapter = BillingAdapter { publish(BillingViewEvent.Purchase(it)) }
+    billingAdapter = BillingAdapter(owner) { publish(BillingViewEvent.Purchase(it)) }
 
     binding.billingList.apply {
       adapter = billingAdapter

@@ -57,7 +57,8 @@ internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent>
   override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
     Injector.obtainFromApplication<PYDroidComponent>(binding.root.context)
         .plusChangeLogDialog()
-        .create(binding.dialogRoot, binding.changelogIcon, getChangelogProvider())
+        .create(
+            viewLifecycleOwner, binding.dialogRoot, binding.changelogIcon, getChangelogProvider())
         .inject(this)
 
     stateSaver =

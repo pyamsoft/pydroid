@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
@@ -32,7 +33,7 @@ import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-internal class OtherAppsList internal constructor(parent: ViewGroup) :
+internal class OtherAppsList internal constructor(owner: LifecycleOwner, parent: ViewGroup) :
     BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent) {
 
   override val viewBinding = OtherAppsListBinding::inflate
@@ -44,7 +45,7 @@ internal class OtherAppsList internal constructor(parent: ViewGroup) :
   private var lastViewed: Int = 0
 
   init {
-    doOnInflate { setupListView() }
+    doOnInflate { setupListView(owner) }
 
     doOnInflate { savedInstanceState -> lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0 }
 
@@ -71,9 +72,9 @@ internal class OtherAppsList internal constructor(parent: ViewGroup) :
     return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
   }
 
-  private fun setupListView() {
+  private fun setupListView(owner: LifecycleOwner) {
     listAdapter =
-        OtherAppsAdapter { event, index ->
+        OtherAppsAdapter(owner) { event, index ->
           return@OtherAppsAdapter when (event) {
             is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
             is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))

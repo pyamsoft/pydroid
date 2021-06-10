@@ -32,6 +32,7 @@ public fun RecyclerView.removeAllItemDecorations() {
 }
 
 /** Call the ViewBinder.teardown() on all view holders */
+@Deprecated("Pass the Controller LifecycleOwner to the ViewHolder class and use owner.doOnDestroy { } to teardown. This method is unreliable.")
 public fun RecyclerView.Adapter<*>.teardownAdapter(recyclerView: RecyclerView) {
   val itemSize = itemCount
   if (itemSize <= 0) {

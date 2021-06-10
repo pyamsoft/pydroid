@@ -41,7 +41,7 @@ internal interface AboutComponent {
   ) : AboutComponent {
 
     override fun inject(fragment: AboutFragment) {
-      val listView = AboutListView(parent)
+      val listView = AboutListView(owner, parent)
       val errorView = AboutErrors(owner, parent)
       fragment.factory = params.factory
       fragment.errorView = errorView

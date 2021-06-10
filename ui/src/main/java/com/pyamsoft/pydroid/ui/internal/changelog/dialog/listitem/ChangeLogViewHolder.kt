@@ -19,16 +19,19 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class ChangeLogViewHolder
 private constructor(
     binding: ListitemLinearHorizontalBinding,
+    owner: LifecycleOwner,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<ChangeLogItemViewState> {
 
   private val binder: ViewBinder<ChangeLogItemViewState>
@@ -45,6 +48,8 @@ private constructor(
     val type = requireNotNull(typeView)
     val text = requireNotNull(textView)
     binder = createViewBinder(type, text) {}
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: ChangeLogItemViewState) {
@@ -64,9 +69,10 @@ private constructor(
     fun create(
         inflater: LayoutInflater,
         container: ViewGroup,
+        owner: LifecycleOwner,
     ): ChangeLogViewHolder {
       val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
-      return ChangeLogViewHolder(binding)
+      return ChangeLogViewHolder(binding, owner)
     }
   }
 }

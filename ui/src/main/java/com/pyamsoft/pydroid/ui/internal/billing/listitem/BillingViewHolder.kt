@@ -19,16 +19,21 @@ package com.pyamsoft.pydroid.ui.internal.billing.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class BillingViewHolder
-private constructor(binding: ListitemLinearHorizontalBinding, callback: BillingAdapter.Callback) :
-    RecyclerView.ViewHolder(binding.root), ViewBinder<BillingItemViewState> {
+private constructor(
+    binding: ListitemLinearHorizontalBinding,
+    owner: LifecycleOwner,
+    callback: BillingAdapter.Callback
+) : RecyclerView.ViewHolder(binding.root), ViewBinder<BillingItemViewState> {
 
   private val binder: ViewBinder<BillingItemViewState>
 
@@ -51,6 +56,8 @@ private constructor(binding: ListitemLinearHorizontalBinding, callback: BillingA
             is BillingItemViewEvent.Purchase -> callback.onPurchase(bindingAdapterPosition)
           }
         }
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: BillingItemViewState) {
@@ -71,10 +78,11 @@ private constructor(binding: ListitemLinearHorizontalBinding, callback: BillingA
     fun create(
         inflater: LayoutInflater,
         container: ViewGroup,
+        owner: LifecycleOwner,
         callback: BillingAdapter.Callback,
     ): BillingViewHolder {
       val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
-      return BillingViewHolder(binding, callback)
+      return BillingViewHolder(binding, owner, callback)
     }
   }
 }

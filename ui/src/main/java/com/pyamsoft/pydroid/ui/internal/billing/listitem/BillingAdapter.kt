@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 
-internal class BillingAdapter internal constructor(private val callback: Callback) :
+internal class BillingAdapter internal constructor(private val owner: LifecycleOwner, private val callback: Callback) :
     ListAdapter<BillingItemViewState, BillingViewHolder>(DIFFER) {
 
   init {
@@ -36,17 +37,12 @@ internal class BillingAdapter internal constructor(private val callback: Callbac
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillingViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    return BillingViewHolder.create(inflater, parent, callback)
+    return BillingViewHolder.create(inflater, parent, owner, callback)
   }
 
   override fun onBindViewHolder(holder: BillingViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView)
-    teardownAdapter(recyclerView)
   }
 
   fun interface Callback {

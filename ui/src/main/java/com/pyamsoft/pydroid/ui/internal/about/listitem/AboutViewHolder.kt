@@ -19,16 +19,19 @@ package com.pyamsoft.pydroid.ui.internal.about.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class AboutViewHolder
 private constructor(
     binding: AdapterItemAboutLicenseBinding,
+    owner: LifecycleOwner,
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
 
@@ -49,6 +52,8 @@ private constructor(
             requireNotNull(titleView),
             requireNotNull(descriptionView),
             requireNotNull(actionView)) { callback(it, bindingAdapterPosition) }
+
+    owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: AboutItemViewState) {
@@ -69,10 +74,11 @@ private constructor(
     fun create(
         inflater: LayoutInflater,
         container: ViewGroup,
+        owner: LifecycleOwner,
         callback: (event: AboutItemViewEvent, index: Int) -> Unit
     ): AboutViewHolder {
       val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
-      return AboutViewHolder(binding, callback)
+      return AboutViewHolder(binding, owner, callback)
     }
   }
 }

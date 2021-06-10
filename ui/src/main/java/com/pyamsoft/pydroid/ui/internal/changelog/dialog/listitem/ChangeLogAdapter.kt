@@ -18,13 +18,12 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
-internal class ChangeLogAdapter internal constructor() :
+internal class ChangeLogAdapter internal constructor(private val owner: LifecycleOwner) :
     ListAdapter<ChangeLogItemViewState, ChangeLogViewHolder>(DIFFER), PopupTextProvider {
 
   init {
@@ -33,7 +32,7 @@ internal class ChangeLogAdapter internal constructor() :
 
   override fun getPopupText(position: Int): String {
     val item = getItem(position)
-    return item.line.line.first().toUpperCase().toString()
+    return item.line.line.first().uppercaseChar().toString()
   }
 
   override fun getItemId(position: Int): Long {
@@ -42,17 +41,12 @@ internal class ChangeLogAdapter internal constructor() :
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChangeLogViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    return ChangeLogViewHolder.create(inflater, parent)
+    return ChangeLogViewHolder.create(inflater, parent, owner)
   }
 
   override fun onBindViewHolder(holder: ChangeLogViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
-  }
-
-  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-    super.onDetachedFromRecyclerView(recyclerView)
-    teardownAdapter(recyclerView)
   }
 
   companion object {

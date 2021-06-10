@@ -40,7 +40,7 @@ internal interface OtherAppsComponent {
   ) : OtherAppsComponent {
 
     override fun inject(fragment: OtherAppsFragment) {
-      val listView = OtherAppsList(parent)
+      val listView = OtherAppsList(owner, parent)
       val errorView = OtherAppsErrors(owner, parent)
       fragment.factory = params.factory
       fragment.listView = listView

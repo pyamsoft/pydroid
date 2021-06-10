@@ -27,7 +27,9 @@ import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsAdapter
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.OpenStore
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewState
+import com.pyamsoft.pydroid.ui.util.doOnChildRemoved
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
+import com.pyamsoft.pydroid.ui.util.teardownViewHolderAt
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -44,7 +46,35 @@ internal class OtherAppsList internal constructor(parent: ViewGroup) :
   private var lastViewed: Int = 0
 
   init {
-    doOnInflate { setupListView() }
+    doOnInflate {
+      listAdapter =
+          OtherAppsAdapter { event, index ->
+            return@OtherAppsAdapter when (event) {
+              is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
+              is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
+            }
+          }
+              .apply {
+                val registration = doOnChildRemoved {
+                  binding.otherAppsList.teardownViewHolderAt(it)
+                }
+                doOnTeardown { registration.unregister() }
+              }
+
+      binding.otherAppsList.apply {
+        adapter = listAdapter
+        layoutManager =
+            LinearLayoutManager(context).apply {
+              initialPrefetchItemCount = 3
+              isItemPrefetchEnabled = false
+            }
+      }
+
+      FastScrollerBuilder(binding.otherAppsList)
+          .useMd2Style()
+          .setPopupTextProvider(listAdapter)
+          .build()
+    }
 
     doOnInflate { savedInstanceState -> lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0 }
 
@@ -69,30 +99,6 @@ internal class OtherAppsList internal constructor(parent: ViewGroup) :
   private fun getCurrentPosition(): Int {
     val manager = binding.otherAppsList.layoutManager
     return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
-  }
-
-  private fun setupListView() {
-    listAdapter =
-        OtherAppsAdapter { event, index ->
-          return@OtherAppsAdapter when (event) {
-            is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
-            is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
-          }
-        }
-
-    binding.otherAppsList.apply {
-      adapter = listAdapter
-      layoutManager =
-          LinearLayoutManager(context).apply {
-            initialPrefetchItemCount = 3
-            isItemPrefetchEnabled = false
-          }
-    }
-
-    FastScrollerBuilder(binding.otherAppsList)
-        .useMd2Style()
-        .setPopupTextProvider(listAdapter)
-        .build()
   }
 
   override fun onRender(state: UiRender<OtherAppsViewState>) {

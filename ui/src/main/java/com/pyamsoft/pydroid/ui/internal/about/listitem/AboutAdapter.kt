@@ -34,7 +34,7 @@ internal constructor(private val callback: (event: AboutItemViewEvent, index: In
 
   override fun getPopupText(position: Int): String {
     val item = getItem(position)
-    return item.library.name.first().toUpperCase().toString()
+    return item.library.name.first().uppercaseChar().toString()
   }
 
   override fun getItemId(position: Int): Long {

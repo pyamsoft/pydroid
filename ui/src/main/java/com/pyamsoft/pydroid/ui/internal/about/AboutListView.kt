@@ -28,7 +28,9 @@ import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewState
+import com.pyamsoft.pydroid.ui.util.doOnChildRemoved
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
+import com.pyamsoft.pydroid.ui.util.teardownViewHolderAt
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -45,7 +47,29 @@ internal class AboutListView internal constructor(parent: ViewGroup) :
   private var lastViewed: Int = 0
 
   init {
-    doOnInflate { setupListView() }
+    aboutAdapter =
+        AboutAdapter { event, index ->
+          return@AboutAdapter when (event) {
+            is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
+            is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
+          }
+        }
+            .apply {
+              val registration = doOnChildRemoved { binding.aboutList.teardownViewHolderAt(it) }
+              doOnTeardown { registration.unregister() }
+            }
+
+    binding.aboutList.apply {
+      adapter = aboutAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
+    }
+
+    FastScrollerBuilder(binding.aboutList).useMd2Style().setPopupTextProvider(aboutAdapter).build()
+    doOnInflate {}
 
     doOnInflate { savedInstanceState -> lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0 }
 
@@ -70,27 +94,6 @@ internal class AboutListView internal constructor(parent: ViewGroup) :
   private fun getCurrentPosition(): Int {
     val manager = binding.aboutList.layoutManager
     return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
-  }
-
-  private fun setupListView() {
-    aboutAdapter =
-        AboutAdapter { event, index ->
-          return@AboutAdapter when (event) {
-            is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
-            is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
-          }
-        }
-
-    binding.aboutList.apply {
-      adapter = aboutAdapter
-      layoutManager =
-          LinearLayoutManager(context).apply {
-            initialPrefetchItemCount = 3
-            isItemPrefetchEnabled = false
-          }
-    }
-
-    FastScrollerBuilder(binding.aboutList).useMd2Style().setPopupTextProvider(aboutAdapter).build()
   }
 
   override fun onRender(state: UiRender<AboutViewState>) {

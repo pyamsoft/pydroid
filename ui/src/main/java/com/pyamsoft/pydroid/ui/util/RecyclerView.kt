@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.util
 
+import android.view.View
+import androidx.annotation.CheckResult
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 
@@ -39,9 +41,48 @@ public fun RecyclerView.Adapter<*>.teardownAdapter(recyclerView: RecyclerView) {
   }
 
   for (index in 0 until itemSize) {
-    val holder = recyclerView.findViewHolderForAdapterPosition(index)
-    if (holder is ViewBinder<*>) {
-      holder.teardown()
-    }
+    recyclerView.teardownViewHolderAt(index)
   }
+}
+
+/** Call the ViewBinder.teardown() on a view holder at given index */
+public fun RecyclerView.teardownViewHolderAt(index: Int) {
+  val holder = this.findViewHolderForAdapterPosition(index)
+  if (holder is ViewBinder<*>) {
+    holder.teardown()
+  }
+}
+
+/** Call the ViewBinder.teardown() on a view holder for a given child view */
+public fun RecyclerView.teardownChildViewHolder(child: View) {
+  val holder = this.getChildViewHolder(child)
+  if (holder is ViewBinder<*>) {
+    holder.teardown()
+  }
+}
+
+/** Watches for RecyclerView child events */
+public fun interface RecyclerViewChildRemovedRegistration {
+
+  /** Unregister this listener */
+  public fun unregister()
+}
+
+/** Watch a RecyclerView and react when children are removed from it */
+@CheckResult
+public inline fun RecyclerView.Adapter<*>.doOnChildRemoved(
+    crossinline block: (index: Int) -> Unit
+): RecyclerViewChildRemovedRegistration {
+  val observer =
+      object : RecyclerView.AdapterDataObserver() {
+
+        override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+          for (index in positionStart until positionStart + itemCount) {
+            block(index)
+          }
+        }
+      }
+
+  this.registerAdapterDataObserver(observer)
+  return RecyclerViewChildRemovedRegistration { this.unregisterAdapterDataObserver(observer) }
 }

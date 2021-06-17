@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':bus'
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':loader'
-include ':notify'
-include ':ui'
-include ':util'
-include ':inject'
+
+dependencies {
+    api project(':core')
+
+    // Timber logging
+    implementation "com.jakewharton.timber:timber:$timber"
+
+    implementation "androidx.annotation:annotation:$annotation"
+}
+
+android {
+    kotlinOptions {
+        freeCompilerArgs += '-Xexplicit-api=strict'
+    }
+}

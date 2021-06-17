@@ -25,6 +25,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.util.asPx
 
 /** Remove the title from a dialog */
 @CheckResult
@@ -33,34 +34,73 @@ public fun Dialog.noTitle(): Dialog {
   return this
 }
 
-/** Call this from at least onCreate() but before onResume() */
-public fun DialogFragment.makeFullscreen() {
-  setSizes(fullHeight = true, fullWidth = true)
+/**
+ * Call this from at least onCreate() but before onResume()
+ *
+ * By default, this attempts to measure the window size and create a slightly smaller than full
+ * screen dialog to avoid the MATCH_PARENT side effect where the Navigation bar is not colored.
+ */
+@JvmOverloads
+public fun DialogFragment.makeFullscreen(useMatchParent: Boolean = false) {
+  setSizes(fullHeight = true, fullWidth = true, useMatchParent = useMatchParent)
 }
 
-/** Call this from at least onCreate() but before onResume() */
-public fun DialogFragment.makeFullWidth() {
-  setSizes(fullHeight = false, fullWidth = true)
+/**
+ * Call this from at least onCreate() but before onResume()
+ *
+ * By default, this attempts to measure the window size and create a slightly smaller than full
+ * screen dialog to avoid the MATCH_PARENT side effect where the Navigation bar is not colored.
+ */
+@JvmOverloads
+public fun DialogFragment.makeFullWidth(useMatchParent: Boolean = false) {
+  setSizes(fullHeight = false, fullWidth = true, useMatchParent = useMatchParent)
 }
 
-/** Call this from at least onCreate() but before onResume() */
-public fun DialogFragment.makeFullHeight() {
-  setSizes(fullHeight = true, fullWidth = false)
+/**
+ * Call this from at least onCreate() but before onResume() By default, this attempts to measure the
+ * window size and create a slightly smaller than full screen dialog to avoid the MATCH_PARENT side
+ * effect where the Navigation bar is not colored.
+ */
+@JvmOverloads
+public fun DialogFragment.makeFullHeight(useMatchParent: Boolean = false) {
+  setSizes(fullHeight = true, fullWidth = false, useMatchParent = useMatchParent)
 }
 
-private fun DialogFragment.setSizes(fullWidth: Boolean, fullHeight: Boolean) {
+private fun DialogFragment.setSizes(
+    fullWidth: Boolean,
+    fullHeight: Boolean,
+    useMatchParent: Boolean
+) {
   val self = this
   val owner = self.viewLifecycleOwner
   owner.lifecycle.addObserver(
       object : LifecycleObserver {
 
+        private val MATCH = WindowManager.LayoutParams.MATCH_PARENT
+        private val WRAP = WindowManager.LayoutParams.WRAP_CONTENT
+
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         fun onResume() {
           self.dialog?.window?.apply {
-            val match = WindowManager.LayoutParams.MATCH_PARENT
-            val wrap = WindowManager.LayoutParams.WRAP_CONTENT
-            val width = if (fullWidth) match else wrap
-            val height = if (fullHeight) match else wrap
+            val width: Int
+            val height: Int
+            if (useMatchParent) {
+              width = if (fullWidth) MATCH else WRAP
+              height = if (fullHeight) MATCH else WRAP
+            } else {
+              val activity = self.requireActivity()
+              val configuration = activity.resources.configuration
+              val screenHeightDp = configuration.screenHeightDp
+              val screenWidthDp = configuration.screenWidthDp
+
+              // Subtract 2 just to slightly avoid the MATCH_PARENT size
+              val screenHeight = screenHeightDp.asPx(activity) - 2
+              val screenWidth = screenWidthDp.asPx(activity) - 2
+
+              width = if (fullWidth) screenWidth else WRAP
+              height = if (fullHeight) screenHeight else WRAP
+            }
+
             setLayout(width, height)
             setGravity(Gravity.CENTER)
           }

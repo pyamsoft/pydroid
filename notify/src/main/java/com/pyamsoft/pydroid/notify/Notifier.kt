@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.notify
 
+import android.app.Service
 import android.content.Context
 import androidx.annotation.CheckResult
 
@@ -56,6 +57,29 @@ public interface Notifier {
 
   /** Cancel a notification by id and tag */
   public fun cancel(id: NotifyId, tag: NotifyTag)
+
+  /** Show a foreground notification */
+  @CheckResult
+  public fun <T : NotifyData> startForeground(
+      service: Service,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId
+
+  /** Show a foreground notification with a given id and tag */
+  @CheckResult
+  public fun <T : NotifyData> startForeground(
+      service: Service,
+      id: NotifyId,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId
+
+  /** Cancel a foreground notification by id */
+  public fun stopForeground(service: Service, id: NotifyId)
+
+  /** Cancel a foreground notification by id and tag */
+  public fun stopForeground(service: Service, id: NotifyId, tag: NotifyTag)
 
   public companion object {
 

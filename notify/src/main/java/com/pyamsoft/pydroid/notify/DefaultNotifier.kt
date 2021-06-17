@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.notify
 
+import android.app.Notification
+import android.app.Service
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationManagerCompat
@@ -46,12 +48,12 @@ internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context:
     return show(generateNotificationId(), tag, channelInfo, notification)
   }
 
-  override fun <T : NotifyData> show(
+  @CheckResult
+  private fun <T : NotifyData> buildNotification(
       id: NotifyId,
-      tag: NotifyTag,
       channelInfo: NotifyChannelInfo,
       notification: T
-  ): NotifyId {
+  ): Notification {
     val dispatcher =
         dispatchers
             .asSequence()
@@ -65,8 +67,16 @@ internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context:
             .firstOrNull()
             ?: throw MissingDispatcherException(dispatchers, notification)
 
-    val newNotification = dispatcher.build(id, channelInfo, notification)
+    return dispatcher.build(id, channelInfo, notification)
+  }
 
+  override fun <T : NotifyData> show(
+      id: NotifyId,
+      tag: NotifyTag,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId {
+    val newNotification = buildNotification(id, channelInfo, notification)
     if (tag.tag.isNotBlank()) {
       manager.notify(tag.tag, id.id, newNotification)
     } else {
@@ -86,6 +96,34 @@ internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context:
     } else {
       manager.cancel(id.id)
     }
+  }
+
+  override fun <T : NotifyData> startForeground(
+      service: Service,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId {
+    return startForeground(service, generateNotificationId(), channelInfo, notification)
+  }
+
+  override fun <T : NotifyData> startForeground(
+      service: Service,
+      id: NotifyId,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId {
+    val newNotification = buildNotification(id, channelInfo, notification)
+    service.startForeground(id.id, newNotification)
+    return id
+  }
+
+  override fun stopForeground(service: Service, id: NotifyId) {
+    stopForeground(service, id, NOTIFY_EMPTY_TAG)
+  }
+
+  override fun stopForeground(service: Service, id: NotifyId, tag: NotifyTag) {
+    service.stopForeground(true)
+    cancel(id, tag)
   }
 
   companion object {

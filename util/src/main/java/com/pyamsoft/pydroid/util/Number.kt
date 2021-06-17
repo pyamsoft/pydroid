@@ -16,11 +16,13 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
 import android.util.SparseIntArray
 import android.util.TypedValue
 import androidx.annotation.CheckResult
+import androidx.annotation.Dimension
 import androidx.annotation.Px
 import kotlin.math.roundToInt
 
@@ -34,16 +36,61 @@ private inline fun SparseIntArray.getOrElse(key: Int, block: (array: SparseIntAr
 }
 
 @CheckResult
-private fun asDp(c: Context, @Px px: Int): Int {
+private fun asDp(activity: Activity, @Px px: Int): Int {
+  return asDpRawContext(activity, px)
+}
+
+@CheckResult
+private fun asDpRawContext(c: Context, @Px px: Int): Int {
   return if (px <= 0) 0
   else
       cachedDP.getOrElse(px) { array ->
-        val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
+        val m: DisplayMetrics = c.resources.displayMetrics
         return@getOrElse TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
             .roundToInt()
             .also { array.put(px, it) }
       }
 }
 
-/** Convert a number in pixels to DP */
-@CheckResult public fun Number.asDp(c: Context): Int = asDp(c, this.toInt())
+@CheckResult
+private fun asPx(activity: Activity, @Dimension(unit = Dimension.DP) dp: Int): Int {
+  return asPxRawContext(activity, dp)
+}
+
+@CheckResult
+private fun asPxRawContext(c: Context, @Dimension(unit = Dimension.DP) dp: Int): Int {
+  return if (dp <= 0) 0
+  else
+      TypedValue.applyDimension(
+              TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(), c.resources.displayMetrics)
+          .toInt()
+}
+
+/**
+ * Convert a number in Pixels to DP
+ *
+ * Prefer this method over the one that only takes a context [Number.asDp]
+ */
+@CheckResult
+public fun Number.asDp(activity: Activity): Int = asDpRawContext(activity, this.toInt())
+
+/**
+ * Convert a number in Pixels to DP
+ *
+ * Prefer the method that takes an activity over this one [Number.asDp]
+ */
+@CheckResult public fun Number.asDp(c: Context): Int = asDpRawContext(c, this.toInt())
+
+/**
+ * Convert a number in DP to Pixels
+ *
+ * Prefer this method over the one that only takes a context [Number.asPx]
+ */
+@CheckResult public fun Number.asPx(activity: Activity): Int = asPx(activity, this.toInt())
+
+/**
+ * Convert a number in DP to Pixels
+ *
+ * Prefer the method that takes an activity over this one [Number.asPx]
+ */
+@CheckResult public fun Number.asPx(c: Context): Int = asPxRawContext(c, this.toInt())

@@ -41,12 +41,12 @@ internal constructor(
         }
 
         // Ignore the app we have open right now in the list
-        return@withContext otherAppsCache
-            .call()
-            .map { it.asSequence() }
-            .map { apps -> apps.filterNot { it.packageName == packageName } }
-            .map { apps -> apps.sortedBy { it.name } }
-            .map { it.toList() }
+        return@withContext otherAppsCache.call().map { apps ->
+          apps.asSequence()
+              .filterNot { it.packageName == packageName }
+              .sortedBy { it.name }
+              .toList()
+        }
       }
 
   override suspend fun clear() {

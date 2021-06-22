@@ -21,6 +21,9 @@ import androidx.annotation.CheckResult
 /** A simple Result style data wrapper */
 public interface ResultWrapper<T> {
 
+  /** Run an action mapping an error object to a success object and continue the stream */
+  @CheckResult public fun recover(action: (Throwable) -> T): ResultWrapper<T>
+
   /**
    * Run an action only when successful result
    *
@@ -59,6 +62,10 @@ public interface ResultWrapper<T> {
 private data class ResultWrapperImpl<T>(private val success: T?, private val error: Throwable?) :
     ResultWrapper<T> {
 
+  override fun recover(action: (Throwable) -> T): ResultWrapper<T> {
+    return ResultWrapperImpl(success = error?.let(action), error = null)
+  }
+
   override fun onSuccess(action: (T) -> Unit): ResultWrapper<T> {
     return this.apply { success?.also(action) }
   }
@@ -68,6 +75,6 @@ private data class ResultWrapperImpl<T>(private val success: T?, private val err
   }
 
   override fun <R> map(transform: (T) -> R): ResultWrapper<R> {
-    return ResultWrapperImpl(success = success?.let { transform(it) }, error = error)
+    return ResultWrapperImpl(success = success?.let(transform), error = error)
   }
 }

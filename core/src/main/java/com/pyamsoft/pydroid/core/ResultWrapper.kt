@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.core
 import androidx.annotation.CheckResult
 
 /** A simple Result style data wrapper */
-public interface ResultWrapper<T> {
+public interface ResultWrapper<T : Any> {
 
   /** Run an action mapping an error object to a success object and continue the stream */
   @CheckResult public fun recover(action: (Throwable) -> T): ResultWrapper<T>
@@ -39,7 +39,7 @@ public interface ResultWrapper<T> {
   public fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T>
 
   /** Transform success results, does not change error results */
-  @CheckResult public fun <R> map(transform: (T) -> R): ResultWrapper<R>
+  @CheckResult public fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R>
 
   public companion object {
 
@@ -59,8 +59,10 @@ public interface ResultWrapper<T> {
   }
 }
 
-private data class ResultWrapperImpl<T>(private val success: T?, private val error: Throwable?) :
-    ResultWrapper<T> {
+private data class ResultWrapperImpl<T : Any>(
+    private val success: T?,
+    private val error: Throwable?
+) : ResultWrapper<T> {
 
   override fun recover(action: (Throwable) -> T): ResultWrapper<T> {
     return ResultWrapperImpl(success = error?.let(action), error = null)
@@ -74,7 +76,7 @@ private data class ResultWrapperImpl<T>(private val success: T?, private val err
     return this.apply { error?.also(action) }
   }
 
-  override fun <R> map(transform: (T) -> R): ResultWrapper<R> {
+  override fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R> {
     return ResultWrapperImpl(success = success?.let(transform), error = error)
   }
 }

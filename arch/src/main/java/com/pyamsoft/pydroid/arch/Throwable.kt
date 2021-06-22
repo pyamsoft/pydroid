@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.arch
 import kotlinx.coroutines.CancellationException
 
 /** Only handle the throwable if it is not a Coroutine cancellation exception */
+@Deprecated("If you are using this you should move your result to a ResultWrapper style result")
 public inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
   if (this !is CancellationException) {
     func(this)

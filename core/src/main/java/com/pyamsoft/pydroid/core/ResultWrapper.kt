@@ -68,10 +68,14 @@ internal constructor(
     return this.apply { error?.also(action) }
   }
 
-  /** Run an action mapping an error object to a success object and continue the stream */
+  /**
+   * Run an action mapping an error object to a success object and continue the stream
+   *
+   * If this is a Success, this operation is a no-op
+   */
   @CheckResult
   public inline fun recover(action: (Throwable) -> T): ResultWrapper<T> {
-    return ResultWrapper(success = error?.let(action), error = null)
+    return error.let { if (it == null) this else ResultWrapper(success = action(it), error = null) }
   }
 
   /**

@@ -131,10 +131,8 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
 
     // Enforce that we do this on the Main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
-      try {
-        launcher.update(activity, RC_APP_UPDATE)
-      } catch (throwable: Throwable) {
-        Timber.e(throwable, "Unable to launch in-app update flow")
+      launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
+        Timber.e(err, "Unable to launch in-app update flow")
         if (isFallbackEnabled) {
           MarketLinker.openAppPage(activity)
               .onSuccess { viewModel.handleNavigationSuccess() }

@@ -106,10 +106,8 @@ public abstract class RatingActivity : VersionCheckActivity() {
     // Enforce that we do this on the Main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
       if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
-        try {
-          launcher.rate(activity)
-        } catch (throwable: Throwable) {
-          Timber.e(throwable, "Unable to launch in-app rating")
+        launcher.rate(activity).onFailure { err ->
+          Timber.e(err, "Unable to launch in-app rating")
           if (isFallbackEnabled) {
             MarketLinker.openAppPage(activity)
                 .onSuccess { viewModel.handleNavigationSuccess() }

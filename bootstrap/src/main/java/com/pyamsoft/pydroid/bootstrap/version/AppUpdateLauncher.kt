@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.app.Activity
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** In app update launcher */
 public interface AppUpdateLauncher {
 
   /** Begin an update */
-  public suspend fun update(activity: Activity, requestCode: Int)
+  @CheckResult public suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit>
 
   public companion object {
 
@@ -32,7 +33,9 @@ public interface AppUpdateLauncher {
     @CheckResult
     public fun empty(): AppUpdateLauncher {
       return object : AppUpdateLauncher {
-        override suspend fun update(activity: Activity, requestCode: Int) {}
+        override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> {
+          return ResultWrapper.success(Unit)
+        }
       }
     }
   }

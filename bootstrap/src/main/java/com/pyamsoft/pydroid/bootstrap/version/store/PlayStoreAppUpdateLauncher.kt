@@ -23,6 +23,7 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -34,23 +35,30 @@ internal constructor(
     @AppUpdateType private val type: Int,
 ) : AppUpdateLauncher {
 
-  override suspend fun update(activity: Activity, requestCode: Int) =
+  override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
-        Timber.d("Begin update flow $requestCode $info")
-        if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
-          Timber.d("Update flow has started")
-          if (manager is FakeAppUpdateManager) {
-            Timber.d("User accepts fake update")
-            manager.userAcceptsUpdate()
+        return@withContext try {
+          Timber.d("Begin update flow $requestCode $info")
+          if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
+            Timber.d("Update flow has started")
+            if (manager is FakeAppUpdateManager) {
+              Timber.d("User accepts fake update")
+              manager.userAcceptsUpdate()
 
-            Timber.d("Start a fake download")
-            manager.downloadStarts()
+              Timber.d("Start a fake download")
+              manager.downloadStarts()
 
-            Timber.d("Complete a fake download")
-            manager.downloadCompletes()
+              Timber.d("Complete a fake download")
+              manager.downloadCompletes()
+            }
           }
+
+          ResultWrapper.success(Unit)
+        } catch (e: Throwable) {
+          Timber.e(e, "Failed to launch In-App update flow")
+          ResultWrapper.failure(e)
         }
       }
 }

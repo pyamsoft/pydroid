@@ -22,7 +22,10 @@ import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -33,7 +36,7 @@ internal constructor(
     private val info: ReviewInfo
 ) : AppRatingLauncher {
 
-  override suspend fun rate(activity: Activity) =
+  override suspend fun rate(activity: Activity): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
@@ -43,12 +46,17 @@ internal constructor(
         }
 
         Enforcer.assertOnMainThread()
-        manager
-            .launchReviewFlow(activity, info)
-            .addOnSuccessListener { Timber.d("In-app Review was a success") }
-            .addOnFailureListener { throw it }
-
-        // Unit
-        return@withContext
+        return@withContext suspendCancellableCoroutine { continuation ->
+          manager
+              .launchReviewFlow(activity, info)
+              .addOnSuccessListener {
+                Timber.d("In-app Review was a success")
+                continuation.resume(ResultWrapper.success(Unit))
+              }
+              .addOnFailureListener { err ->
+                Timber.e(err, "In-App review failed!")
+                continuation.resume(ResultWrapper.failure(err))
+              }
+        }
       }
 }

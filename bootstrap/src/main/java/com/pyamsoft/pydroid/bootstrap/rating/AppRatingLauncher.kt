@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import android.app.Activity
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** In-App review launcher */
 public interface AppRatingLauncher {
 
   /** Possibly launch an in-app review, not guaranteed due to implementation details */
-  public suspend fun rate(activity: Activity)
+  @CheckResult public suspend fun rate(activity: Activity): ResultWrapper<Unit>
 
   public companion object {
 
@@ -32,7 +33,9 @@ public interface AppRatingLauncher {
     @CheckResult
     public fun empty(): AppRatingLauncher {
       return object : AppRatingLauncher {
-        override suspend fun rate(activity: Activity) {}
+        override suspend fun rate(activity: Activity): ResultWrapper<Unit> {
+          return ResultWrapper.success(Unit)
+        }
       }
     }
   }

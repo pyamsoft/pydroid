@@ -22,6 +22,7 @@ import com.pyamsoft.cachify.Cached
 import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.version.store.PlayStoreAppUpdater
+import com.pyamsoft.pydroid.core.ResultWrapper
 import java.util.concurrent.TimeUnit.MINUTES
 
 /** In-App update module */
@@ -50,8 +51,8 @@ public class VersionModule(params: Parameters) {
 
     @JvmStatic
     @CheckResult
-    private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
-      return cachify<AppUpdateLauncher>(
+    private fun createCache(network: VersionInteractor): Cached<ResultWrapper<AppUpdateLauncher>> {
+      return cachify<ResultWrapper<AppUpdateLauncher>>(
           storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) }) {
         network.checkVersion(true)
       }

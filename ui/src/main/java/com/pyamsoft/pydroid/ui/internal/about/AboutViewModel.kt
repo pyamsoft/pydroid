@@ -18,11 +18,10 @@ package com.pyamsoft.pydroid.ui.internal.about
 
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.CoroutineScope
-import timber.log.Timber
 
 internal class AboutViewModel
 internal constructor(
@@ -37,17 +36,7 @@ internal constructor(
                 navigationError = null)) {
 
   private val licenseRunner =
-      highlander<Unit, Boolean> { force ->
-        try {
-          val licenses = interactor.loadLicenses(force)
-          handleLicensesLoaded(licenses)
-        } catch (error: Throwable) {
-          error.onActualError { e ->
-            Timber.e(e, "Error loading licenses")
-            handleLicenseLoadError(e)
-          }
-        }
-      }
+      highlander<ResultWrapper<List<OssLibrary>>, Boolean> { interactor.loadLicenses(it) }
 
   internal fun handleOpenLibrary(index: Int) {
     return openUrl(index) { it.libraryUrl }
@@ -71,7 +60,9 @@ internal constructor(
     setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
-          licenseRunner.call(false)
+          licenseRunner.call(false).onSuccess { handleLicensesLoaded(it) }.onFailure {
+            handleLicenseLoadError(it)
+          }
           setState { copy(isLoading = false) }
         })
   }

@@ -17,10 +17,11 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** Interactor for handling rating related actions */
 public interface RatingInteractor {
 
   /** Ask for a review if the current context allows it to be queued. */
-  @CheckResult public suspend fun askForRating(force: Boolean): AppRatingLauncher
+  @CheckResult public suspend fun askForRating(force: Boolean): ResultWrapper<AppRatingLauncher>
 }

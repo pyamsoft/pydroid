@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -29,12 +30,12 @@ internal class OtherAppsInteractorNetwork
 internal constructor(context: Context, private val service: OtherAppsService) :
     AppInteractorImpl(context), OtherAppsInteractor {
 
-  override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
+  override suspend fun getApps(force: Boolean): ResultWrapper<List<OtherApp>> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
         return@withContext try {
           val result = service.getApps().apps()
-          Result.success(
+          ResultWrapper.success(
               result.map { entry ->
                 OtherApp(
                     entry.packageName(),
@@ -46,7 +47,7 @@ internal constructor(context: Context, private val service: OtherAppsService) :
               })
         } catch (throwable: Throwable) {
           Timber.e(throwable, "Unable to fetch other apps payload")
-          Result.failure(throwable)
+          ResultWrapper.failure(throwable)
         }
       }
 }

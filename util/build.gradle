@@ -22,6 +22,5 @@ dependencies {
 android {
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'
-    freeCompilerArgs += '-Xallow-result-return-type'
   }
 }

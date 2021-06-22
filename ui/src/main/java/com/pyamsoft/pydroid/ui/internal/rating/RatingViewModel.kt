@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -34,21 +34,18 @@ internal constructor(
         initialState = RatingViewState(navigationError = null)) {
 
   private val loadRunner =
-      highlander<LoadResult?, Boolean> { force ->
-        try {
-          val launcher = interactor.askForRating(force)
-          return@highlander LoadResult(force, launcher)
-        } catch (throwable: Throwable) {
-          throwable.onActualError { Timber.e(throwable, "Unable to launch rating flow") }
-          return@highlander null
-        }
+      highlander<ResultWrapper<LoadResult>, Boolean> { force ->
+        interactor.askForRating(force).map { LoadResult(force, it) }
       }
 
   internal fun load(force: Boolean) {
     viewModelScope.launch(context = Dispatchers.Default) {
-      loadRunner.call(force)?.let { result ->
-        publish(RatingControllerEvent.LaunchRating(result.isFallbackEnabled, result.launcher))
-      }
+      loadRunner
+          .call(force)
+          .onSuccess {
+            publish(RatingControllerEvent.LaunchRating(it.isFallbackEnabled, it.launcher))
+          }
+          .onFailure { Timber.e(it, "Unable to launch rating flow") }
     }
   }
 
@@ -64,6 +61,5 @@ internal constructor(
     setState { copy(navigationError = error) }
   }
 
-  internal data class LoadResult
-  internal constructor(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher)
+  private data class LoadResult(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher)
 }

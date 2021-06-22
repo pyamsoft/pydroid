@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -101,7 +102,7 @@ internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerE
     stateSaver?.saveState(outState)
   }
 
-  private fun Result<Unit>.handleNavigation() {
+  private fun ResultWrapper<Unit>.handleNavigation() {
     this.onSuccess { viewModel.handleNavigationSuccess() }.onFailure {
       viewModel.handleNavigationFailed(it)
     }

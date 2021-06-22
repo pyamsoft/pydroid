@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -26,15 +27,20 @@ internal constructor(
     private val ratingPreferences: RatingPreferences,
 ) : RatingInteractor {
 
-  override suspend fun askForRating(force: Boolean): AppRatingLauncher =
+  override suspend fun askForRating(force: Boolean): ResultWrapper<AppRatingLauncher> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
 
-        val showRating = force || ratingPreferences.showRating()
-        return@withContext if (showRating) {
-          rateMyApp.startRating()
-        } else {
-          AppRatingLauncher.empty()
+        return@withContext try {
+          val showRating = force || ratingPreferences.showRating()
+          ResultWrapper.success(
+              if (showRating) {
+                rateMyApp.startRating()
+              } else {
+                AppRatingLauncher.empty()
+              })
+        } catch (e: Throwable) {
+          ResultWrapper.failure(e)
         }
       }
 }

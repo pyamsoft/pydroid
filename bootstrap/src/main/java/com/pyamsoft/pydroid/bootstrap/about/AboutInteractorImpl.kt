@@ -19,17 +19,21 @@ package com.pyamsoft.pydroid.bootstrap.about
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class AboutInteractorImpl internal constructor() : AboutInteractor {
 
-  override suspend fun loadLicenses(force: Boolean): List<OssLibrary> =
+  override suspend fun loadLicenses(force: Boolean): ResultWrapper<List<OssLibrary>> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        return@withContext OssLibraries.libraries().sortedBy {
-          it.name.toLowerCase(Locale.getDefault())
+        return@withContext try {
+          ResultWrapper.success(
+              OssLibraries.libraries().sortedBy { it.name.lowercase(Locale.getDefault()) })
+        } catch (e: Throwable) {
+          ResultWrapper.failure(e)
         }
       }
 }

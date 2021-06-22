@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.util
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal object MarketLinker {
@@ -30,7 +31,7 @@ internal object MarketLinker {
   fun linkToMarketPage(
       context: Context,
       packageName: String,
-  ): Result<Unit> {
+  ): ResultWrapper<Unit> {
     val targetName =
         if (packageName.endsWith(".dev")) {
           packageName.substringBefore(".dev")
@@ -43,7 +44,7 @@ internal object MarketLinker {
 
   @JvmStatic
   @CheckResult
-  fun linkToDeveloperPage(context: Context): Result<Unit> {
+  fun linkToDeveloperPage(context: Context): ResultWrapper<Unit> {
     return DEV_PAGE_URL.hyperlink(context).navigate()
   }
 }

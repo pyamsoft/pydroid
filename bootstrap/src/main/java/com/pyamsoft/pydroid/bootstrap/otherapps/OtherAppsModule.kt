@@ -24,6 +24,7 @@ import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.network.ServiceCreator
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
+import com.pyamsoft.pydroid.core.ResultWrapper
 import java.util.concurrent.TimeUnit.HOURS
 
 /** Module for other pyamsoft applications */
@@ -51,8 +52,8 @@ public class OtherAppsModule(params: Parameters) {
 
     @JvmStatic
     @CheckResult
-    private fun createCache(network: OtherAppsInteractor): Cached<Result<List<OtherApp>>> {
-      return cachify<Result<List<OtherApp>>>(
+    private fun createCache(network: OtherAppsInteractor): Cached<ResultWrapper<List<OtherApp>>> {
+      return cachify<ResultWrapper<List<OtherApp>>>(
           storage = { listOf(MemoryCacheStorage.create(24, HOURS)) }) {
         requireNotNull(network.getApps(true))
       }

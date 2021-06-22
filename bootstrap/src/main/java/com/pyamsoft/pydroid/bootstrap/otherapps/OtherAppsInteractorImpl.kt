@@ -22,6 +22,7 @@ import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -29,10 +30,10 @@ internal class OtherAppsInteractorImpl
 internal constructor(
     context: Context,
     private val packageName: String,
-    private val otherAppsCache: Cached<Result<List<OtherApp>>>
+    private val otherAppsCache: Cached<ResultWrapper<List<OtherApp>>>
 ) : AppInteractorImpl(context), OtherAppsInteractor, Cache {
 
-  override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
+  override suspend fun getApps(force: Boolean): ResultWrapper<List<OtherApp>> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 

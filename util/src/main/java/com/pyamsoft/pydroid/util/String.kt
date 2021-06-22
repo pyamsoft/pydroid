@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** Turn a string into a hyperlink intent */
 @CheckResult
@@ -47,13 +48,13 @@ internal constructor(
    * ActivityNotFound exception.
    */
   @CheckResult
-  public fun navigate(): Result<Unit> {
+  public fun navigate(): ResultWrapper<Unit> {
     val appContext = context.applicationContext
     return try {
       val result = appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-      Result.success(result)
+      ResultWrapper.success(result)
     } catch (e: ActivityNotFoundException) {
-      Result.failure(e)
+      ResultWrapper.failure(e)
     }
   }
 }

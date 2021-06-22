@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,17 +38,8 @@ internal constructor(private val interactor: VersionInteractor) :
             )) {
 
   private val checkUpdateRunner =
-      highlander<UpdateResult?, Boolean> { force ->
-        try {
-          val launcher = interactor.checkVersion(force)
-          return@highlander UpdateResult(force, launcher)
-        } catch (error: Throwable) {
-          error.onActualError { e ->
-            Timber.e(e, "Error checking for latest version")
-            handleVersionCheckError(e)
-          }
-          return@highlander null
-        }
+      highlander<ResultWrapper<UpdateResult>, Boolean> { force ->
+        interactor.checkVersion(force).map { UpdateResult(force, it) }
       }
 
   init {
@@ -89,10 +80,13 @@ internal constructor(private val interactor: VersionInteractor) :
     viewModelScope.setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
-          checkUpdateRunner.call(force)?.let { result ->
-            publish(
-                VersionCheckControllerEvent.LaunchUpdate(result.isFallbackEnabled, result.launcher))
-          }
+          checkUpdateRunner
+              .call(force)
+              .onSuccess {
+                publish(VersionCheckControllerEvent.LaunchUpdate(it.isFallbackEnabled, it.launcher))
+              }
+              .onFailure { Timber.e(it, "Error checking for latest version") }
+              .onFailure { handleVersionCheckError(it) }
         })
   }
 

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -29,10 +30,14 @@ internal class VersionInteractorNetwork internal constructor(private val updater
   override suspend fun completeUpdate() =
       throw IllegalStateException("This should never be called directly")
 
-  override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
+  override suspend fun checkVersion(force: Boolean): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext updater.checkForUpdate()
+        return@withContext try {
+          ResultWrapper.success(updater.checkForUpdate())
+        } catch (e: Throwable) {
+          ResultWrapper.failure(e)
+        }
       }
 }

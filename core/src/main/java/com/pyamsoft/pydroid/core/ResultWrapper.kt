@@ -26,6 +26,18 @@ internal constructor(
     @PublishedApi internal val error: Throwable?
 ) {
 
+  /** Return the success object or null */
+  @CheckResult
+  public fun getOrNull(): T? {
+    return success
+  }
+
+  /** Return the error object or null */
+  @CheckResult
+  public fun exceptionOrNull(): Throwable? {
+    return error
+  }
+
   /**
    * Run an action only when successful result
    *

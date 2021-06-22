@@ -19,27 +19,42 @@ package com.pyamsoft.pydroid.core
 import androidx.annotation.CheckResult
 
 /** A simple Result style data wrapper */
-public interface ResultWrapper<T : Any> {
-
-  /** Run an action mapping an error object to a success object and continue the stream */
-  @CheckResult public fun recover(action: (Throwable) -> T): ResultWrapper<T>
+public data class ResultWrapper<T : Any>
+@PublishedApi
+internal constructor(
+    @PublishedApi internal val success: T?,
+    @PublishedApi internal val error: Throwable?
+) {
 
   /**
    * Run an action only when successful result
    *
    * No @CheckResult since this can be the end of the call.
    */
-  public fun onSuccess(action: (T) -> Unit): ResultWrapper<T>
+  public inline fun onSuccess(action: (T) -> Unit): ResultWrapper<T> {
+    return this.apply { success?.also(action) }
+  }
 
   /**
    * Run an action only when failed result
    *
    * No @CheckResult since this can be the end of the call.
    */
-  public fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T>
+  public inline fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T> {
+    return this.apply { error?.also(action) }
+  }
+
+  /** Run an action mapping an error object to a success object and continue the stream */
+  @CheckResult
+  public inline fun recover(action: (Throwable) -> T): ResultWrapper<T> {
+    return ResultWrapper(success = error?.let(action), error = null)
+  }
 
   /** Transform success results, does not change error results */
-  @CheckResult public fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R>
+  @CheckResult
+  public inline fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R> {
+    return ResultWrapper(success = success?.let(transform), error = error)
+  }
 
   public companion object {
 
@@ -47,36 +62,14 @@ public interface ResultWrapper<T : Any> {
     @JvmStatic
     @CheckResult
     public fun <T : Any> success(success: T): ResultWrapper<T> {
-      return ResultWrapperImpl(success = success, error = null)
+      return ResultWrapper(success = success, error = null)
     }
 
     /** Create a failure state instance */
     @JvmStatic
     @CheckResult
     public fun <T : Any> failure(error: Throwable): ResultWrapper<T> {
-      return ResultWrapperImpl(success = null, error = error)
+      return ResultWrapper(success = null, error = error)
     }
-  }
-}
-
-private data class ResultWrapperImpl<T : Any>(
-    private val success: T?,
-    private val error: Throwable?
-) : ResultWrapper<T> {
-
-  override fun recover(action: (Throwable) -> T): ResultWrapper<T> {
-    return ResultWrapperImpl(success = error?.let(action), error = null)
-  }
-
-  override fun onSuccess(action: (T) -> Unit): ResultWrapper<T> {
-    return this.apply { success?.also(action) }
-  }
-
-  override fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T> {
-    return this.apply { error?.also(action) }
-  }
-
-  override fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R> {
-    return ResultWrapperImpl(success = success?.let(transform), error = error)
   }
 }

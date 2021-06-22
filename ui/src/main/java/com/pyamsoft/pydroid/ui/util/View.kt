@@ -24,6 +24,7 @@ import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.ViewPropertyAnimatorListener
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.app.AppBarActivity
@@ -190,7 +191,7 @@ private inline fun watchToolbarOffset(
     crossinline onNewMargin: (Int) -> Unit,
 ) {
   view.doOnApplyWindowInsets(owner) { _, insets, _ ->
-    val toolbarTopMargin = insets.systemWindowInsetTop
+    val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
     onNewMargin(toolbarTopMargin)
   }
 }

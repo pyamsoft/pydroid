@@ -26,6 +26,12 @@ internal constructor(
     @PublishedApi internal val error: Throwable?
 ) {
 
+  /** Return the success object or throws an exception */
+  @CheckResult
+  public fun getOrThrow(): T {
+    return getOrNull() ?: throw IllegalStateException("ResultWrapper is not Success type")
+  }
+
   /** Return the success object or null */
   @CheckResult
   public fun getOrNull(): T? {
@@ -36,6 +42,12 @@ internal constructor(
   @CheckResult
   public fun exceptionOrNull(): Throwable? {
     return error
+  }
+
+  /** Return the error object or throws an exception */
+  @CheckResult
+  public fun exceptionOrThrow(): Throwable {
+    return exceptionOrNull() ?: throw IllegalStateException("ResultWrapper is not Error type")
   }
 
   /**
@@ -62,10 +74,19 @@ internal constructor(
     return ResultWrapper(success = error?.let(action), error = null)
   }
 
-  /** Transform success results, does not change error results */
+  /**
+   * Transform success results, does not change error results
+   *
+   * If the transform function throws an error, it will be caught and morph the ResultWrapper into
+   * an error ResultWrapper
+   */
   @CheckResult
   public inline fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R> {
-    return ResultWrapper(success = success?.let(transform), error = error)
+    return try {
+      ResultWrapper(success = success?.let(transform), error = error)
+    } catch (e: Throwable) {
+      ResultWrapper(success = null, error = e)
+    }
   }
 
   public companion object {

@@ -22,9 +22,19 @@ import androidx.annotation.CheckResult
 public data class ResultWrapper<T : Any>
 @PublishedApi
 internal constructor(
-    @PublishedApi internal val success: T?,
-    @PublishedApi internal val error: Throwable?
+  @PublishedApi internal val data: T?,
+  @PublishedApi internal val error: Throwable?
 ) {
+
+  /**
+   * Check that this ResultWrapper is valid
+   */
+  @PublishedApi
+  internal fun validateWrapper() {
+    if (data == null && error == null) {
+      throw IllegalStateException("ResultWrapper is missing both a data and an error value.")
+    }
+  }
 
   /** Return the success object or throws an exception */
   @CheckResult
@@ -35,12 +45,15 @@ internal constructor(
   /** Return the success object or null */
   @CheckResult
   public fun getOrNull(): T? {
-    return success
+    validateWrapper()
+    return data
   }
 
   /** Return the error object or null */
   @CheckResult
   public fun exceptionOrNull(): Throwable? {
+    validateWrapper()
+
     return error
   }
 
@@ -56,7 +69,9 @@ internal constructor(
    * No @CheckResult since this can be the end of the call.
    */
   public inline fun onSuccess(action: (T) -> Unit): ResultWrapper<T> {
-    return this.apply { success?.also(action) }
+    validateWrapper()
+
+    return this.apply { data?.also(action) }
   }
 
   /**
@@ -65,6 +80,8 @@ internal constructor(
    * No @CheckResult since this can be the end of the call.
    */
   public inline fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T> {
+    validateWrapper()
+
     return this.apply { error?.also(action) }
   }
 
@@ -72,10 +89,19 @@ internal constructor(
    * Run an action mapping an error object to a success object and continue the stream
    *
    * If this is a Success, this operation is a no-op
+   *
+   * If the transform function throws an error, it will be caught and morph the ResultWrapper into
+   * an error ResultWrapper
    */
   @CheckResult
-  public inline fun recover(action: (Throwable) -> T): ResultWrapper<T> {
-    return error.let { if (it == null) this else ResultWrapper(success = action(it), error = null) }
+  public inline fun recover(transform: (Throwable) -> T): ResultWrapper<T> {
+    validateWrapper()
+
+    return try {
+      error.let { if (it == null) this else ResultWrapper(data = transform(it), error = null) }
+    } catch (e: Throwable) {
+      ResultWrapper(data = null, error = e)
+    }
   }
 
   /**
@@ -85,11 +111,13 @@ internal constructor(
    * an error ResultWrapper
    */
   @CheckResult
-  public inline fun <R : Any> map(transform: (T) -> R?): ResultWrapper<R> {
+  public inline fun <R : Any> map(transform: (T) -> R): ResultWrapper<R> {
+    validateWrapper()
+
     return try {
-      ResultWrapper(success = success?.let(transform), error = error)
+      ResultWrapper(data = data?.let(transform), error = error)
     } catch (e: Throwable) {
-      ResultWrapper(success = null, error = e)
+      ResultWrapper(data = null, error = e)
     }
   }
 
@@ -99,14 +127,14 @@ internal constructor(
     @JvmStatic
     @CheckResult
     public fun <T : Any> success(success: T): ResultWrapper<T> {
-      return ResultWrapper(success = success, error = null)
+      return ResultWrapper(data = success, error = null)
     }
 
     /** Create a failure state instance */
     @JvmStatic
     @CheckResult
     public fun <T : Any> failure(error: Throwable): ResultWrapper<T> {
-      return ResultWrapper(success = null, error = error)
+      return ResultWrapper(data = null, error = error)
     }
   }
 }

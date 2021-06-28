@@ -37,8 +37,4 @@ internal class GlideUriDrawableLoader internal constructor(context: Context, pri
   override fun setImage(view: ImageView, image: Drawable) {
     view.setImageDrawable(image)
   }
-
-  override fun immediateResource(): Drawable? {
-    return null
-  }
 }

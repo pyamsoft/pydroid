@@ -50,14 +50,6 @@ internal class ImageLoaderImpl internal constructor(private val context: Context
       override fun load(data: ByteArray): Loader<Drawable> {
         return GlideByteArrayDrawableLoader(context.applicationContext, data)
       }
-
-      @Suppress("OverridingDeprecatedMember")
-      override fun load(bitmap: Bitmap): Loader<Drawable> {
-        // Full name to avoid deprecation warning
-        @Suppress("DEPRECATION")
-        return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapDrawableLoader(
-            context.applicationContext, bitmap)
-      }
     }
   }
 
@@ -78,36 +70,7 @@ internal class ImageLoaderImpl internal constructor(private val context: Context
       override fun load(data: ByteArray): Loader<Bitmap> {
         return GlideByteArrayBitmapLoader(context.applicationContext, data)
       }
-
-      @Suppress("OverridingDeprecatedMember")
-      override fun load(bitmap: Bitmap): Loader<Bitmap> {
-        // Full name to avoid deprecation warning
-        @Suppress("DEPRECATION")
-        return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapBitmapLoader(
-            context.applicationContext, bitmap)
-      }
     }
-  }
-
-  override fun load(@DrawableRes resource: Int): Loader<Drawable> {
-    return drawables.load(resource)
-  }
-
-  override fun load(url: String): Loader<Drawable> {
-    return drawables.load(url)
-  }
-
-  override fun load(uri: Uri): Loader<Drawable> {
-    return drawables.load(uri)
-  }
-
-  override fun load(data: ByteArray): Loader<Drawable> {
-    return drawables.load(data)
-  }
-
-  @Suppress("OverridingDeprecatedMember")
-  override fun load(bitmap: Bitmap): Loader<Drawable> {
-    @Suppress("DEPRECATION") return drawables.load(bitmap)
   }
 
   override fun asDrawable(): ImageLoaderApi<Drawable> {

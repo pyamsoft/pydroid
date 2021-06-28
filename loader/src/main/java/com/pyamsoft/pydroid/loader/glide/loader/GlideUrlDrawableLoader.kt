@@ -37,8 +37,4 @@ internal constructor(context: Context, private val url: String) :
   override fun setImage(view: ImageView, image: Drawable) {
     view.setImageDrawable(image)
   }
-
-  override fun immediateResource(): Drawable? {
-    return null
-  }
 }

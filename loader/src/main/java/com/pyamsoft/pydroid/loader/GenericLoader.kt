@@ -36,11 +36,6 @@ public abstract class GenericLoader<T : Any> protected constructor() : Loader<T>
   /** Set an image resource onto an ImageView */
   protected abstract fun setImage(view: ImageView, image: T)
 
-  /** Load a resource immediately via blocking call */
-  @CheckResult
-  @Deprecated("You almost always want to use something else.")
-  protected abstract fun immediateResource(): T?
-
   /** Run a configured loading callback */
   protected fun notifyLoading() {
     startAction?.invoke()
@@ -76,24 +71,5 @@ public abstract class GenericLoader<T : Any> protected constructor() : Loader<T>
 
   final override fun mutate(action: (T) -> T): Loader<T> {
     return this.also { it.mutator = action }
-  }
-
-  @Deprecated("You almost always want to use something else")
-  final override fun immediate(): T? {
-    notifyLoading()
-    try {
-      @Suppress("DEPRECATION") val resource: T? = immediateResource()
-      if (resource == null) {
-        notifyError()
-      } else {
-        val mutated = executeMutator(mutateImage(resource))
-        notifySuccess(mutated)
-        return mutated
-      }
-    } catch (e: Exception) {
-      notifyError()
-    }
-
-    return null
   }
 }

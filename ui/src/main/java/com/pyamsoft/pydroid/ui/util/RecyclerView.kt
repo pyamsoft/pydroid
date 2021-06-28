@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.util
 
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.ViewBinder
 
 /** Remove all item decorations from a recyclerview */
 public fun RecyclerView.removeAllItemDecorations() {
@@ -28,21 +27,5 @@ public fun RecyclerView.removeAllItemDecorations() {
 
   for (i in totalCount..0) {
     this.removeItemDecorationAt(i)
-  }
-}
-
-/** Call the ViewBinder.teardown() on all view holders */
-@Deprecated("Pass the Controller LifecycleOwner to the ViewHolder class and use owner.doOnDestroy { } to teardown. This method is unreliable.")
-public fun RecyclerView.Adapter<*>.teardownAdapter(recyclerView: RecyclerView) {
-  val itemSize = itemCount
-  if (itemSize <= 0) {
-    return
-  }
-
-  for (index in 0 until itemSize) {
-    val holder = recyclerView.findViewHolderForAdapterPosition(index)
-    if (holder is ViewBinder<*>) {
-      holder.teardown()
-    }
   }
 }

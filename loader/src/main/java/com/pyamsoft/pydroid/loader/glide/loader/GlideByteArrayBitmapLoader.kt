@@ -38,8 +38,4 @@ internal constructor(context: Context, private val data: ByteArray) :
   override fun setImage(view: ImageView, image: Bitmap) {
     view.setImageBitmap(image)
   }
-
-  override fun immediateResource(): Bitmap? {
-    return BitmapFactory.decodeByteArray(data, 0, data.size)
-  }
 }

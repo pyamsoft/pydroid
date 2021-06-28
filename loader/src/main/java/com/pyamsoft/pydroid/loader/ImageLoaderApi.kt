@@ -40,14 +40,4 @@ public interface ImageLoaderApi<I : Any> {
 
   /** Load a byte array resource */
   @CheckResult public fun load(data: ByteArray): Loader<I>
-
-  /**
-   * Load a bitmap resource
-   *
-   * You almost always want to use something other than this.
-   */
-  @CheckResult
-  @Deprecated(
-      "You almost always want to pass something to the loader that it will load, instead of a completely loaded Bitmap.")
-  public fun load(bitmap: Bitmap): Loader<I>
 }

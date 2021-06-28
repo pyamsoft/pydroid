@@ -37,8 +37,4 @@ internal class GlideUriBitmapLoader internal constructor(context: Context, priva
   override fun setImage(view: ImageView, image: Bitmap) {
     view.setImageBitmap(image)
   }
-
-  override fun immediateResource(): Bitmap? {
-    return null
-  }
 }

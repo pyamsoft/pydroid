@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.loader.glide.loader
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
@@ -38,10 +36,5 @@ internal constructor(context: Context, private val data: ByteArray) :
 
   override fun setImage(view: ImageView, image: Drawable) {
     view.setImageDrawable(image)
-  }
-
-  override fun immediateResource(): Drawable {
-    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-    return BitmapDrawable(context.resources, bitmap)
   }
 }

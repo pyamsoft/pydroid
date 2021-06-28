@@ -20,7 +20,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
@@ -38,9 +37,5 @@ internal constructor(context: Context, @DrawableRes private val resId: Int) :
 
   override fun setImage(view: ImageView, image: Drawable) {
     view.setImageDrawable(image)
-  }
-
-  override fun immediateResource(): Drawable? {
-    return AppCompatResources.getDrawable(context, resId)
   }
 }

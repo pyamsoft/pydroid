@@ -58,13 +58,4 @@ public interface Loader<T : Any> {
 
   /** Load the resource into a target */
   @CheckResult public fun into(target: ImageTarget<T>): Loaded
-
-  /**
-   * Perform all loading work in a blocking manner and return the resource immediately
-   *
-   * Not all ImageLoader parameters support immediate loading and will return null
-   */
-  @CheckResult
-  @Deprecated("You almost always want to use something else")
-  public fun immediate(): T?
 }

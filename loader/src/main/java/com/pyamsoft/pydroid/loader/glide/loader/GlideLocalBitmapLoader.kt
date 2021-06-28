@@ -18,10 +18,8 @@ package com.pyamsoft.pydroid.loader.glide.loader
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
@@ -39,14 +37,5 @@ internal constructor(context: Context, @DrawableRes private val resId: Int) :
 
   override fun setImage(view: ImageView, image: Bitmap) {
     view.setImageBitmap(image)
-  }
-
-  override fun immediateResource(): Bitmap? {
-    val drawable = AppCompatResources.getDrawable(context, resId)
-    if (drawable is BitmapDrawable) {
-      return drawable.bitmap
-    }
-
-    return null
   }
 }

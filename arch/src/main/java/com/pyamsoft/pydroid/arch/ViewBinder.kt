@@ -20,12 +20,6 @@ package com.pyamsoft.pydroid.arch
 public interface ViewBinder<S : UiViewState> {
 
   /** Binds a UiViewState to one or more view components */
-  @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(state)"))
-  public fun bind(state: S) {
-    bindState(state)
-  }
-
-  /** Binds a UiViewState to one or more view components */
   public fun bindState(state: S)
 
   /** Called when the ViewHolder is detached from the List and effectively destroyed. */

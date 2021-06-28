@@ -36,8 +36,8 @@ private fun Toolbar.loadIcon(): Drawable? {
 
   if (icon == null) {
     // If no icon is available, resolve it from the current theme
-    context.withStyledAttributes(
-        attrs = intArrayOf(R.attr.homeAsUpIndicator, R.attr.titleTextColor)) {
+    val attrs = intArrayOf(R.attr.homeAsUpIndicator, R.attr.titleTextColor).sortedArray()
+    context.withStyledAttributes(attrs = attrs) {
       @StyleableRes val iconIndex = 0
       @DrawableRes val iconId = getResourceId(iconIndex, 0)
       if (iconId != 0) {

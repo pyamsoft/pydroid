@@ -121,18 +121,6 @@ public open class UiStateModel<S : UiViewState>(
    */
   @UiThread
   @CheckResult
-  @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(renderables)"))
-  public fun bind(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
-    return bindState(scope, *renderables)
-  }
-
-  /**
-   * Bind renderables to this ViewModel.
-   *
-   * Once bound, any changes to the ViewModel.state will be sent to these renderables.
-   */
-  @UiThread
-  @CheckResult
   public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
     return scope.launch(context = Dispatchers.Main) { internalBindState(renderables) }
   }

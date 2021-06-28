@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.withStyledAttributes
@@ -30,23 +30,23 @@ import com.pyamsoft.pydroid.util.tintWith
 private var cachedIcon: Drawable? = null
 
 @CheckResult
-@SuppressLint("ResourceType")
-private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
+private fun Toolbar.loadIcon(): Drawable? {
   // Pull icon from cache if possible
   var icon: Drawable? = cachedIcon
 
   if (icon == null) {
     // If no icon is available, resolve it from the current theme
     context.withStyledAttributes(
-        R.attr.toolbarStyle, intArrayOf(R.attr.homeAsUpIndicator, R.attr.titleTextColor)) {
-      @DrawableRes val iconId = getResourceId(0, 0)
+        attrs = intArrayOf(R.attr.homeAsUpIndicator, R.attr.titleTextColor)) {
+      @StyleableRes val iconIndex = 0
+      @DrawableRes val iconId = getResourceId(iconIndex, 0)
       if (iconId != 0) {
         // May be a vector on API < 21
         icon = AppCompatResources.getDrawable(context, iconId)
       }
 
-      // This warns about not being a styleable, but its ok I guess
-      @ColorRes val colorId = if (customColor == 0) getResourceId(1, 0) else customColor
+      @StyleableRes val colorIndex = 1
+      @ColorRes val colorId = getResourceId(colorIndex, 0)
 
       if (colorId != 0) {
         icon = icon?.tintWith(context, colorId)
@@ -62,10 +62,10 @@ private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
   return icon
 }
 
-private fun Toolbar.showUpIcon(customIcon: Drawable? = null, @ColorRes customColor: Int = 0) {
+private fun Toolbar.showUpIcon(customIcon: Drawable? = null) {
   var icon: Drawable? = customIcon ?: navigationIcon
   if (icon == null) {
-    icon = loadIcon(customColor)
+    icon = loadIcon()
   }
 
   if (icon != null) {

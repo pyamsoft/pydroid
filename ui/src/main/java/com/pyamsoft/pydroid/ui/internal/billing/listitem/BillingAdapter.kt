@@ -21,10 +21,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.util.teardownAdapter
 
-internal class BillingAdapter internal constructor(private val owner: LifecycleOwner, private val callback: Callback) :
+internal class BillingAdapter
+internal constructor(private val owner: LifecycleOwner, private val callback: Callback) :
     ListAdapter<BillingItemViewState, BillingViewHolder>(DIFFER) {
 
   init {

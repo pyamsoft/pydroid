@@ -49,6 +49,6 @@ internal constructor(private val imageLoader: ImageLoader, parent: ViewGroup) :
 
   private fun handleApp(app: OtherApp) {
     clear()
-    loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
+    loaded = imageLoader.asDrawable().load(app.icon).into(binding.otherAppsIcon)
   }
 }

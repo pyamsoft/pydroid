@@ -44,7 +44,7 @@ protected constructor(private val imageLoader: ImageLoader, icon: ImageView) :
   private fun handleIcon(icon: Int) {
     clear()
     if (icon != 0) {
-      loaded = imageLoader.load(icon).into(requireNotNull(iconView))
+      loaded = imageLoader.asDrawable().load(icon).into(requireNotNull(iconView))
     }
   }
 

@@ -21,13 +21,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
 internal class OtherAppsAdapter
-internal constructor(private val owner: LifecycleOwner, private val callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit) :
-    ListAdapter<OtherAppsItemViewState, OtherAppsViewHolder>(DIFFER), PopupTextProvider {
+internal constructor(
+    private val owner: LifecycleOwner,
+    private val callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
+) : ListAdapter<OtherAppsItemViewState, OtherAppsViewHolder>(DIFFER), PopupTextProvider {
 
   init {
     setHasStableIds(true)

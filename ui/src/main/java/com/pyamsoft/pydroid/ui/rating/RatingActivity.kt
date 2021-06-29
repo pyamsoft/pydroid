@@ -50,16 +50,6 @@ public abstract class RatingActivity : VersionCheckActivity() {
   internal var ratingFactory: ViewModelProvider.Factory? = null
   private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
 
-  /** Handles UiController events */
-  internal val ratingUiController: UiController<RatingControllerEvent> = newUiController {
-    return@newUiController when (it) {
-      is RatingControllerEvent.LaunchRating ->
-          showRating(it.launcher, isFallbackEnabled = it.isFallbackEnabled)
-      is RatingControllerEvent.LaunchMarketPage ->
-          showRating(it.launcher, isFallbackEnabled = false)
-    }
-  }
-
   /** On post create */
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -74,7 +64,14 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
     stateSaver =
         createComponent(
-            savedInstanceState, this, viewModel, ratingUiController, requireNotNull(ratingView)) {
+            savedInstanceState, this, viewModel, controller = newUiController {
+            return@newUiController when (it) {
+              is RatingControllerEvent.LaunchRating ->
+                showRating(it.launcher)
+              is RatingControllerEvent.LaunchMarketPage ->
+                showRating(it.launcher)
+            }
+          }, requireNotNull(ratingView)) {
           return@createComponent when (it) {
             is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
           }
@@ -82,7 +79,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
     // Attempt to load rating based on a couple various factors - does not always result
     // in a call to showRating
-    viewModel.load(false)
+    viewModel.loadInAppRating()
   }
 
   /** On save instance state */
@@ -100,7 +97,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
     stateSaver = null
   }
 
-  private fun showRating(launcher: AppRatingLauncher, isFallbackEnabled: Boolean) {
+  private fun showRating(launcher: AppRatingLauncher) {
     val activity = this
 
     // Enforce that we do this on the Main thread
@@ -108,11 +105,6 @@ public abstract class RatingActivity : VersionCheckActivity() {
       if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
         launcher.rate(activity).onFailure { err ->
           Timber.e(err, "Unable to launch in-app rating")
-          if (isFallbackEnabled) {
-            MarketLinker.linkToMarketPage(activity)
-                .onSuccess { viewModel.handleNavigationSuccess() }
-                .onFailure { viewModel.handleNavigationFailed(it) }
-          }
         }
       }
     }

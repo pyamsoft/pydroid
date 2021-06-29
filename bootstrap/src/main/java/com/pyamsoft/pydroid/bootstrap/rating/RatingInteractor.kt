@@ -26,5 +26,5 @@ public interface RatingInteractor {
   @CheckResult public suspend fun loadMarketLauncher(): ResultWrapper<AppRatingLauncher>
 
   /** Ask for a review if the current context allows it to be queued. */
-  @CheckResult public suspend fun askForRating(force: Boolean): ResultWrapper<AppRatingLauncher>
+  @CheckResult public suspend fun askForRating(): ResultWrapper<AppRatingLauncher>
 }

@@ -34,9 +34,7 @@ internal constructor(
         initialState = RatingViewState(navigationError = null)) {
 
   private val loadRunner =
-      highlander<ResultWrapper<LoadResult>, Boolean> { force ->
-        interactor.askForRating(force).map { LoadResult(force, it) }
-      }
+      highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
 
   private val marketRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.loadMarketLauncher() }
@@ -46,32 +44,24 @@ internal constructor(
       marketRunner
           .call()
           .onSuccess { publish(RatingControllerEvent.LaunchMarketPage(it)) }
-          .onFailure { Timber.e(it, "Unable to launch market page") }
+          .onFailure { e ->
+            Timber.e(e, "Unable to launch market page")
+            setState { copy(navigationError = e) }
+          }
     }
   }
 
-  internal fun load(force: Boolean) {
+  internal fun loadInAppRating() {
     viewModelScope.launch(context = Dispatchers.Default) {
-      loadRunner
-          .call(force)
-          .onSuccess {
-            publish(RatingControllerEvent.LaunchRating(it.isFallbackEnabled, it.launcher))
-          }
-          .onFailure { Timber.e(it, "Unable to launch rating flow") }
+      loadRunner.call().onSuccess { publish(RatingControllerEvent.LaunchRating(it)) }.onFailure { e
+        ->
+        Timber.e(e, "Unable to launch rating flow")
+        setState { copy(navigationError = e) }
+      }
     }
   }
 
   internal fun handleClearNavigationError() {
     setState { copy(navigationError = null) }
   }
-
-  internal fun handleNavigationSuccess() {
-    handleClearNavigationError()
-  }
-
-  internal fun handleNavigationFailed(error: Throwable) {
-    setState { copy(navigationError = error) }
-  }
-
-  private data class LoadResult(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher)
 }

@@ -30,14 +30,13 @@ internal constructor(
     private val ratingPreferences: RatingPreferences,
 ) : RatingInteractor {
 
-  override suspend fun askForRating(force: Boolean): ResultWrapper<AppRatingLauncher> =
+  override suspend fun askForRating(): ResultWrapper<AppRatingLauncher> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
 
         return@withContext try {
-          val showRating = force || ratingPreferences.showRating()
           ResultWrapper.success(
-              if (showRating) {
+              if (ratingPreferences.showRating()) {
                 rateMyApp.startRating()
               } else {
                 AppRatingLauncher.empty()

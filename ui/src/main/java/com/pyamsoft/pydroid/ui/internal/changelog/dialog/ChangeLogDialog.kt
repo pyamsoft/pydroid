@@ -67,7 +67,7 @@ internal class ChangeLogDialog : IconDialog() {
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            newUiController {},
+            controller = newUiController {},
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),

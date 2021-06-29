@@ -21,21 +21,18 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UiController
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
-import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.openAppPage
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.util.show
-import timber.log.Timber
 
-internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent> {
+internal class ChangeLogDialog : IconDialog() {
 
   private var stateSaver: StateSaver? = null
 
@@ -48,6 +45,10 @@ internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent>
   private val viewModel by fromViewModelFactory<ChangeLogDialogViewModel>(activity = true) {
     factory
   }
+
+  // Don't need to create a component or bind this to the controller, since RatingActivity should
+  // be bound for us.
+  private val ratingViewModel by fromViewModelFactory<RatingViewModel>(activity = true) { factory }
 
   @CheckResult
   private fun getChangelogProvider(): ChangeLogProvider {
@@ -66,25 +67,17 @@ internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent>
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            this,
+            newUiController {},
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),
             requireNotNull(closeView)) {
           return@createComponent when (it) {
             is ChangeLogDialogViewEvent.Close -> dismiss()
-            is ChangeLogDialogViewEvent.Rate -> rateApplication()
+            is ChangeLogDialogViewEvent.Rate -> ratingViewModel.loadMarketPage()
           }
         }
   }
-
-  private fun rateApplication() {
-    MarketLinker.openAppPage(requireContext())
-        .onSuccess { Timber.d("Opened App page for rating") }
-        .onFailure { Timber.e(it, "Could not open App page for rating") }
-  }
-
-  override fun onControllerEvent(event: UnitControllerEvent) {}
 
   override fun onDestroyView() {
     super.onDestroyView()

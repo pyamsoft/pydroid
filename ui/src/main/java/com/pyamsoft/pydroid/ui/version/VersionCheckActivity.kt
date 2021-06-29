@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
@@ -35,7 +34,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.ui.util.openAppPage
+import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -134,7 +133,7 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
       launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
         Timber.e(err, "Unable to launch in-app update flow")
         if (isFallbackEnabled) {
-          MarketLinker.openAppPage(activity)
+          MarketLinker.linkToMarketPage(activity)
               .onSuccess { viewModel.handleNavigationSuccess() }
               .onFailure { viewModel.handleNavigationFailed(it) }
         }

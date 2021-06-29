@@ -21,6 +21,7 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
@@ -33,9 +34,8 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingView
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -49,6 +49,16 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
   internal var ratingFactory: ViewModelProvider.Factory? = null
   private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
+
+  /** Handles UiController events */
+  internal val ratingUiController: UiController<RatingControllerEvent> = newUiController {
+    return@newUiController when (it) {
+      is RatingControllerEvent.LaunchRating ->
+          showRating(it.launcher, isFallbackEnabled = it.isFallbackEnabled)
+      is RatingControllerEvent.LaunchMarketPage ->
+          showRating(it.launcher, isFallbackEnabled = false)
+    }
+  }
 
   /** On post create */
   @CallSuper
@@ -64,17 +74,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
     stateSaver =
         createComponent(
-            savedInstanceState,
-            this,
-            viewModel,
-            controller =
-                newUiController {
-                  return@newUiController when (it) {
-                    is RatingControllerEvent.LaunchRating ->
-                        showRating(it.isFallbackEnabled, it.launcher)
-                  }
-                },
-            requireNotNull(ratingView)) {
+            savedInstanceState, this, viewModel, ratingUiController, requireNotNull(ratingView)) {
           return@createComponent when (it) {
             is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
           }
@@ -100,7 +100,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
     stateSaver = null
   }
 
-  private fun showRating(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
+  private fun showRating(launcher: AppRatingLauncher, isFallbackEnabled: Boolean) {
     val activity = this
 
     // Enforce that we do this on the Main thread
@@ -109,7 +109,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
         launcher.rate(activity).onFailure { err ->
           Timber.e(err, "Unable to launch in-app rating")
           if (isFallbackEnabled) {
-            MarketLinker.openAppPage(activity)
+            MarketLinker.linkToMarketPage(activity)
                 .onSuccess { viewModel.handleNavigationSuccess() }
                 .onFailure { viewModel.handleNavigationFailed(it) }
           }

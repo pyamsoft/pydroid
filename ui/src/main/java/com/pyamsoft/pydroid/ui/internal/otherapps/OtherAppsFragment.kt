@@ -33,8 +33,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
-import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.openDevPage
+import com.pyamsoft.pydroid.util.MarketLinker
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerEvent> {
@@ -109,8 +108,8 @@ internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerE
   }
 
   private fun openDeveloperPage() {
-    MarketLinker.openDevPage(requireActivity())
-        // If we cannot load we have nothing to do here
+    // If we cannot load we have nothing to do here
+    MarketLinker.linkToDeveloperPage(requireActivity())
         .onFailure { closeParent() }
         .handleNavigation()
   }

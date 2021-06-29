@@ -33,4 +33,7 @@ internal sealed class RatingControllerEvent : UiControllerEvent {
   data class LaunchRating
   internal constructor(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher) :
       RatingControllerEvent()
+
+  data class LaunchMarketPage internal constructor(val launcher: AppRatingLauncher) :
+      RatingControllerEvent()
 }

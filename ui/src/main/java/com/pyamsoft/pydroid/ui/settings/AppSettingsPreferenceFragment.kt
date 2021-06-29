@@ -36,19 +36,19 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
-import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
+import com.pyamsoft.pydroid.util.MarketLinker
 import timber.log.Timber
 
 /** Preference fragment level for displaying a preference screen */
@@ -75,9 +75,18 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   private val settingsViewModel by fromViewModelFactory<AppSettingsViewModel>(activity = true) {
     factory
   }
+  // Don't need to create a component or bind this to the controller, since RatingActivity should
+  // be bound for us.
+  private val ratingViewModel by fromViewModelFactory<RatingViewModel>(activity = true) { factory }
+
+  // Don't need to create a component or bind this to the controller, since RatingActivity should
+  // be bound for us.
   private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) {
     factory
   }
+
+  // Don't need to create a component or bind this to the controller, since RatingActivity should
+  // be bound for us.
   private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) {
     factory
   }
@@ -128,7 +137,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
             is AppSettingsViewEvent.ClearData -> openClearDataDialog()
             is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
             is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
-            is AppSettingsViewEvent.RateApp -> openPlayStore()
+            is AppSettingsViewEvent.RateApp -> ratingViewModel.loadMarketPage()
             is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
             is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
             is AppSettingsViewEvent.ToggleDarkTheme ->
@@ -143,10 +152,6 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   private fun openDonationDialog() {
     Timber.d("Launch donation dialog")
     BillingDialog.open(requireActivity())
-  }
-
-  private fun openPlayStore() {
-    MarketLinker.openAppPage(requireContext()).handleNavigation()
   }
 
   private fun openOtherAppsPage(apps: List<OtherApp>) {

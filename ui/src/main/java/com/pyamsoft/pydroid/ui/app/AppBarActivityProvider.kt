@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.app
 
 import com.google.android.material.appbar.AppBarLayout
-import com.pyamsoft.pydroid.ui.app.ToolbarActivityProvider
 
 /** Provide an AppBar to the global Activity level */
 public interface AppBarActivityProvider : ToolbarActivityProvider {

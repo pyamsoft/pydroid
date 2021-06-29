@@ -15,16 +15,16 @@
  */
 
 dependencies {
-    api project(':core')
+  api project(':core')
 
-    // Timber logging
-    implementation "com.jakewharton.timber:timber:$timber"
+  // Timber logging
+  implementation "com.jakewharton.timber:timber:$timber"
 
-    implementation "androidx.annotation:annotation:$annotation"
+  implementation "androidx.annotation:annotation:$annotation"
 }
 
 android {
-    kotlinOptions {
-        freeCompilerArgs += '-Xexplicit-api=strict'
-    }
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }

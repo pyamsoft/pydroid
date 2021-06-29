@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes

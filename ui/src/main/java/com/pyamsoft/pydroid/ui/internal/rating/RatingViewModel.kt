@@ -38,6 +38,18 @@ internal constructor(
         interactor.askForRating(force).map { LoadResult(force, it) }
       }
 
+  private val marketRunner =
+      highlander<ResultWrapper<AppRatingLauncher>> { interactor.loadMarketLauncher() }
+
+  internal fun loadMarketPage() {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      marketRunner
+          .call()
+          .onSuccess { publish(RatingControllerEvent.LaunchMarketPage(it)) }
+          .onFailure { Timber.e(it, "Unable to launch market page") }
+    }
+  }
+
   internal fun load(force: Boolean) {
     viewModelScope.launch(context = Dispatchers.Default) {
       loadRunner

@@ -22,13 +22,11 @@ import androidx.annotation.CheckResult
 public data class ResultWrapper<T : Any>
 @PublishedApi
 internal constructor(
-  @PublishedApi internal val data: T?,
-  @PublishedApi internal val error: Throwable?
+    @PublishedApi internal val data: T?,
+    @PublishedApi internal val error: Throwable?
 ) {
 
-  /**
-   * Check that this ResultWrapper is valid
-   */
+  /** Check that this ResultWrapper is valid */
   @PublishedApi
   internal fun validateWrapper() {
     if (data == null && error == null) {

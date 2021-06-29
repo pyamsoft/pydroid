@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.util
+package com.pyamsoft.pydroid.util
 
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.ResultWrapper
-import com.pyamsoft.pydroid.util.hyperlink
 
-internal object MarketLinker {
+/** Links to play store market pages */
+public object MarketLinker {
 
   private const val MARKET_URL = "market://details?id="
   private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=8240502725675466993"
 
+  /** Links to the market page for a specific app */
   @JvmStatic
   @CheckResult
-  fun linkToMarketPage(
+  @JvmOverloads
+  public fun linkToMarketPage(
       context: Context,
-      packageName: String,
+      packageName: String = context.packageName,
   ): ResultWrapper<Unit> {
     val targetName =
         if (packageName.endsWith(".dev")) {
@@ -42,9 +44,10 @@ internal object MarketLinker {
     return "$MARKET_URL$targetName".hyperlink(context).navigate()
   }
 
+  /** Links to the pyamsoft developer page */
   @JvmStatic
   @CheckResult
-  fun linkToDeveloperPage(context: Context): ResultWrapper<Unit> {
+  public fun linkToDeveloperPage(context: Context): ResultWrapper<Unit> {
     return DEV_PAGE_URL.hyperlink(context).navigate()
   }
 }

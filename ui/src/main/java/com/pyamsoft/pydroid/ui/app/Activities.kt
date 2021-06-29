@@ -19,9 +19,7 @@ package com.pyamsoft.pydroid.ui.app
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 
-/**
- * Get the AppBarActivity from a fragment. Null if not present.
- */
+/** Get the AppBarActivity from a fragment. Null if not present. */
 public val Fragment.appBarActivity: AppBarActivity?
   @get:CheckResult
   get() {
@@ -29,9 +27,7 @@ public val Fragment.appBarActivity: AppBarActivity?
     return if (a is AppBarActivity) a else null
   }
 
-/**
- * Get the AppBarActivity from a fragment. Throws if not present
- */
+/** Get the AppBarActivity from a fragment. Throws if not present */
 @CheckResult
 public fun Fragment.requireAppBarActivity(): AppBarActivity {
   return requireNotNull(appBarActivity) { "AppBarActivity is required and cannot be null." }

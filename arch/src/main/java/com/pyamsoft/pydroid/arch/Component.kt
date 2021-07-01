@@ -58,9 +58,15 @@ internal object Internals {
     owner.doOnDestroy { views.forEach { it.teardown() } }
 
     // State saver
-    return StateSaver { outState ->
-      val writer = outState.toWriter()
-      views.forEach { it.saveState(writer) }
+    return object : StateSaver {
+
+      override fun saveState(outState: Bundle) {
+        saveState(outState.toWriter())
+      }
+
+      override fun saveState(outState: UiSavedStateWriter) {
+        views.forEach { it.saveState(outState) }
+      }
     }
   }
 

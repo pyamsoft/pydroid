@@ -28,4 +28,21 @@ internal constructor(private val bundle: Bundle?) : UiSavedStateReader {
   override fun <T : Any> get(key: String): T? {
     @Suppress("UNCHECKED_CAST") return bundle?.get(key) as? T
   }
+
+  override fun all(): Map<String, *> {
+    val b = bundle ?: return EMPTY_MAP
+    val keys = b.keySet()
+
+    val result = mutableMapOf<String, Any?>()
+    for (key in keys) {
+      val value = b.get(key)
+      result[key] = value
+    }
+
+    return result
+  }
+
+  companion object {
+    private val EMPTY_MAP = emptyMap<String, Any?>()
+  }
 }

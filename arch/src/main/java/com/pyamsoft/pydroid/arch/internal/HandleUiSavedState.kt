@@ -34,4 +34,17 @@ internal class HandleUiSavedState internal constructor(private val handle: Saved
   override fun <T : Any> get(key: String): T? {
     return handle.get<T>(key)
   }
+
+  override fun all(): Map<String, *> {
+    val h = handle
+    val keys = h.keys()
+
+    val result = mutableMapOf<String, Any?>()
+    for (key in keys) {
+      val value = h.get<Any?>(key)
+      result[key] = value
+    }
+
+    return result
+  }
 }

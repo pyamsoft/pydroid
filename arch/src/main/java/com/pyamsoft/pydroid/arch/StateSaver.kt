@@ -19,8 +19,11 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 
 /** An interface which can save the state of an object into a Bundle */
-public fun interface StateSaver {
+public interface StateSaver {
 
   /** Save the state of the object into the given Bundle */
   public fun saveState(outState: Bundle)
+
+  /** Save the state of the object into the given UiSavedStateWriter */
+  public fun saveState(outState: UiSavedStateWriter)
 }

@@ -25,6 +25,9 @@ public interface UiSavedStateReader {
 
   /** Get a saved value at key, null if not present */
   @CheckResult public fun <T : Any> get(key: String): T?
+
+  /** Get all key-values */
+  @CheckResult public fun all(): Map<String, *>
 }
 
 /** Convenience function for converting a nullable Bundle into a SavedStateReader */

@@ -21,7 +21,6 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
@@ -35,7 +34,6 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingView
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -64,14 +62,17 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
     stateSaver =
         createComponent(
-            savedInstanceState, this, viewModel, controller = newUiController {
-            return@newUiController when (it) {
-              is RatingControllerEvent.LaunchRating ->
-                showRating(it.launcher)
-              is RatingControllerEvent.LaunchMarketPage ->
-                showRating(it.launcher)
-            }
-          }, requireNotNull(ratingView)) {
+            savedInstanceState,
+            this,
+            viewModel,
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
+                    is RatingControllerEvent.LaunchRating -> showRating(it.launcher)
+                    is RatingControllerEvent.LaunchMarketPage -> showRating(it.launcher)
+                  }
+                },
+            requireNotNull(ratingView)) {
           return@createComponent when (it) {
             is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
           }
@@ -103,9 +104,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
     // Enforce that we do this on the Main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
       if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
-        launcher.rate(activity).onFailure { err ->
-          Timber.e(err, "Unable to launch in-app rating")
-        }
+        launcher.rate(activity).onFailure { err -> Timber.e(err, "Unable to launch in-app rating") }
       }
     }
   }

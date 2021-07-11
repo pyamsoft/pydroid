@@ -42,7 +42,7 @@ buildscript {
     maxSdk = 30
 
     // Kotlin
-    coroutines = '1.5.1'
+    coroutines = '1.5.0'
 
     // AndroidX
     annotation = "1.2.0"
@@ -91,7 +91,7 @@ buildscript {
     classpath "com.android.tools.build:gradle:$agp_version"
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
 
     // Kotlin
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"

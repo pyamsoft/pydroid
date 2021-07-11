@@ -69,6 +69,9 @@ internal class CrashActivity internal constructor() : Activity() {
     setText(binding.crashException, throwableName)
 
     // Allow the stack trace to scroll
+    stackTrace.message?.also { setText(binding.crashMessage, it) }
+
+    // Allow the stack trace to scroll
     setText(binding.crashTrace, stackTrace.stackTraceToString())
     binding.crashTrace.apply {
       isVerticalScrollBarEnabled = true

@@ -68,6 +68,9 @@ internal class CrashActivity internal constructor() : Activity() {
     // Set the throwable name
     setText(binding.crashException, throwableName)
 
+    // Set the message
+    stackTrace.message?.also { setText(binding.crashMessage, it) }
+
     // Allow the stack trace to scroll
     stackTrace.message?.also { setText(binding.crashMessage, it) }
 

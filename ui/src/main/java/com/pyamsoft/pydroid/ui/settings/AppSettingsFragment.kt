@@ -22,50 +22,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
+import com.pyamsoft.pydroid.ui.databinding.LayoutSettingsBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 /** Fragment for displaying a settings page */
 public abstract class AppSettingsFragment : Fragment() {
 
-  private var coordinatorLayout: CoordinatorLayout? = null
-
-  /** Inflate view */
-  @CallSuper
-  override fun onCreateView(
+  final override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.layout_coordinator, container, false)
+    return inflater.inflate(R.layout.layout_settings, container, false)
   }
 
   /** Created view */
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val binding = LayoutCoordinatorBinding.bind(view)
-    coordinatorLayout = binding.layoutCoordinator
-    showPreferenceFragment()
+    val binding = LayoutSettingsBinding.bind(view)
+    showPreferenceFragment(binding)
   }
 
-  private fun showPreferenceFragment() {
+  private fun showPreferenceFragment(binding: LayoutSettingsBinding) {
     val fragmentManager = childFragmentManager
     val tag: String = provideSettingsTag()
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.commit(viewLifecycleOwner) {
-        add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
+        add(binding.settingsContainer.id, provideSettingsFragment(), tag)
       }
     }
-  }
-
-  /** Destroy view */
-  override fun onDestroyView() {
-    super.onDestroyView()
-    coordinatorLayout = null
   }
 
   /** Create a new settings fragment */

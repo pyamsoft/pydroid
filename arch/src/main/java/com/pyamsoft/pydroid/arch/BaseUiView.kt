@@ -113,18 +113,23 @@ protected constructor(parent: ViewGroup) : UiView<S, V>() {
     }
   }
 
+  /** The adoption parent becomes the new root view for any nested child view */
+  protected open fun adoptionParent(): ViewGroup {
+    val root = layoutRoot
+    if (root is ViewGroup) {
+      return root
+    }
+
+    throw IllegalStateException(
+        "Cannot initialize nested view. This BaseUiView adoptionParent must be a ViewGroup.")
+  }
+
   private fun prepareNestedViewInit(view: UiView<S, out V>) {
     if (view !is BaseUiView<S, out V, *>) {
       return
     }
 
-    val root = layoutRoot
-    if (root is ViewGroup) {
-      view.adopt(root)
-    } else {
-      throw IllegalStateException(
-          "Cannot initialize nested view. This BaseUiView layoutRoot must be a ViewGroup.")
-    }
+    view.adopt(adoptionParent())
   }
 
   /**

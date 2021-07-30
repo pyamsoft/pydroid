@@ -30,7 +30,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
-import timber.log.Timber
 
 @CheckResult
 private fun getAccelCubicInterpolator(context: Context): Interpolator {
@@ -129,9 +128,13 @@ private inline fun watchAppBarHeight(
     owner: LifecycleOwner,
     crossinline onNewHeight: (Int) -> Unit,
 ) {
-  val listener = View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ -> onNewHeight(v.height) }
+  val listener =
+      View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ -> v.post { onNewHeight(v.height) } }
   appBar.addOnLayoutChangeListener(listener)
   owner.doOnDestroy { appBar.removeOnLayoutChangeListener(listener) }
+
+  // Fire initial
+  appBar.post { onNewHeight(appBar.height) }
 }
 
 private fun applyNewViewOffset(
@@ -149,7 +152,6 @@ private fun applyNewViewOffset(
   }
 
   val newPadding = initialTopPadding + offset + appBarHeight
-  Timber.d("Apply new offset padding: $view $newPadding")
   view.updatePadding(top = newPadding)
 }
 

@@ -112,7 +112,7 @@ subprojects {
   apply plugin: 'maven-publish'
 
   final String POM_GROUP = "com.github.pyamsoft.pydroid"
-  final String POM_VERSION = "23.1.0"
+  final String POM_VERSION = "23.1.1"
 
   // Kapt flags
   kapt {

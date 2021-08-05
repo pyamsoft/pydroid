@@ -18,15 +18,16 @@ package com.pyamsoft.pydroid.ui.privacy
 
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent
@@ -41,7 +42,7 @@ public abstract class PrivacyActivity : ActivityBase() {
   internal var privacyView: PrivacyView? = null
 
   internal var privacyFactory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<PrivacyViewModel> { privacyFactory }
+  private val viewModel by viewModels<PrivacyViewModel> { privacyFactory.requireNotNull() }
 
   /** Used for Activity level snackbars */
   protected abstract val snackbarRoot: ViewGroup

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.changelog
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -24,9 +25,9 @@ import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
@@ -39,7 +40,7 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
   private var stateSaver: StateSaver? = null
 
   internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<ChangeLogViewModel> { changeLogFactory }
+  private val viewModel by viewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
 
   /** Version name of application */
   protected abstract val versionName: String

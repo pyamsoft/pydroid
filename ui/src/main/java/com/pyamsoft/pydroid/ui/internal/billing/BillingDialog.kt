@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -26,8 +27,8 @@ import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
@@ -48,7 +49,7 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
   internal var purchaseClient: BillingLauncher? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<BillingViewModel>(activity = true) { factory }
+  private val viewModel by activityViewModels<BillingViewModel> { factory.requireNotNull() }
 
   @CheckResult
   private fun getApplicationProvider(): AppProvider {

@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
@@ -28,10 +29,10 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
@@ -72,24 +73,19 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   internal var versionCheckView: VersionCheckView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val settingsViewModel by fromViewModelFactory<AppSettingsViewModel>(activity = true) {
-    factory
-  }
-  // Don't need to create a component or bind this to the controller, since RatingActivity should
-  // be bound for us.
-  private val ratingViewModel by fromViewModelFactory<RatingViewModel>(activity = true) { factory }
+  private val settingsViewModel by activityViewModels<AppSettingsViewModel> { factory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) {
-    factory
-  }
+  private val ratingViewModel by activityViewModels<RatingViewModel> { factory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) {
-    factory
-  }
+  private val versionViewModel by activityViewModels<VersionCheckViewModel> { factory.requireNotNull() }
+
+  // Don't need to create a component or bind this to the controller, since RatingActivity should
+  // be bound for us.
+  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> { factory.requireNotNull() }
 
   /** On inflate preferences */
   @CallSuper

@@ -19,13 +19,14 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
@@ -42,13 +43,11 @@ internal class ChangeLogDialog : IconDialog() {
   internal var iconView: ChangeLogIcon? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<ChangeLogDialogViewModel>(activity = true) {
-    factory
-  }
+  private val viewModel by activityViewModels<ChangeLogDialogViewModel> { factory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val ratingViewModel by fromViewModelFactory<RatingViewModel>(activity = true) { factory }
+  private val ratingViewModel by activityViewModels<RatingViewModel> { factory.requireNotNull() }
 
   @CheckResult
   private fun getChangelogProvider(): ChangeLogProvider {

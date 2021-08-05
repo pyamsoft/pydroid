@@ -23,9 +23,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
@@ -33,9 +34,7 @@ import timber.log.Timber
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<VersionUpgradeViewModel>(activity = true) {
-    factory
-  }
+  private val viewModel by activityViewModels<VersionUpgradeViewModel> { factory.requireNotNull() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

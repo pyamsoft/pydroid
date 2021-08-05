@@ -90,7 +90,7 @@ To get a working `UiViewModel` instance, PYDroid recommends some form of depende
 class MyActivity : AppCompatActivity(), UiController<MyEvent> {
 
     var factory: ViewModelProvider.Factory? = null
-    val viewModel by fromViewModelFactory<MyViewModel> { factory }
+    val viewModel by viewModels<MyViewModel> { factory.requireNotNull() }
 
     var stateSaver: StateSaver? = null
     
@@ -123,15 +123,15 @@ By providing a `ViewModelProvider.Factory` which knows how to construct your `My
 the `fromViewModelFactory` extension function can help you initialize your `UiViewModel` lazily.
 
 To get a `UiViewModel` which also understands the AndroidX `SavedStateHandle`, you can use
-the `UiSavedStateViewModelProvider<*>` class along with the `createSavedStateViewModelFactory`
+the `UiSavedStateViewModelProvider<*>` class along with the `asFactory`
 extension function.
 
 ```kotlin
 class MyActivity : AppCompatActivity(), UiController<MyEvent> {
 
     var provider: UiSavedStateViewModelProvider<MySavedStateViewModel>? = null
-    val viewModel by fromViewModelFactory<MySavedStateViewModel> { 
-      createSavedStateViewModelFactory(provider)
+    val viewModel by viewModels<MySavedStateViewModel> {
+      provider.requireNotNull().asFactory(this)
     }
     
     override fun onCreate(savedInstanceState: Bundle?) {

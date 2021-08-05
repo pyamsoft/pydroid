@@ -27,23 +27,24 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.R as R2
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
+import com.google.android.material.R as R2
 
 internal abstract class FullscreenThemeDialog protected constructor() :
     AppCompatDialogFragment(), UiController<UnitControllerEvent> {
@@ -53,7 +54,7 @@ internal abstract class FullscreenThemeDialog protected constructor() :
   internal var frame: ThemeDialogFrame? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<ThemeDialogViewModel> { factory }
+  private val viewModel by viewModels<ThemeDialogViewModel> { factory.requireNotNull() }
 
   private var stateSaver: StateSaver? = null
 

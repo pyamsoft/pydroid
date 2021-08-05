@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,9 +25,9 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent
@@ -46,7 +47,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
   internal var ratingView: RatingView? = null
 
   internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
+  private val viewModel by viewModels<RatingViewModel> { ratingFactory.requireNotNull() }
 
   /** On post create */
   @CallSuper

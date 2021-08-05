@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 /**
  * A State model managing a single state object.
  *
- * Access the current state via withState and manipulate it via setState. These calls are
+ * Access the current state via state and manipulate it via setState. The setState call is
  * asynchronous.
  */
 public open class UiStateModel<S : UiViewState>(
@@ -104,10 +104,7 @@ public open class UiStateModel<S : UiViewState>(
       // the same state both times.
       UiViewStateDebug.checkStateEquality(newState, handleChange(oldState))
 
-      return@withLock if (oldState == newState) newState
-      else {
-        newState.also { modelState.set(it) }
-      }
+      return@withLock if (oldState == newState) newState else newState.also { modelState.set(it) }
     }
   }
 

@@ -30,6 +30,7 @@ import timber.log.Timber
 
 /** Allow nullable for easier caller API */
 @CheckResult
+@Deprecated("Use the existing Fragment or Activity extensions. If you are creating your own ViewModelStore, you may be doing something wrong.")
 public inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
@@ -40,6 +41,7 @@ public inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
 /** Allow nullable for easier caller API */
 @CheckResult
 @JvmOverloads
+@Deprecated("Use fragment-ktx viewModels {} or activityViewModels {}")
 public inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
@@ -50,6 +52,7 @@ public inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactor
 
 /** Allow nullable for easier caller API */
 @CheckResult
+@Deprecated("Use fragment-ktx viewModels {} or activityViewModels {}")
 public inline fun <reified T : UiStateViewModel<*>> FragmentActivity.fromViewModelFactory(
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {

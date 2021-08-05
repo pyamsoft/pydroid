@@ -29,7 +29,7 @@ internal constructor(
     val connected: BillingState,
     val skuList: List<BillingSku>,
     val error: Throwable?
-) : AppState {}
+) : AppState
 
 internal sealed class BillingViewEvent : UiViewEvent {
 

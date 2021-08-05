@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.billing.BillingSku
 
 internal data class BillingItemViewState internal constructor(val sku: BillingSku) : UiViewState
 
-internal sealed class BillingItemViewEvent() : UiViewEvent {
+internal sealed class BillingItemViewEvent : UiViewEvent {
 
   object Purchase : BillingItemViewEvent()
 }

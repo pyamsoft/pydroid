@@ -32,7 +32,7 @@ dependencies {
   // Android support library.
 
   // These need to be API since they are used as base classes for Activity and Fragment
-  api "androidx.fragment:fragment:$fragment"
+  api "androidx.fragment:fragment-ktx:$fragment"
   api "androidx.preference:preference:$preference"
 
   implementation "androidx.core:core-ktx:$core"

@@ -73,7 +73,9 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   internal var versionCheckView: VersionCheckView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val settingsViewModel by activityViewModels<AppSettingsViewModel> { factory.requireNotNull() }
+  private val settingsViewModel by activityViewModels<AppSettingsViewModel> {
+    factory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
@@ -81,11 +83,15 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val versionViewModel by activityViewModels<VersionCheckViewModel> { factory.requireNotNull() }
+  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
+    factory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> { factory.requireNotNull() }
+  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
+    factory.requireNotNull()
+  }
 
   /** On inflate preferences */
   @CallSuper

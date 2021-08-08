@@ -30,7 +30,8 @@ import timber.log.Timber
 
 /** Allow nullable for easier caller API */
 @CheckResult
-@Deprecated("Use the existing Fragment or Activity extensions. If you are creating your own ViewModelStore, you may be doing something wrong.")
+@Deprecated(
+    "Use the existing Fragment or Activity extensions. If you are creating your own ViewModelStore, you may be doing something wrong.")
 public inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?

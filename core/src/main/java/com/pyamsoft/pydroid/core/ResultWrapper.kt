@@ -62,6 +62,17 @@ internal constructor(
   }
 
   /**
+   * Run an action regardless of result success or failure
+   *
+   * No @CheckResult since this can be the end of the call.
+   */
+  public inline fun onFinally(action: () -> Unit): ResultWrapper<T> {
+    validateWrapper()
+
+    return this.apply { action() }
+  }
+
+  /**
    * Run an action only when successful result
    *
    * No @CheckResult since this can be the end of the call.

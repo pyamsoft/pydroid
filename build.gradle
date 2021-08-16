@@ -70,7 +70,7 @@ buildscript {
     okhttp = "4.9.1"
 
     // Logging
-    timber = "5.0.0"
+    timber = "5.0.1"
 
     // Image loading
     glide = '4.12.0'

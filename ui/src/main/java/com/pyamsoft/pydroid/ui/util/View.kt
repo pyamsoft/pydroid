@@ -151,7 +151,7 @@ private inline fun watchToolbarOffset(
     crossinline onNewMargin: (Int) -> Unit,
 ) {
   view.doOnApplyWindowInsets(owner) { _, insets, _ ->
-    val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).bottom
+    val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
     onNewMargin(toolbarTopMargin)
   }
 }

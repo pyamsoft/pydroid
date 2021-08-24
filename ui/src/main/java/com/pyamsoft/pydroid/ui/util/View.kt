@@ -32,6 +32,13 @@ import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
 
+/** A listener which responds to some kind of change on a View */
+public fun interface ViewListener {
+
+  /** Cancel the view listener */
+  public fun cancel()
+}
+
 @CheckResult
 private fun getAccelCubicInterpolator(context: Context): Interpolator {
   return AnimationUtils.loadInterpolator(
@@ -114,35 +121,25 @@ public inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> U
 }
 
 /** Perform an action when the View Layout changes */
-@JvmOverloads
 public inline fun View.doOnLayoutChanged(
-    owner: LifecycleOwner? = null,
     crossinline onChange: (View, Int, Int, Int, Int, Int, Int, Int, Int) -> Unit,
-) {
-  val self = this
+): ViewListener {
   val listener =
-      object : View.OnLayoutChangeListener {
-        override fun onLayoutChange(
-            v: View,
-            left: Int,
-            top: Int,
-            right: Int,
-            bottom: Int,
-            oldLeft: Int,
-            oldTop: Int,
-            oldRight: Int,
-            oldBottom: Int
-        ) {
-          onChange(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
-
-          if (owner == null) {
-            self.removeOnLayoutChangeListener(this)
-          }
-        }
+      View.OnLayoutChangeListener {
+          v,
+          left,
+          top,
+          right,
+          bottom,
+          oldLeft,
+          oldTop,
+          oldRight,
+          oldBottom ->
+        onChange(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
       }
 
-  self.addOnLayoutChangeListener(listener)
-  owner?.doOnDestroy { self.removeOnLayoutChangeListener(listener) }
+  this.addOnLayoutChangeListener(listener)
+  return ViewListener { this.removeOnLayoutChangeListener(listener) }
 }
 
 private inline fun watchToolbarOffset(
@@ -161,7 +158,9 @@ private inline fun watchAppBarHeight(
     owner: LifecycleOwner,
     crossinline onNewHeight: (Int) -> Unit,
 ) {
-  appBar.doOnLayoutChanged(owner) { v, _, _, _, _, _, _, _, _ -> onNewHeight(v.height) }
+  appBar.doOnLayoutChanged { v, _, _, _, _, _, _, _, _ -> onNewHeight(v.height) }.also {
+    owner.doOnDestroy { it.cancel() }
+  }
 
   // Post in case not set up
   appBar.apply { post { onNewHeight(this.height) } }

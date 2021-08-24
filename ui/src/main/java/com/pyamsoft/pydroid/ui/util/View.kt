@@ -27,6 +27,7 @@ import androidx.core.view.ViewPropertyAnimatorListener
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.appbar.AppBarLayout
 import com.pyamsoft.pydroid.ui.app.AppBarActivity
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -112,29 +113,58 @@ public inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> U
   setOnClickListener(DebouncedOnClickListener.create(func))
 }
 
+/** Perform an action when the View Layout changes */
+@JvmOverloads
+public inline fun View.doOnLayoutChanged(
+    owner: LifecycleOwner? = null,
+    crossinline onChange: (View, Int, Int, Int, Int, Int, Int, Int, Int) -> Unit,
+) {
+  val self = this
+  val listener =
+      object : View.OnLayoutChangeListener {
+        override fun onLayoutChange(
+            v: View,
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            oldLeft: Int,
+            oldTop: Int,
+            oldRight: Int,
+            oldBottom: Int
+        ) {
+          onChange(v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom)
+
+          if (owner == null) {
+            self.removeOnLayoutChangeListener(this)
+          }
+        }
+      }
+
+  self.addOnLayoutChangeListener(listener)
+  owner?.doOnDestroy { self.removeOnLayoutChangeListener(listener) }
+}
+
 private inline fun watchToolbarOffset(
     view: View,
     owner: LifecycleOwner,
     crossinline onNewMargin: (Int) -> Unit,
 ) {
   view.doOnApplyWindowInsets(owner) { _, insets, _ ->
-    val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+    val toolbarTopMargin = insets.getInsets(WindowInsetsCompat.Type.statusBars()).bottom
     onNewMargin(toolbarTopMargin)
   }
 }
 
 private inline fun watchAppBarHeight(
-    appBar: View,
+    appBar: AppBarLayout,
     owner: LifecycleOwner,
     crossinline onNewHeight: (Int) -> Unit,
 ) {
-  val listener =
-      View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ -> v.post { onNewHeight(v.height) } }
-  appBar.addOnLayoutChangeListener(listener)
-  owner.doOnDestroy { appBar.removeOnLayoutChangeListener(listener) }
+  appBar.doOnLayoutChanged(owner) { v, _, _, _, _, _, _, _, _ -> onNewHeight(v.height) }
 
-  // Fire initial
-  appBar.post { onNewHeight(appBar.height) }
+  // Post in case not set up
+  appBar.apply { post { onNewHeight(this.height) } }
 }
 
 private fun applyNewViewOffset(

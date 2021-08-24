@@ -20,7 +20,7 @@ buildscript {
   ext {
     kotlin_version = '1.5.21'
     dokka_version = "1.5.0"
-    agp_version = "7.0.0"
+    agp_version = "7.0.1"
   }
   repositories {
     mavenLocal()
@@ -112,7 +112,7 @@ subprojects {
   apply plugin: 'maven-publish'
 
   final String POM_GROUP = "com.github.pyamsoft.pydroid"
-  final String POM_VERSION = "23.1.1"
+  final String POM_VERSION = "23.1.2"
 
   // Kapt flags
   kapt {

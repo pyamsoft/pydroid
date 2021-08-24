@@ -34,7 +34,7 @@
         android:layout_marginEnd="16dp">
 
         <ImageView
-            android:id="@android:id/icon"
+            android:id="@+id/ad_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
@@ -54,7 +54,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@android:id/title"
+            android:id="@+id/ad_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -82,7 +82,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@android:id/summary"
+            android:id="@+id/ad_summary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:maxLines="4"
@@ -97,7 +97,7 @@
 
     <!-- Preference should place its actual preference widget here. -->
     <LinearLayout
-        android:id="@android:id/widget_frame"
+        android:id="@+id/ad_widget_frame"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"

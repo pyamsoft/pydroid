@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.ui.internal.preference
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.preference.R as R2
+import androidx.preference.PreferenceViewHolder
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.AdPreferenceLayoutBinding
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
 import com.pyamsoft.pydroid.ui.preference.getStyledAttr
+import androidx.preference.R as R2
 
 internal class AdPreferenceCompat : PreferenceCompat {
 
@@ -49,5 +51,23 @@ internal class AdPreferenceCompat : PreferenceCompat {
       defStyleRes: Int
   ) : super(context, attrs, defStyleAttr, defStyleRes) {
     layoutResource = R.layout.ad_preference_layout
+  }
+
+  override fun onBindViewHolder(holder: PreferenceViewHolder) {
+    // Must run before super to fix view IDs
+    val binding = AdPreferenceLayoutBinding.bind(holder.itemView)
+
+    // Fix the IDs here
+    // AAPT cannot build when we use @android:id/ inside of an XML layout because
+    // of ViewBinding...
+    binding.apply {
+      adIcon.id = android.R.id.icon
+      adSummary.id = android.R.id.summary
+      adTitle.id = android.R.id.title
+      adWidgetFrame.id = android.R.id.widget_frame
+    }
+
+    // Now run VH binding
+    super.onBindViewHolder(holder)
   }
 }

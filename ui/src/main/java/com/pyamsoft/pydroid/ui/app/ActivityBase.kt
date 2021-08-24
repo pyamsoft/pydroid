@@ -91,12 +91,12 @@ public abstract class ActivityBase :
     billingConnector = null
   }
 
-  final override fun withToolbar(func: (Toolbar) -> Unit) {
-    capturedToolbar?.let(func)
+  override fun <T> withToolbar(func: (Toolbar) -> T): T? {
+    return capturedToolbar?.let(func)
   }
 
-  final override fun requireToolbar(func: (Toolbar) -> Unit) {
-    requireNotNull(capturedToolbar).let(func)
+  override fun <T> requireToolbar(func: (Toolbar) -> T): T {
+    return requireNotNull(capturedToolbar).let(func)
   }
 
   final override fun setToolbar(toolbar: Toolbar?) {

@@ -21,9 +21,17 @@ import com.google.android.material.appbar.AppBarLayout
 /** An activity which handles a global AppBar */
 public interface AppBarActivity : ToolbarActivity {
 
-  /** Run the function if the AppBar is set, otherwise do nothing */
-  public fun withAppBar(func: (AppBarLayout) -> Unit)
+  /**
+   * Run the function if the AppBar is set, otherwise do nothing
+   *
+   * Do not @CheckResult the return value since it can be ignored safely.
+   */
+  public fun <T> withAppBar(func: (AppBarLayout) -> T): T?
 
-  /** Run the function if the AppBar is set, otherwise throw */
-  public fun requireAppBar(func: (AppBarLayout) -> Unit)
+  /**
+   * Run the function if the AppBar is set, otherwise throw
+   *
+   * Do not @CheckResult the return value since it can be ignored safely.
+   */
+  public fun <T> requireAppBar(func: (AppBarLayout) -> T): T
 }

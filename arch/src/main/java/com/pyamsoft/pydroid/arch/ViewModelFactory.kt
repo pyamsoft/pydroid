@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.arch.internal.HandleUiSavedState
-import com.pyamsoft.pydroid.core.requireNotNull
 
 /** A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances. */
 public abstract class ViewModelFactory protected constructor() : ViewModelProvider.Factory {
@@ -103,17 +102,6 @@ public inline fun <reified T : ViewModel> UiSavedStateViewModelProvider<T>.asFac
       @Suppress("UNCHECKED_CAST") return self.create(savedState) as? T ?: fail(modelClass)
     }
   }
-}
-
-/** Create a save state aware view model factory */
-@CheckResult
-@JvmOverloads
-@Deprecated("Use UiSavedStateViewModelProvider.asFactory(owner, defaultArgs) instead.")
-public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedStateViewModelFactory(
-    provider: UiSavedStateViewModelProvider<T>?,
-    defaultArgs: Bundle? = null
-): ViewModelProvider.Factory {
-  return provider.requireNotNull().asFactory(this, defaultArgs)
 }
 
 /** Create a view model factory */

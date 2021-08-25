@@ -8,6 +8,8 @@ import kotlinx.coroutines.launch
  * A UiRender for a given snapshot of state.
  *
  * Used for Android view compatibility
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
 private class StateUiRender<S>(private val state: S) : UiRender<S> {
 

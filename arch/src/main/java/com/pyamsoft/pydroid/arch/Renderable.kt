@@ -18,7 +18,11 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.UiThread
 
-/** Generic interface representing something that can render a UiViewState */
+/**
+ * Generic interface representing something that can render a UiViewState
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
+ */
 public fun interface Renderable<S : UiViewState> {
 
   /** Render a state */

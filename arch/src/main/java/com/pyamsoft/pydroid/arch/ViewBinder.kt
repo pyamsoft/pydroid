@@ -16,7 +16,11 @@
 
 package com.pyamsoft.pydroid.arch
 
-/** A simple interface to help abstract List ViewHolder instances into a Renderable-like style */
+/**
+ * A simple interface to help abstract List ViewHolder instances into a Renderable-like style
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
+ */
 public interface ViewBinder<S : UiViewState> {
 
   /** Binds a UiViewState to one or more view components */

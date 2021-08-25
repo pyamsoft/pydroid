@@ -29,7 +29,11 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import timber.log.Timber
 
-/** A basic Android View based implementation of a UiView */
+/**
+ * A basic Android View based implementation of a UiView
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
+ */
 public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding>
 protected constructor(parent: ViewGroup) : UiView<S, V>() {
 

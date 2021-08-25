@@ -32,6 +32,8 @@ import kotlinx.coroutines.withContext
  *
  * The UiView can render a UiViewState object, and can also publish View level events to a
  * Presentation layer.
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
 public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() :
     Renderable<S> {

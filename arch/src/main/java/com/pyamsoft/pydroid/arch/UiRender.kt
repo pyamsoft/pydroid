@@ -3,7 +3,11 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import kotlinx.coroutines.CoroutineScope
 
-/** Represents an interface which can observe a UiViewState for render events */
+/**
+ * Represents an interface which can observe a UiViewState for render events
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
+ */
 public interface UiRender<S> {
 
   /**

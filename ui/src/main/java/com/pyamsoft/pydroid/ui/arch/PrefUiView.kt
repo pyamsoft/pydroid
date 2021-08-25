@@ -30,7 +30,11 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import timber.log.Timber
 
-/** A UiView which handles Preference screen entries. */
+/**
+ * A UiView which handles Preference screen entries.
+ *
+ * NOTE: Will be removed in the future in favor of Jetpack Compose
+ */
 public abstract class PrefUiView<S : UiViewState, V : UiViewEvent>
 protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
 

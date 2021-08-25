@@ -20,10 +20,10 @@ package com.pyamsoft.pydroid.ui.internal.preference
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.PreferenceViewHolder
+import androidx.preference.R as R2
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
 import com.pyamsoft.pydroid.ui.preference.getStyledAttr
-import androidx.preference.R as R2
 
 internal class InAppPreferenceCompat : PreferenceCompat {
 

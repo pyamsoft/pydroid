@@ -102,7 +102,7 @@ public open class UiStateModel<S : UiViewState>(
 
       // If we are in debug mode, perform the state change twice and make sure that it produces
       // the same state both times.
-      UiViewStateDebug.checkStateEquality(newState, handleChange(oldState))
+      UiViewStateDebug.checkStateEquality(newState) { handleChange(oldState) }
 
       return@withLock if (oldState == newState) newState else newState.also { modelState.set(it) }
     }

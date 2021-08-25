@@ -28,7 +28,8 @@ internal object UiViewStateDebug {
    */
   @JvmStatic
   @RemoveInRelease
-  fun <S : UiViewState> checkStateEquality(state1: S, state2: S) {
+  inline fun <S : UiViewState> checkStateEquality(state1: S, state2Generator: () -> S) {
+    val state2 = state2Generator()
     if (state1 != state2) {
       // Pull a page from the MvRx repo's BaseMvRxViewModel :)
       val changedProp =

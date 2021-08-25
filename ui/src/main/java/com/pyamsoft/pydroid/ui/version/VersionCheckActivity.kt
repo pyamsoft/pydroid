@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
@@ -28,23 +29,26 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
-import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 /** Activity that handles checking for a new version update */
-public abstract class VersionCheckActivity : PrivacyActivity() {
+public abstract class VersionCheckActivity : ActivityBase() {
 
   /** Check for updates automatically */
   protected open val checkForUpdates: Boolean = true
+
+  /** Used for Activity level snackbars */
+  protected abstract val snackbarRoot: ViewGroup
 
   private var stateSaver: StateSaver? = null
 

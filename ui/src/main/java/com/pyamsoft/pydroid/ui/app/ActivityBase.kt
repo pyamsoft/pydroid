@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.app
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.inject.Injector
@@ -34,20 +33,16 @@ import kotlinx.coroutines.launch
  *
  * You are required to extend this class so that other ui bits work.
  */
-public abstract class ActivityBase :
-    AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider, AppProvider {
+public abstract class ActivityBase : AppCompatActivity(), AppProvider {
+
+  /** The main view container for all page level fragment transactions */
+  public abstract val fragmentContainerId: Int
 
   /** The activity scoped component graph for the BillingDialog */
   private var injector: BillingComponent? = null
 
   /** The connection to the Billing client */
   internal var billingConnector: BillingConnector? = null
-
-  /** The main view container for all page level fragment transactions */
-  public abstract val fragmentContainerId: Int
-
-  /** Activity level toolbar, similar to ActionBar */
-  private var capturedToolbar: Toolbar? = null
 
   /** Activity theming */
   internal var theming: Theming? = null
@@ -83,23 +78,8 @@ public abstract class ActivityBase :
     // Disconnect billing
     billingConnector?.disconnect()
 
-    // Clear captured Toolbar
-    capturedToolbar = null
-
     // Clear billing
     injector = null
     billingConnector = null
-  }
-
-  override fun <T> withToolbar(func: (Toolbar) -> T): T? {
-    return capturedToolbar?.let(func)
-  }
-
-  override fun <T> requireToolbar(func: (Toolbar) -> T): T {
-    return requireNotNull(capturedToolbar).let(func)
-  }
-
-  final override fun setToolbar(toolbar: Toolbar?) {
-    capturedToolbar = toolbar
   }
 }

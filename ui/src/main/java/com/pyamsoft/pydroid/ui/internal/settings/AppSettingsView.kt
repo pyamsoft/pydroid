@@ -24,12 +24,8 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEventBus
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEvents
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 internal class AppSettingsView
 internal constructor(
@@ -138,21 +134,19 @@ internal constructor(
   }
 
   private fun setupPrivacyPolicy() {
+    val hyperlink = privacyPolicyUrl.hyperlink(privacyPolicy.context)
     privacyPolicy.onPreferenceClickListener =
         Preference.OnPreferenceClickListener {
-          viewScope.launch(context = Dispatchers.Default) {
-            PrivacyEventBus.send(PrivacyEvents.ViewPrivacyPolicy(privacyPolicyUrl))
-          }
+          publish(AppSettingsViewEvent.Hyperlink(hyperlink))
           return@OnPreferenceClickListener true
         }
   }
 
   private fun setupTermsConditions() {
+    val hyperlink = termsConditionsUrl.hyperlink(termsConditions.context)
     termsConditions.onPreferenceClickListener =
         Preference.OnPreferenceClickListener {
-          viewScope.launch(context = Dispatchers.Default) {
-            PrivacyEventBus.send(PrivacyEvents.ViewTermsAndConditions(termsConditionsUrl))
-          }
+          publish(AppSettingsViewEvent.Hyperlink(hyperlink))
           return@OnPreferenceClickListener true
         }
   }

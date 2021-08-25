@@ -48,7 +48,7 @@ public open class UiStateModel<S : UiViewState>(
   // Mutex to make sure that setState operations happen in order
   private val mutex = Mutex()
 
-  private var modelState = MutableUiVMState(MutableStateFlow(initialState))
+  private val modelState = MutableUiVMState(MutableStateFlow(initialState))
 
   /**
    * The current state

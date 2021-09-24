@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import com.pyamsoft.pydroid.ui.internal.timber.LinkDebugTree
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
 
@@ -35,7 +36,7 @@ internal constructor(
 
       if (enabled) {
         setStrictMode()
-        Timber.plant(Timber.DebugTree())
+        Timber.plant(LinkDebugTree())
       }
 
       Timber.d("Initializing PYDroid")

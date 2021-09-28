@@ -102,11 +102,5 @@ internal class ChangeLogDialog : IconDialog() {
     fun open(activity: FragmentActivity) {
       ChangeLogDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
-
-    @JvmStatic
-    @CheckResult
-    fun isNotShown(activity: FragmentActivity): Boolean {
-      return activity.supportFragmentManager.findFragmentByTag(TAG) == null
-    }
   }
 }

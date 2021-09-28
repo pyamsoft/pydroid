@@ -43,7 +43,10 @@ internal constructor(
     viewModelScope.launch(context = Dispatchers.Default) {
       marketRunner
           .call()
-          .onSuccess { publish(RatingControllerEvent.LaunchMarketPage(it)) }
+          .onSuccess {
+            Timber.d("Launching market page: $it")
+            publish(RatingControllerEvent.LaunchMarketPage(it))
+          }
           .onFailure { e ->
             Timber.e(e, "Unable to launch market page")
             setState { copy(navigationError = e) }
@@ -53,11 +56,16 @@ internal constructor(
 
   internal fun loadInAppRating() {
     viewModelScope.launch(context = Dispatchers.Default) {
-      loadRunner.call().onSuccess { publish(RatingControllerEvent.LaunchRating(it)) }.onFailure { e
-        ->
-        Timber.e(e, "Unable to launch rating flow")
-        setState { copy(navigationError = e) }
-      }
+      loadRunner
+          .call()
+          .onSuccess {
+            Timber.d("Launch in-app rating")
+            publish(RatingControllerEvent.LaunchRating(it))
+          }
+          .onFailure { e ->
+            Timber.e(e, "Unable to launch rating flow")
+            setState { copy(navigationError = e) }
+          }
     }
   }
 

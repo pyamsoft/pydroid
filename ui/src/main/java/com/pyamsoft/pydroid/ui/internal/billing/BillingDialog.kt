@@ -130,11 +130,5 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
     fun open(activity: FragmentActivity) {
       BillingDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
-
-    @JvmStatic
-    @CheckResult
-    fun isNotShown(activity: FragmentActivity): Boolean {
-      return activity.supportFragmentManager.findFragmentByTag(TAG) == null
-    }
   }
 }

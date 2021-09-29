@@ -23,6 +23,7 @@ import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
@@ -70,14 +71,14 @@ internal constructor(
 
   @CheckResult
   private fun formatCalendar(calendar: Calendar): String {
-    val formatter = requireNotNull(lastShownDateFormatter.get())
-    return requireNotNull(formatter.format(calendar.time))
+    val formatter = lastShownDateFormatter.get().requireNotNull()
+    return formatter.format(calendar.time)
   }
 
   @CheckResult
   private fun parseCalendar(string: String): Calendar {
-    val formatter = requireNotNull(lastShownDateFormatter.get())
-    val date = requireNotNull(formatter.parse(string))
+    val formatter = lastShownDateFormatter.get().requireNotNull()
+    val date = formatter.parse(string).requireNotNull()
     return Calendar.getInstance().apply { time = date }
   }
 
@@ -95,8 +96,7 @@ internal constructor(
   @CheckResult
   private fun getLastSeenDate(defaultDateString: String): Calendar {
     val prefString = prefs.getString(LAST_SHOWN_RATING_DATE, defaultDateString)
-    val lastSeenDateAsString = requireNotNull(prefString)
-    return parseCalendar(lastSeenDateAsString)
+    return parseCalendar(prefString.requireNotNull())
   }
 
   override suspend fun showRating(): Boolean =
@@ -157,7 +157,9 @@ internal constructor(
   override suspend fun getDarkMode(): Mode =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
-        return@withContext requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString()))
+        return@withContext prefs
+            .getString(darkModeKey, SYSTEM.toRawString())
+            .requireNotNull()
             .toMode()
       }
 

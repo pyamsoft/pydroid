@@ -35,9 +35,6 @@ import kotlinx.coroutines.launch
  */
 public abstract class ActivityBase : AppCompatActivity(), AppProvider {
 
-  /** The main view container for all page level fragment transactions */
-  public abstract val fragmentContainerId: Int
-
   /** The activity scoped component graph for the BillingDialog */
   private var injector: BillingComponent? = null
 
@@ -52,9 +49,8 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     injector =
-        Injector.obtainFromApplication<PYDroidComponent>(this).plusBilling().create().also {
-            component ->
-          component.inject(this)
+        Injector.obtainFromApplication<PYDroidComponent>(this).plusBilling().create().also { c ->
+          c.inject(this)
         }
 
     requireNotNull(billingConnector).connect()

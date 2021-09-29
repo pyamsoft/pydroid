@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
@@ -49,9 +50,9 @@ private constructor(
         .create(binding.otherAppsListitemRoot)
         .inject(this)
 
-    val title = requireNotNull(titleView)
-    val icon = requireNotNull(iconView)
-    val action = requireNotNull(actionView)
+    val title = titleView.requireNotNull()
+    val icon = iconView.requireNotNull()
+    val action = actionView.requireNotNull()
     binder = createViewBinder(icon, title, action) { callback(it, bindingAdapterPosition) }
 
     binding.otherAppsListitemRoot.layout {

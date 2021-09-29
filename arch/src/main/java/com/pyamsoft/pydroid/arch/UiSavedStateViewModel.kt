@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
+import com.pyamsoft.pydroid.core.requireNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -53,7 +54,7 @@ protected constructor(savedState: UiSavedState, initialState: S) : UiViewModel<S
       crossinline defaultValue: suspend () -> T
   ): T =
       withContext(context = Dispatchers.Main) {
-        return@withContext requireNotNull(savedState).get(key) ?: defaultValue()
+        return@withContext savedState.requireNotNull().get(key) ?: defaultValue()
       }
 
   /**
@@ -63,12 +64,12 @@ protected constructor(savedState: UiSavedState, initialState: S) : UiViewModel<S
    */
   @UiThread
   protected suspend fun <T : Any> putSavedState(key: String, value: T): Unit =
-      withContext(context = Dispatchers.Main) { requireNotNull(savedState).put(key, value) }
+      withContext(context = Dispatchers.Main) { savedState.requireNotNull().put(key, value) }
 
   /** Use this to remove data from a SavedStateHandle */
   @UiThread
   protected suspend fun <T : Any> removeSavedState(key: String): T? =
       withContext(context = Dispatchers.Main) {
-        return@withContext requireNotNull(savedState).remove(key)
+        return@withContext savedState.requireNotNull().remove(key)
       }
 }

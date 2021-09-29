@@ -21,6 +21,7 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingConnector
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
@@ -53,16 +54,16 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
           c.inject(this)
         }
 
-    requireNotNull(billingConnector).connect()
+    billingConnector.requireNotNull().connect()
 
-    lifecycleScope.launch { requireNotNull(theming).init() }
+    lifecycleScope.launch { theming.requireNotNull().init() }
   }
 
   /** Get system service */
   @CallSuper
   override fun getSystemService(name: String): Any? =
       when (name) {
-        BillingComponent::class.java.name -> requireNotNull(injector)
+        BillingComponent::class.java.name -> injector.requireNotNull()
         else -> super.getSystemService(name)
       }
 

@@ -67,10 +67,11 @@ internal class ChangeLogDialog : IconDialog() {
             viewLifecycleOwner,
             viewModel,
             controller = newUiController {},
-            requireNotNull(iconView),
-            requireNotNull(nameView),
-            requireNotNull(listView),
-            requireNotNull(closeView)) {
+            iconView.requireNotNull(),
+            nameView.requireNotNull(),
+            listView.requireNotNull(),
+            closeView.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is ChangeLogDialogViewEvent.Close -> dismiss()
             is ChangeLogDialogViewEvent.Rate -> ratingViewModel.loadMarketPage()

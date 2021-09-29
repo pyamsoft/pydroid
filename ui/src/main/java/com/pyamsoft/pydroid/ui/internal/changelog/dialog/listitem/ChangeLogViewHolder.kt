@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
@@ -45,9 +46,11 @@ private constructor(
         .create(binding.listitemLinearH)
         .inject(this)
 
-    val type = requireNotNull(typeView)
-    val text = requireNotNull(textView)
-    binder = createViewBinder(type, text) {}
+    binder =
+        createViewBinder(
+            typeView.requireNotNull(),
+            textView.requireNotNull(),
+        ) {}
 
     owner.doOnDestroy { teardown() }
   }

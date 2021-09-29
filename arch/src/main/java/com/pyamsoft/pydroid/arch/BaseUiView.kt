@@ -24,6 +24,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.viewbinding.ViewBinding
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -264,8 +265,8 @@ protected constructor(parent: ViewGroup) : UiView<S, V>() {
       val b: V? = bound
       val result: V
       if (b == null) {
-        val r = requireNotNull(resolver)
-        val bound = r(requireNotNull(parent))
+        val r = resolver.requireNotNull()
+        val bound = r(parent.requireNotNull())
         this.bound = bound
         result = bound
       } else {
@@ -277,7 +278,7 @@ protected constructor(parent: ViewGroup) : UiView<S, V>() {
 
     internal fun remove() {
       assertValidState()
-      bound?.teardown(requireNotNull(parent))
+      bound?.teardown(parent.requireNotNull())
     }
 
     internal fun teardown() {

@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
@@ -49,9 +50,10 @@ private constructor(
 
     binder =
         createViewBinder(
-            requireNotNull(titleView),
-            requireNotNull(descriptionView),
-            requireNotNull(actionView)) { callback(it, bindingAdapterPosition) }
+            titleView.requireNotNull(),
+            descriptionView.requireNotNull(),
+            actionView.requireNotNull(),
+        ) { callback(it, bindingAdapterPosition) }
 
     owner.doOnDestroy { teardown() }
   }

@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
@@ -137,16 +138,21 @@ internal class AboutListView internal constructor(owner: LifecycleOwner, parent:
   }
 
   @CheckResult
+  private fun usingAdapter(): AboutAdapter {
+    return aboutAdapter.requireNotNull()
+  }
+
+  @CheckResult
   private fun isEmpty(): Boolean {
-    return requireNotNull(aboutAdapter).itemCount == 0
+    return usingAdapter().itemCount == 0
   }
 
   private fun loadLicenses(libraries: List<OssLibrary>) {
-    requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
+    usingAdapter().submitList(libraries.map { AboutItemViewState(it) })
   }
 
   private fun clearLicenses() {
-    requireNotNull(aboutAdapter).submitList(null)
+    usingAdapter().submitList(null)
   }
 
   companion object {

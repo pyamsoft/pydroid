@@ -22,6 +22,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.util.hyperlink
@@ -101,7 +102,7 @@ internal constructor(
   }
 
   private fun handleDarkTheme(darkTheme: AppSettingsViewState.DarkTheme?) {
-    darkTheme?.let { requireNotNull(preferenceScreen).adjustTint(it.dark) }
+    darkTheme?.let { preferenceScreen.requireNotNull().adjustTint(it.dark) }
   }
 
   private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {

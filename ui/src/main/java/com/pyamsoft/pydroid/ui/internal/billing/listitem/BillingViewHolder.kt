@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.createViewBinder
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
@@ -47,9 +48,9 @@ private constructor(
         .create(binding.listitemLinearH)
         .inject(this)
 
-    val click = requireNotNull(clickView)
-    val content = requireNotNull(contentView)
-    val price = requireNotNull(priceView)
+    val click = clickView.requireNotNull()
+    val content = contentView.requireNotNull()
+    val price = priceView.requireNotNull()
     binder =
         createViewBinder(click, content, price) {
           return@createViewBinder when (it) {

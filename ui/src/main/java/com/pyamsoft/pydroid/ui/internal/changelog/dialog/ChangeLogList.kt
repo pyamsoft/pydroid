@@ -17,11 +17,13 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.ChangelogListBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogAdapter
@@ -107,11 +109,16 @@ internal class ChangeLogList internal constructor(owner: LifecycleOwner, parent:
     layoutRoot.isVisible = false
   }
 
+  @CheckResult
+  private fun usingAdapter(): ChangeLogAdapter {
+    return changeLogAdapter.requireNotNull()
+  }
+
   private fun loadChangeLog(changeLog: List<ChangeLogLine>) {
-    requireNotNull(changeLogAdapter).submitList(changeLog.map { ChangeLogItemViewState(it) })
+    usingAdapter().submitList(changeLog.map { ChangeLogItemViewState(it) })
   }
 
   private fun clear() {
-    requireNotNull(changeLogAdapter).submitList(null)
+    usingAdapter().submitList(null)
   }
 }

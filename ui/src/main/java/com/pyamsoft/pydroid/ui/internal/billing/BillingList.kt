@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -26,6 +27,7 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.BillingListBinding
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingAdapter
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemViewState
@@ -107,14 +109,21 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
     }
   }
 
+  @CheckResult
+  private fun usingAdapter(): BillingAdapter {
+    return billingAdapter.requireNotNull()
+  }
+
   private fun loadSkus(skuList: List<BillingSku>) {
-    requireNotNull(billingAdapter).submitList(skuList.map { BillingItemViewState(it) })
+    usingAdapter().submitList(skuList.map { BillingItemViewState(it) })
+
     binding.billingList.isVisible = true
     binding.billingError.isGone = true
   }
 
   private fun clear() {
-    requireNotNull(billingAdapter).submitList(null)
+    usingAdapter().submitList(null)
+
     binding.billingList.isGone = true
     binding.billingError.isVisible = true
   }

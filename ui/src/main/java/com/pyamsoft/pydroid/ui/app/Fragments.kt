@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.app
 
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
+import com.pyamsoft.pydroid.core.requireNotNull
 
 /** Return the ToolbarActivity or null */
 public val Fragment.toolbarActivity: ToolbarActivity?
@@ -30,5 +31,5 @@ public val Fragment.toolbarActivity: ToolbarActivity?
 /** Return the ToolbarActivity or throw */
 @CheckResult
 public fun Fragment.requireToolbarActivity(): ToolbarActivity {
-  return requireNotNull(toolbarActivity) { "ToolbarActivity is required and cannot be null." }
+  return toolbarActivity.requireNotNull { "ToolbarActivity is required and cannot be null." }
 }

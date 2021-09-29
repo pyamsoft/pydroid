@@ -66,8 +66,9 @@ internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
             viewLifecycleOwner,
             viewModel,
             controller = this,
-            requireNotNull(listView),
-            requireNotNull(errorView)) {
+            listView.requireNotNull(),
+            errorView.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
             is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()

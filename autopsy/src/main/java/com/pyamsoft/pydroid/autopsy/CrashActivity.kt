@@ -29,6 +29,7 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
+import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.system.exitProcess
 
 /**
@@ -58,9 +59,9 @@ internal class CrashActivity internal constructor() : Activity() {
       }
     }
 
-    val threadName = requireNotNull(intent.getStringExtra(KEY_THREAD_NAME))
-    val throwableName = requireNotNull(intent.getStringExtra(KEY_THROWABLE))
-    val stackTrace = requireNotNull(intent.getSerializableExtra(KEY_TRACE) as Throwable)
+    val threadName = intent.getStringExtra(KEY_THREAD_NAME).requireNotNull()
+    val throwableName = intent.getStringExtra(KEY_THROWABLE).requireNotNull()
+    val stackTrace = intent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
 
     // Set the thread name
     setText(binding.crashThreadName, "Uncaught exception in $threadName thread")

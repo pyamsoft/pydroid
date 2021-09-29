@@ -69,8 +69,8 @@ internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerE
             viewLifecycleOwner,
             viewModel,
             this,
-            requireNotNull(listView),
-            requireNotNull(errorView),
+            listView.requireNotNull(),
+            errorView.requireNotNull(),
         ) {
           return@createComponent when (it) {
             is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError()

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsListBinding
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsAdapter
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.OpenStore
@@ -122,16 +123,21 @@ internal class OtherAppsList internal constructor(owner: LifecycleOwner, parent:
   }
 
   @CheckResult
+  private fun usingAdapter(): OtherAppsAdapter {
+    return listAdapter.requireNotNull()
+  }
+
+  @CheckResult
   private fun isEmpty(): Boolean {
-    return requireNotNull(listAdapter).itemCount == 0
+    return usingAdapter().itemCount == 0
   }
 
   private fun loadApps(apps: List<OtherApp>) {
-    requireNotNull(listAdapter).submitList(apps.map { OtherAppsItemViewState(it) })
+    usingAdapter().submitList(apps.map { OtherAppsItemViewState(it) })
   }
 
   private fun clearApps() {
-    requireNotNull(listAdapter).submitList(null)
+    usingAdapter().submitList(null)
   }
 
   companion object {

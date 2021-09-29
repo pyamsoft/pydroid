@@ -73,10 +73,10 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
             viewLifecycleOwner,
             viewModel,
             controller = this,
-            requireNotNull(iconView),
-            requireNotNull(nameView),
-            requireNotNull(listView),
-            requireNotNull(closeView),
+            iconView.requireNotNull(),
+            nameView.requireNotNull(),
+            listView.requireNotNull(),
+            closeView.requireNotNull(),
         ) {
           return@createComponent when (it) {
             is BillingViewEvent.Close -> dismiss()
@@ -101,7 +101,7 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
     // Enforce on main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
       Timber.d("Start purchase flow for $sku")
-      requireNotNull(purchaseClient).purchase(requireActivity(), sku)
+      purchaseClient.requireNotNull().purchase(requireActivity(), sku)
     }
   }
 

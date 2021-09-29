@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 import timber.log.Timber
@@ -64,7 +65,7 @@ protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
 
   @CheckResult
   private fun parent(): PreferenceScreen {
-    return requireNotNull(_parent)
+    return _parent.requireNotNull()
   }
 
   private fun die(): Nothing {
@@ -111,7 +112,7 @@ protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
   /** Bind preference view to UiView */
   @CheckResult
   protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
-    return createBoundPref { requireNotNull(parent().findPreference<V>(key)) }
+    return createBoundPref { parent().findPreference<V>(key).requireNotNull() }
   }
 
   @CheckResult
@@ -144,7 +145,7 @@ protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
       val v: V? = view
       val result: V
       if (v == null) {
-        @Suppress("UNCHECKED_CAST") val bound = requireNotNull(resolver).invoke()
+        @Suppress("UNCHECKED_CAST") val bound = resolver.requireNotNull().invoke()
         view = bound
         result = bound
       } else {

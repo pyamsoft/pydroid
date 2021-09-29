@@ -85,7 +85,8 @@ public abstract class VersionCheckActivity : ActivityBase() {
                     is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(this)
                   }
                 },
-            requireNotNull(versionCheckView)) {
+            versionCheckView.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
             is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
@@ -103,7 +104,7 @@ public abstract class VersionCheckActivity : ActivityBase() {
   @CallSuper
   override fun getSystemService(name: String): Any? =
       when (name) {
-        VersionCheckComponent::class.java.name -> requireNotNull(injector)
+        VersionCheckComponent::class.java.name -> injector.requireNotNull()
         else -> super.getSystemService(name)
       }
 

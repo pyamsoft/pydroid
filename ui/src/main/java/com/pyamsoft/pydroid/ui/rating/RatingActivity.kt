@@ -71,7 +71,8 @@ public abstract class RatingActivity : VersionCheckActivity() {
                     is RatingControllerEvent.LaunchMarketPage -> showRating(it.launcher)
                   }
                 },
-            requireNotNull(ratingView)) {
+            ratingView.requireNotNull(),
+        ) {
           return@createComponent when (it) {
             is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
           }

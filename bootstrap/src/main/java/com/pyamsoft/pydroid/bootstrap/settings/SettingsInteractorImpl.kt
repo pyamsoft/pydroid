@@ -19,12 +19,13 @@ package com.pyamsoft.pydroid.bootstrap.settings
 import android.app.ActivityManager
 import android.content.Context
 import androidx.core.content.getSystemService
+import com.pyamsoft.pydroid.core.requireNotNull
 import timber.log.Timber
 
 internal class SettingsInteractorImpl internal constructor(context: Context) : SettingsInteractor {
 
   private val activityManager by lazy {
-    requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
+    context.applicationContext.getSystemService<ActivityManager>().requireNotNull()
   }
 
   override suspend fun wipeData() {

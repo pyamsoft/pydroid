@@ -34,7 +34,7 @@ public interface Associate {
 /** Reggie is the normal enforcer, he expects correctly threaded contexts of execution */
 internal class Reggie : Associate {
 
-  private val mainLooper by lazy { requireNotNull(Looper.getMainLooper()) }
+  private val mainLooper by lazy { Looper.getMainLooper().requireNotNull() }
 
   @CheckResult
   private fun isMainThread(): Boolean {

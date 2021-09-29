@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
@@ -36,7 +37,7 @@ public object PYDroid {
   @JvmStatic
   @CheckResult
   private fun instance(): PYDroidInitializer {
-    return requireNotNull(instance.get()) {
+    return instance.get().requireNotNull {
       "PYDroid not initialized, call PYDroid.init() in Application.onCreate()"
     }
   }

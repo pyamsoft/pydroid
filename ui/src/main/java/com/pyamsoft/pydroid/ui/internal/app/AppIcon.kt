@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 import android.widget.ImageView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 
@@ -44,7 +45,7 @@ protected constructor(private val imageLoader: ImageLoader, icon: ImageView) :
   private fun handleIcon(icon: Int) {
     clear()
     if (icon != 0) {
-      loaded = imageLoader.asDrawable().load(icon).into(requireNotNull(iconView))
+      loaded = imageLoader.asDrawable().load(icon).into(iconView.requireNotNull())
     }
   }
 

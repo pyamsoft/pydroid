@@ -54,9 +54,7 @@ public class OtherAppsModule(params: Parameters) {
     @CheckResult
     private fun createCache(network: OtherAppsInteractor): Cached<ResultWrapper<List<OtherApp>>> {
       return cachify<ResultWrapper<List<OtherApp>>>(
-          storage = { listOf(MemoryCacheStorage.create(24, HOURS)) }) {
-        requireNotNull(network.getApps(true))
-      }
+          storage = { listOf(MemoryCacheStorage.create(24, HOURS)) }) { network.getApps(true) }
     }
   }
 

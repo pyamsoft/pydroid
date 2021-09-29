@@ -76,14 +76,22 @@ internal abstract class FullscreenThemeDialog protected constructor() :
         .create(getInitialTitle(), getToolbarBackground(), binding.layoutConstraint)
         .inject(this)
 
-    val toolbar = requireNotNull(toolbar)
+    val toolbar = toolbar.requireNotNull()
+    val frame = frame.requireNotNull()
     val dropshadow =
         DropshadowView.createTyped<ThemeDialogViewState, ThemeDialogViewEvent>(
             binding.layoutConstraint)
-    val frame = requireNotNull(frame)
+
     stateSaver =
         createComponent(
-            savedInstanceState, viewLifecycleOwner, viewModel, this, frame, toolbar, dropshadow) {
+            savedInstanceState,
+            viewLifecycleOwner,
+            viewModel,
+            this,
+            frame,
+            toolbar,
+            dropshadow,
+        ) {
           return@createComponent when (it) {
             is ThemeDialogViewEvent.Close -> dismiss()
           }

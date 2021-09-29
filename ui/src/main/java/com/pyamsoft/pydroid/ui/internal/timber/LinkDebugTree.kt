@@ -27,6 +27,6 @@ internal class LinkDebugTree internal constructor() : Timber.DebugTree() {
 
   // Log the file and line so that you can click the link to the log
   override fun createStackElementTag(element: StackTraceElement): String {
-    return element.run { "(${fileName}:${lineNumber}) ${methodName}()" }
+    return element.run { "(${fileName}:${lineNumber})" }
   }
 }

@@ -27,7 +27,6 @@ import timber.log.Timber
 internal class RatingInteractorImpl
 internal constructor(
     private val rateMyApp: RateMyApp,
-    private val ratingPreferences: RatingPreferences,
 ) : RatingInteractor {
 
   override suspend fun askForRating(): ResultWrapper<AppRatingLauncher> =
@@ -35,12 +34,7 @@ internal constructor(
         Enforcer.assertOffMainThread()
 
         return@withContext try {
-          ResultWrapper.success(
-              if (ratingPreferences.showRating()) {
-                rateMyApp.startRating()
-              } else {
-                AppRatingLauncher.empty()
-              })
+          ResultWrapper.success(rateMyApp.startRating())
         } catch (e: Throwable) {
           ResultWrapper.failure(e)
         }

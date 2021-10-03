@@ -23,7 +23,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
 internal interface RatingComponent {
@@ -39,7 +38,6 @@ internal interface RatingComponent {
     internal constructor(
         internal val context: Context,
         internal val isFake: Boolean,
-        internal val preferences: RatingPreferences
     )
   }
 
@@ -60,7 +58,8 @@ internal interface RatingComponent {
               RatingModule.Parameters(
                   context = params.context.applicationContext,
                   isFake = params.isFake,
-                  preferences = params.preferences))
+              ),
+          )
       factory = createViewModelFactory { RatingViewModel(module.provideInteractor()) }
     }
 
@@ -69,8 +68,10 @@ internal interface RatingComponent {
       activity.ratingFactory = factory
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(
           owner: LifecycleOwner,

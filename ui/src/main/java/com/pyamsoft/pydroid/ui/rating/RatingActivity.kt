@@ -77,9 +77,13 @@ public abstract class RatingActivity : VersionCheckActivity() {
             is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
           }
         }
+  }
 
-    // Attempt to load rating based on a couple various factors - does not always result
-    // in a call to showRating
+  /**
+   * Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that is up
+   * to Google
+   */
+  protected fun loadInAppRating() {
     viewModel.loadInAppRating()
   }
 

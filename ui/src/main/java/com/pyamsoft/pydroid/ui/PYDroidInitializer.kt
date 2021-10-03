@@ -55,7 +55,6 @@ internal constructor(
                           PYDroidComponent.Component.DebugParameters(
                               enabled = enabled,
                               upgradeAvailable = params.debug?.upgradeAvailable ?: false,
-                              ratingAvailable = params.debug?.ratingAvailable ?: false,
                           ),
                   ),
               )

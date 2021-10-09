@@ -21,6 +21,7 @@ buildscript {
     kotlin_version = '1.5.31'
     dokka_version = "1.5.31"
     agp_version = "7.0.3"
+    compose_version = "1.0.3"
   }
   repositories {
     mavenLocal()
@@ -40,6 +41,13 @@ buildscript {
 
     minSdk = 22
     maxSdk = 30
+
+    // Compose
+    composeViewModel = "2.4.0-rc01"
+    composeActivity = "1.3.1"
+    composeMaterial = "1.0.3"
+    composeTooling = "1.0.3"
+    composeAnimation = "1.0.3"
 
     // Kotlin
     coroutines = '1.5.2'

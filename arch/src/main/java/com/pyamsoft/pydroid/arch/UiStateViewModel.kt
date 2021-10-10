@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
@@ -51,6 +53,13 @@ internal constructor(
     get() {
       return delegate.state
     }
+
+  /** Get VM state as a Composable object */
+  @Composable
+  @CheckResult
+  public fun compose(): State<S> {
+    return delegate.compose()
+  }
 
   /**
    * Bind renderables to this ViewModel.

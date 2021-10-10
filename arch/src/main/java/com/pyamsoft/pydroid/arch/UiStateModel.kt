@@ -145,7 +145,7 @@ public open class UiStateModel<S : UiViewState>(
     @Composable
     @CheckResult
     fun compose(): State<S> {
-      return flow.collectAsState(initial = get())
+      return flow.collectAsState()
     }
 
     @CheckResult

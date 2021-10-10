@@ -30,10 +30,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class PlayStoreRateMyApp
-internal constructor(
-    private val isFake: Boolean,
-    context: Context
-) : RateMyApp {
+internal constructor(private val isFake: Boolean, context: Context) : RateMyApp {
 
   private val manager by lazy {
     if (isFake) {

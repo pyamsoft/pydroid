@@ -23,12 +23,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
+import com.pyamsoft.pydroid.ui.databinding.AboutListItemBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class AboutViewHolder
 private constructor(
-    private val binding: AdapterItemAboutLicenseBinding,
+    private val binding: AboutListItemBinding,
     owner: LifecycleOwner,
     private val callback: AboutAdapter.Callback,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
@@ -63,7 +63,7 @@ private constructor(
         owner: LifecycleOwner,
         callback: AboutAdapter.Callback,
     ): AboutViewHolder {
-      val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
+      val binding = AboutListItemBinding.inflate(inflater, container, false)
       return AboutViewHolder(binding, owner, callback)
     }
   }

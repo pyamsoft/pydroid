@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
-import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogDialogItemComponent
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemComponent
@@ -58,8 +57,6 @@ internal interface PYDroidComponent {
   @CheckResult fun plusChangeLog(): ChangeLogComponent.Factory
 
   @CheckResult fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
-
-  @CheckResult fun plusChangeLogDialogItem(): ChangeLogDialogItemComponent.Factory
 
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
 
@@ -288,10 +285,6 @@ internal interface PYDroidComponent {
 
     override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
-    }
-
-    override fun plusChangeLogDialogItem(): ChangeLogDialogItemComponent.Factory {
-      return ChangeLogDialogItemComponent.Impl.FactoryImpl()
     }
 
     override fun moduleProvider(): ModuleProvider {

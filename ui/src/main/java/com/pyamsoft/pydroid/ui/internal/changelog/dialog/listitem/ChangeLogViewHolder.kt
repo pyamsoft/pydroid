@@ -21,48 +21,33 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.createViewBinder
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
+import com.pyamsoft.pydroid.ui.databinding.ChangelogListItemBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class ChangeLogViewHolder
 private constructor(
-    binding: ListitemLinearHorizontalBinding,
+    private val binding: ChangelogListItemBinding,
     owner: LifecycleOwner,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<ChangeLogItemViewState> {
 
-  private val binder: ViewBinder<ChangeLogItemViewState>
-
-  internal var typeView: ChangeLogItemType? = null
-  internal var textView: ChangeLogItemText? = null
-
   init {
-    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-        .plusChangeLogDialogItem()
-        .create(binding.listitemLinearH)
-        .inject(this)
-
-    binder =
-        createViewBinder(
-            typeView.requireNotNull(),
-            textView.requireNotNull(),
-        ) {}
-
     owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: ChangeLogItemViewState) {
-    binder.bindState(state)
+    binding.changelogListItem.setContent {
+      MdcTheme {
+        ChangeLogListItem(
+            state = state,
+        )
+      }
+    }
   }
 
   override fun teardown() {
-    binder.teardown()
-    typeView = null
-    textView = null
+    binding.changelogListItem.disposeComposition()
   }
 
   companion object {
@@ -74,7 +59,7 @@ private constructor(
         container: ViewGroup,
         owner: LifecycleOwner,
     ): ChangeLogViewHolder {
-      val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
+      val binding = ChangelogListItemBinding.inflate(inflater, container, false)
       return ChangeLogViewHolder(binding, owner)
     }
   }

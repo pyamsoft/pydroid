@@ -21,52 +21,41 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.createViewBinder
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class AboutViewHolder
 private constructor(
-    binding: AdapterItemAboutLicenseBinding,
+    private val binding: AdapterItemAboutLicenseBinding,
     owner: LifecycleOwner,
-    callback: (event: AboutItemViewEvent, index: Int) -> Unit
+    private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
 
-  private val binder: ViewBinder<AboutItemViewState>
-
-  internal var titleView: AboutItemTitleView? = null
-  internal var descriptionView: AboutItemDescriptionView? = null
-  internal var actionView: AboutItemActionView? = null
-
   init {
-    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-        .plusAboutItem()
-        .create(binding.aboutListitemRoot)
-        .inject(this)
-
-    binder =
-        createViewBinder(
-            titleView.requireNotNull(),
-            descriptionView.requireNotNull(),
-            actionView.requireNotNull(),
-        ) { callback(it, bindingAdapterPosition) }
-
     owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: AboutItemViewState) {
-    binder.bindState(state)
+
+    binding.aboutListitemRoot.setContent {
+      MdcTheme {
+        AboutItemComposable(
+            state = state,
+            onClickViewHomePage = {
+              callback(AboutItemViewEvent.OpenLibraryUrl, bindingAdapterPosition)
+            },
+            onClickViewLicense = {
+              callback(AboutItemViewEvent.OpenLicenseUrl, bindingAdapterPosition)
+            },
+        )
+      }
+    }
   }
 
   override fun teardown() {
-    binder.teardown()
-    titleView = null
-    descriptionView = null
-    actionView = null
+    binding.aboutListitemRoot.disposeComposition()
   }
 
   companion object {

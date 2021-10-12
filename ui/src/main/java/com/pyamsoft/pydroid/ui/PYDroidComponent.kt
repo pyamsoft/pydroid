@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
-import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemComponent
@@ -52,8 +51,6 @@ internal interface PYDroidComponent {
   @CheckResult fun plusBillingItem(): BillingItemComponent.Factory
 
   @CheckResult fun plusAbout(): AboutComponent.Factory
-
-  @CheckResult fun plusAboutItem(): AboutItemComponent.Factory
 
   @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
 
@@ -249,10 +246,6 @@ internal interface PYDroidComponent {
 
     override fun plusOtherAppsItem(): OtherAppsItemComponent.Factory {
       return OtherAppsItemComponent.Impl.FactoryImpl(otherAppItemParams)
-    }
-
-    override fun plusAboutItem(): AboutItemComponent.Factory {
-      return AboutItemComponent.Impl.FactoryImpl()
     }
 
     override fun plusClearConfirm(): SettingsClearConfigComponent.Factory {

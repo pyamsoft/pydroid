@@ -215,7 +215,8 @@ public object OssLibraries {
             description = description,
             libraryUrl = url,
             licenseName = license.license,
-            licenseUrl = license.location))
+            licenseUrl = license.location,
+        ))
   }
 
   /** Get the list of libraries used in the application */

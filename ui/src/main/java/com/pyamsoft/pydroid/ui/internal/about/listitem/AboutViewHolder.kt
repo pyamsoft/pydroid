@@ -41,7 +41,7 @@ private constructor(
 
     binding.aboutListitemRoot.setContent {
       MdcTheme {
-        AboutItemComposable(
+        AboutListItem(
             state = state,
             onClickViewHomePage = {
               callback(AboutItemViewEvent.OpenLibraryUrl, bindingAdapterPosition)

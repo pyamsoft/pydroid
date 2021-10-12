@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 @Composable
-internal fun AboutItemComposable(
+internal fun AboutListItem(
     state: AboutItemViewState,
     onClickViewHomePage: () -> Unit,
     onClickViewLicense: () -> Unit
@@ -133,7 +133,7 @@ private fun VisitHomepage(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewAboutItemComposable() {
-  AboutItemComposable(
+  AboutListItem(
       state = AboutItemViewState(OssLibraries.libraries().first()),
       onClickViewLicense = {},
       onClickViewHomePage = {},

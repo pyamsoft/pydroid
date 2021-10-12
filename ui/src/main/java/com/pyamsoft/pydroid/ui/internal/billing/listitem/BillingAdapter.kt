@@ -44,7 +44,7 @@ internal constructor(private val owner: LifecycleOwner, private val callback: Ca
     holder.bindState(item)
   }
 
-  fun interface Callback {
+  interface Callback {
 
     fun onPurchase(index: Int)
   }

@@ -75,9 +75,8 @@ internal fun AboutListItem(
 @Composable
 private fun Name(library: OssLibrary) {
   Text(
-      style = MaterialTheme.typography.body1,
+      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
       text = library.name,
-      fontWeight = FontWeight.Bold,
   )
 }
 
@@ -132,7 +131,7 @@ private fun VisitHomepage(onClick: () -> Unit) {
 
 @Preview
 @Composable
-private fun PreviewAboutItemComposable() {
+private fun PreviewAboutListItem() {
   AboutListItem(
       state = AboutItemViewState(OssLibraries.libraries().first()),
       onClickViewLicense = {},

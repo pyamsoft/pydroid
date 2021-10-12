@@ -16,13 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.billing.BillingSku
 
 internal data class BillingItemViewState internal constructor(val sku: BillingSku) : UiViewState
-
-internal sealed class BillingItemViewEvent : UiViewEvent {
-
-  object Purchase : BillingItemViewEvent()
-}

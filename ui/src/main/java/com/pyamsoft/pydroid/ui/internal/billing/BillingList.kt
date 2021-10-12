@@ -38,7 +38,8 @@ import io.cabriole.decorator.LinearMarginDecoration
 
 internal class BillingList
 internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
-    BaseUiView<BillingViewState, BillingViewEvent, BillingListBinding>(parent) {
+    BaseUiView<BillingViewState, BillingViewEvent, BillingListBinding>(parent),
+    BillingAdapter.Callback {
 
   override val viewBinding = BillingListBinding::inflate
 
@@ -65,7 +66,7 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
   }
 
   private fun setupListView() {
-    billingAdapter = BillingAdapter(owner) { publish(BillingViewEvent.Purchase(it)) }
+    billingAdapter = BillingAdapter(owner, this)
 
     binding.billingList.apply {
       adapter = billingAdapter
@@ -126,5 +127,9 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
 
     binding.billingList.isGone = true
     binding.billingError.isVisible = true
+  }
+
+  override fun onPurchase(index: Int) {
+    publish(BillingViewEvent.Purchase(index))
   }
 }

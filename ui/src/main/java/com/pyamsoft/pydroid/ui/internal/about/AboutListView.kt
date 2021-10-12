@@ -27,8 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutAdapter
-import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
-import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewState
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
@@ -36,7 +34,8 @@ import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class AboutListView internal constructor(owner: LifecycleOwner, parent: ViewGroup) :
-    BaseUiView<AboutViewState, AboutViewEvent.ListItemEvent, AboutLibrariesListBinding>(parent) {
+    BaseUiView<AboutViewState, AboutViewEvent.ListItemEvent, AboutLibrariesListBinding>(parent),
+    AboutAdapter.Callback {
 
   override val viewBinding = AboutLibrariesListBinding::inflate
 
@@ -75,13 +74,7 @@ internal class AboutListView internal constructor(owner: LifecycleOwner, parent:
   }
 
   private fun setupListView(owner: LifecycleOwner) {
-    aboutAdapter =
-        AboutAdapter(owner) { event, index ->
-          return@AboutAdapter when (event) {
-            is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
-            is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
-          }
-        }
+    aboutAdapter = AboutAdapter(owner, this)
 
     binding.aboutList.apply {
       adapter = aboutAdapter
@@ -153,6 +146,14 @@ internal class AboutListView internal constructor(owner: LifecycleOwner, parent:
 
   private fun clearLicenses() {
     usingAdapter().submitList(null)
+  }
+
+  override fun onViewLicense(index: Int) {
+    publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
+  }
+
+  override fun onViewHomepage(index: Int) {
+    publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
   }
 
   companion object {

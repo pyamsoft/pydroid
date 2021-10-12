@@ -30,7 +30,7 @@ internal class AboutViewHolder
 private constructor(
     private val binding: AdapterItemAboutLicenseBinding,
     owner: LifecycleOwner,
-    private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
+    private val callback: AboutAdapter.Callback,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
 
   init {
@@ -38,17 +38,12 @@ private constructor(
   }
 
   override fun bindState(state: AboutItemViewState) {
-
     binding.aboutListitemRoot.setContent {
       MdcTheme {
         AboutListItem(
             state = state,
-            onClickViewHomePage = {
-              callback(AboutItemViewEvent.OpenLibraryUrl, bindingAdapterPosition)
-            },
-            onClickViewLicense = {
-              callback(AboutItemViewEvent.OpenLicenseUrl, bindingAdapterPosition)
-            },
+            onClickViewHomePage = { callback.onViewHomepage(bindingAdapterPosition) },
+            onClickViewLicense = { callback.onViewLicense(bindingAdapterPosition) },
         )
       }
     }
@@ -66,7 +61,7 @@ private constructor(
         inflater: LayoutInflater,
         container: ViewGroup,
         owner: LifecycleOwner,
-        callback: (event: AboutItemViewEvent, index: Int) -> Unit
+        callback: AboutAdapter.Callback,
     ): AboutViewHolder {
       val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
       return AboutViewHolder(binding, owner, callback)

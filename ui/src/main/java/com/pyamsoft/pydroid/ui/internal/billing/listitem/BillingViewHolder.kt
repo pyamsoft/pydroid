@@ -21,55 +21,35 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.createViewBinder
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
+import com.pyamsoft.pydroid.ui.databinding.BillingListItemBinding
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class BillingViewHolder
 private constructor(
-    binding: ListitemLinearHorizontalBinding,
+    private val binding: BillingListItemBinding,
     owner: LifecycleOwner,
-    callback: BillingAdapter.Callback
+    private val callback: BillingAdapter.Callback
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<BillingItemViewState> {
 
-  private val binder: ViewBinder<BillingItemViewState>
-
-  internal var clickView: BillingItemClick? = null
-  internal var contentView: BillingItemContent? = null
-  internal var priceView: BillingItemPrice? = null
-
   init {
-    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-        .plusBillingItem()
-        .create(binding.listitemLinearH)
-        .inject(this)
-
-    val click = clickView.requireNotNull()
-    val content = contentView.requireNotNull()
-    val price = priceView.requireNotNull()
-    binder =
-        createViewBinder(click, content, price) {
-          return@createViewBinder when (it) {
-            is BillingItemViewEvent.Purchase -> callback.onPurchase(bindingAdapterPosition)
-          }
-        }
-
     owner.doOnDestroy { teardown() }
   }
 
   override fun bindState(state: BillingItemViewState) {
-    binder.bindState(state)
+    binding.billingListItem.setContent {
+      MdcTheme {
+        BillingListItem(
+            state = state,
+            onPurchase = { callback.onPurchase(bindingAdapterPosition) },
+        )
+      }
+    }
   }
 
   override fun teardown() {
-    binder.teardown()
-
-    contentView = null
-    priceView = null
+    binding.billingListItem.disposeComposition()
   }
 
   companion object {
@@ -82,7 +62,7 @@ private constructor(
         owner: LifecycleOwner,
         callback: BillingAdapter.Callback,
     ): BillingViewHolder {
-      val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
+      val binding = BillingListItemBinding.inflate(inflater, container, false)
       return BillingViewHolder(binding, owner, callback)
     }
   }

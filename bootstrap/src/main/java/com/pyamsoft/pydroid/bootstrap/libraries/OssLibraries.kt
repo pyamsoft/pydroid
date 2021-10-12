@@ -150,6 +150,36 @@ public object OssLibraries {
         "AndroidFastScroll",
         "https://github.com/zhanghai/AndroidFastScroll",
         "Fast scroll for Android RecyclerView and more")
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Animation",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Material",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Foundation",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Android Compose Theme Adapter",
+        "https://github.com/material-components/material-components-android-compose-theme-adapter",
+        "A library that enables reuse of Material Components for Android XML themes for theming in Jetpack Compose.",
+    )
   }
 
   private fun addLoaderLibraries() {
@@ -184,6 +214,16 @@ public object OssLibraries {
         "AndroidX Lifecycle ViewModel",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
         "The AndroidX Jetpack ViewModel library. Model the state of your application easily.")
+    add(
+        "Jetpack Compose Compiler",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Runtime",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
   }
 
   private fun addNotifyLibraries() {

@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +40,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 @Composable
+@OptIn(ExperimentalAnimationApi::class)
 internal fun AboutScreen(
     state: AboutViewState,
     onNavigationErrorDismissed: () -> Unit,
@@ -57,14 +60,16 @@ internal fun AboutScreen(
         scaffoldState = scaffoldState,
     ) {
       Box {
-        if (isLoading) {
-          Loading()
-        } else {
-          AboutList(
-              list = list,
-              onViewHomePage = onViewHomePage,
-              onViewLicense = onViewLicense,
-          )
+        Crossfade(targetState = isLoading) { loading ->
+          if (loading) {
+            Loading()
+          } else {
+            AboutList(
+                list = list,
+                onViewHomePage = onViewHomePage,
+                onViewLicense = onViewLicense,
+            )
+          }
         }
 
         NavigationError(

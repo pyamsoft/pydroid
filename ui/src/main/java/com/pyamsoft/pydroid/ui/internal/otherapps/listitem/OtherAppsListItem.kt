@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -108,11 +110,11 @@ private fun Icon(app: OtherApp) {
 }
 
 @Composable
+@OptIn(ExperimentalAnimationApi::class)
 private fun Description(app: OtherApp) {
   val description = app.description
 
-  // TODO Replace with AnimatedVisibility
-  if (description.isNotBlank()) {
+  AnimatedVisibility(visible = description.isNotBlank()) {
     Box(
         modifier = Modifier.padding(vertical = 8.dp),
     ) {

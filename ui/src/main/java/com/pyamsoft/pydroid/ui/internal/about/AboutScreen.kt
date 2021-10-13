@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
@@ -29,11 +28,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import java.util.Locale
 
 @Composable
 internal fun AboutScreen(
@@ -49,8 +48,7 @@ internal fun AboutScreen(
   val scaffoldState = rememberScaffoldState()
 
   Surface(
-      modifier =
-          Modifier.fillMaxWidth().fillMaxHeight().wrapContentWidth(Alignment.CenterHorizontally),
+      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
   ) {
     Scaffold(
         scaffoldState = scaffoldState,
@@ -83,7 +81,7 @@ private fun AboutList(
   if (!isLoading) {
     Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
       LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-        itemsIndexed(list, key = { _, item -> item.libraryUrl }) { index, item ->
+        itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
           AboutListItem(
               library = item,
               onViewHomePage = { onViewHomePage(index) },
@@ -121,7 +119,7 @@ private fun PreviewAboutScreen(
       state =
           AboutViewState(
               isLoading = isLoading,
-              licenses = OssLibraries.libraries().toList(),
+              licenses = OssLibraries.libraries().sortedBy { it.name.lowercase() },
               navigationError = error,
           ),
       onNavigationErrorDismissed = {},

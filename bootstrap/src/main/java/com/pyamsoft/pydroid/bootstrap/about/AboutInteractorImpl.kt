@@ -28,7 +28,6 @@ internal class AboutInteractorImpl internal constructor() : AboutInteractor {
   override suspend fun loadLicenses(force: Boolean): List<OssLibrary> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        val locale = Locale.getDefault()
-        return@withContext OssLibraries.libraries().sortedBy { it.name.lowercase(locale) }
+        return@withContext OssLibraries.libraries().sortedBy { it.name.lowercase() }
       }
 }

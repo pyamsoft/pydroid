@@ -47,7 +47,7 @@ public interface Theming {
 
     @CheckResult
     internal fun toRawString(): String {
-      return name.lowercase(Locale.getDefault())
+      return name.lowercase()
     }
 
     @CheckResult

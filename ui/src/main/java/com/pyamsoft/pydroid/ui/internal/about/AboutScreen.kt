@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
@@ -30,9 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import java.util.Locale
 
 @Composable
 internal fun AboutScreen(
@@ -82,11 +83,20 @@ private fun AboutList(
     Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
       LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
-          AboutListItem(
-              library = item,
-              onViewHomePage = { onViewHomePage(index) },
-              onViewLicense = { onViewLicense(index) },
-          )
+          Box(
+              modifier =
+                  Modifier.padding(horizontal = 8.dp)
+                      .padding(
+                          top = 8.dp,
+                          bottom = if (index == list.lastIndex) 8.dp else 0.dp,
+                      ),
+          ) {
+            AboutListItem(
+                library = item,
+                onViewHomePage = { onViewHomePage(index) },
+                onViewLicense = { onViewLicense(index) },
+            )
+          }
         }
       }
     }

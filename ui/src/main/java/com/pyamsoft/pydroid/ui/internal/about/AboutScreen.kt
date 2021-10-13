@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
@@ -29,6 +30,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,12 +57,15 @@ internal fun AboutScreen(
         scaffoldState = scaffoldState,
     ) {
       Box {
-        AboutList(
-            list = list,
-            isLoading = isLoading,
-            onViewHomePage = onViewHomePage,
-            onViewLicense = onViewLicense,
-        )
+        if (isLoading) {
+          Loading()
+        } else {
+          AboutList(
+              list = list,
+              onViewHomePage = onViewHomePage,
+              onViewLicense = onViewLicense,
+          )
+        }
 
         NavigationError(
             snackbarHost = scaffoldState.snackbarHostState,
@@ -73,30 +78,35 @@ internal fun AboutScreen(
 }
 
 @Composable
+private fun Loading() {
+  Box(
+      modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+      contentAlignment = Alignment.Center,
+  ) { CircularProgressIndicator() }
+}
+
+@Composable
 private fun AboutList(
     list: List<OssLibrary>,
-    isLoading: Boolean,
     onViewHomePage: (index: Int) -> Unit,
     onViewLicense: (index: Int) -> Unit,
 ) {
-  if (!isLoading) {
-    Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
-      LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-        itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
-          Box(
-              modifier =
-                  Modifier.padding(horizontal = 8.dp)
-                      .padding(
-                          top = 8.dp,
-                          bottom = if (index == list.lastIndex) 8.dp else 0.dp,
-                      ),
-          ) {
-            AboutListItem(
-                library = item,
-                onViewHomePage = { onViewHomePage(index) },
-                onViewLicense = { onViewLicense(index) },
-            )
-          }
+  Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
+    LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+      itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
+        Box(
+            modifier =
+                Modifier.padding(horizontal = 8.dp)
+                    .padding(
+                        top = 8.dp,
+                        bottom = if (index == list.lastIndex) 8.dp else 0.dp,
+                    ),
+        ) {
+          AboutListItem(
+              library = item,
+              onViewHomePage = { onViewHomePage(index) },
+              onViewLicense = { onViewLicense(index) },
+          )
         }
       }
     }

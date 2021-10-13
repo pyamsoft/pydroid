@@ -180,6 +180,11 @@ public object OssLibraries {
         "https://github.com/material-components/material-components-android-compose-theme-adapter",
         "A library that enables reuse of Material Components for Android XML themes for theming in Jetpack Compose.",
     )
+    add(
+        "Landscapist",
+        "https://github.com/skydoves/Landscapist",
+        "Jetpack Compose image loading library which can fetch and display network images using Glide, Coil, and Fresco",
+    )
   }
 
   private fun addLoaderLibraries() {

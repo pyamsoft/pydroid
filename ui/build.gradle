@@ -44,7 +44,7 @@ dependencies {
   implementation "androidx.compose.ui:ui-tooling:$composeTooling"
   implementation "com.google.android.material:compose-theme-adapter:$composeMaterial"
 
-  implementation "com.github.skydoves:landscapist-glide:$landscapist"
+  implementation "com.github.skydoves:landscapist-coil:$landscapist"
 
   // These need to be API since they are used as base classes for Activity and Fragment
   api "androidx.fragment:fragment-ktx:$fragment"

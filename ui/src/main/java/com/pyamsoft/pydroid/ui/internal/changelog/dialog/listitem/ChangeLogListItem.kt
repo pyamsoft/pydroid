@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +33,9 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 @Composable
 internal fun ChangeLogListItem(state: ChangeLogItemViewState) {
   val line = state.line
-  Row {
+  Row(
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
     Column(modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.Center) {
       Type(
           line = line,

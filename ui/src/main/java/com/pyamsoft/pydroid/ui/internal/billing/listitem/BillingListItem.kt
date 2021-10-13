@@ -36,6 +36,7 @@ internal fun BillingListItem(state: BillingItemViewState, onPurchase: () -> Unit
 
   Row(
       modifier = Modifier.padding(8.dp).clickable { onPurchase() },
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1F)) {
       Name(

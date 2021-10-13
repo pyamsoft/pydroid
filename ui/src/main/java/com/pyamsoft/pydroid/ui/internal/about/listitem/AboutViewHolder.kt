@@ -42,8 +42,8 @@ private constructor(
       MdcTheme {
         AboutListItem(
             state = state,
-            onClickViewHomePage = { callback.onViewHomepage(bindingAdapterPosition) },
-            onClickViewLicense = { callback.onViewLicense(bindingAdapterPosition) },
+            onViewHomePage = { callback.onViewHomepage(bindingAdapterPosition) },
+            onViewLicense = { callback.onViewLicense(bindingAdapterPosition) },
         )
       }
     }

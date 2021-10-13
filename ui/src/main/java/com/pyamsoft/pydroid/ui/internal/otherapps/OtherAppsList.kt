@@ -26,8 +26,6 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsListBinding
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsAdapter
-import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.OpenStore
-import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewState
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
@@ -35,7 +33,8 @@ import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class OtherAppsList internal constructor(owner: LifecycleOwner, parent: ViewGroup) :
-    BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent) {
+    BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent),
+    OtherAppsAdapter.Callback {
 
   override val viewBinding = OtherAppsListBinding::inflate
 
@@ -74,13 +73,7 @@ internal class OtherAppsList internal constructor(owner: LifecycleOwner, parent:
   }
 
   private fun setupListView(owner: LifecycleOwner) {
-    listAdapter =
-        OtherAppsAdapter(owner) { event, index ->
-          return@OtherAppsAdapter when (event) {
-            is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
-            is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
-          }
-        }
+    listAdapter = OtherAppsAdapter(owner, this)
 
     binding.otherAppsList.apply {
       adapter = listAdapter
@@ -138,6 +131,14 @@ internal class OtherAppsList internal constructor(owner: LifecycleOwner, parent:
 
   private fun clearApps() {
     usingAdapter().submitList(null)
+  }
+
+  override fun onOpenStore(index: Int) {
+    publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
+  }
+
+  override fun onViewSource(index: Int) {
+    publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
   }
 
   companion object {

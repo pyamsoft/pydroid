@@ -26,7 +26,7 @@ import me.zhanghai.android.fastscroll.PopupTextProvider
 internal class OtherAppsAdapter
 internal constructor(
     private val owner: LifecycleOwner,
-    private val callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
+    private val callback: Callback,
 ) : ListAdapter<OtherAppsItemViewState, OtherAppsViewHolder>(DIFFER), PopupTextProvider {
 
   init {
@@ -50,6 +50,13 @@ internal constructor(
   override fun onBindViewHolder(holder: OtherAppsViewHolder, position: Int) {
     val item = getItem(position)
     holder.bindState(item)
+  }
+
+  interface Callback {
+
+    fun onOpenStore(index: Int)
+
+    fun onViewSource(index: Int)
   }
 
   companion object {

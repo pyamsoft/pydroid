@@ -38,8 +38,8 @@ import com.pyamsoft.pydroid.ui.R
 @Composable
 internal fun AboutListItem(
     state: AboutItemViewState,
-    onClickViewHomePage: () -> Unit,
-    onClickViewLicense: () -> Unit
+    onViewHomePage: () -> Unit,
+    onViewLicense: () -> Unit
 ) {
   val library = state.library
 
@@ -62,10 +62,10 @@ internal fun AboutListItem(
 
       Row(modifier = Modifier.padding(top = 8.dp)) {
         ViewLicense(
-            onClick = onClickViewLicense,
+            onClick = onViewLicense,
         )
         VisitHomepage(
-            onClick = onClickViewHomePage,
+            onClick = onViewHomePage,
         )
       }
     }
@@ -134,7 +134,7 @@ private fun VisitHomepage(onClick: () -> Unit) {
 private fun PreviewAboutListItem() {
   AboutListItem(
       state = AboutItemViewState(OssLibraries.libraries().first()),
-      onClickViewLicense = {},
-      onClickViewHomePage = {},
+      onViewLicense = {},
+      onViewHomePage = {},
   )
 }

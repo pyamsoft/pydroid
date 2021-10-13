@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
-import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
@@ -49,8 +48,6 @@ internal interface PYDroidComponent {
   @CheckResult fun plusAbout(): AboutComponent.Factory
 
   @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
-
-  @CheckResult fun plusOtherAppsItem(): OtherAppsItemComponent.Factory
 
   @CheckResult fun plusClearConfirm(): SettingsClearConfigComponent.Factory
 
@@ -173,11 +170,6 @@ internal interface PYDroidComponent {
           OtherAppsComponent.Factory.Parameters(factory = viewModelFactory)
         }
 
-    private val otherAppItemParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsItemComponent.Factory.Parameters(imageLoader = loaderModule.provideLoader())
-        }
-
     private val changeLogParams by
         lazy(LazyThreadSafetyMode.NONE) {
           ChangeLogComponent.Factory.Parameters(factory = viewModelFactory)
@@ -253,10 +245,6 @@ internal interface PYDroidComponent {
 
     override fun plusOtherApps(): OtherAppsComponent.Factory {
       return OtherAppsComponent.Impl.FactoryImpl(otherAppsParams)
-    }
-
-    override fun plusOtherAppsItem(): OtherAppsItemComponent.Factory {
-      return OtherAppsItemComponent.Impl.FactoryImpl(otherAppItemParams)
     }
 
     override fun plusClearConfirm(): SettingsClearConfigComponent.Factory {

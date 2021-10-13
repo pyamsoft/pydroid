@@ -21,24 +21,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.StateSaver
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.arch.UiController
-import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
-
-  private var stateSaver: StateSaver? = null
-  internal var listView: AboutListView? = null
-  internal var errorView: AboutErrors? = null
 
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<AboutViewModel> { factory.requireNotNull() }
@@ -47,36 +43,37 @@ internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.layout_frame, container, false)
+  ): View {
+    val context = inflater.context
+
+    Injector.obtainFromApplication<PYDroidComponent>(context).plusAbout().create().inject(this)
+
+    viewModel.bindController(viewLifecycleOwner, this)
+
+    return ComposeView(context).apply {
+      id = R.id.about_fragment
+
+      layoutParams =
+          ViewGroup.LayoutParams(
+              ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+      setContent {
+        MdcTheme {
+          val state by viewModel.compose()
+
+          AboutScreen(
+              state = state,
+              onViewHomePage = { viewModel.handleOpenLibrary(it) },
+              onViewLicense = { viewModel.handleOpenLicense(it) },
+              onNavigationErrorDismissed = { viewModel.handleHideNavigationError() },
+          )
+        }
+      }
+    }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    val binding = LayoutFrameBinding.bind(view)
-    Injector.obtainFromApplication<PYDroidComponent>(view.context)
-        .plusAbout()
-        .create(binding.layoutFrame, viewLifecycleOwner)
-        .inject(this)
-
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            viewLifecycleOwner,
-            viewModel,
-            controller = this,
-            listView.requireNotNull(),
-            errorView.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
-            is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
-            is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.handleOpenLibrary(it.index)
-            is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.handleOpenLicense(it.index)
-          }
-        }
-
     viewModel.handleLoadLicenses()
   }
 
@@ -88,15 +85,8 @@ internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    listView = null
     factory = null
-    errorView = null
-    stateSaver = null
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    stateSaver?.saveState(outState)
+    (view as? ComposeView)?.disposeComposition()
   }
 
   private fun openUrl(url: String) {

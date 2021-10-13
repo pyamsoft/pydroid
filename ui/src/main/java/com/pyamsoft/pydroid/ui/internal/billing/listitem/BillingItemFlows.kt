@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.billing.BillingSku
 
+@Stable
 internal data class BillingItemViewState internal constructor(val sku: BillingSku) : UiViewState

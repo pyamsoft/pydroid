@@ -24,5 +24,5 @@ import com.pyamsoft.pydroid.core.ResultWrapper
 public interface AboutInteractor {
 
   /** Load libraries for the application. */
-  @CheckResult public suspend fun loadLicenses(force: Boolean): ResultWrapper<List<OssLibrary>>
+  @CheckResult public suspend fun loadLicenses(force: Boolean): List<OssLibrary>
 }

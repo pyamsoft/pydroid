@@ -16,15 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
 
-import com.pyamsoft.pydroid.arch.UiViewEvent
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
+@Stable
 internal data class OtherAppsItemViewState internal constructor(val app: OtherApp) : UiViewState
-
-internal sealed class OtherAppsItemViewEvent : UiViewEvent {
-
-  object ViewSource : OtherAppsItemViewEvent()
-
-  object OpenStore : OtherAppsItemViewEvent()
-}

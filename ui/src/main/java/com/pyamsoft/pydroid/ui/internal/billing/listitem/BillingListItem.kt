@@ -31,8 +31,10 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.billing.BillingSku
 
 @Composable
-internal fun BillingListItem(state: BillingItemViewState, onPurchase: () -> Unit) {
-  val sku = state.sku
+internal fun BillingListItem(
+    sku: BillingSku,
+    onPurchase: () -> Unit,
+) {
 
   Row(
       modifier = Modifier.padding(8.dp).clickable { onPurchase() },
@@ -86,17 +88,15 @@ private fun Price(sku: BillingSku) {
 @Composable
 private fun PreviewBillingListItem() {
   BillingListItem(
-      state =
-          BillingItemViewState(
-              object : BillingSku {
-                override val id: String = ""
-                override val displayPrice: String = "$1.00"
-                override val price: Long = 100
-                override val title: String = "TEST"
-                override val description: String = "Just a Test"
-                override val iconUrl: String = ""
-              },
-          ),
+      sku =
+          object : BillingSku {
+            override val id: String = ""
+            override val displayPrice: String = "$1.00"
+            override val price: Long = 100
+            override val title: String = "TEST"
+            override val description: String = "Just a Test"
+            override val iconUrl: String = ""
+          },
       onPurchase = {},
   )
 }

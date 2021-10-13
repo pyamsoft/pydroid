@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.about.listitem
+package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +37,10 @@ import com.pyamsoft.pydroid.ui.R
 
 @Composable
 internal fun AboutListItem(
-    state: AboutItemViewState,
+    library: OssLibrary,
     onViewHomePage: () -> Unit,
     onViewLicense: () -> Unit
 ) {
-  val library = state.library
-
   Card(
       shape = RoundedCornerShape(size = 4.dp),
       elevation = 2.dp,
@@ -133,7 +131,7 @@ private fun VisitHomepage(onClick: () -> Unit) {
 @Composable
 private fun PreviewAboutListItem() {
   AboutListItem(
-      state = AboutItemViewState(OssLibraries.libraries().first()),
+      library = OssLibraries.libraries().first(),
       onViewLicense = {},
       onViewHomePage = {},
   )

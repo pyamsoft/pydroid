@@ -41,7 +41,7 @@ private constructor(
     binding.billingListItem.setContent {
       MdcTheme {
         BillingListItem(
-            state = state,
+            sku = state.sku,
             onPurchase = { callback.onPurchase(bindingAdapterPosition) },
         )
       }

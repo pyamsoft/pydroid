@@ -16,8 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
+@Stable
 internal data class ChangeLogItemViewState internal constructor(val line: ChangeLogLine) :
     UiViewState

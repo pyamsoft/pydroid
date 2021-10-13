@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 
@@ -28,31 +26,22 @@ internal interface AboutComponent {
 
   interface Factory {
 
-    @CheckResult fun create(parent: ViewGroup, owner: LifecycleOwner): AboutComponent
+    @CheckResult fun create(): AboutComponent
 
     data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
   }
 
-  class Impl
-  private constructor(
-      private val parent: ViewGroup,
-      private val owner: LifecycleOwner,
-      private val params: Factory.Parameters
-  ) : AboutComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : AboutComponent {
 
     override fun inject(fragment: AboutFragment) {
-      val listView = AboutListView(owner, parent)
-      val errorView = AboutErrors(owner, parent)
       fragment.factory = params.factory
-      fragment.errorView = errorView
-      fragment.listView = listView
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-      override fun create(parent: ViewGroup, owner: LifecycleOwner): AboutComponent {
+      override fun create(): AboutComponent {
         OssLibraries.usingUi = true
-        return Impl(parent, owner, params)
+        return Impl(params)
       }
     }
   }

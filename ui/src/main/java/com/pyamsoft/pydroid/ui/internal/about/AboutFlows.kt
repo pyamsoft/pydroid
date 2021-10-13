@@ -16,35 +16,18 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
+@Stable
 internal data class AboutViewState
 internal constructor(
     val isLoading: Boolean,
     val licenses: List<OssLibrary>,
-    val loadError: Throwable?,
     val navigationError: Throwable?
 ) : UiViewState
-
-internal sealed class AboutViewEvent : UiViewEvent {
-
-  internal sealed class ListItemEvent : AboutViewEvent() {
-
-    data class OpenLibrary internal constructor(val index: Int) : ListItemEvent()
-
-    data class OpenLicense internal constructor(val index: Int) : ListItemEvent()
-  }
-
-  internal sealed class ErrorEvent : AboutViewEvent() {
-
-    object HideNavigationError : ErrorEvent()
-
-    object HideLoadError : ErrorEvent()
-  }
-}
 
 internal sealed class AboutControllerEvent : UiControllerEvent {
 

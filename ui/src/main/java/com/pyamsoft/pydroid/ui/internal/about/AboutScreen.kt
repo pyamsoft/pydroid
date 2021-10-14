@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
@@ -46,6 +48,7 @@ internal fun AboutScreen(
     onNavigationErrorDismissed: () -> Unit,
     onViewHomePage: (index: Int) -> Unit,
     onViewLicense: (index: Int) -> Unit,
+    onClose: () -> Unit,
 ) {
   val list = state.licenses
   val isLoading = state.isLoading
@@ -59,7 +62,11 @@ internal fun AboutScreen(
     Scaffold(
         scaffoldState = scaffoldState,
     ) {
-      Box {
+      Column {
+        DialogToolbar(
+            title = "Open Source Licenses",
+            onClose = onClose,
+        )
         Crossfade(targetState = isLoading) { loading ->
           if (loading) {
             Loading()
@@ -150,6 +157,7 @@ private fun PreviewAboutScreen(
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},
+      onClose = {},
   )
 }
 

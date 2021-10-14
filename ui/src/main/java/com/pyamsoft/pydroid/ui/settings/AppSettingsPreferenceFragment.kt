@@ -73,9 +73,8 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   internal var versionCheckView: VersionCheckView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val settingsViewModel by activityViewModels<AppSettingsViewModel> {
-    factory.requireNotNull()
-  }
+  private val settingsViewModel by
+      activityViewModels<AppSettingsViewModel> { factory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
@@ -83,15 +82,13 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
-    factory.requireNotNull()
-  }
+  private val versionViewModel by
+      activityViewModels<VersionCheckViewModel> { factory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
-    factory.requireNotNull()
-  }
+  private val changeLogViewModel by
+      activityViewModels<ChangeLogViewModel> { factory.requireNotNull() }
 
   /** On inflate preferences */
   @CallSuper
@@ -233,7 +230,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   @CallSuper
   protected open fun onLicenseItemClicked() {
     Timber.d("Show about licenses fragment")
-    AboutDialog().show(requireActivity(), AboutDialog.TAG)
+    AboutDialog.show(requireActivity())
   }
 
   /** Shows a page for Source licenses, override or extend to use unique implementation */

@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 
 internal interface AboutComponent {
 
-  fun inject(fragment: AboutFragment)
+  fun inject(dialog: AboutDialog)
 
   interface Factory {
 
@@ -33,8 +33,8 @@ internal interface AboutComponent {
 
   class Impl private constructor(private val params: Factory.Parameters) : AboutComponent {
 
-    override fun inject(fragment: AboutFragment) {
-      fragment.factory = params.factory
+    override fun inject(dialog: AboutDialog) {
+      dialog.factory = params.factory
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

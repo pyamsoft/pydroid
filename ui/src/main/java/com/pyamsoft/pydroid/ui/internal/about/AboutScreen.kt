@@ -18,11 +18,12 @@ package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
@@ -56,9 +57,7 @@ internal fun AboutScreen(
 
   val scaffoldState = rememberScaffoldState()
 
-  Surface(
-      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-  ) {
+  Surface {
     Scaffold(
         scaffoldState = scaffoldState,
     ) {
@@ -103,23 +102,18 @@ private fun AboutList(
     onViewHomePage: (index: Int) -> Unit,
     onViewLicense: (index: Int) -> Unit,
 ) {
-  Box(modifier = Modifier.fillMaxHeight().fillMaxWidth()) {
-    LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+  Box {
+    LazyColumn(
+        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        contentPadding = PaddingValues(8.dp),
+    ) {
       itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
-        Box(
-            modifier =
-                Modifier.padding(horizontal = 8.dp)
-                    .padding(
-                        top = 8.dp,
-                        bottom = if (index == list.lastIndex) 8.dp else 0.dp,
-                    ),
-        ) {
-          AboutListItem(
-              library = item,
-              onViewHomePage = { onViewHomePage(index) },
-              onViewLicense = { onViewLicense(index) },
-          )
-        }
+        AboutListItem(
+            library = item,
+            onViewHomePage = { onViewHomePage(index) },
+            onViewLicense = { onViewLicense(index) },
+        )
       }
     }
   }

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing.listitem
+package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -37,7 +38,7 @@ internal fun BillingListItem(
 ) {
 
   Row(
-      modifier = Modifier.padding(8.dp).clickable { onPurchase() },
+      modifier = Modifier.fillMaxWidth().clickable { onPurchase() },
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1F)) {

@@ -20,6 +20,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -48,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingListItem
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
@@ -66,9 +66,7 @@ internal fun BillingScreen(
 
   val scaffoldState = rememberScaffoldState()
 
-  Surface(
-      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-  ) {
+  Surface {
     Scaffold(
         scaffoldState = scaffoldState,
     ) {
@@ -111,7 +109,7 @@ private fun SkuList(
     onPurchase: (index: Int) -> Unit,
     onClose: () -> Unit,
 ) {
-  Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+  Column {
     // Remember the computed ready state
     val readyState = remember {
       ReadyState(
@@ -120,15 +118,25 @@ private fun SkuList(
       )
     }
 
-    Crossfade(targetState = readyState) { ready ->
+    Crossfade(
+        targetState = readyState,
+    ) { ready ->
       if (ready.isEmpty || !isConnected) {
         ErrorText()
       } else {
-        LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-          itemsIndexed(list, key = { _, item -> item.id }) { index, item ->
-            Box(
-                modifier = Modifier.padding(horizontal = 8.dp),
-            ) { BillingListItem(sku = item, onPurchase = { onPurchase(index) }) }
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(8.dp),
+        ) {
+          itemsIndexed(
+              items = list,
+              key = { _, item -> item.id },
+          ) { index, item ->
+            BillingListItem(
+                sku = item,
+                onPurchase = { onPurchase(index) },
+            )
           }
         }
       }
@@ -144,7 +152,7 @@ private fun SkuList(
 @Composable
 private fun ErrorText() {
   Box(
-      modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(8.dp),
+      modifier = Modifier.fillMaxWidth().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) {
     Text(

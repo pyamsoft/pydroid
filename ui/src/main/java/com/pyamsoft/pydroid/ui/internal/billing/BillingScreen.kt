@@ -171,7 +171,7 @@ private fun Header(
     name: String,
 ) {
   Column(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().padding(top = 16.dp).padding(horizontal = 16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

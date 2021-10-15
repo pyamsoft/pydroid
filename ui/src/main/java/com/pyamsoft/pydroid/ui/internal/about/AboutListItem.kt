@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -134,9 +135,11 @@ private fun VisitHomepage(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewAboutListItem() {
-  AboutListItem(
-      library = OssLibraries.libraries().first(),
-      onViewLicense = {},
-      onViewHomePage = {},
-  )
+  Surface {
+    AboutListItem(
+        library = OssLibraries.libraries().first(),
+        onViewLicense = {},
+        onViewHomePage = {},
+    )
+  }
 }

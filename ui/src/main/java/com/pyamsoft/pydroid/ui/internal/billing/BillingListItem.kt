@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -88,16 +89,18 @@ private fun Price(sku: BillingSku) {
 @Preview
 @Composable
 private fun PreviewBillingListItem() {
-  BillingListItem(
-      sku =
-          object : BillingSku {
-            override val id: String = ""
-            override val displayPrice: String = "$1.00"
-            override val price: Long = 100
-            override val title: String = "TEST"
-            override val description: String = "Just a Test"
-            override val iconUrl: String = ""
-          },
-      onPurchase = {},
-  )
+  Surface {
+    BillingListItem(
+        sku =
+            object : BillingSku {
+              override val id: String = ""
+              override val displayPrice: String = "$1.00"
+              override val price: Long = 100
+              override val title: String = "TEST"
+              override val description: String = "Just a Test"
+              override val iconUrl: String = ""
+            },
+        onPurchase = {},
+    )
+  }
 }

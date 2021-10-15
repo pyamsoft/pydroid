@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -74,11 +75,13 @@ private fun Line(line: ChangeLogLine) {
 @Preview
 @Composable
 private fun PreviewChangeLogListItem() {
-  ChangeLogListItem(
-      line =
-          ChangeLogLine(
-              ChangeLogLine.Type.FEATURE,
-              "Changed Stuff, like a lot of stuff, so much stuff that you wouldn't even recognize",
-          ),
-  )
+    Surface {
+        ChangeLogListItem(
+            line =
+            ChangeLogLine(
+                ChangeLogLine.Type.FEATURE,
+                "Changed Stuff, like a lot of stuff, so much stuff that you wouldn't even recognize",
+            ),
+        )
+    }
 }

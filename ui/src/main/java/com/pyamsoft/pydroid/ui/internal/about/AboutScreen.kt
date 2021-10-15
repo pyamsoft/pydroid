@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -56,28 +57,30 @@ internal fun AboutScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Column {
-    DialogToolbar(
-        title = "Open Source Licenses",
-        onClose = onClose,
-    )
-    Crossfade(targetState = isLoading) { loading ->
-      if (loading) {
-        Loading()
-      } else {
-        AboutList(
-            list = list,
-            onViewHomePage = onViewHomePage,
-            onViewLicense = onViewLicense,
-        )
+  Surface {
+    Column {
+      DialogToolbar(
+          title = "Open Source Licenses",
+          onClose = onClose,
+      )
+      Crossfade(targetState = isLoading) { loading ->
+        if (loading) {
+          Loading()
+        } else {
+          AboutList(
+              list = list,
+              onViewHomePage = onViewHomePage,
+              onViewLicense = onViewLicense,
+          )
+        }
       }
-    }
 
-    NavigationError(
-        snackbarHost = snackbarHostState,
-        error = navigationError,
-        onSnackbarDismissed = onNavigationErrorDismissed,
-    )
+      NavigationError(
+          snackbarHost = snackbarHostState,
+          error = navigationError,
+          onSnackbarDismissed = onNavigationErrorDismissed,
+      )
+    }
   }
 }
 

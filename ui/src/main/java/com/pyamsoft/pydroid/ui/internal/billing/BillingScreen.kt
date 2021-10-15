@@ -32,6 +32,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -62,34 +63,36 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Column {
-    Header(
-        icon = icon,
-        name = name,
-    )
+  Surface {
+    Column {
+      Header(
+          icon = icon,
+          name = name,
+      )
 
-    Crossfade(targetState = connection) { connected ->
-      // Remember computed value
-      val isLoading = remember { connected == BillingState.LOADING }
-      val isConnected = remember { connected == BillingState.CONNECTED }
+      Crossfade(targetState = connection) { connected ->
+        // Remember computed value
+        val isLoading = remember { connected == BillingState.LOADING }
+        val isConnected = remember { connected == BillingState.CONNECTED }
 
-      if (isLoading) {
-        Loading()
-      } else {
-        SkuList(
-            isConnected = isConnected,
-            list = skuList,
-            onPurchase = onPurchase,
-            onClose = onClose,
-        )
+        if (isLoading) {
+          Loading()
+        } else {
+          SkuList(
+              isConnected = isConnected,
+              list = skuList,
+              onPurchase = onPurchase,
+              onClose = onClose,
+          )
+        }
       }
-    }
 
-    BillingError(
-        snackbarHost = snackbarHostState,
-        error = error,
-        onSnackbarDismissed = onBillingErrorDismissed,
-    )
+      BillingError(
+          snackbarHost = snackbarHostState,
+          error = error,
+          onSnackbarDismissed = onBillingErrorDismissed,
+      )
+    }
   }
 }
 
@@ -118,7 +121,7 @@ private fun SkuList(
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(8.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         ) {
           itemsIndexed(
               items = list,
@@ -133,7 +136,7 @@ private fun SkuList(
       }
     }
 
-    Row {
+    Row(modifier = Modifier.padding(16.dp)) {
       Spacer(modifier = Modifier.weight(1F))
       TextButton(onClick = onClose) { Text(text = stringResource(R.string.close)) }
     }

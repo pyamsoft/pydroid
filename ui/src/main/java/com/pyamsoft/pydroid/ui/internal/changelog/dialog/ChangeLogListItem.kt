@@ -37,7 +37,7 @@ internal fun ChangeLogListItem(line: ChangeLogLine) {
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(
-        modifier = Modifier.width(72.dp),
+        modifier = Modifier.width(80.dp),
         verticalArrangement = Arrangement.Center,
     ) {
       Type(

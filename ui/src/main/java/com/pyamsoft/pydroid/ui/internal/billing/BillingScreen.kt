@@ -24,10 +24,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
@@ -65,9 +63,7 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface(
-      color = MaterialTheme.colors.primary,
-      modifier = Modifier.wrapContentHeight(unbounded = true)) {
+  Surface {
     Column {
       Header(
           icon = icon,
@@ -175,11 +171,7 @@ private fun Header(
     name: String,
 ) {
   Column(
-      modifier =
-          Modifier.fillMaxWidth()
-              .offset(y = (-28).dp)
-              .padding(horizontal = 16.dp)
-              .padding(top = 16.dp),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

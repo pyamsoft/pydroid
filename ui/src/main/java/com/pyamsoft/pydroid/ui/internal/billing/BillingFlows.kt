@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
-import com.pyamsoft.pydroid.ui.internal.app.AppState
+import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 
 internal data class BillingViewState
 internal constructor(
@@ -28,7 +28,7 @@ internal constructor(
     val connected: BillingState,
     val skuList: List<BillingSku>,
     val error: Throwable?
-) : AppState
+) : AppViewState
 
 internal sealed class BillingControllerEvent : UiControllerEvent {
 

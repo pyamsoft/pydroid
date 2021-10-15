@@ -16,20 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.ui.internal.app.AppState
+import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-internal data class ChangeLogDialogViewState
+internal data class ChangeLogViewState
 internal constructor(
     override val icon: Int,
     override val name: String,
     val changeLog: List<ChangeLogLine>,
-) : AppState
-
-internal sealed class ChangeLogDialogViewEvent : UiViewEvent {
-
-  object Close : ChangeLogDialogViewEvent()
-
-  object Rate : ChangeLogDialogViewEvent()
-}
+) : AppViewState

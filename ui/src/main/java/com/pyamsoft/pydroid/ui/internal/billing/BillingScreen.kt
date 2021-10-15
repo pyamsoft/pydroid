@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
@@ -46,7 +45,7 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.R
-import com.skydoves.landscapist.coil.CoilImage
+import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 
 @Composable
 internal fun BillingScreen(
@@ -65,7 +64,7 @@ internal fun BillingScreen(
 
   Surface {
     Column {
-      Header(
+      AppHeader(
           icon = icon,
           name = name,
       )
@@ -162,27 +161,6 @@ private fun ErrorText() {
     Text(
         text = stringResource(R.string.billing_error_message),
         style = MaterialTheme.typography.body1)
-  }
-}
-
-@Composable
-private fun Header(
-    icon: Int,
-    name: String,
-) {
-  Column(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-  ) {
-    CoilImage(
-        imageModel = icon,
-        modifier = Modifier.size(56.dp),
-    )
-    Text(
-        text = name,
-        style = MaterialTheme.typography.h5,
-    )
   }
 }
 

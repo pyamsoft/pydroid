@@ -16,10 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -31,13 +28,7 @@ internal interface ChangeLogDialogComponent {
 
   interface Factory {
 
-    @CheckResult
-    fun create(
-        owner: LifecycleOwner,
-        parent: ViewGroup,
-        imageView: ImageView,
-        provider: ChangeLogProvider
-    ): ChangeLogDialogComponent
+    @CheckResult fun create(provider: ChangeLogProvider): ChangeLogDialogComponent
 
     data class Parameters
     internal constructor(
@@ -48,9 +39,6 @@ internal interface ChangeLogDialogComponent {
 
   class Impl
   private constructor(
-      private val owner: LifecycleOwner,
-      private val parent: ViewGroup,
-      private val imageView: ImageView,
       private val provider: ChangeLogProvider,
       private val params: Factory.Parameters,
   ) : ChangeLogDialogComponent {
@@ -61,22 +49,13 @@ internal interface ChangeLogDialogComponent {
 
     override fun inject(dialog: ChangeLogDialog) {
       dialog.factory = factory
-      dialog.listView = ChangeLogList(owner, parent)
-      dialog.nameView = ChangeLogName(parent)
-      dialog.closeView = ChangeLogClose(parent)
-      dialog.iconView = ChangeLogIcon(params.imageLoader, imageView)
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(
-          owner: LifecycleOwner,
-          parent: ViewGroup,
-          imageView: ImageView,
-          provider: ChangeLogProvider
-      ): ChangeLogDialogComponent {
-        return Impl(owner, parent, imageView, provider, params)
+      override fun create(provider: ChangeLogProvider): ChangeLogDialogComponent {
+        return Impl(provider, params)
       }
     }
   }

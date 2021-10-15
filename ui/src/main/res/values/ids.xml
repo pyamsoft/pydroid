@@ -17,4 +17,5 @@
 <resources>
     <item name="dialog_about" type="id" />
     <item name="dialog_billing" type="id" />
+    <item name="dialog_changelog" type="id" />
 </resources>

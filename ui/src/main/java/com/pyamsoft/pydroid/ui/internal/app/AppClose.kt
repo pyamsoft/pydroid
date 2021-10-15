@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.ui.databinding.ChangelogCloseBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal abstract class AppClose<S : AppState, V : UiViewEvent>
+internal abstract class AppClose<S : AppViewState, V : UiViewEvent>
 protected constructor(parent: ViewGroup, showRatingButton: Boolean) :
     BaseUiView<S, V, ChangelogCloseBinding>(parent) {
 

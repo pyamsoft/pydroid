@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
 
-internal abstract class AppName<S : AppState> protected constructor(parent: ViewGroup) :
+internal abstract class AppName<S : AppViewState> protected constructor(parent: ViewGroup) :
     BaseUiView<S, Nothing, ChangelogNameBinding>(parent) {
 
   final override val viewBinding = ChangelogNameBinding::inflate

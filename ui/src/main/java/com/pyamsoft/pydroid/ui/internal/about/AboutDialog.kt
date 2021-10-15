@@ -45,11 +45,11 @@ internal class AboutDialog : AppCompatDialogFragment() {
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View {
-    val context = inflater.context
+    val act = requireActivity()
 
-    Injector.obtainFromApplication<PYDroidComponent>(context).plusAbout().create().inject(this)
+    Injector.obtainFromApplication<PYDroidComponent>(act).plusAbout().create().inject(this)
 
-    return ComposeView(context).apply {
+    return ComposeView(act).apply {
       id = R.id.dialog_about
 
       setContent {

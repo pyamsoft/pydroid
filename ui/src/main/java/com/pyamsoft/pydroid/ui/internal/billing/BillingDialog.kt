@@ -59,6 +59,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
+
     Injector.obtainFromActivity<BillingComponent>(act)
         .plusDialog()
         .create(getApplicationProvider())

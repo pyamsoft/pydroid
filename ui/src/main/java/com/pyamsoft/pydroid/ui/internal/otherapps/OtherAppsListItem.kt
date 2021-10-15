@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
+package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -22,10 +22,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -41,37 +45,37 @@ import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-internal fun OtherAppsListItem(
-    state: OtherAppsItemViewState,
-    onOpenStore: () -> Unit,
-    onViewSource: () -> Unit
-) {
-  val app = state.app
-
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    Icon(
-        app = app,
-    )
-
-    Column(
-        modifier = Modifier.padding(8.dp).weight(1F),
-    ) {
-      Name(
+internal fun OtherAppsListItem(app: OtherApp, onOpenStore: () -> Unit, onViewSource: () -> Unit) {
+  Card(
+      modifier = Modifier.fillMaxWidth(),
+      shape = RoundedCornerShape(size = 4.dp),
+      elevation = 2.dp,
+  ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Icon(
           app = app,
       )
-      Description(
-          app = app,
-      )
-      Row {
-        ViewSource(
-            onClick = onViewSource,
+
+      Column(
+          modifier = Modifier.padding(start = 8.dp).weight(1F),
+      ) {
+        Name(
+            app = app,
         )
-        Box(
-            modifier = Modifier.padding(start = 8.dp),
-        ) {
-          OpenStore(
-              onClick = onOpenStore,
+        Description(
+            app = app,
+        )
+        Row {
+          ViewSource(
+              onClick = onViewSource,
           )
+          Box(
+              modifier = Modifier.padding(start = 8.dp),
+          ) {
+            OpenStore(
+                onClick = onOpenStore,
+            )
+          }
         }
       }
     }
@@ -98,12 +102,11 @@ private fun Icon(app: OtherApp) {
 
   if (icon.isNotBlank()) {
     Box(
-        modifier = Modifier.padding(8.dp),
         contentAlignment = Alignment.Center,
     ) {
       CoilImage(
           imageModel = app.icon,
-          modifier = Modifier.width(64.dp).height(64.dp),
+          modifier = Modifier.padding(start = 8.dp).width(64.dp).height(64.dp),
       )
     }
   }
@@ -153,19 +156,20 @@ private fun OpenStore(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewOtherAppsListItem() {
-  OtherAppsListItem(
-      state =
-          OtherAppsItemViewState(
-              OtherApp(
-                  packageName = "test",
-                  name = "Test App",
-                  description = "Just a test app",
-                  icon =
-                      "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
-                  storeUrl = "some_url",
-                  sourceUrl = "some_url",
-              )),
-      onOpenStore = {},
-      onViewSource = {},
-  )
+  Surface {
+    OtherAppsListItem(
+        app =
+            OtherApp(
+                packageName = "test",
+                name = "Test App",
+                description = "Just a test app",
+                icon =
+                    "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
+                storeUrl = "some_url",
+                sourceUrl = "some_url",
+            ),
+        onOpenStore = {},
+        onViewSource = {},
+    )
+  }
 }

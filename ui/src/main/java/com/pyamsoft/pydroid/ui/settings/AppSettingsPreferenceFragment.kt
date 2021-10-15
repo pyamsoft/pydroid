@@ -157,7 +157,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   private fun openOtherAppsPage(apps: List<OtherApp>) {
     onViewMorePyamsoftAppsClicked(false)
     Timber.d("Show other apps fragment: $apps")
-    OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
+    OtherAppsDialog.show(requireActivity())
   }
 
   /** On destroy */

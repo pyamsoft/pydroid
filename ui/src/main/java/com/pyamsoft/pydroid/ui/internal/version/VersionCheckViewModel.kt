@@ -60,7 +60,6 @@ internal constructor(private val interactor: VersionInteractor) :
   }
 
   internal fun handleVersionCheckComplete() {
-    setState { copy(isLoading = false) }
   }
 
   internal fun handleHideNavigation() {
@@ -87,6 +86,7 @@ internal constructor(private val interactor: VersionInteractor) :
               }
               .onFailure { Timber.e(it, "Error checking for latest version") }
               .onFailure { handleVersionCheckError(it) }
+              .onFinally { setState { copy(isLoading = false) } }
         })
   }
 

@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
 internal data class OtherAppsViewState
 internal constructor(
+    val isLoading: Boolean,
     val apps: List<OtherApp>,
     val appsError: Throwable?,
     val navigationError: Throwable?

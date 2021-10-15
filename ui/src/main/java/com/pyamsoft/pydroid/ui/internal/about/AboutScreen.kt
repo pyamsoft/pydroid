@@ -63,7 +63,9 @@ internal fun AboutScreen(
           title = "Open Source Licenses",
           onClose = onClose,
       )
-      Crossfade(targetState = isLoading) { loading ->
+      Crossfade(
+          targetState = isLoading,
+      ) { loading ->
         if (loading) {
           Loading()
         } else {
@@ -104,7 +106,10 @@ private fun AboutList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(8.dp),
     ) {
-      itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->
+      itemsIndexed(
+          items = list,
+          key = { _, item -> "${item.name}:${item.libraryUrl}" },
+      ) { index, item ->
         AboutListItem(
             library = item,
             onViewHomePage = { onViewHomePage(index) },

@@ -52,12 +52,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
     return ComposeView(context).apply {
       id = R.id.dialog_about
 
-      layoutParams =
-          ViewGroup.LayoutParams(
-              ViewGroup.LayoutParams.MATCH_PARENT,
-              ViewGroup.LayoutParams.MATCH_PARENT,
-          )
-
       setContent {
         MdcTheme {
           val state by viewModel.compose()

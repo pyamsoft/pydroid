@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
@@ -66,12 +67,6 @@ internal class BillingDialog : AppCompatDialogFragment() {
     return ComposeView(act).apply {
       id = R.id.dialog_billing
 
-      layoutParams =
-          ViewGroup.LayoutParams(
-              ViewGroup.LayoutParams.MATCH_PARENT,
-              ViewGroup.LayoutParams.MATCH_PARENT,
-          )
-
       setContent {
         MdcTheme {
           val state by viewModel.compose()
@@ -89,6 +84,8 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    makeFullWidth()
+
     viewModel.bindController(viewLifecycleOwner) { event ->
       return@bindController when (event) {
         is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
@@ -102,10 +99,12 @@ internal class BillingDialog : AppCompatDialogFragment() {
   }
 
   private fun launchPurchase(sku: BillingSku) {
-    // Enforce on main thread
-    viewLifecycleOwner.lifecycleScope.launch(context = Dispatchers.Main) {
-      Timber.d("Start purchase flow for $sku")
-      purchaseClient.requireNotNull().purchase(requireActivity(), sku)
+    requireActivity().also { a ->
+      // Enforce on main thread
+      a.lifecycleScope.launch(context = Dispatchers.Main) {
+        Timber.d("Start purchase flow for $sku")
+        purchaseClient.requireNotNull().purchase(a, sku)
+      }
     }
   }
 

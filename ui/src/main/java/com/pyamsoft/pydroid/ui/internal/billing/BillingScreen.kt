@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,13 +30,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -64,41 +60,36 @@ internal fun BillingScreen(
   val skuList = state.skuList
   val error = state.error
 
-  val scaffoldState = rememberScaffoldState()
+  val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface {
-    Scaffold(
-        scaffoldState = scaffoldState,
-    ) {
-      Column {
-        Header(
-            icon = icon,
-            name = name,
-        )
+  Column {
+    Header(
+        icon = icon,
+        name = name,
+    )
 
-        Crossfade(targetState = connection) { connected ->
-          // Remember computed value
-          val isConnected = remember { connected == BillingState.CONNECTED }
+    Crossfade(targetState = connection) { connected ->
+      // Remember computed value
+      val isLoading = remember { connected == BillingState.LOADING }
+      val isConnected = remember { connected == BillingState.CONNECTED }
 
-          if (connected == BillingState.LOADING) {
-            Loading()
-          } else {
-            SkuList(
-                isConnected = isConnected,
-                list = skuList,
-                onPurchase = onPurchase,
-                onClose = onClose,
-            )
-          }
-        }
-
-        BillingError(
-            snackbarHost = scaffoldState.snackbarHostState,
-            error = error,
-            onSnackbarDismissed = onBillingErrorDismissed,
+      if (isLoading) {
+        Loading()
+      } else {
+        SkuList(
+            isConnected = isConnected,
+            list = skuList,
+            onPurchase = onPurchase,
+            onClose = onClose,
         )
       }
     }
+
+    BillingError(
+        snackbarHost = snackbarHostState,
+        error = error,
+        onSnackbarDismissed = onBillingErrorDismissed,
+    )
   }
 }
 
@@ -185,7 +176,7 @@ private fun Header(
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+      modifier = Modifier.fillMaxWidth().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }

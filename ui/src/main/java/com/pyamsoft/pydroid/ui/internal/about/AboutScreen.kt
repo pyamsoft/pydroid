@@ -24,16 +24,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,43 +54,37 @@ internal fun AboutScreen(
   val isLoading = state.isLoading
   val navigationError = state.navigationError
 
-  val scaffoldState = rememberScaffoldState()
+  val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface {
-    Scaffold(
-        scaffoldState = scaffoldState,
-    ) {
-      Column {
-        DialogToolbar(
-            title = "Open Source Licenses",
-            onClose = onClose,
-        )
-        Crossfade(targetState = isLoading) { loading ->
-          if (loading) {
-            Loading()
-          } else {
-            AboutList(
-                list = list,
-                onViewHomePage = onViewHomePage,
-                onViewLicense = onViewLicense,
-            )
-          }
-        }
-
-        NavigationError(
-            snackbarHost = scaffoldState.snackbarHostState,
-            error = navigationError,
-            onSnackbarDismissed = onNavigationErrorDismissed,
+  Column {
+    DialogToolbar(
+        title = "Open Source Licenses",
+        onClose = onClose,
+    )
+    Crossfade(targetState = isLoading) { loading ->
+      if (loading) {
+        Loading()
+      } else {
+        AboutList(
+            list = list,
+            onViewHomePage = onViewHomePage,
+            onViewLicense = onViewLicense,
         )
       }
     }
+
+    NavigationError(
+        snackbarHost = snackbarHostState,
+        error = navigationError,
+        onSnackbarDismissed = onNavigationErrorDismissed,
+    )
   }
 }
 
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+      modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }
@@ -105,7 +98,7 @@ private fun AboutList(
   Box {
     LazyColumn(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(8.dp),
     ) {
       itemsIndexed(list, key = { _, item -> "${item.name}:${item.libraryUrl}" }) { index, item ->

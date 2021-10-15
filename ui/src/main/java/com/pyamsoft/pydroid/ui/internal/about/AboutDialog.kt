@@ -20,11 +20,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -52,11 +50,13 @@ internal class AboutDialog : AppCompatDialogFragment() {
     Injector.obtainFromApplication<PYDroidComponent>(context).plusAbout().create().inject(this)
 
     return ComposeView(context).apply {
-      id = R.id.about_fragment
+      id = R.id.dialog_about
 
       layoutParams =
           ViewGroup.LayoutParams(
-              ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+              ViewGroup.LayoutParams.MATCH_PARENT,
+              ViewGroup.LayoutParams.MATCH_PARENT,
+          )
 
       setContent {
         MdcTheme {
@@ -67,7 +67,8 @@ internal class AboutDialog : AppCompatDialogFragment() {
               onViewHomePage = { viewModel.handleOpenLibrary(it) },
               onViewLicense = { viewModel.handleOpenLicense(it) },
               onNavigationErrorDismissed = { viewModel.handleHideNavigationError() },
-              onClose = { dismiss() })
+              onClose = { dismiss() },
+          )
         }
       }
     }
@@ -105,14 +106,8 @@ internal class AboutDialog : AppCompatDialogFragment() {
     private const val TAG = "AboutDialog"
 
     @JvmStatic
-    @CheckResult
-    private fun newInstance(): DialogFragment {
-      return AboutDialog().apply { arguments = Bundle().apply {} }
-    }
-
-    @JvmStatic
     internal fun show(activity: FragmentActivity) {
-      newInstance().show(activity, TAG)
+      AboutDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
   }
 }

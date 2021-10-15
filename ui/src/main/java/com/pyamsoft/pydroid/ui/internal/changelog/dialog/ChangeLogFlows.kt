@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 internal data class ChangeLogDialogViewState
 internal constructor(
     override val icon: Int,
-    override val name: CharSequence,
+    override val name: String,
     val changeLog: List<ChangeLogLine>,
 ) : AppState
 

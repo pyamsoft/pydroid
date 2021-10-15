@@ -4,5 +4,5 @@ import com.pyamsoft.pydroid.arch.UiViewState
 
 internal interface AppState : UiViewState {
   val icon: Int
-  val name: CharSequence
+  val name: String
 }

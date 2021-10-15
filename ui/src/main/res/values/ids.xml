@@ -15,5 +15,6 @@
   -->
 
 <resources>
-    <item name="about_fragment" type="id" />
+    <item name="dialog_about" type="id" />
+    <item name="dialog_billing" type="id" />
 </resources>

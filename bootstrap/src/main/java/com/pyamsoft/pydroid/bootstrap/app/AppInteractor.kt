@@ -22,5 +22,5 @@ import androidx.annotation.CheckResult
 public interface AppInteractor {
 
   /** Gets the application display name */
-  @CheckResult public suspend fun getDisplayName(): CharSequence
+  @CheckResult public suspend fun getDisplayName(): String
 }

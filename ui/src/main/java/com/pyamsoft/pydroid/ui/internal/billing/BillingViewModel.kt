@@ -31,8 +31,7 @@ internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     provider: AppProvider,
-) :
-    UiViewModel<BillingViewState, BillingControllerEvent>(
+) : UiViewModel<BillingViewState, BillingControllerEvent>(
         initialState =
             BillingViewState(
                 skuList = emptyList(),

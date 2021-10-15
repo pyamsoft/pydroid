@@ -17,10 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.content.Context
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -42,22 +39,13 @@ internal interface BillingComponent {
 
     interface Factory {
 
-      @CheckResult
-      fun create(
-          parent: ViewGroup,
-          owner: LifecycleOwner,
-          imageView: ImageView,
-          provider: AppProvider,
-      ): DialogComponent
+      @CheckResult fun create(provider: AppProvider): DialogComponent
     }
 
     class Impl
     private constructor(
         private val module: BillingModule,
         private val params: BillingComponent.Factory.Parameters,
-        private val owner: LifecycleOwner,
-        private val imageView: ImageView,
-        private val parent: ViewGroup,
         provider: AppProvider,
     ) : DialogComponent {
 
@@ -68,11 +56,6 @@ internal interface BillingComponent {
       override fun inject(dialog: BillingDialog) {
         dialog.purchaseClient = module.provideLauncher()
         dialog.factory = factory
-
-        dialog.iconView = BillingIcon(params.imageLoader, imageView)
-        dialog.listView = BillingList(owner, parent)
-        dialog.closeView = BillingClose(parent)
-        dialog.nameView = BillingName(parent)
       }
 
       internal class FactoryImpl
@@ -81,13 +64,8 @@ internal interface BillingComponent {
           private val params: BillingComponent.Factory.Parameters,
       ) : Factory {
 
-        override fun create(
-            parent: ViewGroup,
-            owner: LifecycleOwner,
-            imageView: ImageView,
-            provider: AppProvider,
-        ): DialogComponent {
-          return Impl(module, params, owner, imageView, parent, provider)
+        override fun create(provider: AppProvider): DialogComponent {
+          return Impl(module, params, provider)
         }
       }
     }
@@ -107,10 +85,7 @@ internal interface BillingComponent {
     )
   }
 
-  class Impl
-  private constructor(
-      private val params: Factory.Parameters,
-  ) : BillingComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : BillingComponent {
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash

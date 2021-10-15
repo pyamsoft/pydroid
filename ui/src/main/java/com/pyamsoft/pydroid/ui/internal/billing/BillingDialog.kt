@@ -17,34 +17,30 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UiController
-import com.pyamsoft.pydroid.arch.createComponent
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent> {
-
-  private var stateSaver: StateSaver? = null
-
-  internal var nameView: BillingName? = null
-  internal var iconView: BillingIcon? = null
-  internal var listView: BillingList? = null
-  internal var closeView: BillingClose? = null
+internal class BillingDialog : AppCompatDialogFragment() {
 
   internal var purchaseClient: BillingLauncher? = null
 
@@ -56,39 +52,47 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
     return requireActivity() as AppProvider
   }
 
-  override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
-    Injector.obtainFromActivity<BillingComponent>(requireActivity())
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View {
+    val act = requireActivity()
+    Injector.obtainFromActivity<BillingComponent>(act)
         .plusDialog()
-        .create(
-            binding.dialogRoot,
-            viewLifecycleOwner,
-            binding.changelogIcon,
-            getApplicationProvider(),
-        )
+        .create(getApplicationProvider())
         .inject(this)
 
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            viewLifecycleOwner,
-            viewModel,
-            controller = this,
-            iconView.requireNotNull(),
-            nameView.requireNotNull(),
-            listView.requireNotNull(),
-            closeView.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is BillingViewEvent.Close -> dismiss()
-            is BillingViewEvent.ClearError -> viewModel.handleClearError()
-            is BillingViewEvent.Purchase -> viewModel.handlePurchase(it.index)
-          }
+    return ComposeView(act).apply {
+      id = R.id.dialog_billing
+
+      layoutParams =
+          ViewGroup.LayoutParams(
+              ViewGroup.LayoutParams.MATCH_PARENT,
+              ViewGroup.LayoutParams.MATCH_PARENT,
+          )
+
+      setContent {
+        MdcTheme {
+          val state by viewModel.compose()
+
+          BillingScreen(
+              state = state,
+              onPurchase = { viewModel.handlePurchase(it) },
+              onBillingErrorDismissed = { viewModel.handleClearError() },
+              onClose = { dismiss() },
+          )
         }
+      }
+    }
   }
 
-  override fun onControllerEvent(event: BillingControllerEvent) {
-    return when (event) {
-      is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel.bindController(viewLifecycleOwner) { event ->
+      return@bindController when (event) {
+        is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
+      }
     }
   }
 
@@ -99,7 +103,7 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
 
   private fun launchPurchase(sku: BillingSku) {
     // Enforce on main thread
-    lifecycleScope.launch(context = Dispatchers.Main) {
+    viewLifecycleOwner.lifecycleScope.launch(context = Dispatchers.Main) {
       Timber.d("Start purchase flow for $sku")
       purchaseClient.requireNotNull().purchase(requireActivity(), sku)
     }
@@ -108,18 +112,7 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
   override fun onDestroyView() {
     super.onDestroyView()
     factory = null
-    stateSaver = null
     purchaseClient = null
-
-    nameView = null
-    iconView = null
-    listView = null
-    closeView = null
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    stateSaver?.saveState(outState)
   }
 
   companion object {
@@ -127,7 +120,7 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
     private const val TAG = "BillingDialog"
 
     @JvmStatic
-    fun open(activity: FragmentActivity) {
+    internal fun open(activity: FragmentActivity) {
       BillingDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
   }

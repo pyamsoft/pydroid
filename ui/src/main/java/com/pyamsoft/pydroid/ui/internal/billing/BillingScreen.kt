@@ -136,9 +136,19 @@ private fun SkuList(
       }
     }
 
-    Row(modifier = Modifier.padding(16.dp)) {
-      Spacer(modifier = Modifier.weight(1F))
-      TextButton(onClick = onClose) { Text(text = stringResource(R.string.close)) }
+    Row(
+        modifier = Modifier.padding(16.dp),
+    ) {
+      Spacer(
+          modifier = Modifier.weight(1F),
+      )
+      TextButton(
+          onClick = onClose,
+      ) {
+        Text(
+            text = stringResource(R.string.close),
+        )
+      }
     }
   }
 }

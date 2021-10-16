@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -47,7 +48,7 @@ import com.skydoves.landscapist.coil.CoilImage
 @Composable
 internal fun OtherAppsListItem(app: OtherApp, onOpenStore: () -> Unit, onViewSource: () -> Unit) {
   Card(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = Modifier.fillMaxWidth().padding(8.dp),
       shape = RoundedCornerShape(size = 4.dp),
       elevation = 2.dp,
   ) {
@@ -106,7 +107,7 @@ private fun Icon(app: OtherApp) {
     ) {
       CoilImage(
           imageModel = app.icon,
-          modifier = Modifier.padding(start = 8.dp).width(64.dp).height(64.dp),
+          modifier = Modifier.size(64.dp),
       )
     }
   }

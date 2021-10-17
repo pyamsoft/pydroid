@@ -17,16 +17,10 @@
 package com.pyamsoft.pydroid.ui.internal.rating
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 
 internal data class RatingViewState(val navigationError: Throwable?) : UiViewState
-
-internal sealed class RatingViewEvent : UiViewEvent {
-
-  object HideNavigation : RatingViewEvent()
-}
 
 internal sealed class RatingControllerEvent : UiControllerEvent {
 

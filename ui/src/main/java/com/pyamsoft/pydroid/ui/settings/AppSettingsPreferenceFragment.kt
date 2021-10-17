@@ -43,7 +43,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
@@ -69,8 +68,6 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   private var versionStateSaver: StateSaver? = null
 
   internal var settingsView: AppSettingsView? = null
-
-  internal var versionCheckView: VersionCheckView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
   private val settingsViewModel by
@@ -111,9 +108,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
 
     Injector.obtainFromApplication<PYDroidComponent>(view.context)
         .plusSettings()
-        .create(viewLifecycleOwner, preferenceScreen, hideClearAll, hideUpgradeInformation) {
-          listView
-        }
+        .create(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
     settingsStateSaver =

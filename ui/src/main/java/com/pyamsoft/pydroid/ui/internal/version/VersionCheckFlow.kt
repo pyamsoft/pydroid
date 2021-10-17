@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 internal data class VersionCheckViewState
 internal constructor(
     val isLoading: Boolean,
-    val throwable: Throwable?,
+    val versionCheckError: Throwable?,
     val navigationError: Throwable?,
 ) : UiViewState
 

@@ -16,12 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
 internal interface AppSettingsComponent {
@@ -32,11 +29,9 @@ internal interface AppSettingsComponent {
 
     @CheckResult
     fun create(
-        owner: LifecycleOwner,
         preferenceScreen: PreferenceScreen,
         hideClearAll: Boolean,
         hideUpgradeInformation: Boolean,
-        parentProvider: () -> ViewGroup
     ): AppSettingsComponent
 
     data class Parameters
@@ -51,8 +46,6 @@ internal interface AppSettingsComponent {
 
   class Impl
   private constructor(
-      private val parentProvider: () -> ViewGroup,
-      private val owner: LifecycleOwner,
       private val hideClearAll: Boolean,
       private val hideUpgradeInformation: Boolean,
       private val preferenceScreen: PreferenceScreen,
@@ -62,7 +55,6 @@ internal interface AppSettingsComponent {
     override fun inject(fragment: AppSettingsPreferenceFragment) {
       fragment.factory = params.factory
 
-      val versionView = VersionCheckView(owner, parentProvider)
       val settingsView =
           AppSettingsView(
               params.bugReportUrl,
@@ -73,7 +65,6 @@ internal interface AppSettingsComponent {
               hideUpgradeInformation,
               preferenceScreen)
 
-      fragment.versionCheckView = versionView
       fragment.settingsView = settingsView
     }
 
@@ -81,14 +72,11 @@ internal interface AppSettingsComponent {
         Factory {
 
       override fun create(
-          owner: LifecycleOwner,
           preferenceScreen: PreferenceScreen,
           hideClearAll: Boolean,
           hideUpgradeInformation: Boolean,
-          parentProvider: () -> ViewGroup
       ): AppSettingsComponent {
-        return Impl(
-            parentProvider, owner, hideClearAll, hideUpgradeInformation, preferenceScreen, params)
+        return Impl(hideClearAll, hideUpgradeInformation, preferenceScreen, params)
       }
     }
   }

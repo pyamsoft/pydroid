@@ -17,23 +17,21 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.UpgradeReady
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -47,56 +45,53 @@ public abstract class VersionCheckActivity : ActivityBase() {
   /** Check for updates automatically */
   protected open val checkForUpdates: Boolean = true
 
-  /** Used for Activity level snackbars */
-  protected abstract val snackbarRoot: ViewGroup
-
-  private var stateSaver: StateSaver? = null
-
-  internal var versionCheckView: VersionCheckView? = null
-
   internal var versionFactory: ViewModelProvider.Factory? = null
   private val viewModel by viewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
 
   private var injector: VersionCheckComponent? = null
 
-  /** On post create */
+  /** On create */
   @CallSuper
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
     injector =
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusVersionCheck()
-            .create(this) { snackbarRoot }
-            .also { component -> component.inject(this) }
-
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            this,
-            viewModel,
-            controller =
-                newUiController {
-                  return@newUiController when (it) {
-                    is VersionCheckControllerEvent.LaunchUpdate ->
-                        showVersionUpgrade(it.isFallbackEnabled, it.launcher)
-                    is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(this)
-                  }
-                },
-            versionCheckView.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
-            is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
-            is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation()
-          }
+        Injector.obtainFromApplication<PYDroidComponent>(this).plusVersionCheck().create().also {
+            component ->
+          component.inject(this)
         }
 
+    viewModel.bindController(this) { event ->
+      return@bindController when (event) {
+        is LaunchUpdate -> showVersionUpgrade(event.isFallbackEnabled, event.launcher)
+        is UpgradeReady -> VersionUpgradeDialog.show(this)
+      }
+    }
+  }
+
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
     if (checkForUpdates) {
       checkUpdates()
     }
+  }
+
+  /**
+   * Version Check screen
+   *
+   * All UI and function related to checking for new updates to Applications
+   */
+  @Composable
+  protected fun VersionScreen() {
+    val state by viewModel.compose()
+
+    VersionCheckScreen(
+        state = state,
+        onNavigationErrorDismissed = { viewModel.handleHideNavigation() },
+        onVersionCheckErrorDismissed = { viewModel.handleClearError() },
+    )
   }
 
   /** Get system service */
@@ -108,20 +103,11 @@ public abstract class VersionCheckActivity : ActivityBase() {
         else -> super.getSystemService(name)
       }
 
-  /** On save instance state */
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    stateSaver?.saveState(outState)
-  }
-
   /** On destroy */
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
     versionFactory = null
-    versionCheckView = null
-    stateSaver = null
   }
 
   private fun checkUpdates() {

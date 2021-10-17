@@ -33,7 +33,7 @@ internal constructor(private val interactor: VersionInteractor) :
         initialState =
             VersionCheckViewState(
                 isLoading = false,
-                throwable = null,
+                versionCheckError = null,
                 navigationError = null,
             )) {
 
@@ -52,11 +52,11 @@ internal constructor(private val interactor: VersionInteractor) :
   }
 
   private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
-    setState { copy(throwable = throwable) }
+    setState { copy(versionCheckError = throwable) }
   }
 
   internal fun handleClearError() {
-    setState { copy(throwable = null) }
+    setState { copy(versionCheckError = null) }
   }
 
   internal fun handleVersionCheckComplete() {

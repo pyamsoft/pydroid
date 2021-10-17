@@ -19,18 +19,17 @@ package com.pyamsoft.pydroid.ui.rating
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent
-import com.pyamsoft.pydroid.ui.internal.rating.RatingView
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent
+import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LaunchMarketPage
+import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LaunchRating
+import com.pyamsoft.pydroid.ui.internal.rating.RatingScreen
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
@@ -40,43 +39,36 @@ import timber.log.Timber
 /** Activity which handles displaying an in-app rating prompt */
 public abstract class RatingActivity : VersionCheckActivity() {
 
-  private var stateSaver: StateSaver? = null
-
-  internal var ratingView: RatingView? = null
-
   internal var ratingFactory: ViewModelProvider.Factory? = null
   private val viewModel by viewModels<RatingViewModel> { ratingFactory.requireNotNull() }
 
-  /** On post create */
+  /** On create */
   @CallSuper
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.obtainFromApplication<PYDroidComponent>(this).plusRating().create().inject(this)
 
-    // Need to do this in onPostCreate because the snackbarRoot will not be available until
-    // after subclass onCreate
-    Injector.obtainFromApplication<PYDroidComponent>(this)
-        .plusRating()
-        .create(this) { snackbarRoot }
-        .inject(this)
+    viewModel.bindController(this) { event ->
+      return@bindController when (event) {
+        is LaunchMarketPage -> showRating(event.launcher)
+        is LaunchRating -> showRating(event.launcher)
+      }
+    }
+  }
 
-    stateSaver =
-        createComponent(
-            savedInstanceState,
-            this,
-            viewModel,
-            controller =
-                newUiController {
-                  return@newUiController when (it) {
-                    is RatingControllerEvent.LaunchRating -> showRating(it.launcher)
-                    is RatingControllerEvent.LaunchMarketPage -> showRating(it.launcher)
-                  }
-                },
-            ratingView.requireNotNull(),
-        ) {
-          return@createComponent when (it) {
-            is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
-          }
-        }
+  /**
+   * Rating screen
+   *
+   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
+   */
+  @Composable
+  protected fun RatingScreen() {
+    val state by viewModel.compose()
+
+    RatingScreen(
+        state = state,
+        onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
+    )
   }
 
   /**
@@ -87,19 +79,11 @@ public abstract class RatingActivity : VersionCheckActivity() {
     viewModel.loadInAppRating()
   }
 
-  /** On save instance state */
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    stateSaver?.saveState(outState)
-  }
-
   /** On destroy */
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
     ratingFactory = null
-    stateSaver = null
   }
 
   private fun showRating(launcher: AppRatingLauncher) {

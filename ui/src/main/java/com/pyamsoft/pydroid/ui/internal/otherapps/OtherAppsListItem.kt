@@ -51,7 +51,8 @@ internal fun OtherAppsListItem(app: OtherApp, onOpenStore: () -> Unit, onViewSou
   ) {
     Row(
         modifier = Modifier.padding(8.dp).fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
       Icon(
           app = app,
       )

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.timber.LinkDebugTree
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
@@ -51,6 +52,7 @@ internal constructor(
                       privacyPolicyUrl = params.privacyPolicyUrl,
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
+                      theme = params.theme ?: NoopTheme,
                       debug =
                           PYDroidComponent.Component.DebugParameters(
                               enabled = enabled,

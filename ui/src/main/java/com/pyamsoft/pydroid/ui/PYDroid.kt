@@ -20,6 +20,7 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
 import timber.log.Timber
@@ -93,6 +94,7 @@ public object PYDroid {
       internal val privacyPolicyUrl: String,
       internal val termsConditionsUrl: String,
       internal val version: Int,
+      internal val theme: ComposeTheme? = null,
       internal val debug: DebugParameters? = null
   )
 

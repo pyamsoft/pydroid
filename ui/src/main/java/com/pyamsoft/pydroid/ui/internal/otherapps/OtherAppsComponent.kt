@@ -16,10 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 
 internal interface OtherAppsComponent {
 
@@ -29,15 +28,17 @@ internal interface OtherAppsComponent {
 
     @CheckResult fun create(): OtherAppsComponent
 
-    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+    data class Parameters
+    internal constructor(
+        internal val factory: ViewModelProvider.Factory,
+        internal val composeTheme: ComposeTheme,
+    )
   }
 
-  class Impl
-  private constructor(
-      private val params: Factory.Parameters
-  ) : OtherAppsComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : OtherAppsComponent {
 
     override fun inject(dialog: OtherAppsDialog) {
+      dialog.composeTheme = params.composeTheme
       dialog.factory = params.factory
     }
 

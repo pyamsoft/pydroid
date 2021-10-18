@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
@@ -81,6 +82,7 @@ internal interface PYDroidComponent {
         internal val termsConditionsUrl: String,
         internal val version: Int,
         internal val debug: DebugParameters,
+        internal val theme: ComposeTheme,
     )
 
     data class DebugParameters(
@@ -96,6 +98,8 @@ internal interface PYDroidComponent {
     private val preferences by lazy { PYDroidPreferencesImpl(params.application, params.version) }
 
     private val theming: Theming by lazy { ThemingImpl(preferences) }
+
+    private val composeTheme = params.theme
 
     private val viewModelFactory by lazy {
       PYDroidViewModelFactory(
@@ -157,7 +161,10 @@ internal interface PYDroidComponent {
 
     private val aboutParams by
         lazy(LazyThreadSafetyMode.NONE) {
-          AboutComponent.Factory.Parameters(factory = viewModelFactory)
+          AboutComponent.Factory.Parameters(
+              factory = viewModelFactory,
+              composeTheme = composeTheme,
+          )
         }
 
     private val clearSettingsParams by
@@ -167,7 +174,10 @@ internal interface PYDroidComponent {
 
     private val otherAppsParams by
         lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsComponent.Factory.Parameters(factory = viewModelFactory)
+          OtherAppsComponent.Factory.Parameters(
+              factory = viewModelFactory,
+              composeTheme = composeTheme,
+          )
         }
 
     private val changeLogParams by
@@ -196,8 +206,8 @@ internal interface PYDroidComponent {
     private val changeLogDialogParams by
         lazy(LazyThreadSafetyMode.NONE) {
           ChangeLogDialogComponent.Factory.Parameters(
-              imageLoader = loaderModule.provideLoader(),
               interactor = changeLogModule.provideInteractor(),
+              composeTheme = composeTheme,
           )
         }
 
@@ -207,8 +217,8 @@ internal interface PYDroidComponent {
               context = context.applicationContext,
               theming = theming,
               errorBus = EventBus.create(emitOnlyWhenActive = false),
-              imageLoader = loaderModule.provideLoader(),
               interactor = changeLogModule.provideInteractor(),
+              composeTheme = composeTheme,
           )
         }
 

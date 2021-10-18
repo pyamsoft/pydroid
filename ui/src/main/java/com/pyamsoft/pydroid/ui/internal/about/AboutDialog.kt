@@ -26,16 +26,20 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
+import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutDialog : AppCompatDialogFragment() {
+
+  /** May be provided by PYDroid, otherwise this is just a noop */
+  internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<AboutViewModel> { factory.requireNotNull() }
@@ -53,9 +57,9 @@ internal class AboutDialog : AppCompatDialogFragment() {
       id = R.id.dialog_about
 
       setContent {
-        MdcTheme {
-          val state by viewModel.compose()
+        val state by viewModel.compose()
 
+        composeTheme {
           AboutScreen(
               state = state,
               onViewHomePage = { viewModel.handleOpenLibrary(it) },

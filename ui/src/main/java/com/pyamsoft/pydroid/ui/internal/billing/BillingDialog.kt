@@ -28,20 +28,24 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.composethemeadapter.MdcTheme
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class BillingDialog : AppCompatDialogFragment() {
+
+  /** May be provided by PYDroid, otherwise this is just a noop */
+  internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var purchaseClient: BillingLauncher? = null
 
@@ -69,9 +73,9 @@ internal class BillingDialog : AppCompatDialogFragment() {
       id = R.id.dialog_billing
 
       setContent {
-        MdcTheme {
-          val state by viewModel.compose()
+        val state by viewModel.compose()
 
+        composeTheme {
           BillingScreen(
               state = state,
               onPurchase = { viewModel.handlePurchase(it) },

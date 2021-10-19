@@ -128,11 +128,13 @@ public open class UiStateModel<S : UiViewState>(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
     return scope.launch(context = Dispatchers.Main) { internalBindState(renderables) }
   }
 
   // internal instead of protected so that only callers in the module can use this
+  @Deprecated("Migrate to Jetpack Compose")
   internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
     val state = modelState
 

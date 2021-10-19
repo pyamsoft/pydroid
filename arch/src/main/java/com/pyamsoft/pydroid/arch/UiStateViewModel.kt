@@ -68,6 +68,7 @@ internal constructor(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   protected fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
     return delegate.bindState(scope, *renderables)
   }
@@ -79,6 +80,7 @@ internal constructor(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   protected inline fun bindState(
       scope: CoroutineScope,
       crossinline onRender: (UiRender<S>) -> Unit
@@ -87,6 +89,7 @@ internal constructor(
   }
 
   // internal instead of protected so that only callers in the module can use this
+  @Deprecated("Migrate to Jetpack Compose")
   internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
     delegate.internalBindState(renderables)
   }

@@ -46,6 +46,7 @@ protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
    * This is automatically scoped to the life of the [scope]
    */
   @UiThread
+  @Deprecated("Migrate to Jetpack Compose")
   public fun <V : UiViewEvent> bindViews(
       scope: CoroutineScope,
       savedInstanceState: UiSavedStateReader,

@@ -21,5 +21,4 @@ package com.pyamsoft.pydroid.arch
  *
  * Usually sent via a UiView.publish() call
  */
-@Deprecated("Migrate to Jetpack Compose")
-public interface UiViewEvent
+@Deprecated("Migrate to Jetpack Compose") public interface UiViewEvent

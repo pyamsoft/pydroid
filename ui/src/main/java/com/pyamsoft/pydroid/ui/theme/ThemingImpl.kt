@@ -30,8 +30,7 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
       withContext(context = Dispatchers.IO) {
         // Now even though this will take work, it will defer until all other handler work is done
         val mode = preferences.getDarkMode()
-        withContext(context = Dispatchers.Main) {
-          setDarkTheme(mode) }
+        withContext(context = Dispatchers.Main) { setDarkTheme(mode) }
       }
 
   /** Is activity dark mode */

@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.dialog
+package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-internal class ThemeDialogViewModel
-internal constructor(
-    initialName: String,
-) :
-    UiViewModel<ThemeDialogViewState, UnitControllerEvent>(
-        initialState = ThemeDialogViewState(name = initialName))
+internal data class VersionUpgradeViewState(
+    val upgraded: Boolean,
+) : UiViewState
+
+internal sealed class VersionUpgradeControllerEvent : UiControllerEvent {
+
+  object UpgradeComplete : VersionUpgradeControllerEvent()
+}

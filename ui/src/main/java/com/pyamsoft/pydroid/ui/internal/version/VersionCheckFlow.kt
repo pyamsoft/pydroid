@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.version
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
@@ -27,15 +26,6 @@ internal constructor(
     val versionCheckError: Throwable?,
     val navigationError: Throwable?,
 ) : UiViewState
-
-internal sealed class VersionCheckViewEvent : UiViewEvent {
-
-  object LoadingHidden : VersionCheckViewEvent()
-
-  object ErrorHidden : VersionCheckViewEvent()
-
-  object NavigationHidden : VersionCheckViewEvent()
-}
 
 internal sealed class VersionCheckControllerEvent : UiControllerEvent {
 

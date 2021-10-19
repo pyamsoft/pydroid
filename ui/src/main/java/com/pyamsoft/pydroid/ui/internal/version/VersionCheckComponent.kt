@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -41,11 +42,12 @@ internal interface VersionCheckComponent {
         internal val context: Context,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean
+        internal val isFakeUpgradeAvailable: Boolean,
+        internal val composeTheme: ComposeTheme,
     )
   }
 
-  class Impl private constructor(params: Factory.Parameters) : VersionCheckComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
 
     private val checkFactory: ViewModelProvider.Factory
     private val upgradeFactory: ViewModelProvider.Factory
@@ -70,6 +72,7 @@ internal interface VersionCheckComponent {
     }
 
     override fun inject(dialog: VersionUpgradeDialog) {
+      dialog.composeTheme = params.composeTheme
       dialog.factory = upgradeFactory
     }
 

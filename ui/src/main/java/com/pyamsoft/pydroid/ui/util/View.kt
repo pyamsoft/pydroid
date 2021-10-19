@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.util.InsetListener
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 
 /** A listener which responds to some kind of change on a View */
+@Deprecated("Migrate to Jetpack Compose")
 public fun interface ViewListener {
 
   /** Cancel the view listener */
@@ -46,6 +47,7 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
 
 /** Fade view in animation */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.fadeIn(): ViewPropertyAnimatorCompat {
   val i: Interpolator = getAccelCubicInterpolator(context)
   alpha = 0f
@@ -74,6 +76,7 @@ public fun View.fadeIn(): ViewPropertyAnimatorCompat {
 
 /** Fade view out animation */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.fadeAway(): ViewPropertyAnimatorCompat {
   val i: Interpolator = getAccelCubicInterpolator(context)
   alpha = 1f
@@ -100,6 +103,7 @@ public fun View.fadeAway(): ViewPropertyAnimatorCompat {
 
 /** Flip a view vertically */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.flipVertical(): ViewPropertyAnimatorCompat {
   val i: Interpolator = getAccelCubicInterpolator(context)
   return ViewCompat.animate(this)
@@ -110,16 +114,19 @@ public fun View.flipVertical(): ViewPropertyAnimatorCompat {
 }
 
 /** Set a debounced on click listener */
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
   setOnClickListener(listener)
 }
 
 /** Set a debounced on click listener */
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
   setOnClickListener(DebouncedOnClickListener.create(func))
 }
 
 /** Perform an action when the View Layout changes */
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun View.doOnLayoutChanged(
     crossinline onChange: (View, Int, Int, Int, Int, Int, Int, Int, Int) -> Unit,
 ): ViewListener {
@@ -183,6 +190,7 @@ private fun applyNewViewOffset(
 
 /** Offset the padding of the page content in relation to the existing app bar */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.applyAppBarOffset(appBarActivity: AppBarActivity): ViewListener {
   val initialTopPadding = this.paddingTop
 
@@ -213,6 +221,7 @@ public fun View.applyAppBarOffset(appBarActivity: AppBarActivity): ViewListener 
 
 /** Offset the padding of the page content in relation to the existing toolbar */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.applyToolbarOffset(): InsetListener {
   val initialTopPadding = this.paddingTop
 

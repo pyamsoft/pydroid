@@ -85,14 +85,17 @@ internal constructor(
 
         clearOldPreferences()
 
-        return@withContext prefs
-            .getString(darkModeKey, SYSTEM.toRawString())
-            .requireNotNull()
-            .toMode()
+        // Initialize this key here so the preference screen can be populated
+        if (prefs.contains(darkModeKey)) {
+          prefs.edit { putString(darkModeKey, DEFAULT_DARK_MODE) }
+        }
+
+        return@withContext prefs.getString(darkModeKey, DEFAULT_DARK_MODE).requireNotNull().toMode()
       }
 
   companion object {
 
+    private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
     private const val LAST_SHOWN_RATING_DATE = "rate_app_last_shown_date"
     private const val LAST_SHOWN_RATING_VERSION = "rate_app_last_shown_version"
     private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"

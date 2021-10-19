@@ -20,6 +20,7 @@ import android.view.View
 import androidx.annotation.CheckResult
 
 /** Click listener which debounces all other click events for the frame */
+@Deprecated("Migrate to Jetpack Compose")
 public abstract class DebouncedOnClickListener protected constructor() : View.OnClickListener {
 
   /** On click */
@@ -40,8 +41,9 @@ public abstract class DebouncedOnClickListener protected constructor() : View.On
     private val enableAgain = Runnable { enabled = true }
 
     /** Create a new debouncing click listener */
-    @CheckResult
     @JvmStatic
+    @CheckResult
+    @Deprecated("Migrate to Jetpack Compose")
     public inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
       return object : DebouncedOnClickListener() {
         override fun doClick(view: View) {
@@ -54,6 +56,7 @@ public abstract class DebouncedOnClickListener protected constructor() : View.On
 
 /** Convert a click listener into a debouncing one. */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.OnClickListener.debounce(): View.OnClickListener {
   return DebouncedOnClickListener.create { this.onClick(it) }
 }

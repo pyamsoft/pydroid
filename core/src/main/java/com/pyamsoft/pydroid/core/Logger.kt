@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.core
 import androidx.annotation.RestrictTo
 
 /** The PYDroid Logger */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public object Logger : PYDroidLogger {
 
   private var logger: PYDroidLogger? = null
@@ -36,7 +37,7 @@ public object Logger : PYDroidLogger {
   }
 
   /** Set the logger for the rest of the library */
-  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   public fun setLogger(logger: PYDroidLogger) {
     this.logger = logger
   }

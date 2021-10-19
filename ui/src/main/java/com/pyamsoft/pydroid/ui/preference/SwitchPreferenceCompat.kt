@@ -23,6 +23,7 @@ import androidx.preference.R
 import androidx.preference.SwitchPreferenceCompat
 
 /** SwitchPreference that uses vector drawables */
+@Deprecated("Migrate to Jetpack Compose")
 public open class SwitchPreferenceCompat : SwitchPreferenceCompat {
 
   /** Construct */

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.app
 import androidx.appcompat.widget.Toolbar
 
 /** Provide a toolbar to the global Activity level */
+@Deprecated("Migrate to Jetpack Compose")
 public interface ToolbarActivityProvider {
 
   /** Set or clear the global toolbar instance */

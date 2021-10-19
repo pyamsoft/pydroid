@@ -28,6 +28,7 @@ import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
 /** Load a vector drawable icon from XML */
+@Deprecated("Migrate to Jetpack Compose")
 internal fun Preference.loadIconCompat(attrs: AttributeSet?) {
   if (attrs != null) {
     context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
@@ -43,6 +44,7 @@ internal fun Preference.loadIconCompat(attrs: AttributeSet?) {
 /** Get an attribute from a style */
 @AttrRes
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 internal fun Context.getStyledAttr(@AttrRes attr: Int, @AttrRes fallbackAttr: Int): Int {
   val value = TypedValue()
   theme.resolveAttribute(attr, value, true)

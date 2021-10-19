@@ -29,6 +29,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 /** A listener which responds to some kind of change on WindowInsets */
+@Deprecated("Migrate to Jetpack Compose")
 public fun interface InsetListener {
 
   /** Cancel the inset listener */
@@ -79,6 +80,7 @@ private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
 
 /** Run a block once when the WindowInsets are applied */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun View.doOnApplyWindowInsets(
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ): InsetListener {
@@ -103,6 +105,7 @@ public inline fun View.doOnApplyWindowInsets(
 }
 
 /** The representation of the originalk padding of the application before it was modified */
+@Deprecated("Migrate to Jetpack Compose")
 public data class InitialPadding
 internal constructor(
     /** Top padding */
@@ -120,6 +123,7 @@ internal constructor(
 
 @CheckResult
 @PublishedApi
+@Deprecated("Migrate to Jetpack Compose")
 internal fun recordInitialPaddingForView(view: View): InitialPadding {
   return InitialPadding(
       top = view.paddingTop,
@@ -129,6 +133,7 @@ internal fun recordInitialPaddingForView(view: View): InitialPadding {
 }
 
 @PublishedApi
+@Deprecated("Migrate to Jetpack Compose")
 internal fun View.requestApplyInsetsWhenAttached() {
   if (isAttachedToWindow) {
     // We're already attached, just request as normal

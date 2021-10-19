@@ -23,6 +23,7 @@ import androidx.preference.ListPreference
 import androidx.preference.R
 
 /** ListPreference that uses vector drawables */
+@Deprecated("Migrate to Jetpack Compose")
 public open class ListPreferenceCompat : ListPreference {
 
   /** Construct */

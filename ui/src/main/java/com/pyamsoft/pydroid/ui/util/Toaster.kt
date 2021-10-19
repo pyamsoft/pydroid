@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID
 
 /** Global toast manager */
+@Deprecated("Migrate to Jetpack Compose")
 public object Toaster {
 
   private var cached: Toasty? = null

@@ -23,6 +23,7 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.R
 
 /** CheckBoxPreference that uses vector drawables */
+@Deprecated("Migrate to Jetpack Compose")
 public open class CheckBoxPreferenceCompat : CheckBoxPreference {
 
   /** Construct */

@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID
 
 /** Snackbar manager with lifecycle */
+@Deprecated("Migrate to Jetpack Compose")
 public object Snackbreak {
 
   private fun <B : BaseTransientBottomBar<B>> B.materialMargin() {

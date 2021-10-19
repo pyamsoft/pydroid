@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.app
 import com.google.android.material.appbar.AppBarLayout
 
 /** An activity which handles a global AppBar */
+@Deprecated("Migrate to Jetpack Compose")
 public interface AppBarActivity : ToolbarActivity {
 
   /**

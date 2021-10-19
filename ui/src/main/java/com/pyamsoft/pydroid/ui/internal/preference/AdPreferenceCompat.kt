@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.preference.PreferenceCompat
 import com.pyamsoft.pydroid.ui.preference.getStyledAttr
 
+@Deprecated("Migrate to Jetpack Compose")
 internal class AdPreferenceCompat : PreferenceCompat {
 
   constructor(context: Context) : this(context, null)

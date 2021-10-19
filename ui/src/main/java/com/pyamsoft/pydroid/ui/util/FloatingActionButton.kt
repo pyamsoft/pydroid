@@ -21,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /** Apply behavior to a FAB */
 @JvmOverloads
+@Deprecated("Migrate to Jetpack Compose")
 public fun FloatingActionButton.withBehavior(
     behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()
 ): FloatingActionButton {
@@ -33,6 +34,7 @@ public fun FloatingActionButton.withBehavior(
 }
 
 /** Hide FAB */
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -> Unit) {
   this.hide(
       object : FloatingActionButton.OnVisibilityChangedListener() {
@@ -47,6 +49,7 @@ public inline fun FloatingActionButton.hide(crossinline func: FloatingActionButt
 }
 
 /** Show FAB */
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
   this.show(
       object : FloatingActionButton.OnVisibilityChangedListener() {

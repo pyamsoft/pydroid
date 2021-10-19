@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class ChangeLogViewModel
 internal constructor(private val interactor: ChangeLogInteractor) :
@@ -33,7 +32,7 @@ internal constructor(private val interactor: ChangeLogInteractor) :
   ) {
     viewModelScope.launch(context = Dispatchers.Default) {
       if (interactor.showChangelog(force)) {
-        withContext(context = Dispatchers.Main) { publish(ChangeLogControllerEvent.ShowChangeLog) }
+        publish(ChangeLogControllerEvent.ShowChangeLog)
       }
     }
   }

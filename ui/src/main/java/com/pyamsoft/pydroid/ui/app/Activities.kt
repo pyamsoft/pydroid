@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.core.requireNotNull
 
 /** Get the AppBarActivity from a fragment. Null if not present. */
+@Deprecated("Migrate to Jetpack Compose")
 public val Fragment.appBarActivity: AppBarActivity?
   @get:CheckResult
   get() {
@@ -30,6 +31,7 @@ public val Fragment.appBarActivity: AppBarActivity?
 
 /** Get the AppBarActivity from a fragment. Throws if not present */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun Fragment.requireAppBarActivity(): AppBarActivity {
   return appBarActivity.requireNotNull { "AppBarActivity is required and cannot be null." }
 }

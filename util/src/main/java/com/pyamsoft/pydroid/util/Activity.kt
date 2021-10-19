@@ -21,6 +21,7 @@ import androidx.annotation.CheckResult
 
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun Activity.valueFromCurrentTheme(attr: Int): Int {
   val attributes = this.obtainStyledAttributes(intArrayOf(attr))
   return attributes.getResourceId(0, 0).also { attributes.recycle() }

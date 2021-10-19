@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.core.requireNotNull
 
 /** Return the ToolbarActivity or null */
+@Deprecated("Migrate to Jetpack Compose")
 public val Fragment.toolbarActivity: ToolbarActivity?
   @get:CheckResult
   get() {
@@ -30,6 +31,7 @@ public val Fragment.toolbarActivity: ToolbarActivity?
 
 /** Return the ToolbarActivity or throw */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun Fragment.requireToolbarActivity(): ToolbarActivity {
   return toolbarActivity.requireNotNull { "ToolbarActivity is required and cannot be null." }
 }

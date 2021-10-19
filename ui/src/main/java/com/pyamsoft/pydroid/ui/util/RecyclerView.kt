@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.recyclerview.widget.RecyclerView
 
 /** Remove all item decorations from a recyclerview */
+@Deprecated("Migrate to Jetpack Compose")
 public fun RecyclerView.removeAllItemDecorations() {
   val totalCount = this.itemDecorationCount - 1
   if (totalCount <= 0) {

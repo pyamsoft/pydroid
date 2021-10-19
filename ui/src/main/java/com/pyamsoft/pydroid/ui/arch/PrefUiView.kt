@@ -36,6 +36,7 @@ import kotlin.reflect.KProperty
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public abstract class PrefUiView<S : UiViewState, V : UiViewEvent>
 protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
 

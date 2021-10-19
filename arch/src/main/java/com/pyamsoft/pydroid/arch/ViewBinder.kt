@@ -21,6 +21,7 @@ package com.pyamsoft.pydroid.arch
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public interface ViewBinder<S : UiViewState> {
 
   /** Binds a UiViewState to one or more view components */

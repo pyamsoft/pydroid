@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public interface UiRender<S> {
 
   /**

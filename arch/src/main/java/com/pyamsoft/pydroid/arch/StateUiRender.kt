@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 private class StateUiRender<S>(private val state: S) : UiRender<S> {
 
   override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {

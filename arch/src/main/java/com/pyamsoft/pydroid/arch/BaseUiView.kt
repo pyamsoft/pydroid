@@ -35,6 +35,7 @@ import kotlin.reflect.KProperty
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding>
 protected constructor(parent: ViewGroup) : UiView<S, V>() {
 

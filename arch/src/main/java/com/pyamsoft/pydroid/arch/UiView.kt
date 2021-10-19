@@ -35,6 +35,7 @@ import kotlinx.coroutines.withContext
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() :
     Renderable<S> {
 

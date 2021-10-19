@@ -79,7 +79,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-    
+
     viewModel.bindController(viewLifecycleOwner) { event ->
       return@bindController when (event) {
         is VersionUpgradeControllerEvent.UpgradeComplete -> {

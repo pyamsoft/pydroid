@@ -1,5 +1,6 @@
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CheckResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +25,8 @@ private class StateUiRender<S>(private val state: S) : UiRender<S> {
 }
 
 /** Convert data into a UiRender<S> */
+@CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun <S : UiViewState> S.asUiRender(): UiRender<S> {
   return StateUiRender(this)
 }

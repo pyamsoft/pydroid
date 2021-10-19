@@ -17,4 +17,5 @@
 package com.pyamsoft.pydroid.arch
 
 /** A no-op UiViewEvent */
+@Deprecated("Migrate to Jetpack Compose")
 public object UnitViewEvent : UiViewEvent

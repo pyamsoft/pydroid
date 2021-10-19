@@ -78,9 +78,6 @@ buildscript {
     retrofit = '2.9.0'
     okhttp = "4.9.2"
 
-    // Logging
-    timber = "5.0.1"
-
     // Image loading
     glide = '4.12.0'
     landscapist = "1.3.8"

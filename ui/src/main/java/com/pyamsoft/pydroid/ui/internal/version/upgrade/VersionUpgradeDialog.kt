@@ -25,11 +25,11 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
-import timber.log.Timber
 
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
 
@@ -55,7 +55,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
         .setNegativeButton("Later") { _, _ -> dismiss() }
         .setPositiveButton("Restart") { _, _ ->
           viewModel.completeUpgrade {
-            Timber.d("Upgrade completed, dismiss")
+            Logger.d("Upgrade completed, dismiss")
             dismiss()
           }
         }

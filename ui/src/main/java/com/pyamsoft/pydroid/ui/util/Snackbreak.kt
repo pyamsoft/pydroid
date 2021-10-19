@@ -29,10 +29,10 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID
-import timber.log.Timber
 
 /** Snackbar manager with lifecycle */
 public object Snackbreak {
@@ -158,7 +158,7 @@ public object Snackbreak {
 
         // If this is the cache, null it out
         if (cached?.instance?.id == instance.id) {
-          Timber.d("Clear Snackbreak.Breaker cached instance.")
+          Logger.d("Clear Snackbreak.Breaker cached instance.")
           cached = null
         }
       }

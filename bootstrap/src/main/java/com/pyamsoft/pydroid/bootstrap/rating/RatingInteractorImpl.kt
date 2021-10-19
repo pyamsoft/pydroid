@@ -18,11 +18,11 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import android.app.Activity
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class RatingInteractorImpl
 internal constructor(
@@ -49,9 +49,9 @@ internal constructor(
 
                 override suspend fun rate(activity: Activity): ResultWrapper<Unit> {
                   return MarketLinker.linkToMarketPage(activity)
-                      .onSuccess { Timber.d("Opened market page for ${activity.packageName}") }
+                      .onSuccess { Logger.d("Opened market page for ${activity.packageName}") }
                       .onFailure {
-                        Timber.e(it, "Failed to open market page for ${activity.packageName}")
+                        Logger.e(it, "Failed to open market page for ${activity.packageName}")
                       }
                 }
               })

@@ -26,10 +26,10 @@ import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import timber.log.Timber
 
 /**
  * A UiView which handles Preference screen entries.
@@ -54,7 +54,7 @@ protected constructor(parent: PreferenceScreen) : UiView<S, V>() {
 
   /** After teardown is complete */
   final override fun onFinalTeardown() {
-    Timber.d("Teardown complete, unbind")
+    Logger.d("Teardown complete, unbind")
     _parent = null
   }
 

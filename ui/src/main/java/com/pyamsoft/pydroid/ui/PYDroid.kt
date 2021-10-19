@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
-import timber.log.Timber
 
 /** PYDroid library entry point */
 public object PYDroid {
@@ -65,7 +66,7 @@ public object PYDroid {
         if (instance.get() == null) {
           val pydroid = PYDroidInitializer.create(application, params)
           if (instance.compareAndSet(null, pydroid)) {
-            Timber.d("PYDroid is initialized.")
+            Logger.d("PYDroid is initialized.")
           }
         }
       }
@@ -89,14 +90,15 @@ public object PYDroid {
   public data class Parameters
   @JvmOverloads
   public constructor(
-      internal val viewSourceUrl: String,
-      internal val bugReportUrl: String,
-      internal val privacyPolicyUrl: String,
-      internal val termsConditionsUrl: String,
-      internal val version: Int,
+      override val viewSourceUrl: String,
+      override val bugReportUrl: String,
+      override val privacyPolicyUrl: String,
+      override val termsConditionsUrl: String,
+      override val version: Int,
+      override val logger: PYDroidLogger? = null,
       internal val theme: ComposeTheme? = null,
-      internal val debug: DebugParameters? = null
-  )
+      internal val debug: DebugParameters? = null,
+  ) : BaseParameters
 
   /** PYDroid debugging parameters */
   public data class DebugParameters(
@@ -104,4 +106,14 @@ public object PYDroid {
       internal val upgradeAvailable: Boolean,
       internal val ratingAvailable: Boolean,
   )
+
+  /** Base parameters for PYDroid */
+  internal interface BaseParameters {
+    val viewSourceUrl: String
+    val bugReportUrl: String
+    val privacyPolicyUrl: String
+    val termsConditionsUrl: String
+    val version: Int
+    val logger: PYDroidLogger?
+  }
 }

@@ -19,10 +19,10 @@ package com.pyamsoft.pydroid.bootstrap.version
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class VersionInteractorImpl
 internal constructor(
@@ -41,7 +41,7 @@ internal constructor(
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
-        Timber.d("GOING DOWN FOR UPDATE")
+        Logger.d("GOING DOWN FOR UPDATE")
         updater.complete()
       }
 

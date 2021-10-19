@@ -23,9 +23,6 @@ android {
 dependencies {
   api project(':bus')
 
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
-
   implementation "androidx.annotation:annotation:$annotation"
   implementation "com.android.billingclient:billing:$playBilling"
 }

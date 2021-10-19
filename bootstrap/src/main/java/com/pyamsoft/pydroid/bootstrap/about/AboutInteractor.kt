@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** Interactor for About Libraries */
 public interface AboutInteractor {

@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -49,7 +50,6 @@ import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.MarketLinker
-import timber.log.Timber
 
 /** Preference fragment level for displaying a preference screen */
 public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
@@ -70,8 +70,9 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   internal var settingsView: AppSettingsView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val settingsViewModel by
-      activityViewModels<AppSettingsViewModel> { factory.requireNotNull() }
+  private val settingsViewModel by activityViewModels<AppSettingsViewModel> {
+    factory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
@@ -79,13 +80,15 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val versionViewModel by
-      activityViewModels<VersionCheckViewModel> { factory.requireNotNull() }
+  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
+    factory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
-  private val changeLogViewModel by
-      activityViewModels<ChangeLogViewModel> { factory.requireNotNull() }
+  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
+    factory.requireNotNull()
+  }
 
   /** On inflate preferences */
   @CallSuper
@@ -145,13 +148,13 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   }
 
   private fun openDonationDialog() {
-    Timber.d("Launch donation dialog")
+    Logger.d("Launch donation dialog")
     BillingDialog.open(requireActivity())
   }
 
   private fun openOtherAppsPage(apps: List<OtherApp>) {
     onViewMorePyamsoftAppsClicked(false)
-    Timber.d("Show other apps fragment: $apps")
+    Logger.d("Show other apps fragment: $apps")
     OtherAppsDialog.show(requireActivity())
   }
 
@@ -218,13 +221,13 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   /** Toggles dark theme, override or extend to use unique implementation */
   @CallSuper
   protected open fun onDarkThemeClicked(mode: Theming.Mode) {
-    Timber.d("Dark theme set: $mode")
+    Logger.d("Dark theme set: $mode")
   }
 
   /** Shows a page for Open Source licenses, override or extend to use unique implementation */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    Timber.d("Show about licenses fragment")
+    Logger.d("Show about licenses fragment")
     AboutDialog.show(requireActivity())
   }
 

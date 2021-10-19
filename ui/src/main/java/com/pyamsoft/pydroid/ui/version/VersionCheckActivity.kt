@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -37,7 +38,6 @@ import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /** Activity that handles checking for a new version update */
 public abstract class VersionCheckActivity : ActivityBase() {
@@ -123,7 +123,7 @@ public abstract class VersionCheckActivity : ActivityBase() {
     // Enforce that we do this on the Main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
       launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
-        Timber.e(err, "Unable to launch in-app update flow")
+        Logger.e(err, "Unable to launch in-app update flow")
         if (isFallbackEnabled) {
           MarketLinker.linkToMarketPage(activity)
               .onSuccess { viewModel.handleNavigationSuccess() }

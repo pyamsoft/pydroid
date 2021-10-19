@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -34,7 +35,6 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /** Activity which handles displaying an in-app rating prompt */
 public abstract class RatingActivity : VersionCheckActivity() {
@@ -91,7 +91,7 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
     // Enforce that we do this on the Main thread
     lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher.rate(activity).onFailure { err -> Timber.e(err, "Unable to launch in-app rating") }
+      launcher.rate(activity).onFailure { err -> Logger.e(err, "Unable to launch in-app rating") }
     }
   }
 }

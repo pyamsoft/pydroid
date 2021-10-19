@@ -165,11 +165,11 @@ private fun PreviewVersionCheckScreenNotLoadingNavigationError() {
 @Preview
 @Composable
 private fun PreviewVersionCheckScreenNotLoadingAllErrors() {
-    PreviewVersionCheckScreen(
-        isLoading = false,
-        versionCheckError = RuntimeException("TEST ERROR"),
-        navigationError = RuntimeException("TEST ERROR"),
-    )
+  PreviewVersionCheckScreen(
+      isLoading = false,
+      versionCheckError = RuntimeException("TEST ERROR"),
+      navigationError = RuntimeException("TEST ERROR"),
+  )
 }
 
 @Preview
@@ -205,9 +205,9 @@ private fun PreviewVersionCheckScreenLoadingNavigationError() {
 @Preview
 @Composable
 private fun PreviewVersionCheckScreenLoadingAllErrors() {
-    PreviewVersionCheckScreen(
-        isLoading = true,
-        versionCheckError = RuntimeException("TEST ERROR"),
-        navigationError = RuntimeException("TEST ERROR"),
-    )
+  PreviewVersionCheckScreen(
+      isLoading = true,
+      versionCheckError = RuntimeException("TEST ERROR"),
+      navigationError = RuntimeException("TEST ERROR"),
+  )
 }

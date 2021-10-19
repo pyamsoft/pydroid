@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
@@ -40,7 +41,6 @@ import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 internal class BillingDialog : AppCompatDialogFragment() {
 
@@ -107,7 +107,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
     requireActivity().also { a ->
       // Enforce on main thread
       a.lifecycleScope.launch(context = Dispatchers.Main) {
-        Timber.d("Start purchase flow for $sku")
+        Logger.d("Start purchase flow for $sku")
         purchaseClient.requireNotNull().purchase(a, sku)
       }
     }

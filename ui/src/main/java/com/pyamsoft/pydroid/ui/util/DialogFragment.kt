@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.ui.util
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.doOnResume
-import timber.log.Timber
 
 /**
  * Using the fragment manager to handle transactions, this guarantees that any old versions of the
@@ -35,11 +35,11 @@ public fun DialogFragment.show(activity: FragmentActivity, tag: String) {
     val transaction = fragmentManager.beginTransaction()
     val prev = fragmentManager.findFragmentByTag(tag)
     if (prev != null) {
-      Timber.d("Remove old fragment with tag: $tag")
+      Logger.d("Remove old fragment with tag: $tag")
       transaction.remove(prev)
     }
 
-    Timber.d("Add new fragment with tag: $tag")
+    Logger.d("Add new fragment with tag: $tag")
     show(transaction, tag)
   }
 }

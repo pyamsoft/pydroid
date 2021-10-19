@@ -17,9 +17,6 @@
 dependencies {
   api project(':core')
 
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
-
   implementation "androidx.annotation:annotation:$annotation"
 }
 

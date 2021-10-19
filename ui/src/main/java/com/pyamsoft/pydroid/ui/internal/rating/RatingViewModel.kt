@@ -21,10 +21,10 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 internal class RatingViewModel
 internal constructor(
@@ -44,11 +44,11 @@ internal constructor(
       marketRunner
           .call()
           .onSuccess {
-            Timber.d("Launching market page: $it")
+            Logger.d("Launching market page: $it")
             publish(RatingControllerEvent.LaunchMarketPage(it))
           }
           .onFailure { e ->
-            Timber.e(e, "Unable to launch market page")
+            Logger.e(e, "Unable to launch market page")
             setState { copy(navigationError = e) }
           }
     }
@@ -59,11 +59,11 @@ internal constructor(
       loadRunner
           .call()
           .onSuccess {
-            Timber.d("Launch in-app rating")
+            Logger.d("Launch in-app rating")
             publish(RatingControllerEvent.LaunchRating(it))
           }
           .onFailure { e ->
-            Timber.e(e, "Unable to launch rating flow")
+            Logger.e(e, "Unable to launch rating flow")
             setState { copy(navigationError = e) }
           }
     }

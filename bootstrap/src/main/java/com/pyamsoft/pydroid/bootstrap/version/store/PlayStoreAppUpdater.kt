@@ -28,12 +28,12 @@ import com.google.android.play.core.ktx.requestCompleteUpdate
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class PlayStoreAppUpdater
 internal constructor(
@@ -60,9 +60,9 @@ internal constructor(
       crossinline onDownloadComplete: () -> Unit
   ): InstallStateUpdatedListener {
     return InstallStateUpdatedListener { state ->
-      Timber.d("Install state changed: ${state.installStatus()}")
+      Logger.d("Install state changed: ${state.installStatus()}")
       if (state.installStatus() == InstallStatus.DOWNLOADED) {
-        Timber.d("Download completed!")
+        Logger.d("Download completed!")
         onDownloadComplete()
       }
     }
@@ -72,7 +72,7 @@ internal constructor(
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
-        Timber.d("COMPLETED UPDATE")
+        Logger.d("COMPLETED UPDATE")
         manager.requestCompleteUpdate()
       }
 
@@ -83,11 +83,11 @@ internal constructor(
         return@withContext suspendCancellableCoroutine<Unit> { continuation ->
           val listener = createStatusListener(onDownloadComplete)
 
-          Timber.d("Listen for install status DOWNLOADED")
+          Logger.d("Listen for install status DOWNLOADED")
           manager.registerListener(listener)
 
           continuation.invokeOnCancellation {
-            Timber.d("Stop listening for install status")
+            Logger.d("Stop listening for install status")
             manager.unregisterListener(listener)
           }
         }
@@ -98,28 +98,28 @@ internal constructor(
         Enforcer.assertOffMainThread()
 
         if (isFake) {
-          Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+          Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
           delay(2000L)
         }
 
         return@withContext suspendCancellableCoroutine { continuation ->
           manager.appUpdateInfo
               .addOnFailureListener { error ->
-                Timber.e(error, "Failed to resolve app update info task")
+                Logger.e(error, "Failed to resolve app update info task")
                 continuation.resume(AppUpdateLauncher.empty())
               }
               .addOnSuccessListener { info ->
-                Timber.d("App Update info received: $info")
+                Logger.d("App Update info received: $info")
                 if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                   val updateType = AppUpdateType.FLEXIBLE
                   if (info.isUpdateTypeAllowed(updateType)) {
-                    Timber.d("Update is available and flexible")
+                    Logger.d("Update is available and flexible")
                     continuation.resume(PlayStoreAppUpdateLauncher(manager, info, updateType))
                     return@addOnSuccessListener
                   }
                 }
 
-                Timber.d("Update is not available")
+                Logger.d("Update is not available")
                 continuation.resume(AppUpdateLauncher.empty())
               }
         }

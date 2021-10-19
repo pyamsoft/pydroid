@@ -66,7 +66,6 @@ public fun DialogFragment.makeFullHeight(useMatchParent: Boolean = false) {
   setSizes(fullHeight = true, fullWidth = false, useMatchParent = useMatchParent)
 }
 
-
 private const val MATCH = WindowManager.LayoutParams.MATCH_PARENT
 private const val WRAP = WindowManager.LayoutParams.WRAP_CONTENT
 

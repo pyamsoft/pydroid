@@ -21,12 +21,12 @@ import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class PlayStoreAppRatingLauncher
 internal constructor(private val manager: ReviewManager, private val info: ReviewInfo) :
@@ -40,11 +40,11 @@ internal constructor(private val manager: ReviewManager, private val info: Revie
           manager
               .launchReviewFlow(activity, info)
               .addOnSuccessListener {
-                Timber.d("In-app Review was a success")
+                Logger.d("In-app Review was a success")
                 continuation.resume(ResultWrapper.success(Unit))
               }
               .addOnFailureListener { err ->
-                Timber.e(err, "In-App review failed!")
+                Logger.e(err, "In-App review failed!")
                 continuation.resume(ResultWrapper.failure(err))
               }
         }

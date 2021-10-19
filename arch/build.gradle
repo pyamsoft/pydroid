@@ -29,9 +29,6 @@ android {
 }
 
 dependencies {
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
-
   // View Binding
   implementation "androidx.databinding:viewbinding:$agp_version"
 

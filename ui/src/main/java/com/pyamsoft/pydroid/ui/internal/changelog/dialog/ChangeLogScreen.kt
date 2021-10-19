@@ -126,8 +126,14 @@ private fun PreviewChangeLogScreenContent() {
   PreviewChangeLogScreen(
       changeLog =
           listOf(
-              ChangeLogLine(ChangeLogLine.Type.CHANGE, "Just a simple Change, Lots of content content content wow"),
-              ChangeLogLine(ChangeLogLine.Type.BUGFIX, "Just a text Bugfix, Lots of content content content wow"),
-              ChangeLogLine(ChangeLogLine.Type.FEATURE, "Just a new Feature, Lots of content content content wow"),
+              ChangeLogLine(
+                  ChangeLogLine.Type.CHANGE,
+                  "Just a simple Change, Lots of content content content wow"),
+              ChangeLogLine(
+                  ChangeLogLine.Type.BUGFIX,
+                  "Just a text Bugfix, Lots of content content content wow"),
+              ChangeLogLine(
+                  ChangeLogLine.Type.FEATURE,
+                  "Just a new Feature, Lots of content content content wow"),
           ))
 }

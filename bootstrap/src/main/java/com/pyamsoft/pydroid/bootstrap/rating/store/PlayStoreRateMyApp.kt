@@ -22,12 +22,12 @@ import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class PlayStoreRateMyApp
 internal constructor(private val isFake: Boolean, context: Context) : RateMyApp {
@@ -45,7 +45,7 @@ internal constructor(private val isFake: Boolean, context: Context) : RateMyApp 
         Enforcer.assertOffMainThread()
 
         if (isFake) {
-          Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+          Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
           delay(2000L)
         }
 
@@ -53,16 +53,16 @@ internal constructor(private val isFake: Boolean, context: Context) : RateMyApp 
           manager
               .requestReviewFlow()
               .addOnFailureListener { error ->
-                Timber.e(error, "Failed to resolve app review info task")
+                Logger.e(error, "Failed to resolve app review info task")
                 continuation.resume(AppRatingLauncher.empty())
               }
               .addOnCompleteListener { request ->
-                Timber.d("App Review info received: $request")
+                Logger.d("App Review info received: $request")
                 if (request.isSuccessful) {
                   val info = request.result
                   continuation.resume(PlayStoreAppRatingLauncher(manager, info))
                 } else {
-                  Timber.d("Review is not available")
+                  Logger.d("Review is not available")
                   continuation.resume(AppRatingLauncher.empty())
                 }
               }

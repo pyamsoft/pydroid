@@ -21,10 +21,10 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.core.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class VersionUpgradeViewModel
 internal constructor(
@@ -33,11 +33,11 @@ internal constructor(
 
   internal inline fun completeUpgrade(crossinline onComplete: () -> Unit) {
     viewModelScope.launch(context = Dispatchers.Default) {
-      Timber.d("Updating app, restart via update manager!")
+      Logger.d("Updating app, restart via update manager!")
       interactor.completeUpdate()
 
       withContext(context = Dispatchers.Main) {
-        Timber.d("App update completed, publish finish!")
+        Logger.d("App update completed, publish finish!")
         onComplete()
       }
     }

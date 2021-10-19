@@ -64,10 +64,6 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
         "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.")
     add("Kotlin", "https://github.com/JetBrains/kotlin", "The Kotlin Programming Language.")
-    add(
-        "Timber",
-        "https://github.com/JakeWharton/timber",
-        "A logger with a small, extensible API which provides utility on top of Android's normal Log class.")
   }
 
   private fun addUtilLibraries() {

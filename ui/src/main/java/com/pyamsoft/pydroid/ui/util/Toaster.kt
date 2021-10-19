@@ -22,9 +22,9 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID
-import timber.log.Timber
 
 /** Global toast manager */
 public object Toaster {
@@ -52,7 +52,7 @@ public object Toaster {
 
       // If this is the cache, null it out
       if (cached?.instance?.id == instance.id) {
-        Timber.d("Clear Toaster cached instance.")
+        Logger.d("Clear Toaster cached instance.")
         cached = null
       }
     }

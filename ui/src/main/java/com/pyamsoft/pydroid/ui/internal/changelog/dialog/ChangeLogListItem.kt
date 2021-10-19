@@ -75,13 +75,13 @@ private fun Line(line: ChangeLogLine) {
 @Preview
 @Composable
 private fun PreviewChangeLogListItem() {
-    Surface {
-        ChangeLogListItem(
-            line =
+  Surface {
+    ChangeLogListItem(
+        line =
             ChangeLogLine(
                 ChangeLogLine.Type.FEATURE,
                 "Changed Stuff, like a lot of stuff, so much stuff that you wouldn't even recognize",
             ),
-        )
-    }
+    )
+  }
 }

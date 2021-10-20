@@ -55,12 +55,6 @@ import com.pyamsoft.pydroid.util.hyperlink
 /** Fragment for displaying a settings page */
 public abstract class SettingsFragment : Fragment() {
 
-  /** Hide upgrade */
-  protected open val hideUpgradeInformation: Boolean = false
-
-  /** Hide clear button */
-  protected open val hideClearAll: Boolean = false
-
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
@@ -133,13 +127,6 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  /** Override this method to implement any custom preferences in your app */
-  @Composable
-  @CheckResult
-  protected open fun customPreferences(): List<Preferences> {
-    return emptyList()
-  }
-
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -181,4 +168,13 @@ public abstract class SettingsFragment : Fragment() {
         .onFailure { Logger.e(it, "Failed to navigate hyperlink") }
         .onFailure { viewModel.handleNavigationFailed(it) }
   }
+
+  /** Hide upgrade */
+  protected abstract val hideUpgradeInformation: Boolean
+
+  /** Hide clear button */
+  protected abstract val hideClearAll: Boolean
+
+  /** Override this method to implement any custom preferences in your app */
+  @Composable @CheckResult protected abstract fun customPreferences(): List<Preferences>
 }

@@ -58,7 +58,15 @@ internal interface SettingsComponent {
 
     private val factory = createViewModelFactory {
       SettingsViewModel(
-          hideClearAll, hideUpgradeInformation, params.theming, params.otherAppsModule.provideInteractor())
+          bugReportUrl = params.bugReportUrl,
+          privacyPolicyUrl = params.privacyPolicyUrl,
+          termsConditionsUrl = params.termsConditionsUrl,
+          viewSourceUrl = params.viewSourceUrl,
+          hideClearAll = hideClearAll,
+          hideUpgradeInformation = hideUpgradeInformation,
+          theming = params.theming,
+          interactor = params.otherAppsModule.provideInteractor(),
+      )
     }
 
     override fun inject(fragment: SettingsFragment) {

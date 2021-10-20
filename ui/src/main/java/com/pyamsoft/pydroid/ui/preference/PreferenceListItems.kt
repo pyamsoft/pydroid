@@ -39,6 +39,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
@@ -264,9 +266,11 @@ private fun PreferenceItem(
           contentAlignment = Alignment.Center,
       ) {
         if (icon != 0) {
+          val imageTintColor = if (MaterialTheme.colors.isLight) Color.Black else Color.White
           CoilImage(
               modifier = Modifier.size(24.dp),
               imageModel = icon,
+              colorFilter = ColorFilter.tint(color = imageTintColor),
           )
         }
       }

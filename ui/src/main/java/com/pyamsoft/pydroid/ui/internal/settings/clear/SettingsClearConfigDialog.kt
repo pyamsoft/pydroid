@@ -22,18 +22,19 @@ import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.util.show
 
 internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
   internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<SettingsClearConfigViewModel> {
-    factory.requireNotNull()
-  }
+  private val viewModel by
+      activityViewModels<SettingsClearConfigViewModel> { factory.requireNotNull() }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     Injector.obtainFromApplication<PYDroidComponent>(requireContext())
@@ -63,12 +64,17 @@ internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
   companion object {
 
-    internal const val TAG = "SettingsClearConfigDialog"
+    private const val TAG = "SettingsClearConfigDialog"
 
     @JvmStatic
     @CheckResult
-    fun newInstance(): DialogFragment {
+    private fun newInstance(): DialogFragment {
       return SettingsClearConfigDialog().apply { arguments = Bundle().apply {} }
+    }
+
+    @JvmStatic
+    internal fun open(activity: FragmentActivity) {
+      newInstance().show(activity, TAG)
     }
   }
 }

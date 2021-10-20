@@ -30,12 +30,15 @@ internal constructor(
     val applicationName: CharSequence,
     val darkMode: Theming.Mode,
     val otherApps: List<OtherApp>,
-    val navigationError: Throwable?
+    val navigationError: Throwable?,
+    val isLoading: Boolean,
 ) : UiViewState
 
 internal sealed class SettingsControllerEvent : UiControllerEvent {
 
   object NavigateDeveloperPage : SettingsControllerEvent()
+
+  data class NavigateHyperlink internal constructor(val url: String) : SettingsControllerEvent()
 
   data class OpenOtherAppsScreen internal constructor(val others: List<OtherApp>) :
       SettingsControllerEvent()

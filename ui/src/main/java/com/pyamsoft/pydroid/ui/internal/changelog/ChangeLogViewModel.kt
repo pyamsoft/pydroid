@@ -27,7 +27,7 @@ internal class ChangeLogViewModel
 internal constructor(private val interactor: ChangeLogInteractor) :
     UiViewModel<UnitViewState, ChangeLogControllerEvent>(initialState = UnitViewState) {
 
-  internal fun show(
+  internal fun handleShow(
       force: Boolean,
   ) {
     viewModelScope.launch(context = Dispatchers.Default) {

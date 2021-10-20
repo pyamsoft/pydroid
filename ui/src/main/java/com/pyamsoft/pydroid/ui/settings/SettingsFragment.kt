@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -36,15 +37,20 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModel
+import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.util.MarketLinker
+import com.pyamsoft.pydroid.util.hyperlink
 
 /** Fragment for displaying a settings page */
 public abstract class SettingsFragment : Fragment() {
@@ -80,9 +86,6 @@ public abstract class SettingsFragment : Fragment() {
   private val changeLogViewModel by
       activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
 
-  /** Any user provided compose content */
-  @Composable protected open fun Content() {}
-
   final override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -106,14 +109,35 @@ public abstract class SettingsFragment : Fragment() {
 
         composeTheme {
           SettingsScreen(
+              customContent = customPreferences(),
               state = state,
               onDarkModeChanged = {
                 viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
               },
+              onLicensesClicked = { AboutDialog.show(act) },
+              onCheckUpdateClicked = { versionViewModel.handleCheckForUpdates(force = true) },
+              onShowChangeLogClicked = { changeLogViewModel.handleShow(force = true) },
+              onResetClicked = { SettingsClearConfigDialog.open(act) },
+              onRateClicked = { ratingViewModel.handleViewMarketPage() },
+              onDonateClicked = { BillingDialog.open(act) },
+              onBugReportClicked = { viewModel.handleReportBug() },
+              onViewSourceClicked = { viewModel.handleViewSourceCode() },
+              onViewPrivacyPolicy = { viewModel.handleViewPrivacyPolicy() },
+              onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
+              onViewMoreAppsClicked = { viewModel.handleViewMoreApps() },
+              onViewSocialMediaClicked = { viewModel.handleViewSocialMedia() },
+              onViewBlogClicked = { viewModel.handleViewBlog() },
           )
         }
       }
     }
+  }
+
+  /** Override this method to implement any custom preferences in your app */
+  @Composable
+  @CheckResult
+  protected open fun customPreferences(): List<Preferences> {
+    return emptyList()
   }
 
   @CallSuper
@@ -121,17 +145,33 @@ public abstract class SettingsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     viewModel.bindController(viewLifecycleOwner) { event ->
       return@bindController when (event) {
-        is SettingsControllerEvent.NavigateDeveloperPage -> openDeveloperPage()
-        is SettingsControllerEvent.OpenOtherAppsScreen -> openOtherAppsPage(event.others)
+        is SettingsControllerEvent.NavigateDeveloperPage -> handleOpenDeveloperPage()
+        is SettingsControllerEvent.OpenOtherAppsScreen -> handleOpenOtherAppsPage(event.others)
+        is SettingsControllerEvent.NavigateHyperlink -> handleHyperlink(event.url)
       }
     }
+
+    viewModel.handleLoadPreferences(viewLifecycleOwner.lifecycleScope, requireActivity())
   }
 
-  private fun openDeveloperPage() {
+  @CallSuper
+  override fun onDestroyView() {
+    super.onDestroyView()
+    factory = null
+    versionFactory = null
+    ratingFactory = null
+    changeLogFactory = null
+  }
+
+  private fun handleOpenDeveloperPage() {
     MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
   }
 
-  private fun openOtherAppsPage(apps: List<OtherApp>) {
+  private fun handleHyperlink(url: String) {
+    url.hyperlink(requireActivity()).navigate().handleNavigation()
+  }
+
+  private fun handleOpenOtherAppsPage(apps: List<OtherApp>) {
     Logger.d("Show other apps fragment: $apps")
     OtherAppsDialog.show(requireActivity())
   }

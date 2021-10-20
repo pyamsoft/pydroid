@@ -143,7 +143,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a group of Preferences */
-  internal data class Group
+  public data class Group
   internal constructor(
       override val name: String,
       override val isEnabled: Boolean,
@@ -158,7 +158,7 @@ public fun preferenceGroup(
     name: String,
     isEnabled: Boolean = true,
     preferences: List<Preferences.Item>,
-): Preferences {
+): Preferences.Group {
   return Preferences.Group(
       name = name,
       isEnabled = isEnabled,

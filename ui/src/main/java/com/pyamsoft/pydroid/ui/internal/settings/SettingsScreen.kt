@@ -16,87 +16,154 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.annotation.CheckResult
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.pyamsoft.pydroid.ui.R
+import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
-import com.pyamsoft.pydroid.ui.preference.listPreference
-import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.toMode
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 internal fun SettingsScreen(
     state: SettingsViewState,
+    customContent: List<Preferences>,
     onDarkModeChanged: (Theming.Mode) -> Unit,
+    onLicensesClicked: () -> Unit,
+    onCheckUpdateClicked: () -> Unit,
+    onShowChangeLogClicked: () -> Unit,
+    onResetClicked: () -> Unit,
+    onRateClicked: () -> Unit,
+    onDonateClicked: () -> Unit,
+    onBugReportClicked: () -> Unit,
+    onViewSourceClicked: () -> Unit,
+    onViewPrivacyPolicy: () -> Unit,
+    onViewTermsOfServiceClicked: () -> Unit,
+    onViewMoreAppsClicked: () -> Unit,
+    onViewSocialMediaClicked: () -> Unit,
+    onViewBlogClicked: () -> Unit,
 ) {
+  val isLoading = state.isLoading
   val applicationName = state.applicationName
   val darkMode = state.darkMode
+  val hideClearAll = state.hideClearAll
+  val hideUpgradeInformation = state.hideUpgradeInformation
 
   Surface {
-    PreferenceScreen(
-        preferences =
-            listOf(
-                applicationPreferences(
-                    applicationName = applicationName,
-                    darkMode = darkMode,
-                    onDarkModeChanged = onDarkModeChanged,
-                ),
-            ),
-    )
+    Crossfade(
+        targetState = isLoading,
+    ) { loading ->
+      if (loading) {
+        Loading()
+      } else {
+        SettingsList(
+            customContent = customContent,
+            hideClearAll = hideClearAll,
+            hideUpgradeInformation = hideUpgradeInformation,
+            applicationName = applicationName,
+            darkMode = darkMode,
+            onDarkModeChanged = onDarkModeChanged,
+            onLicensesClicked = onLicensesClicked,
+            onCheckUpdateClicked = onCheckUpdateClicked,
+            onShowChangeLogClicked = onShowChangeLogClicked,
+            onResetClicked = onResetClicked,
+            onRateClicked = onRateClicked,
+            onDonateClicked = onDonateClicked,
+            onBugReportClicked = onBugReportClicked,
+            onViewSourceClicked = onViewSourceClicked,
+            onViewPrivacyPolicy = onViewPrivacyPolicy,
+            onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+            onViewMoreAppsClicked = onViewMoreAppsClicked,
+            onViewSocialMediaClicked = onViewSocialMediaClicked,
+            onViewBlogClicked = onViewBlogClicked,
+        )
+      }
+    }
   }
 }
 
 @Composable
-@CheckResult
-private fun darkThemePreference(
-    darkMode: Theming.Mode,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
-): Preferences.Item {
-  val names = stringArrayResource(R.array.dark_mode_names_v1)
-  val values = stringArrayResource(R.array.dark_mode_values_v1)
-
-  return listPreference(
-      name = stringResource(R.string.dark_mode_title),
-      summary = stringResource(R.string.dark_mode_summary),
-      icon = R.drawable.ic_visibility_24dp,
-      value = darkMode.toRawString(),
-      entries = names.mapIndexed { index, name -> name to values[index] }.toMap(),
-      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toMode()) })
+private fun Loading() {
+  Box(
+      modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
+      contentAlignment = Alignment.Center,
+  ) { CircularProgressIndicator() }
 }
 
 @Composable
-@CheckResult
-private fun applicationPreferences(
+private fun SettingsList(
+    customContent: List<Preferences>,
+    hideClearAll: Boolean,
+    hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
-): Preferences {
-  return preferenceGroup(
-      name = "$applicationName Settings",
+    onLicensesClicked: () -> Unit,
+    onCheckUpdateClicked: () -> Unit,
+    onShowChangeLogClicked: () -> Unit,
+    onResetClicked: () -> Unit,
+    onRateClicked: () -> Unit,
+    onDonateClicked: () -> Unit,
+    onBugReportClicked: () -> Unit,
+    onViewSourceClicked: () -> Unit,
+    onViewPrivacyPolicy: () -> Unit,
+    onViewTermsOfServiceClicked: () -> Unit,
+    onViewMoreAppsClicked: () -> Unit,
+    onViewSocialMediaClicked: () -> Unit,
+    onViewBlogClicked: () -> Unit,
+) {
+  PreferenceScreen(
       preferences =
-          listOf(
-              darkThemePreference(
-                  darkMode = darkMode,
-                  onDarkModeChanged = onDarkModeChanged,
-              )),
+          customContent +
+              listOf(
+                  createApplicationPreferencesGroup(
+                      hideClearAll = hideClearAll,
+                      hideUpgradeInformation = hideUpgradeInformation,
+                      applicationName = applicationName,
+                      darkMode = darkMode,
+                      onDarkModeChanged = onDarkModeChanged,
+                      onLicensesClicked = onLicensesClicked,
+                      onCheckUpdateClicked = onCheckUpdateClicked,
+                      onShowChangeLogClicked = onShowChangeLogClicked,
+                      onResetClicked = onResetClicked,
+                  ),
+                  createSupportPreferencesGroup(
+                      applicationName = applicationName,
+                      onRateClicked = onRateClicked,
+                      onDonateClicked = onDonateClicked,
+                      onBugReportClicked = onBugReportClicked,
+                      onViewSourceClicked = onViewSourceClicked,
+                      onViewPrivacyPolicy = onViewPrivacyPolicy,
+                      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+                  ),
+                  createMoreAppsPreferencesGroup(
+                      onViewMoreAppsClicked = onViewMoreAppsClicked,
+                  ),
+                  createSocialMediaPreferencesGroup(
+                      onViewSocialMediaClicked = onViewSocialMediaClicked,
+                      onViewBlogClicked = onViewBlogClicked,
+                  ),
+              ),
   )
 }
 
-@Preview
 @Composable
-private fun PreviewSettingsScreen() {
+private fun PreviewSettingsScreen(isLoading: Boolean) {
   SettingsScreen(
       state =
           SettingsViewState(
+              isLoading = isLoading,
               hideClearAll = false,
               hideUpgradeInformation = false,
               applicationName = "TEST",
@@ -104,6 +171,32 @@ private fun PreviewSettingsScreen() {
               otherApps = emptyList(),
               navigationError = null,
           ),
+      customContent = emptyList(),
       onDarkModeChanged = {},
+      onLicensesClicked = {},
+      onCheckUpdateClicked = {},
+      onShowChangeLogClicked = {},
+      onResetClicked = {},
+      onRateClicked = {},
+      onDonateClicked = {},
+      onBugReportClicked = {},
+      onViewSourceClicked = {},
+      onViewPrivacyPolicy = {},
+      onViewTermsOfServiceClicked = {},
+      onViewMoreAppsClicked = {},
+      onViewSocialMediaClicked = {},
+      onViewBlogClicked = {},
   )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoading() {
+  PreviewSettingsScreen(isLoading = true)
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoaded() {
+  PreviewSettingsScreen(isLoading = false)
 }

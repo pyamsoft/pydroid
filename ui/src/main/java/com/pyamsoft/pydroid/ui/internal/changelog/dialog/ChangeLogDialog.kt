@@ -76,7 +76,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
         composeTheme {
           ChangeLogScreen(
               state = state,
-              onRateApp = { ratingViewModel.loadMarketPage() },
+              onRateApp = { ratingViewModel.handleViewMarketPage() },
               onClose = { dismiss() },
           )
         }

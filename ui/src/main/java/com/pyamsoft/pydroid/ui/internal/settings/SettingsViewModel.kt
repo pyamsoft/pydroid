@@ -31,6 +31,10 @@ import kotlinx.coroutines.launch
 
 internal class SettingsViewModel
 internal constructor(
+    private val bugReportUrl: String,
+    private val viewSourceUrl: String,
+    private val privacyPolicyUrl: String,
+    private val termsConditionsUrl: String,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     private val theming: Theming,
@@ -45,6 +49,7 @@ internal constructor(
                 darkMode = Theming.Mode.SYSTEM,
                 otherApps = emptyList(),
                 navigationError = null,
+                isLoading = false,
             ),
     ) {
 
@@ -66,7 +71,7 @@ internal constructor(
     }
   }
 
-  internal fun handleSeeMoreApps() {
+  internal fun handleViewMoreApps() {
     state.otherApps.let { others ->
       if (others.isEmpty()) {
         Logger.w("Other apps list is empty, fallback to developer store page")
@@ -78,8 +83,17 @@ internal constructor(
     }
   }
 
-  internal fun handleSyncDarkThemeState(scope: CoroutineScope, activity: Activity) {
-    scope.setState { copy(darkMode = theming.getMode(activity)) }
+  internal fun handleLoadPreferences(scope: CoroutineScope, activity: Activity) {
+    scope.setState(
+        stateChange = { copy(isLoading = true) },
+        andThen = {
+          setState {
+            copy(
+                darkMode = theming.getMode(activity),
+                isLoading = false,
+            )
+          }
+        })
   }
 
   internal fun handleChangeDarkMode(scope: CoroutineScope, mode: Theming.Mode) {
@@ -96,5 +110,35 @@ internal constructor(
 
   internal fun handleNavigationSuccess() {
     setState { copy(navigationError = null) }
+  }
+
+  internal fun handleViewSocialMedia() {
+    publish(SettingsControllerEvent.NavigateHyperlink(FACEBOOK))
+  }
+
+  internal fun handleViewBlog() {
+    publish(SettingsControllerEvent.NavigateHyperlink(BLOG))
+  }
+
+  internal fun handleViewTermsOfService() {
+    publish(SettingsControllerEvent.NavigateHyperlink(termsConditionsUrl))
+  }
+
+  internal fun handleViewPrivacyPolicy() {
+    publish(SettingsControllerEvent.NavigateHyperlink(privacyPolicyUrl))
+  }
+
+  internal fun handleViewSourceCode() {
+    publish(SettingsControllerEvent.NavigateHyperlink(viewSourceUrl))
+  }
+
+  internal fun handleReportBug() {
+    publish(SettingsControllerEvent.NavigateHyperlink(bugReportUrl))
+  }
+
+  companion object {
+
+    private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
+    private const val BLOG = "https://pyamsoft.blogspot.com/"
   }
 }

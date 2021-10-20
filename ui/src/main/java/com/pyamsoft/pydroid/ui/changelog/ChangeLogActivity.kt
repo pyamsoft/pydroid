@@ -71,6 +71,6 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // Called in onPostResume so that the DialogFragment can be shown correctly.
-    viewModel.show(false)
+    viewModel.handleShow(false)
   }
 }

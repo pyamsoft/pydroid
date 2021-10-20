@@ -39,7 +39,7 @@ internal constructor(
   private val marketRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.loadMarketLauncher() }
 
-  internal fun loadMarketPage() {
+  internal fun handleViewMarketPage() {
     viewModelScope.launch(context = Dispatchers.Default) {
       marketRunner
           .call()

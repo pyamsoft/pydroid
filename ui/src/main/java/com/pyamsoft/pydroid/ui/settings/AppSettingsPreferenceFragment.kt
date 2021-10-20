@@ -47,7 +47,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
-import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -135,9 +134,9 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
             is AppSettingsViewEvent.ClearData -> openClearDataDialog()
             is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
             is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
-            is AppSettingsViewEvent.RateApp -> ratingViewModel.loadMarketPage()
+            is AppSettingsViewEvent.RateApp -> ratingViewModel.handleViewMarketPage()
             is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
-            is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
+            is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.handleShow(true)
             is AppSettingsViewEvent.ToggleDarkTheme ->
                 settingsViewModel.handleChangeDarkMode(it.mode)
             is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
@@ -198,7 +197,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
    * end result of clearing user application data will be enforced by the library.
    */
   protected open fun onClearAllPrompt() {
-    SettingsClearConfigDialog.newInstance().show(requireActivity(), SettingsClearConfigDialog.TAG)
+    SettingsClearConfigDialog.open(requireActivity())
   }
 
   private fun openLicensesPage() {

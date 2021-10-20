@@ -110,7 +110,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
     super.onViewCreated(view, savedInstanceState)
 
     Injector.obtainFromApplication<PYDroidComponent>(view.context)
-        .plusSettings()
+        .plusAppSettings()
         .create(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 

@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 
@@ -29,6 +28,9 @@ public interface Theming {
 
   /** Is activity dark mode */
   @CheckResult public fun isDarkTheme(activity: Activity): Boolean
+
+  /** Get current mode */
+  @CheckResult public fun getMode(activity: Activity): Mode
 
   /** Set application wide dark mode */
   public fun setDarkTheme(mode: Mode)
@@ -54,20 +56,19 @@ public interface Theming {
         when (this) {
           LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
           DARK -> AppCompatDelegate.MODE_NIGHT_YES
-          else ->
-              when {
-                supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-              }
+          else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         }
 
     public companion object {
 
       @JvmStatic
       @CheckResult
-      private fun supportsFollowSystem(): Boolean {
-        return Build.VERSION.SDK_INT >= 28
-      }
+      internal fun fromAppCompatMode(mode: Int) =
+          when (mode) {
+            AppCompatDelegate.MODE_NIGHT_NO -> LIGHT
+            AppCompatDelegate.MODE_NIGHT_YES -> DARK
+            else -> SYSTEM
+          }
     }
   }
 }

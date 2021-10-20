@@ -39,6 +39,11 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
     return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
   }
 
+  /** Which mode are we in right now? */
+  override fun getMode(activity: Activity): Theming.Mode {
+    return Theming.Mode.fromAppCompatMode(AppCompatDelegate.getDefaultNightMode())
+  }
+
   /** Set application wide dark mode */
   override fun setDarkTheme(mode: Theming.Mode) {
     AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())

@@ -62,7 +62,7 @@ private fun socialMediaPreference(
 private fun blogPreference(
     onViewBlogClicked: () -> Unit,
 ): Preferences.Item {
-  return inAppPreference(
+  return preference(
       name = stringResource(R.string.social_media_b_title),
       summary = stringResource(R.string.social_media_b_summary),
       onClick = onViewBlogClicked,

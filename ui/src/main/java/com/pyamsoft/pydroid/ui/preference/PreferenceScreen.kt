@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -34,7 +34,11 @@ public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     preferences: List<Preferences>,
 ) {
-  LazyColumn(modifier = modifier, contentPadding = PaddingValues(vertical = 8.dp)) {
+  LazyColumn(
+      modifier = modifier,
+      contentPadding = PaddingValues(vertical = 8.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
+  ) {
     preferences.forEach { preference ->
       when (preference) {
         is Preferences.Group -> renderGroup(preference)

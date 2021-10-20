@@ -40,7 +40,11 @@ dependencies {
   implementation "androidx.compose.animation:animation:$composeAnimation"
   implementation "androidx.compose.ui:ui-tooling:$composeTooling"
 
+  // Compose Image loading
   implementation "com.github.skydoves:landscapist-coil:$landscapist"
+
+  // Compose Preferences
+  implementation "com.github.Sh4dowSoul.ComposePreferences:compose-preferences:$composePreferences"
 
   // These need to be API since they are used as base classes for Activity and Fragment
   api "androidx.fragment:fragment-ktx:$fragment"

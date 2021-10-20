@@ -24,10 +24,6 @@ import androidx.annotation.CallSuper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -48,7 +44,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.util.getDefaultSharedPreferencesName
 import com.pyamsoft.pydroid.util.MarketLinker
 
 /** Fragment for displaying a settings page */
@@ -85,15 +80,6 @@ public abstract class SettingsFragment : Fragment() {
   private val changeLogViewModel by
       activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
 
-  /** Provide a settings data store */
-  protected open val settingsDataStore: DataStore<Preferences> by
-      lazy(LazyThreadSafetyMode.NONE) {
-        val act = requireActivity()
-        return@lazy PreferenceDataStoreFactory.create {
-          act.preferencesDataStoreFile(act.getDefaultSharedPreferencesName())
-        }
-      }
-
   /** Any user provided compose content */
   @Composable protected open fun Content() {}
 
@@ -119,10 +105,7 @@ public abstract class SettingsFragment : Fragment() {
         val state by viewModel.compose()
 
         composeTheme {
-          Content()
-
           SettingsScreen(
-              dataStore = settingsDataStore,
               state = state,
               onDarkModeChanged = {
                 viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)

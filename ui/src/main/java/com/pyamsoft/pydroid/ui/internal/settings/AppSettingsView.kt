@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
+@Deprecated("Migrate to Jetpack Compose")
 internal class AppSettingsView
 internal constructor(
     private val bugReportUrl: String,

@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
+@Deprecated("Migrate to Jetpack Compose")
 internal interface AppSettingsComponent {
 
   fun inject(fragment: AppSettingsPreferenceFragment)

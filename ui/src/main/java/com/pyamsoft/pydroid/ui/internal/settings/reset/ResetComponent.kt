@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.clear
+package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
 
-internal interface SettingsClearConfigComponent {
+internal interface ResetComponent {
 
-  fun inject(dialog: SettingsClearConfigDialog)
+  fun inject(dialog: ResetDialog)
 
   interface Factory {
 
-    @CheckResult fun create(): SettingsClearConfigComponent
+    @CheckResult fun create(): ResetComponent
 
-    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+    data class Parameters
+    internal constructor(
+        internal val factory: ViewModelProvider.Factory,
+        internal val composeTheme: ComposeTheme,
+    )
   }
 
-  class Impl internal constructor(private val params: Factory.Parameters) :
-      SettingsClearConfigComponent {
+  class Impl internal constructor(private val params: Factory.Parameters) : ResetComponent {
 
-    override fun inject(dialog: SettingsClearConfigDialog) {
+    override fun inject(dialog: ResetDialog) {
       dialog.factory = params.factory
+      dialog.composeTheme = params.composeTheme
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-      override fun create(): SettingsClearConfigComponent {
+      override fun create(): ResetComponent {
         return Impl(params)
       }
     }

@@ -27,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@Deprecated("Migrate to Jetpack Compose")
 internal class AppSettingsViewModel
 internal constructor(
     private val theming: Theming,

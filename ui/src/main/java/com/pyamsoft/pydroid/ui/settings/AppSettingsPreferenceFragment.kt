@@ -43,7 +43,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
@@ -51,6 +51,7 @@ import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.MarketLinker
 
 /** Preference fragment level for displaying a preference screen */
+@Deprecated("Migrate to Jetpack Compose via com.pyamsoft.pydroid.ui.settings.SettingsFragment")
 public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   /** XML resource id */
@@ -197,7 +198,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
    * end result of clearing user application data will be enforced by the library.
    */
   protected open fun onClearAllPrompt() {
-    SettingsClearConfigDialog.open(requireActivity())
+    ResetDialog.open(requireActivity())
   }
 
   private fun openLicensesPage() {

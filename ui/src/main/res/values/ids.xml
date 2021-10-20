@@ -20,6 +20,7 @@
     <item name="dialog_billing" type="id" />
     <item name="dialog_changelog" type="id" />
     <item name="dialog_upgrade" type="id" />
+    <item name="dialog_reset" type="id" />
 
     <item name="fragment_settings" type="id" />
 </resources>

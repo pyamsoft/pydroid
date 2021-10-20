@@ -14,22 +14,33 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.clear
+package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.pyamsoft.pydroid.core.Logger
 
-internal class SettingsClearConfigViewModel
+internal class ResetViewModel
 internal constructor(
     private val interactor: SettingsInteractor,
-) : UiViewModel<UnitViewState, UnitControllerEvent>(initialState = UnitViewState) {
+) :
+    UiViewModel<ResetViewState, ResetControllerEvent>(
+        initialState = ResetViewState(reset = false)) {
 
-  internal fun reset() {
-    viewModelScope.launch(context = Dispatchers.Default) { interactor.wipeData() }
+  internal fun handleFullReset() {
+    if (state.reset) {
+      Logger.w("Already reset, do nothing")
+      return
+    }
+
+    setState(
+        stateChange = { copy(reset = true) },
+        andThen = {
+          Logger.d("Completely reset application")
+          interactor.wipeData()
+
+          Logger.d("Reset completed, broadcast!")
+          publish(ResetControllerEvent.ResetComplete)
+        })
   }
 }

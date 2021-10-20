@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
@@ -52,7 +52,7 @@ internal interface PYDroidComponent {
 
   @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
 
-  @CheckResult fun plusClearConfirm(): SettingsClearConfigComponent.Factory
+  @CheckResult fun plusReset(): ResetComponent.Factory
 
   @CheckResult fun plusChangeLog(): ChangeLogComponent.Factory
 
@@ -186,7 +186,10 @@ internal interface PYDroidComponent {
 
     private val clearSettingsParams by
         lazy(LazyThreadSafetyMode.NONE) {
-          SettingsClearConfigComponent.Factory.Parameters(factory = viewModelFactory)
+          ResetComponent.Factory.Parameters(
+              factory = viewModelFactory,
+              composeTheme = composeTheme,
+          )
         }
 
     private val otherAppsParams by
@@ -275,8 +278,8 @@ internal interface PYDroidComponent {
       return OtherAppsComponent.Impl.FactoryImpl(otherAppsParams)
     }
 
-    override fun plusClearConfirm(): SettingsClearConfigComponent.Factory {
-      return SettingsClearConfigComponent.Impl.FactoryImpl(clearSettingsParams)
+    override fun plusReset(): ResetComponent.Factory {
+      return ResetComponent.Impl.FactoryImpl(clearSettingsParams)
     }
 
     override fun plusVersionCheck(): VersionCheckComponent.Factory {

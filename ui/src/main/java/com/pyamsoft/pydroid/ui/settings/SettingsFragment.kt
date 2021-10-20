@@ -46,7 +46,7 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -117,7 +117,7 @@ public abstract class SettingsFragment : Fragment() {
               onLicensesClicked = { AboutDialog.show(act) },
               onCheckUpdateClicked = { versionViewModel.handleCheckForUpdates(force = true) },
               onShowChangeLogClicked = { changeLogViewModel.handleShow(force = true) },
-              onResetClicked = { SettingsClearConfigDialog.open(act) },
+              onResetClicked = { ResetDialog.open(act) },
               onRateClicked = { ratingViewModel.handleViewMarketPage() },
               onDonateClicked = { BillingDialog.open(act) },
               onBugReportClicked = { viewModel.handleReportBug() },

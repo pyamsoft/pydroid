@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.databinding.LayoutSettingsBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 /** Fragment for displaying a settings page */
+@Deprecated("Migrate to Jetpack Compose via com.pyamsoft.pydroid.ui.settings.SettingsFragment")
 public abstract class AppSettingsFragment : Fragment() {
 
   final override fun onCreateView(

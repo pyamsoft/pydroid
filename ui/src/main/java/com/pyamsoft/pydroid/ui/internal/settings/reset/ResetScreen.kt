@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.version.upgrade
+package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,16 +29,17 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun VersionUpgradeScreen(
-    state: VersionUpgradeViewState,
-    onUpgrade: () -> Unit,
+internal fun ResetScreen(
+    state: ResetViewState,
+    onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val isUpgraded = state.upgraded
+  val reset = state.reset
 
   Surface {
     Column(
@@ -53,8 +54,8 @@ internal fun VersionUpgradeScreen(
       ) { Message() }
 
       Actions(
-          isUpgraded = isUpgraded,
-          onUpgrade = onUpgrade,
+          isReset = reset,
+          onReset = onReset,
           onClose = onClose,
       )
     }
@@ -64,7 +65,7 @@ internal fun VersionUpgradeScreen(
 @Composable
 private fun Title() {
   Text(
-      text = "Upgrade Available",
+      text = "Are you sure?",
       style = MaterialTheme.typography.h4,
   )
 }
@@ -73,7 +74,7 @@ private fun Title() {
 private fun Message() {
   Column {
     Text(
-        text = "A new version has been downloaded!",
+        text = "All saved data will be cleared and all settings reset to default.",
         style = MaterialTheme.typography.body1,
     )
 
@@ -81,8 +82,17 @@ private fun Message() {
         modifier = Modifier.padding(top = 8.dp),
     ) {
       Text(
-          text = "Click to restart the app and upgrade to the latest version!",
+          text = "The app will act as if you are launching it for the first time.",
           style = MaterialTheme.typography.body1,
+      )
+    }
+
+    Box(
+        modifier = Modifier.padding(top = 8.dp),
+    ) {
+      Text(
+          text = "This cannot be undone.",
+          style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
       )
     }
   }
@@ -90,8 +100,8 @@ private fun Message() {
 
 @Composable
 private fun Actions(
-    isUpgraded: Boolean,
-    onUpgrade: () -> Unit,
+    isReset: Boolean,
+    onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
   Row {
@@ -100,22 +110,22 @@ private fun Actions(
     )
     TextButton(
         onClick = onClose,
-        enabled = !isUpgraded,
+        enabled = !isReset,
     ) {
       Text(
-          text = "Later",
+          text = "Cancel",
       )
     }
     Box(
         modifier = Modifier.padding(start = 8.dp),
     ) {
       TextButton(
-          onClick = onUpgrade,
-          enabled = !isUpgraded,
+          onClick = onReset,
+          enabled = !isReset,
           colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.error),
       ) {
         Text(
-            text = "Restart",
+            text = "Reset",
         )
       }
     }
@@ -123,22 +133,22 @@ private fun Actions(
 }
 
 @Composable
-private fun PreviewVersionUpgradeScreen(upgraded: Boolean) {
-  VersionUpgradeScreen(
-      state = VersionUpgradeViewState(upgraded = upgraded),
-      onUpgrade = {},
+private fun PreviewResetScreen(reset: Boolean) {
+  ResetScreen(
+      state = ResetViewState(reset = reset),
+      onReset = {},
       onClose = {},
   )
 }
 
 @Preview
 @Composable
-private fun PreviewVersionUpgradeScreenNotUpgraded() {
-  PreviewVersionUpgradeScreen(upgraded = false)
+private fun PreviewResetScreenNotReset() {
+  PreviewResetScreen(reset = false)
 }
 
 @Preview
 @Composable
-private fun PreviewVersionUpgradeScreenUpgraded() {
-  PreviewVersionUpgradeScreen(upgraded = true)
+private fun PreviewResetScreenReset() {
+  PreviewResetScreen(reset = true)
 }

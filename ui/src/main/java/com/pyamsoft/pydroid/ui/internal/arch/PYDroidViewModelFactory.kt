@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewModel
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlin.reflect.KClass
 
@@ -49,9 +49,9 @@ internal constructor(
               {
                 AppSettingsViewModel(params.theming, params.otherAppsInteractor)
               },
-          SettingsClearConfigViewModel::class to
+          ResetViewModel::class to
               {
-                SettingsClearConfigViewModel(params.settingsInteractor)
+                ResetViewModel(params.settingsInteractor)
               })
 
   override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {

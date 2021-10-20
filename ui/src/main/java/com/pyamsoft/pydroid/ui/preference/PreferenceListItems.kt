@@ -26,18 +26,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
-internal fun SimpleListItem(
+internal fun SimplePreferenceItem(
     preference: Preferences.SimplePreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -46,7 +51,7 @@ internal fun SimpleListItem(
   val icon = preference.icon
   val onClick = preference.onClick
 
-  ListItem(
+  PreferenceItem(
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -57,7 +62,7 @@ internal fun SimpleListItem(
 }
 
 @Composable
-internal fun CheckBoxListItem(
+internal fun CheckBoxPreferenceItem(
     preference: Preferences.CheckBoxPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -67,7 +72,7 @@ internal fun CheckBoxListItem(
   val onCheckedChanged = preference.onCheckedChanged
   val checked = preference.checked
 
-  ListItem(
+  PreferenceItem(
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -86,7 +91,7 @@ internal fun CheckBoxListItem(
 }
 
 @Composable
-internal fun SwitchListItem(
+internal fun SwitchPreferenceItem(
     preference: Preferences.SwitchPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -96,7 +101,7 @@ internal fun SwitchListItem(
   val onCheckedChanged = preference.onCheckedChanged
   val checked = preference.checked
 
-  ListItem(
+  PreferenceItem(
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -115,7 +120,86 @@ internal fun SwitchListItem(
 }
 
 @Composable
-private fun ListItem(
+internal fun ListPreferenceItem(
+    preference: Preferences.ListPreference,
+) {
+  val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
+
+  val isEnabled = preference.isEnabled
+  val name = preference.name
+  val summary = preference.summary
+  val icon = preference.icon
+  val value = preference.value
+  val entries = preference.entries
+  val onPreferenceSelected = preference.onPreferenceSelected
+
+  PreferenceItem(
+      isEnabled = isEnabled,
+      text = name,
+      summary = summary,
+      icon = icon,
+      trailing = null,
+      modifier = { enabled ->
+        Modifier.clickable(enabled = enabled) { showDialog(!isDialogShown) }
+      },
+  )
+
+  if (isDialogShown) {
+    AlertDialog(
+        onDismissRequest = { showDialog(false) },
+        title = {
+          Text(
+              text = name,
+              style = MaterialTheme.typography.h6,
+          )
+        },
+        buttons = {
+          Column(
+              modifier = Modifier.padding(16.dp),
+          ) {
+            entries.forEach { current ->
+              val isSelected = value == current.key
+              val onEntrySelected = {
+                onPreferenceSelected(current.key, current.value)
+                showDialog(false)
+              }
+
+              Row(
+                  modifier =
+                      Modifier.fillMaxWidth()
+                          .selectable(
+                              selected = isSelected,
+                              onClick = {
+                                if (!isSelected) {
+                                  onEntrySelected()
+                                }
+                              },
+                          )
+                          .padding(16.dp),
+              ) {
+                RadioButton(
+                    modifier = Modifier.padding(end = 16.dp),
+                    selected = isSelected,
+                    onClick = {
+                      if (!isSelected) {
+                        onEntrySelected()
+                      }
+                    },
+                )
+                Text(
+                    text = current.value,
+                    style = MaterialTheme.typography.body2,
+                )
+              }
+            }
+          }
+        },
+    )
+  }
+}
+
+@Composable
+private fun PreferenceItem(
     isEnabled: Boolean,
     text: String,
     summary: String,

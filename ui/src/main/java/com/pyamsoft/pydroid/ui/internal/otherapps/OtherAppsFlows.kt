@@ -16,10 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
+@Stable
 internal data class OtherAppsViewState
 internal constructor(
     val isLoading: Boolean,

@@ -16,9 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
+@Stable
 internal data class VersionUpgradeViewState(
     val upgraded: Boolean,
 ) : UiViewState

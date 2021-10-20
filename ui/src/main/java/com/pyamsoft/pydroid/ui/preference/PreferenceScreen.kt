@@ -66,9 +66,10 @@ private fun RenderItem(
     preference: Preferences.Item,
 ) {
   return when (preference) {
-    is Preferences.SimplePreference -> SimpleListItem(preference)
-    is Preferences.SwitchPreference -> SwitchListItem(preference)
-    is Preferences.CheckBoxPreference -> CheckBoxListItem(preference)
+    is Preferences.SimplePreference -> SimplePreferenceItem(preference)
+    is Preferences.SwitchPreference -> SwitchPreferenceItem(preference)
+    is Preferences.CheckBoxPreference -> CheckBoxPreferenceItem(preference)
+    is Preferences.ListPreference -> ListPreferenceItem(preference)
     else ->
         throw IllegalArgumentException(
             "Preference is not a consumable type for PreferenceScreen: $preference")

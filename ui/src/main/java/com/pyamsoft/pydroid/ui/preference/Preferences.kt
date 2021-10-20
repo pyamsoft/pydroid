@@ -88,6 +88,26 @@ public sealed class Preferences {
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
+  /** Represents a Ad Preference item */
+  internal data class AdPreference
+  internal constructor(
+      override val name: String,
+      override val isEnabled: Boolean,
+      override val summary: String,
+      @DrawableRes override val icon: Int,
+      internal val onClick: (() -> Unit)?,
+  ) : Item()
+
+  /** Represents a In-App Purchase Preference item */
+  internal data class InAppPreference
+  internal constructor(
+      override val name: String,
+      override val isEnabled: Boolean,
+      override val summary: String,
+      @DrawableRes override val icon: Int,
+      internal val onClick: (() -> Unit)?,
+  ) : Item()
+
   /** Represents a List Preference item */
   internal data class ListPreference
   internal constructor(
@@ -157,6 +177,44 @@ public fun preference(
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.SimplePreference(
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      icon = icon,
+      onClick = onClick,
+  )
+}
+
+/** Create a new Preference.AdPreference */
+@CheckResult
+@JvmOverloads
+public fun adPreference(
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    onClick: (() -> Unit)? = null,
+): Preferences.Item {
+  return Preferences.AdPreference(
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      icon = icon,
+      onClick = onClick,
+  )
+}
+
+/** Create a new Preference.InAppPreference */
+@CheckResult
+@JvmOverloads
+public fun inAppPreference(
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    onClick: (() -> Unit)? = null,
+): Preferences.Item {
+  return Preferences.InAppPreference(
       name = name,
       isEnabled = isEnabled,
       summary = summary,

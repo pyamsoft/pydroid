@@ -36,6 +36,16 @@ import com.pyamsoft.pydroid.ui.R
 
 @Composable
 internal fun AdBadge() {
+  Badge(text = stringResource(R.string.ad_badge))
+}
+
+@Composable
+internal fun InAppBadge() {
+  Badge(text = stringResource(R.string.in_app_badge))
+}
+
+@Composable
+private fun Badge(text: String) {
   Box(
       modifier =
           Modifier.background(
@@ -46,7 +56,7 @@ internal fun AdBadge() {
       contentAlignment = Alignment.Center,
   ) {
     Text(
-        text = stringResource(R.string.ad_badge),
+        text = text,
         style =
             MaterialTheme.typography.caption.copy(
                 fontSize = 8.sp,

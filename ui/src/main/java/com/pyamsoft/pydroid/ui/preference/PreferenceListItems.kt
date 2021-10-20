@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.ui.internal.app.AdBadge
+import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
@@ -56,7 +59,46 @@ internal fun SimplePreferenceItem(
       text = name,
       summary = summary,
       icon = icon,
-      trailing = null,
+      modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
+  )
+}
+
+@Composable
+internal fun AdPreferenceItem(
+    preference: Preferences.AdPreference,
+) {
+  val isEnabled = preference.isEnabled
+  val name = preference.name
+  val summary = preference.summary
+  val icon = preference.icon
+  val onClick = preference.onClick
+
+  PreferenceItem(
+      isEnabled = isEnabled,
+      text = name,
+      summary = summary,
+      icon = icon,
+      badge = { AdBadge() },
+      modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
+  )
+}
+
+@Composable
+internal fun InAppPreferenceItem(
+    preference: Preferences.InAppPreference,
+) {
+  val isEnabled = preference.isEnabled
+  val name = preference.name
+  val summary = preference.summary
+  val icon = preference.icon
+  val onClick = preference.onClick
+
+  PreferenceItem(
+      isEnabled = isEnabled,
+      text = name,
+      summary = summary,
+      icon = icon,
+      badge = { InAppBadge() },
       modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
@@ -138,7 +180,6 @@ internal fun ListPreferenceItem(
       text = name,
       summary = summary,
       icon = icon,
-      trailing = null,
       modifier = { enabled ->
         Modifier.clickable(enabled = enabled) { showDialog(!isDialogShown) }
       },
@@ -204,8 +245,9 @@ private fun PreferenceItem(
     text: String,
     summary: String,
     @DrawableRes icon: Int,
-    trailing: (@Composable (isEnabled: Boolean) -> Unit)?,
     modifier: (isEnabled: Boolean) -> Modifier,
+    trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
+    badge: (@Composable () -> Unit)? = null,
 ) {
   val enabled = LocalPreferenceEnabledStatus.current && isEnabled
 
@@ -234,11 +276,16 @@ private fun PreferenceItem(
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.Start,
       ) {
-        Text(
-            text = text,
-            maxLines = 1,
-            style = MaterialTheme.typography.body1,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+              text = text,
+              style = MaterialTheme.typography.body1,
+          )
+          badge?.let { compose -> Box(modifier = Modifier.padding(start = 8.dp)) { compose() } }
+          Spacer(modifier = Modifier.weight(1F))
+        }
 
         if (summary.isNotBlank()) {
           Box(

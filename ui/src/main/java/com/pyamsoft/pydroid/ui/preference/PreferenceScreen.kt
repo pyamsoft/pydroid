@@ -70,6 +70,8 @@ private fun RenderItem(
     is Preferences.SwitchPreference -> SwitchPreferenceItem(preference)
     is Preferences.CheckBoxPreference -> CheckBoxPreferenceItem(preference)
     is Preferences.ListPreference -> ListPreferenceItem(preference)
+    is Preferences.InAppPreference -> InAppPreferenceItem(preference)
+    is Preferences.AdPreference -> AdPreferenceItem(preference)
     else ->
         throw IllegalArgumentException(
             "Preference is not a consumable type for PreferenceScreen: $preference")
@@ -93,6 +95,12 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
                             preference(
                                 name = "TEST ITEM 2",
                                 summary = "TESTING 123",
+                            ),
+                            adPreference(
+                                name = "TEST AD",
+                            ),
+                            inAppPreference(
+                                name = "TEST IN-APP",
                             ),
                             checkBoxPreference(
                                 name = "TEST CHECKBOX 1",

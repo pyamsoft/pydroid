@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.autopsy
 
 import android.content.Context
+import android.util.Log
 import androidx.startup.Initializer
 
 /**
@@ -26,10 +27,8 @@ import androidx.startup.Initializer
  */
 internal class AutopsyInitializer internal constructor() : Initializer<Boolean> {
 
-  private val logger = Logger.tag(this)
-
   override fun create(context: Context): Boolean {
-    logger.d("Creating initializer and overriding crash handler")
+    Log.d(TAG, "Creating initializer and overriding crash handler")
     val handler = CrashHandler(context.applicationContext)
     Thread.setDefaultUncaughtExceptionHandler(handler)
     return true
@@ -37,5 +36,9 @@ internal class AutopsyInitializer internal constructor() : Initializer<Boolean> 
 
   override fun dependencies(): MutableList<Class<out Initializer<*>>> {
     return mutableListOf()
+  }
+
+  companion object {
+    private const val TAG = "AutopsyInitializer"
   }
 }

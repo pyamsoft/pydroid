@@ -17,25 +17,28 @@
 package com.pyamsoft.pydroid.autopsy
 
 import android.content.Context
+import android.util.Log
 import kotlin.system.exitProcess
 
 internal data class CrashHandler internal constructor(private val context: Context) :
     Thread.UncaughtExceptionHandler {
 
-  private val logger = Logger.tag(this)
-
   override fun uncaughtException(t: Thread, e: Throwable) {
-    logger.e(e, "Uncaught Exception!")
+    Log.e(TAG, "Uncaught Exception!", e)
     try {
-      logger.d("Launching uncaught exception CrashActivity")
+      Log.d(TAG, "Launching uncaught exception CrashActivity")
       context.startActivity(CrashActivity.newIntent(context, t.name, e))
     } catch (throwable: Throwable) {
-      logger.e(throwable, "Error during exception processing")
+      Log.e(TAG, "Error during exception processing", throwable)
     } finally {
-      logger.d("Completed exception processing")
+      Log.d(TAG, "Completed exception processing")
 
       // NOTE: Sometimes this exit will occur before the Activity launches correctly.
       exitProcess(1)
     }
+  }
+
+  companion object {
+    private const val TAG = "CrashHandler"
   }
 }

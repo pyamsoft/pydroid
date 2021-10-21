@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.loader.GenericLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.loader.Loaded
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal abstract class GlideLoader<T : Any> protected constructor(protected val context: Context) :
     GenericLoader<T>() {
 

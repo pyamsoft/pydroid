@@ -26,6 +26,7 @@ import androidx.annotation.DrawableRes
  * Loads image resources in the background and loads data into ImageViews or other containers once
  * the image is ready
  */
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 public interface ImageLoaderApi<I : Any> {
 
   /** Load a drawable resource */

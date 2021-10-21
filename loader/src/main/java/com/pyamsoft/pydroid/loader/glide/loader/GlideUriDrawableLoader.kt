@@ -23,6 +23,7 @@ import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal class GlideUriDrawableLoader internal constructor(context: Context, private val uri: Uri) :
     GlideDrawableTransformer(context) {
 

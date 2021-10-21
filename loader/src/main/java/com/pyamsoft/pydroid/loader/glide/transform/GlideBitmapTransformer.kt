@@ -20,5 +20,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.pyamsoft.pydroid.loader.glide.loader.GlideRequestTransformer
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal abstract class GlideBitmapTransformer protected constructor(context: Context) :
     GlideRequestTransformer<Bitmap>(context = context, transformer = { it.asBitmap() })

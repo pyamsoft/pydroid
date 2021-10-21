@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.loader.glide.loader.GlideUriDrawableLoader
 import com.pyamsoft.pydroid.loader.glide.loader.GlideUrlBitmapLoader
 import com.pyamsoft.pydroid.loader.glide.loader.GlideUrlDrawableLoader
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal class ImageLoaderImpl internal constructor(private val context: Context) : ImageLoader {
 
   private val drawables by lazy {

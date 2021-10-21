@@ -20,6 +20,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.Target
 import com.pyamsoft.pydroid.loader.Loaded
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal class GlideLoaded
 internal constructor(private val manager: RequestManager, private val target: Target<*>) : Loaded {
 

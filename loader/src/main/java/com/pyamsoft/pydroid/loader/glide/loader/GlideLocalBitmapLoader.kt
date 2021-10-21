@@ -23,6 +23,7 @@ import androidx.annotation.DrawableRes
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
+@Deprecated("Use Landscapist in Jetpack Compose UI")
 internal class GlideLocalBitmapLoader
 internal constructor(context: Context, @DrawableRes private val resId: Int) :
     GlideBitmapTransformer(context) {

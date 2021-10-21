@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.preference.Preferences
-import com.pyamsoft.pydroid.ui.preference.inAppPreference
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 

@@ -115,156 +115,139 @@ internal interface PYDroidComponent {
           ))
     }
 
-    private val loaderModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          LoaderModule(LoaderModule.Parameters(context = context.applicationContext))
-        }
+    private val loaderModule by lazy(LazyThreadSafetyMode.NONE) {
+      LoaderModule(LoaderModule.Parameters(context = context.applicationContext))
+    }
 
-    private val settingsModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          SettingsModule(SettingsModule.Parameters(context = context.applicationContext))
-        }
+    private val settingsModule by lazy(LazyThreadSafetyMode.NONE) {
+      SettingsModule(SettingsModule.Parameters(context = context.applicationContext))
+    }
 
     private val aboutModule by lazy(LazyThreadSafetyMode.NONE) { AboutModule() }
 
-    private val networkModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          NetworkModule(NetworkModule.Parameters(addLoggingInterceptor = params.debug.enabled))
-        }
+    private val networkModule by lazy(LazyThreadSafetyMode.NONE) {
+      NetworkModule(NetworkModule.Parameters(addLoggingInterceptor = params.debug.enabled))
+    }
 
-    private val otherAppsModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsModule(
-              OtherAppsModule.Parameters(
-                  context = context.applicationContext,
-                  packageName = context.applicationContext.packageName,
-                  serviceCreator = networkModule.provideServiceCreator(),
-              ))
-        }
-
-    private val changeLogModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          ChangeLogModule(
-              ChangeLogModule.Parameters(
-                  context = context.applicationContext,
-                  preferences = preferences,
-              ))
-        }
-
-    private val appSettingsParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          AppSettingsComponent.Factory.Parameters(
-              bugReportUrl = params.bugReportUrl,
-              viewSourceUrl = params.viewSourceUrl,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-              factory = viewModelFactory,
-          )
-        }
-
-    private val settingsParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          SettingsComponent.Factory.Parameters(
-              bugReportUrl = params.bugReportUrl,
-              viewSourceUrl = params.viewSourceUrl,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-              factory = viewModelFactory,
-              composeTheme = composeTheme,
-              theming = theming,
-              otherAppsModule = otherAppsModule,
-          )
-        }
-
-    private val aboutParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          AboutComponent.Factory.Parameters(
-              factory = viewModelFactory,
-              composeTheme = composeTheme,
-          )
-        }
-
-    private val clearSettingsParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          ResetComponent.Factory.Parameters(
-              factory = viewModelFactory,
-              composeTheme = composeTheme,
-          )
-        }
-
-    private val otherAppsParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsComponent.Factory.Parameters(
-              factory = viewModelFactory,
-              composeTheme = composeTheme,
-          )
-        }
-
-    private val changeLogParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          ChangeLogComponent.Factory.Parameters(factory = viewModelFactory)
-        }
-
-    private val ratingParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          RatingComponent.Factory.Parameters(
+    private val otherAppsModule by lazy(LazyThreadSafetyMode.NONE) {
+      OtherAppsModule(
+          OtherAppsModule.Parameters(
               context = context.applicationContext,
-              isFake = params.debug.enabled,
-          )
-        }
+              packageName = context.applicationContext.packageName,
+              serviceCreator = networkModule.provideServiceCreator(),
+          ))
+    }
 
-    private val versionParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          VersionCheckComponent.Factory.Parameters(
+    private val changeLogModule by lazy(LazyThreadSafetyMode.NONE) {
+      ChangeLogModule(
+          ChangeLogModule.Parameters(
               context = context.applicationContext,
-              version = params.version,
-              isFakeUpgradeChecker = params.debug.enabled,
-              isFakeUpgradeAvailable = params.debug.upgradeAvailable,
-              composeTheme = composeTheme,
-          )
-        }
+              preferences = preferences,
+          ))
+    }
 
-    private val changeLogDialogParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          ChangeLogDialogComponent.Factory.Parameters(
-              interactor = changeLogModule.provideInteractor(),
-              composeTheme = composeTheme,
-          )
-        }
+    private val appSettingsParams by lazy(LazyThreadSafetyMode.NONE) {
+      AppSettingsComponent.Factory.Parameters(
+          bugReportUrl = params.bugReportUrl,
+          viewSourceUrl = params.viewSourceUrl,
+          privacyPolicyUrl = params.privacyPolicyUrl,
+          termsConditionsUrl = params.termsConditionsUrl,
+          factory = viewModelFactory,
+      )
+    }
 
-    private val billingParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          BillingComponent.Factory.Parameters(
-              context = context.applicationContext,
-              theming = theming,
-              errorBus = EventBus.create(emitOnlyWhenActive = false),
-              interactor = changeLogModule.provideInteractor(),
-              composeTheme = composeTheme,
-          )
-        }
+    private val settingsParams by lazy(LazyThreadSafetyMode.NONE) {
+      SettingsComponent.Factory.Parameters(
+          bugReportUrl = params.bugReportUrl,
+          viewSourceUrl = params.viewSourceUrl,
+          privacyPolicyUrl = params.privacyPolicyUrl,
+          termsConditionsUrl = params.termsConditionsUrl,
+          factory = viewModelFactory,
+          composeTheme = composeTheme,
+          theming = theming,
+          otherAppsModule = otherAppsModule,
+      )
+    }
 
-    private val provider by
-        lazy(LazyThreadSafetyMode.NONE) {
-          object : ModuleProvider {
+    private val aboutParams by lazy(LazyThreadSafetyMode.NONE) {
+      AboutComponent.Factory.Parameters(
+          factory = viewModelFactory,
+          composeTheme = composeTheme,
+      )
+    }
 
-            private val modules by
-                lazy(LazyThreadSafetyMode.NONE) {
-                  object : ModuleProvider.Modules {
-                    override fun theming(): Theming {
-                      return theming
-                    }
+    private val clearSettingsParams by lazy(LazyThreadSafetyMode.NONE) {
+      ResetComponent.Factory.Parameters(
+          factory = viewModelFactory,
+          composeTheme = composeTheme,
+      )
+    }
 
-                    override fun imageLoader(): ImageLoader {
-                      return loaderModule.provideLoader()
-                    }
-                  }
-                }
+    private val otherAppsParams by lazy(LazyThreadSafetyMode.NONE) {
+      OtherAppsComponent.Factory.Parameters(
+          factory = viewModelFactory,
+          composeTheme = composeTheme,
+      )
+    }
 
-            override fun get(): ModuleProvider.Modules {
-              return modules
+    private val changeLogParams by lazy(LazyThreadSafetyMode.NONE) {
+      ChangeLogComponent.Factory.Parameters(factory = viewModelFactory)
+    }
+
+    private val ratingParams by lazy(LazyThreadSafetyMode.NONE) {
+      RatingComponent.Factory.Parameters(
+          context = context.applicationContext,
+          isFake = params.debug.enabled,
+      )
+    }
+
+    private val versionParams by lazy(LazyThreadSafetyMode.NONE) {
+      VersionCheckComponent.Factory.Parameters(
+          context = context.applicationContext,
+          version = params.version,
+          isFakeUpgradeChecker = params.debug.enabled,
+          isFakeUpgradeAvailable = params.debug.upgradeAvailable,
+          composeTheme = composeTheme,
+      )
+    }
+
+    private val changeLogDialogParams by lazy(LazyThreadSafetyMode.NONE) {
+      ChangeLogDialogComponent.Factory.Parameters(
+          interactor = changeLogModule.provideInteractor(),
+          composeTheme = composeTheme,
+      )
+    }
+
+    private val billingParams by lazy(LazyThreadSafetyMode.NONE) {
+      BillingComponent.Factory.Parameters(
+          context = context.applicationContext,
+          theming = theming,
+          errorBus = EventBus.create(emitOnlyWhenActive = false),
+          interactor = changeLogModule.provideInteractor(),
+          composeTheme = composeTheme,
+      )
+    }
+
+    private val provider by lazy(LazyThreadSafetyMode.NONE) {
+      object : ModuleProvider {
+
+        private val modules by lazy(LazyThreadSafetyMode.NONE) {
+          object : ModuleProvider.Modules {
+            override fun theming(): Theming {
+              return theming
+            }
+
+            override fun imageLoader(): ImageLoader {
+              return loaderModule.provideLoader()
             }
           }
         }
+
+        override fun get(): ModuleProvider.Modules {
+          return modules
+        }
+      }
+    }
 
     init {
       params.logger?.also { Logger.setLogger(it) }

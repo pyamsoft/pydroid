@@ -21,8 +21,7 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 
-@Stable
-internal data class RatingViewState(val navigationError: Throwable?) : UiViewState
+@Stable internal data class RatingViewState(val navigationError: Throwable?) : UiViewState
 
 internal sealed class RatingControllerEvent : UiControllerEvent {
 

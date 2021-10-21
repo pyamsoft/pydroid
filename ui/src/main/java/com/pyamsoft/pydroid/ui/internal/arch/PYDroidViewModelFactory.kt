@@ -49,10 +49,7 @@ internal constructor(
               {
                 AppSettingsViewModel(params.theming, params.otherAppsInteractor)
               },
-          ResetViewModel::class to
-              {
-                ResetViewModel(params.settingsInteractor)
-              })
+          ResetViewModel::class to { ResetViewModel(params.settingsInteractor) })
 
   override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
     return viewModelProviders[modelClass.kotlin]?.invoke() ?: fail(modelClass)

@@ -30,10 +30,10 @@ public interface Theming {
   @CheckResult public fun isDarkTheme(activity: Activity): Boolean
 
   /** Get current mode */
-  @CheckResult public fun getMode(activity: Activity): Mode
+  @CheckResult public suspend fun getMode(): Mode
 
   /** Set application wide dark mode */
-  public fun setDarkTheme(mode: Mode)
+  public suspend fun setDarkTheme(mode: Mode)
 
   /** Dark mode enum */
   public enum class Mode {
@@ -45,30 +45,5 @@ public interface Theming {
 
     /** System mode */
     SYSTEM;
-
-    @CheckResult
-    internal fun toRawString(): String {
-      return name.lowercase()
-    }
-
-    @CheckResult
-    internal fun toAppCompatMode(): Int =
-        when (this) {
-          LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-          DARK -> AppCompatDelegate.MODE_NIGHT_YES
-          else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
-
-    public companion object {
-
-      @JvmStatic
-      @CheckResult
-      internal fun fromAppCompatMode(mode: Int) =
-          when (mode) {
-            AppCompatDelegate.MODE_NIGHT_NO -> LIGHT
-            AppCompatDelegate.MODE_NIGHT_YES -> DARK
-            else -> SYSTEM
-          }
-    }
   }
 }

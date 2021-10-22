@@ -55,8 +55,6 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
         }
 
     billingConnector.requireNotNull().connect()
-
-    lifecycleScope.launch { theming.requireNotNull().init() }
   }
 
   /** Get system service */

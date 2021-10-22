@@ -17,16 +17,34 @@
 package com.pyamsoft.pydroid.ui.theme
 
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 
 @CheckResult
-internal fun String.toMode(): Mode =
+internal fun String.toThemingMode(): Mode {
+  return when (this) {
+    "light" -> LIGHT
+    "dark" -> DARK
+    "system" -> SYSTEM
+    else -> SYSTEM
+  }
+}
+
+@CheckResult
+internal fun Mode.toRawString(): String =
     when (this) {
-      "light" -> LIGHT
-      "dark" -> DARK
-      "system" -> SYSTEM
-      else -> SYSTEM
+      LIGHT -> "light"
+      DARK -> "dark"
+      SYSTEM -> "system"
+    }
+
+@CheckResult
+internal fun Mode.toAppCompatMode(): Int =
+    when (this) {
+      LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+      DARK -> AppCompatDelegate.MODE_NIGHT_YES
+      else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }

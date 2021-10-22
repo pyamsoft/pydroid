@@ -169,7 +169,7 @@ internal fun ListPreferenceItem(
   val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
 
   val isEnabled = preference.isEnabled
-  val name = preference.name
+  val title = preference.name
   val summary = preference.summary
   val icon = preference.icon
   val currentValue = preference.value
@@ -178,7 +178,7 @@ internal fun ListPreferenceItem(
 
   PreferenceItem(
       isEnabled = isEnabled,
-      text = name,
+      text = title,
       summary = summary,
       icon = icon,
       modifier = { enabled ->
@@ -191,7 +191,7 @@ internal fun ListPreferenceItem(
         onDismissRequest = { showDialog(false) },
         title = {
           Text(
-              text = name,
+              text = title,
               style = MaterialTheme.typography.h6,
           )
         },

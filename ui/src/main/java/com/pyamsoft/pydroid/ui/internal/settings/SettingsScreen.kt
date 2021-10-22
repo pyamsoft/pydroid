@@ -23,8 +23,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -53,14 +57,19 @@ internal fun SettingsScreen(
     onViewMoreAppsClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
+    onNavigationErrorDismissed: () -> Unit,
 ) {
+  val scaffoldState = rememberScaffoldState()
   val isLoading = state.isLoading
   val applicationName = state.applicationName
   val darkMode = state.darkMode
   val hideClearAll = state.hideClearAll
   val hideUpgradeInformation = state.hideUpgradeInformation
+  val navigationError = state.navigationError
 
-  Surface {
+  Scaffold(
+      scaffoldState = scaffoldState,
+  ) {
     Crossfade(
         targetState = isLoading,
     ) { loading ->
@@ -90,6 +99,12 @@ internal fun SettingsScreen(
         )
       }
     }
+
+    NavigationError(
+        snackbarHost = scaffoldState.snackbarHostState,
+        error = navigationError,
+        onSnackbarDismissed = onNavigationErrorDismissed,
+    )
   }
 }
 
@@ -159,6 +174,23 @@ private fun SettingsList(
 }
 
 @Composable
+private fun NavigationError(
+    snackbarHost: SnackbarHostState,
+    error: Throwable?,
+    onSnackbarDismissed: () -> Unit,
+) {
+  if (error != null) {
+    LaunchedEffect(error) {
+      snackbarHost.showSnackbar(
+          message = error.message ?: "An unexpected error occurred",
+          duration = SnackbarDuration.Long,
+      )
+      onSnackbarDismissed()
+    }
+  }
+}
+
+@Composable
 private fun PreviewSettingsScreen(isLoading: Boolean) {
   SettingsScreen(
       state =
@@ -186,6 +218,7 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       onViewMoreAppsClicked = {},
       onViewSocialMediaClicked = {},
       onViewBlogClicked = {},
+      onNavigationErrorDismissed = {},
   )
 }
 

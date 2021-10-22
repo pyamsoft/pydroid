@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -83,13 +82,13 @@ internal constructor(
     }
   }
 
-  internal fun handleLoadPreferences(scope: CoroutineScope, activity: Activity) {
+  internal fun handleLoadPreferences(scope: CoroutineScope) {
     scope.setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
           setState {
             copy(
-                darkMode = theming.getMode(activity),
+                darkMode = theming.getMode(),
                 isLoading = false,
             )
           }
@@ -97,7 +96,10 @@ internal constructor(
   }
 
   internal fun handleChangeDarkMode(scope: CoroutineScope, mode: Theming.Mode) {
-    scope.launch(context = Dispatchers.Main) { theming.setDarkTheme(mode) }
+    scope.setState(
+        stateChange = { copy(darkMode = mode) },
+        andThen = { theming.setDarkTheme(mode) },
+    )
   }
 
   internal fun handleClearNavigationError() {

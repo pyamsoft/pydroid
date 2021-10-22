@@ -26,7 +26,8 @@ import com.pyamsoft.pydroid.ui.preference.listPreference
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.toMode
+import com.pyamsoft.pydroid.ui.theme.toRawString
+import com.pyamsoft.pydroid.ui.theme.toThemingMode
 
 @Composable
 @CheckResult
@@ -118,7 +119,7 @@ private fun darkThemePreference(
       icon = R.drawable.ic_visibility_24dp,
       value = darkMode.toRawString(),
       entries = names.mapIndexed { index, name -> name to values[index] }.toMap(),
-      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toMode()) })
+      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toThemingMode()) })
 }
 
 @Composable

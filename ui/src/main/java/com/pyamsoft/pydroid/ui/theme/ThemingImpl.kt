@@ -28,9 +28,8 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
 
   override suspend fun init() =
       withContext(context = Dispatchers.IO) {
-        // Now even though this will take work, it will defer until all other handler work is done
-        val mode = preferences.getDarkMode()
-        withContext(context = Dispatchers.Main) { setDarkTheme(mode) }
+        // Make sure we set the AppCompatDelegate from the saved preference mode
+        applyDarkTheme(getMode())
       }
 
   /** Is activity dark mode */
@@ -40,12 +39,21 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
   }
 
   /** Which mode are we in right now? */
-  override fun getMode(activity: Activity): Theming.Mode {
-    return Theming.Mode.fromAppCompatMode(AppCompatDelegate.getDefaultNightMode())
+  override suspend fun getMode(): Theming.Mode {
+    return preferences.getDarkMode()
   }
 
   /** Set application wide dark mode */
-  override fun setDarkTheme(mode: Theming.Mode) {
-    AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
-  }
+  override suspend fun setDarkTheme(mode: Theming.Mode) =
+      withContext(context = Dispatchers.IO) {
+        preferences.setDarkMode(mode)
+        applyDarkTheme(mode)
+      }
+
+  private suspend fun applyDarkTheme(mode: Theming.Mode) =
+      withContext(context = Dispatchers.Main) {
+        // Needs to run on main thread
+        val appCompatMode = mode.toAppCompatMode()
+        AppCompatDelegate.setDefaultNightMode(appCompatMode)
+      }
 }

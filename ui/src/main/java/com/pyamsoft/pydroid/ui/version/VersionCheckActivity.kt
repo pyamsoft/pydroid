@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
@@ -84,11 +85,14 @@ public abstract class VersionCheckActivity : ActivityBase() {
    * All UI and function related to checking for new updates to Applications
    */
   @Composable
-  protected fun VersionScreen() {
+  protected fun VersionScreen(
+      snackbarHostState: SnackbarHostState,
+  ) {
     val state by viewModel.compose()
 
     VersionCheckScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onNavigationErrorDismissed = { viewModel.handleHideNavigation() },
         onVersionCheckErrorDismissed = { viewModel.handleClearError() },
     )

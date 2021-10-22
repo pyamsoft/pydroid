@@ -172,7 +172,7 @@ internal fun ListPreferenceItem(
   val name = preference.name
   val summary = preference.summary
   val icon = preference.icon
-  val value = preference.value
+  val currentValue = preference.value
   val entries = preference.entries
   val onPreferenceSelected = preference.onPreferenceSelected
 
@@ -200,9 +200,11 @@ internal fun ListPreferenceItem(
               modifier = Modifier.padding(16.dp),
           ) {
             entries.forEach { current ->
-              val isSelected = value == current.key
+              val name = current.key
+              val value = current.value
+              val isSelected = value == currentValue
               val onEntrySelected = {
-                onPreferenceSelected(current.key, current.value)
+                onPreferenceSelected(name, value)
                 showDialog(false)
               }
 
@@ -229,7 +231,7 @@ internal fun ListPreferenceItem(
                     },
                 )
                 Text(
-                    text = current.value,
+                    text = name,
                     style = MaterialTheme.typography.body2,
                 )
               }
@@ -256,7 +258,7 @@ private fun PreferenceItem(
       isEnabled = enabled,
   ) {
     Row(
-        modifier = modifier(enabled).fillMaxWidth(),
+        modifier = modifier(enabled).fillMaxWidth().padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {

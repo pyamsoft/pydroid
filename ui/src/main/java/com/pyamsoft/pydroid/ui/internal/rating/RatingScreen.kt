@@ -27,11 +27,10 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 internal fun RatingScreen(
     state: RatingViewState,
+    snackbarHostState: SnackbarHostState,
     onNavigationErrorDismissed: () -> Unit,
 ) {
   val navigationError = state.navigationError
-
-  val snackbarHostState = remember { SnackbarHostState() }
 
   NavigationError(
       snackbarHost = snackbarHostState,
@@ -67,6 +66,7 @@ private fun PreviewRatingScreen(
             RatingViewState(
                 navigationError = navigationError,
             ),
+        snackbarHostState = SnackbarHostState(),
         onNavigationErrorDismissed = {},
     )
   }

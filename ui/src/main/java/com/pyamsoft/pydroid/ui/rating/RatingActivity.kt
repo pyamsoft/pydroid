@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.rating
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
@@ -62,11 +63,14 @@ public abstract class RatingActivity : VersionCheckActivity() {
    * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
    */
   @Composable
-  protected fun RatingScreen() {
+  protected fun RatingScreen(
+      snackbarHostState: SnackbarHostState,
+  ) {
     val state by viewModel.compose()
 
     RatingScreen(
         state = state,
+        snackbarHostState = snackbarHostState,
         onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
     )
   }

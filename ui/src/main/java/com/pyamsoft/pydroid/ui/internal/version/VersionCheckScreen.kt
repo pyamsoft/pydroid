@@ -21,20 +21,18 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 internal fun VersionCheckScreen(
     state: VersionCheckViewState,
+    snackbarHostState: SnackbarHostState,
     onNavigationErrorDismissed: () -> Unit,
     onVersionCheckErrorDismissed: () -> Unit,
 ) {
   val isLoading = state.isLoading
   val versionCheckError = state.versionCheckError
   val navigationError = state.navigationError
-
-  val snackbarHostState = remember { SnackbarHostState() }
 
   Loading(
       snackbarHost = snackbarHostState,
@@ -126,6 +124,7 @@ private fun PreviewVersionCheckScreen(
                 versionCheckError = versionCheckError,
                 navigationError = navigationError,
             ),
+        snackbarHostState = SnackbarHostState(),
         onVersionCheckErrorDismissed = {},
         onNavigationErrorDismissed = {},
     )

@@ -18,18 +18,23 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import android.content.res.Configuration
+import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.WindowCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** Handles getting current dark mode state and setting dark mode state */
-internal class ThemingImpl internal constructor(private val preferences: ThemingPreferences) :
-    Theming {
+internal class ThemingImpl
+internal constructor(
+    private val preferences: ThemingPreferences,
+) : Theming {
 
   override suspend fun init() =
       withContext(context = Dispatchers.IO) {
         // Make sure we set the AppCompatDelegate from the saved preference mode
-        applyDarkTheme(getMode())
+        val mode = getMode()
+        applyDarkTheme(mode)
       }
 
   /** Is activity dark mode */
@@ -55,5 +60,13 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
         // Needs to run on main thread
         val appCompatMode = mode.toAppCompatMode()
         AppCompatDelegate.setDefaultNightMode(appCompatMode)
+      }
+
+  @CheckResult
+  private fun Theming.Mode.toAppCompatMode(): Int =
+      when (this) {
+        Theming.Mode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        Theming.Mode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+        Theming.Mode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
       }
 }

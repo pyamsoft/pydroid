@@ -32,5 +32,8 @@ internal constructor(
     val licenseName: String,
 
     /** Library license URL */
-    val licenseUrl: String
+    val licenseUrl: String,
+
+    /** A unique key per library */
+    val key: String = "${name}:${libraryUrl}"
 )

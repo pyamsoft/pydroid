@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.libraries
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.util.contains
 
 /** Manage the various open source libraries */
 public object OssLibraries {
@@ -147,40 +148,11 @@ public object OssLibraries {
         "https://github.com/zhanghai/AndroidFastScroll",
         "Fast scroll for Android RecyclerView and more")
     add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Animation",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Material",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Foundation",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Android Compose Theme Adapter",
-        "https://github.com/material-components/material-components-android-compose-theme-adapter",
-        "A library that enables reuse of Material Components for Android XML themes for theming in Jetpack Compose.",
-    )
-    add(
         "Landscapist",
         "https://github.com/skydoves/Landscapist",
         "Jetpack Compose image loading library which can fetch and display network images using Glide, Coil, and Fresco",
     )
+    addComposeUiLibraries()
   }
 
   private fun addLoaderLibraries() {
@@ -215,6 +187,10 @@ public object OssLibraries {
         "AndroidX Lifecycle ViewModel",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
         "The AndroidX Jetpack ViewModel library. Model the state of your application easily.")
+    addComposeArchLibraries()
+  }
+
+  private fun addComposeArchLibraries() {
     add(
         "Jetpack Compose Compiler",
         "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
@@ -222,6 +198,30 @@ public object OssLibraries {
     )
     add(
         "Jetpack Compose Runtime",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+  }
+
+  private fun addComposeUiLibraries() {
+    addComposeArchLibraries()
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Animation",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose Material",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
+        "Jetpack Compose is Android’s modern toolkit for building native UI",
+    )
+    add(
+        "Jetpack Compose UI",
         "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
         "Jetpack Compose is Android’s modern toolkit for building native UI",
     )
@@ -239,6 +239,7 @@ public object OssLibraries {
         "PYDroid Autopsy",
         "https://github.com/pyamsoft/pydroid",
         "PYDroid development crash reporting screen")
+    addComposeUiLibraries()
   }
 
   /** Add a new library to the list of libraries used by the application */
@@ -250,14 +251,18 @@ public object OssLibraries {
       description: String,
       license: LibraryLicense = OssLicenses.APACHE2
   ) {
-    libraries.add(
+    val lib =
         OssLibrary(
             name = name,
             description = description,
             libraryUrl = url,
             licenseName = license.license,
             licenseUrl = license.location,
-        ))
+        )
+
+    if (!libraries.contains { it.key == lib.key }) {
+      libraries.add(lib)
+    }
   }
 
   /** Get the list of libraries used in the application */

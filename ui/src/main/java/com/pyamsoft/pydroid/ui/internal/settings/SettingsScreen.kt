@@ -34,6 +34,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.systemBarsPadding
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -111,7 +113,7 @@ internal fun SettingsScreen(
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
+      modifier = Modifier.systemBarsPadding().fillMaxHeight().fillMaxWidth().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }

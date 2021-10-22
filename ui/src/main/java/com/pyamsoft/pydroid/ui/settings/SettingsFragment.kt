@@ -23,12 +23,15 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.accompanist.insets.LocalWindowInsets
+import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
@@ -80,6 +83,9 @@ public abstract class SettingsFragment : Fragment() {
   private val changeLogViewModel by
       activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
 
+  // Watches the window insets
+  private var windowInsetObserver: ViewWindowInsetObserver? = null
+
   final override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -98,31 +104,37 @@ public abstract class SettingsFragment : Fragment() {
     return ComposeView(act).apply {
       id = R.id.fragment_settings
 
+      val observer = ViewWindowInsetObserver(this)
+      val windowInsets = observer.start()
+      windowInsetObserver = observer
+
       setContent {
         val state by viewModel.compose()
 
         composeTheme {
-          SettingsScreen(
-              customContent = customPreferences(),
-              state = state,
-              onDarkModeChanged = {
-                viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
-              },
-              onLicensesClicked = { AboutDialog.show(act) },
-              onCheckUpdateClicked = { versionViewModel.handleCheckForUpdates(force = true) },
-              onShowChangeLogClicked = { changeLogViewModel.handleShow(force = true) },
-              onResetClicked = { ResetDialog.open(act) },
-              onRateClicked = { ratingViewModel.handleViewMarketPage() },
-              onDonateClicked = { BillingDialog.open(act) },
-              onBugReportClicked = { viewModel.handleReportBug() },
-              onViewSourceClicked = { viewModel.handleViewSourceCode() },
-              onViewPrivacyPolicy = { viewModel.handleViewPrivacyPolicy() },
-              onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
-              onViewMoreAppsClicked = { viewModel.handleViewMoreApps() },
-              onViewSocialMediaClicked = { viewModel.handleViewSocialMedia() },
-              onViewBlogClicked = { viewModel.handleViewBlog() },
-              onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
-          )
+          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+            SettingsScreen(
+                customContent = customPreferences(),
+                state = state,
+                onDarkModeChanged = {
+                  viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
+                },
+                onLicensesClicked = { AboutDialog.show(act) },
+                onCheckUpdateClicked = { versionViewModel.handleCheckForUpdates(force = true) },
+                onShowChangeLogClicked = { changeLogViewModel.handleShow(force = true) },
+                onResetClicked = { ResetDialog.open(act) },
+                onRateClicked = { ratingViewModel.handleViewMarketPage() },
+                onDonateClicked = { BillingDialog.open(act) },
+                onBugReportClicked = { viewModel.handleReportBug() },
+                onViewSourceClicked = { viewModel.handleViewSourceCode() },
+                onViewPrivacyPolicy = { viewModel.handleViewPrivacyPolicy() },
+                onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
+                onViewMoreAppsClicked = { viewModel.handleViewMoreApps() },
+                onViewSocialMediaClicked = { viewModel.handleViewSocialMedia() },
+                onViewBlogClicked = { viewModel.handleViewBlog() },
+                onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
+            )
+          }
         }
       }
     }
@@ -149,6 +161,9 @@ public abstract class SettingsFragment : Fragment() {
     versionFactory = null
     ratingFactory = null
     changeLogFactory = null
+
+    windowInsetObserver?.stop()
+    windowInsetObserver = null
   }
 
   private fun handleOpenDeveloperPage() {

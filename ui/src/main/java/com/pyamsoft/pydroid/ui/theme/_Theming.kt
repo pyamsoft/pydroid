@@ -41,10 +41,3 @@ internal fun Mode.toRawString(): String =
       SYSTEM -> "system"
     }
 
-@CheckResult
-internal fun Mode.toAppCompatMode(): Int =
-    when (this) {
-      LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-      DARK -> AppCompatDelegate.MODE_NIGHT_YES
-      else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-    }

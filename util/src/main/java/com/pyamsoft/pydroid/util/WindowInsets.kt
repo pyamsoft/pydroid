@@ -26,6 +26,7 @@ import android.view.Window
 import android.view.WindowInsetsController
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 
 /** A listener which responds to some kind of change on WindowInsets */
@@ -54,7 +55,8 @@ public fun Activity.stableLayoutHideNavigation() {
 
 @SuppressLint("NewApi")
 private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
-  this.setDecorFitsSystemWindows(false)
+  WindowCompat.setDecorFitsSystemWindows(this, false)
+
   if (isLandscape) {
     this.insetsController?.systemBarsBehavior =
         WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -63,11 +65,7 @@ private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
 
 @Suppress("DEPRECATION")
 private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
-  this.decorView.systemUiVisibility =
-      this.decorView.systemUiVisibility or
-          View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-          View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  WindowCompat.setDecorFitsSystemWindows(this, false)
 
   if (isLandscape) {
     // In landscape mode, navbar is marked immersive sticky

@@ -33,8 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.insets.systemBarsPadding
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
@@ -44,6 +44,8 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 internal fun SettingsScreen(
     state: SettingsViewState,
+    topItemMargin: Dp,
+    bottomItemMargin: Dp,
     customContent: List<Preferences>,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -79,6 +81,8 @@ internal fun SettingsScreen(
         Loading()
       } else {
         SettingsList(
+            topItemMargin = topItemMargin,
+            bottomItemMargin = bottomItemMargin,
             customContent = customContent,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
@@ -120,6 +124,8 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
+    topItemMargin: Dp,
+    bottomItemMargin: Dp,
     customContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
@@ -141,6 +147,8 @@ private fun SettingsList(
     onViewBlogClicked: () -> Unit,
 ) {
   PreferenceScreen(
+      topItemMargin = topItemMargin,
+      bottomItemMargin = bottomItemMargin,
       preferences =
           customContent +
               listOf(
@@ -205,6 +213,8 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
               otherApps = emptyList(),
               navigationError = null,
           ),
+      topItemMargin = 0.dp,
+      bottomItemMargin = 0.dp,
       customContent = emptyList(),
       onDarkModeChanged = {},
       onLicensesClicked = {},

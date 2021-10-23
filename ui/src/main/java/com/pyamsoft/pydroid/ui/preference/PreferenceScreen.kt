@@ -28,14 +28,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 
+
 @Composable
-@JvmOverloads
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
+    topItemMargin: Dp = 0.dp,
+    bottomItemMargin: Dp = 0.dp,
     preferences: List<Preferences>,
 ) {
   LazyColumn(
@@ -48,12 +51,16 @@ public fun PreferenceScreen(
       when (preference) {
         is Preferences.Group ->
             renderGroup(
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
                 index = index,
                 maxIndex = maxIndex,
                 preference = preference,
             )
         is Preferences.Item ->
             renderItem(
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
                 index = index,
                 maxIndex = maxIndex,
                 preference = preference,
@@ -71,6 +78,8 @@ private fun EmptyBox(modifier: Modifier = Modifier) {
 }
 
 private fun LazyListScope.renderPaddedItems(
+    topItemMargin: Dp,
+    bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
     content: LazyListScope.() -> Unit
@@ -78,7 +87,11 @@ private fun LazyListScope.renderPaddedItems(
   if (index == 0) {
     item {
       EmptyBox(
-          modifier = Modifier.fillMaxWidth().statusBarsHeight(),
+          modifier =
+              Modifier.fillMaxWidth()
+                  .statusBarsHeight(
+                      additional = topItemMargin,
+                  ),
       )
     }
   }
@@ -88,18 +101,30 @@ private fun LazyListScope.renderPaddedItems(
   if (index == maxIndex) {
     item {
       EmptyBox(
-          modifier = Modifier.fillMaxWidth().navigationBarsHeight(),
+          modifier =
+              Modifier.fillMaxWidth()
+                  .navigationBarsHeight(
+                      additional = bottomItemMargin,
+                  ),
       )
     }
   }
 }
 
-private fun LazyListScope.renderGroup(index: Int, maxIndex: Int, preference: Preferences.Group) {
+private fun LazyListScope.renderGroup(
+    topItemMargin: Dp,
+    bottomItemMargin: Dp,
+    index: Int,
+    maxIndex: Int,
+    preference: Preferences.Group
+) {
   val name = preference.name
   val preferences = preference.preferences
   val isEnabled = preference.isEnabled
 
   renderPaddedItems(
+      topItemMargin = topItemMargin,
+      bottomItemMargin = bottomItemMargin,
       index = index,
       maxIndex = maxIndex,
   ) {
@@ -116,8 +141,16 @@ private fun LazyListScope.renderGroup(index: Int, maxIndex: Int, preference: Pre
   }
 }
 
-private fun LazyListScope.renderItem(index: Int, maxIndex: Int, preference: Preferences.Item) {
+private fun LazyListScope.renderItem(
+    topItemMargin: Dp,
+    bottomItemMargin: Dp,
+    index: Int,
+    maxIndex: Int,
+    preference: Preferences.Item
+) {
   renderPaddedItems(
+      topItemMargin = topItemMargin,
+      bottomItemMargin = bottomItemMargin,
       index = index,
       maxIndex = maxIndex,
   ) { item { RenderItem(preference) } }

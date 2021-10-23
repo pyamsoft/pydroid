@@ -26,6 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -114,8 +116,10 @@ public abstract class SettingsFragment : Fragment() {
         composeTheme {
           CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
             SettingsScreen(
-                customContent = customPreferences(),
                 state = state,
+                topItemMargin = customTopItemMargin(),
+                bottomItemMargin = customBottomItemMargin(),
+                customContent = customPreferences(),
                 onDarkModeChanged = {
                   viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
                 },
@@ -193,4 +197,10 @@ public abstract class SettingsFragment : Fragment() {
 
   /** Override this method to implement any custom preferences in your app */
   @Composable @CheckResult protected abstract fun customPreferences(): List<Preferences>
+
+  /** Override this method to add additional margin to the top settings item */
+  @Composable @CheckResult protected abstract fun customTopItemMargin(): Dp
+
+  /** Override this method to add additional margin to the top settings item */
+  @Composable @CheckResult protected abstract fun customBottomItemMargin(): Dp
 }

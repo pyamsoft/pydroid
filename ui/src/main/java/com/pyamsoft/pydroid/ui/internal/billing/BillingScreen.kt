@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -87,7 +88,7 @@ internal fun BillingScreen(
       }
 
       BillingError(
-          snackbarHost = snackbarHostState,
+          snackbarHostState = snackbarHostState,
           error = error,
           onSnackbarDismissed = onBillingErrorDismissed,
       )
@@ -174,13 +175,15 @@ private fun Loading() {
 
 @Composable
 private fun BillingError(
-    snackbarHost: SnackbarHostState,
+    snackbarHostState: SnackbarHostState,
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
+  SnackbarHost(hostState = snackbarHostState)
+
   if (error != null) {
     LaunchedEffect(error) {
-      snackbarHost.showSnackbar(
+      snackbarHostState.showSnackbar(
           message = error.message ?: "An unexpected error occurred",
           duration = SnackbarDuration.Short,
       )

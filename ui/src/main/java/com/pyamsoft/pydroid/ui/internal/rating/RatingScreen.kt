@@ -21,7 +21,6 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -33,7 +32,7 @@ internal fun RatingScreen(
   val navigationError = state.navigationError
 
   NavigationError(
-      snackbarHost = snackbarHostState,
+      snackbarHostState = snackbarHostState,
       error = navigationError,
       onSnackbarDismissed = onNavigationErrorDismissed,
   )
@@ -41,13 +40,13 @@ internal fun RatingScreen(
 
 @Composable
 private fun NavigationError(
-    snackbarHost: SnackbarHostState,
+    snackbarHostState: SnackbarHostState,
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
   if (error != null) {
     LaunchedEffect(error) {
-      snackbarHost.showSnackbar(
+      snackbarHostState.showSnackbar(
           message = error.message ?: "An unexpected error occurred",
           duration = SnackbarDuration.Long,
       )

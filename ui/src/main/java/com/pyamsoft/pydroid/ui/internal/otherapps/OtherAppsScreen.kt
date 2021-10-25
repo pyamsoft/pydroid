@@ -28,13 +28,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,9 +55,11 @@ internal fun OtherAppsScreen(
   val appsError = state.appsError
   val navigationError = state.navigationError
 
-  val snackbarHostState = remember { SnackbarHostState() }
+  val scaffoldState = rememberScaffoldState()
 
-  Surface {
+  Scaffold(
+      scaffoldState = scaffoldState,
+  ) {
     Column {
       DialogToolbar(
           title = "More pyamsoft apps",
@@ -88,7 +90,7 @@ internal fun OtherAppsScreen(
       }
 
       NavigationError(
-          snackbarHost = snackbarHostState,
+          snackbarHost = scaffoldState.snackbarHostState,
           error = navigationError,
           onSnackbarDismissed = onNavigationErrorDismissed,
       )

@@ -63,7 +63,6 @@ internal fun SettingsScreen(
     onViewBlogClicked: () -> Unit,
     onNavigationErrorDismissed: () -> Unit,
 ) {
-  val scaffoldState = rememberScaffoldState()
   val isLoading = state.isLoading
   val applicationName = state.applicationName
   val darkMode = state.darkMode
@@ -71,6 +70,7 @@ internal fun SettingsScreen(
   val hideUpgradeInformation = state.hideUpgradeInformation
   val navigationError = state.navigationError
 
+  val scaffoldState = rememberScaffoldState()
   Scaffold(
       scaffoldState = scaffoldState,
   ) {

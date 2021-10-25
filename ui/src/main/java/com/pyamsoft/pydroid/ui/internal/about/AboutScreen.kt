@@ -28,12 +28,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,10 +54,9 @@ internal fun AboutScreen(
   val list = state.licenses
   val isLoading = state.isLoading
   val navigationError = state.navigationError
+  val scaffoldState = rememberScaffoldState()
 
-  val snackbarHostState = remember { SnackbarHostState() }
-
-  Surface {
+  Scaffold(scaffoldState = scaffoldState) {
     Column {
       DialogToolbar(
           title = "Open Source Licenses",
@@ -78,7 +77,7 @@ internal fun AboutScreen(
       }
 
       NavigationError(
-          snackbarHost = snackbarHostState,
+          snackbarHost = scaffoldState.snackbarHostState,
           error = navigationError,
           onSnackbarDismissed = onNavigationErrorDismissed,
       )

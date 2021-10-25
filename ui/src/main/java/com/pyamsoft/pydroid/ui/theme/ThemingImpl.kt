@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.WindowCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

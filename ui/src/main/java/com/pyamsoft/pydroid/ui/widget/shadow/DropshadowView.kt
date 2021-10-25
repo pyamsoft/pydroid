@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 /** Dropshadow UiView */
+@Deprecated("Migrate to Jetpack Compose")
 public class DropshadowView<S : UiViewState, E : UiViewEvent>
 private constructor(parent: ViewGroup) : BaseUiView<S, E, DropshadowBinding>(parent) {
 

@@ -22,6 +22,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
 /** Floating Action Button behavior which hides button after scroll distance is passed */
+@Deprecated("Migrate to Jetpack Compose")
 public class HideOnScrollListener
 private constructor(
     private var visible: Boolean,

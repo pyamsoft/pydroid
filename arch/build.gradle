@@ -34,7 +34,7 @@ dependencies {
 
   // Compose
   implementation "androidx.compose.compiler:compiler:$compose_version"
-  implementation "androidx.compose.runtime:runtime:$composeRuntime"
+  implementation "androidx.compose.runtime:runtime:$compose_version"
 
   // ViewModel
   // We publish these one since consumers use it to access a coroutine scope and view model saved state

@@ -33,12 +33,12 @@ android {
 
 dependencies {
   // Compose
+  implementation "androidx.activity:activity-compose:$compose_version"
   implementation "androidx.compose.compiler:compiler:$compose_version"
-  implementation "androidx.compose.ui:ui:$composeUi"
-  implementation "androidx.activity:activity-compose:$composeActivity"
-  implementation "androidx.compose.material:material:$composeMaterial"
-  implementation "androidx.compose.animation:animation:$composeAnimation"
-  implementation "androidx.compose.ui:ui-tooling:$composeTooling"
+  implementation "androidx.compose.ui:ui:$compose_version"
+  implementation "androidx.compose.material:material:$compose_version"
+  implementation "androidx.compose.animation:animation:$compose_version"
+  implementation "androidx.compose.ui:ui-tooling:$compose_version"
 
   // Compose Image loading
   implementation "com.github.skydoves:landscapist-coil:$landscapist"
@@ -54,14 +54,9 @@ dependencies {
   implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
   implementation "androidx.recyclerview:recyclerview:$recyclerView"
   implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
-  implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 
   // Material Design
   implementation "com.google.android.material:material:$materialDesign"
-
-  // RecyclerView decorations
-  implementation "io.cabriole:decorator:$decorator"
-  implementation "me.zhanghai.android.fastscroll:library:$fastscroll"
 
   // Cachify
   implementation "com.github.pyamsoft:cachify:$cachify"

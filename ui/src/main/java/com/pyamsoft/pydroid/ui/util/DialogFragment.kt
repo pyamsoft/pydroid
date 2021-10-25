@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
 import com.pyamsoft.pydroid.util.doOnResume
 
 /**

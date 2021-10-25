@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader

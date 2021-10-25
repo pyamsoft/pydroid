@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import android.app.Activity
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
+import com.pyamsoft.pydroid.core.Logger.e
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers

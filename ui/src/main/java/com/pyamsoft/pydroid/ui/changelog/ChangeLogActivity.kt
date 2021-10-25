@@ -21,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent

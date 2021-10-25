@@ -25,6 +25,7 @@ import androidx.annotation.UiThread
 import androidx.viewbinding.ViewBinding
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty

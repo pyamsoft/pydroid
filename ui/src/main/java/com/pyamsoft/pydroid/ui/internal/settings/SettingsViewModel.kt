@@ -22,6 +22,8 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.e
+import com.pyamsoft.pydroid.core.Logger.w
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope

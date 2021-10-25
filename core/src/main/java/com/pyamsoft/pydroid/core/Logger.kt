@@ -16,24 +16,59 @@
 
 package com.pyamsoft.pydroid.core
 
+import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
+
+private val IGNORE_NAMES =
+    listOf(
+        Logger::class.java.name,
+        PYDroidLogger::class.java.name,
+    )
 
 /** The PYDroid Logger */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-public object Logger : PYDroidLogger {
+public object Logger {
 
   private var logger: PYDroidLogger? = null
 
-  override fun d(message: String, vararg args: Any) {
-    logger?.d(message, args)
+  @CheckResult
+  private fun Any.createStackTraceTag(): String {
+    return this.run {
+      Throwable().stackTrace.first { it.className !in IGNORE_NAMES }.run {
+        "($fileName:$lineNumber)"
+      }
+    }
   }
 
-  override fun w(message: String, vararg args: Any) {
-    logger?.w(message, args)
+  /** Debug level log */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+  public fun Any.d(
+      message: String,
+      vararg args: Any,
+  ) {
+    val tag = this.createStackTraceTag()
+    logger?.d(tag, message, args)
   }
 
-  override fun e(throwable: Throwable, message: String, vararg args: Any) {
-    logger?.e(throwable, message, args)
+  /** Warning level log */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+  public fun Any.w(
+      message: String,
+      vararg args: Any,
+  ) {
+    val tag = this.createStackTraceTag()
+    logger?.w(tag, message, args)
+  }
+
+  /** Error level log */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+  public fun Any.e(
+      throwable: Throwable,
+      message: String,
+      vararg args: Any,
+  ) {
+    val tag = this.createStackTraceTag()
+    logger?.e(tag, throwable, message, args)
   }
 
   /** Set the logger for the rest of the library */
@@ -47,11 +82,24 @@ public object Logger : PYDroidLogger {
 public interface PYDroidLogger {
 
   /** Debug level log */
-  public fun d(message: String, vararg args: Any)
+  public fun d(
+      tag: String,
+      message: String,
+      vararg args: Any,
+  )
 
   /** Warning level log */
-  public fun w(message: String, vararg args: Any)
+  public fun w(
+      tag: String,
+      message: String,
+      vararg args: Any,
+  )
 
   /** Error level log */
-  public fun e(throwable: Throwable, message: String, vararg args: Any)
+  public fun e(
+      tag: String,
+      throwable: Throwable,
+      message: String,
+      vararg args: Any,
+  )
 }

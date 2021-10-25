@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 
-
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
@@ -50,7 +49,8 @@ public fun PreferenceScreen(
     preferences.forEachIndexed { index, preference ->
       when (preference) {
         is Preferences.Group ->
-            renderGroup(
+            renderGroupInScope(
+                listScope = this,
                 topItemMargin = topItemMargin,
                 bottomItemMargin = bottomItemMargin,
                 index = index,
@@ -58,7 +58,8 @@ public fun PreferenceScreen(
                 preference = preference,
             )
         is Preferences.Item ->
-            renderItem(
+            renderItemInScope(
+                listScope = this,
                 topItemMargin = topItemMargin,
                 bottomItemMargin = bottomItemMargin,
                 index = index,
@@ -77,15 +78,24 @@ private fun EmptyBox(modifier: Modifier = Modifier) {
   }
 }
 
-private fun LazyListScope.renderPaddedItems(
+// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
+// calling applications will break with a NoClassDefFoundError
+//
+// Don't do private fun LazyListScope.FunctionName()
+// or
+// content: LazyListScope.() -> Unit
+//
+// until this is fixed.
+private fun renderPaddedItemsInScope(
+    listScope: LazyListScope,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
-    content: LazyListScope.() -> Unit
+    content: () -> Unit
 ) {
   if (index == 0) {
-    item {
+    listScope.item {
       EmptyBox(
           modifier =
               Modifier.fillMaxWidth()
@@ -96,10 +106,10 @@ private fun LazyListScope.renderPaddedItems(
     }
   }
 
-  this.content()
+  content()
 
   if (index == maxIndex) {
-    item {
+    listScope.item {
       EmptyBox(
           modifier =
               Modifier.fillMaxWidth()
@@ -111,7 +121,16 @@ private fun LazyListScope.renderPaddedItems(
   }
 }
 
-private fun LazyListScope.renderGroup(
+// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
+// calling applications will break with a NoClassDefFoundError
+//
+// Don't do private fun LazyListScope.FunctionName()
+// or
+// content: LazyListScope.() -> Unit
+//
+// until this is fixed.
+private fun renderGroupInScope(
+    listScope: LazyListScope,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     index: Int,
@@ -122,15 +141,16 @@ private fun LazyListScope.renderGroup(
   val preferences = preference.preferences
   val isEnabled = preference.isEnabled
 
-  renderPaddedItems(
+  renderPaddedItemsInScope(
+      listScope = listScope,
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       index = index,
       maxIndex = maxIndex,
   ) {
-    item { PreferenceGroupHeader(name) }
+    listScope.item { PreferenceGroupHeader(name) }
 
-    items(
+    listScope.items(
         items = preferences,
         key = { it.renderKey },
     ) { item ->
@@ -141,19 +161,29 @@ private fun LazyListScope.renderGroup(
   }
 }
 
-private fun LazyListScope.renderItem(
+// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
+// calling applications will break with a NoClassDefFoundError
+//
+// Don't do private fun LazyListScope.FunctionName()
+// or
+// content: LazyListScope.() -> Unit
+//
+// until this is fixed.
+private fun renderItemInScope(
+    listScope: LazyListScope,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
     preference: Preferences.Item
 ) {
-  renderPaddedItems(
+  renderPaddedItemsInScope(
+      listScope = listScope,
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       index = index,
       maxIndex = maxIndex,
-  ) { item { RenderItem(preference) } }
+  ) { listScope.item { RenderItem(preference) } }
 }
 
 @Composable

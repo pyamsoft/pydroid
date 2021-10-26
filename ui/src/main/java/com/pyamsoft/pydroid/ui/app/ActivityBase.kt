@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.app
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -27,7 +26,6 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
-import kotlinx.coroutines.launch
 
 /**
  * The base Activity class for PYDroid.

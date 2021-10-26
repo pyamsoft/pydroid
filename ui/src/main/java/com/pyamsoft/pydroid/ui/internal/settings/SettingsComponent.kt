@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.theme.Theming
 
@@ -43,7 +43,7 @@ internal interface SettingsComponent {
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
         internal val factory: ViewModelProvider.Factory,
-        internal val composeTheme: ComposeTheme,
+        internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val otherAppsModule: OtherAppsModule,
     )

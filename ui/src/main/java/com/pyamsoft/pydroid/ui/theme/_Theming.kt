@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.theme
 
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
@@ -40,4 +39,3 @@ internal fun Mode.toRawString(): String =
       DARK -> "dark"
       SYSTEM -> "system"
     }
-

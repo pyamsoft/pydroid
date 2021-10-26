@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDelegate
 
 /** Handles getting current dark mode state and setting dark mode state */
 public interface Theming {
@@ -44,6 +43,6 @@ public interface Theming {
     DARK,
 
     /** System mode */
-    SYSTEM;
+    SYSTEM
   }
 }

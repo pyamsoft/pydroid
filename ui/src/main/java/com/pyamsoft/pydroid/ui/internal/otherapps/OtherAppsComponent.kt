@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
 internal interface OtherAppsComponent {
 
@@ -31,7 +31,7 @@ internal interface OtherAppsComponent {
     data class Parameters
     internal constructor(
         internal val factory: ViewModelProvider.Factory,
-        internal val composeTheme: ComposeTheme,
+        internal val composeTheme: ComposeThemeFactory,
     )
   }
 

@@ -16,13 +16,47 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.runtime.Composable
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 /** Alias for a theme type */
-internal typealias ComposeTheme =
-    @Composable
-    (
-        activity: Activity,
-        content: @Composable () -> Unit,
-    ) -> Unit
+internal fun interface ComposeTheme {
+
+  /** Must be named "invoke" to work with Kotlin function calling */
+  @Composable
+  @SuppressLint("ComposableNaming")
+  operator fun invoke(
+      activity: Activity,
+      content: @Composable () -> Unit,
+  )
+}
+
+/** Composable theme consumer */
+public fun interface ComposeThemeProvider {
+
+  /** Must be named "invoke" to work with Kotlin function calling */
+  @Composable
+  @SuppressLint("ComposableNaming")
+  public operator fun invoke(
+      themeProvider: ThemeProvider,
+      content: @Composable () -> Unit,
+  )
+}
+
+/** Generates a ComposeTheme */
+internal class ComposeThemeFactory(
+    private val theming: Theming,
+    private val themeProvider: ComposeThemeProvider,
+) : ComposeTheme {
+
+  /** Must be named "invoke" to work with Kotlin function calling */
+  @Composable
+  @SuppressLint("ComposableNaming")
+  override fun invoke(activity: Activity, content: @Composable () -> Unit) {
+    val provider = ThemeProvider { theming.isDarkTheme(activity) }
+    themeProvider(themeProvider = provider, content = content)
+  }
+}

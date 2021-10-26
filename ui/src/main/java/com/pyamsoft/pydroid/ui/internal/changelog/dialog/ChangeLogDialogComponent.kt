@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 
 internal interface ChangeLogDialogComponent {
@@ -33,7 +33,7 @@ internal interface ChangeLogDialogComponent {
     data class Parameters
     internal constructor(
         internal val interactor: ChangeLogInteractor,
-        internal val composeTheme: ComposeTheme,
+        internal val composeTheme: ComposeThemeFactory,
     )
   }
 

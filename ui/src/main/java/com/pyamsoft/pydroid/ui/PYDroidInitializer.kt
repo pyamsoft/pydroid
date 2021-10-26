@@ -20,7 +20,7 @@ import android.app.Application
 import android.os.StrictMode
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.app.NoopThemeProvider
 import com.pyamsoft.pydroid.util.isDebugMode
 
 internal data class PYDroidInitializer
@@ -49,7 +49,7 @@ internal constructor(
                       privacyPolicyUrl = params.privacyPolicyUrl,
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
-                      theme = params.theme ?: NoopTheme,
+                      theme = params.theme ?: NoopThemeProvider,
                       logger = params.logger,
                       debug =
                           PYDroidComponent.Component.DebugParameters(

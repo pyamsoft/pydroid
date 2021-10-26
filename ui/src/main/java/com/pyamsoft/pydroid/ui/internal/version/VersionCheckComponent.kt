@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -43,7 +43,7 @@ internal interface VersionCheckComponent {
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean,
-        internal val composeTheme: ComposeTheme,
+        internal val composeTheme: ComposeThemeFactory,
     )
   }
 

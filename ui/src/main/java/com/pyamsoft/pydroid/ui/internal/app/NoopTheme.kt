@@ -16,7 +16,35 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import androidx.compose.runtime.Composable
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 
 /** A Compose theme which does nothing */
-internal val NoopTheme: ComposeTheme = { _, content -> content() }
+@Suppress("ObjectLiteralToLambda")
+internal val NoopTheme: ComposeTheme =
+    object : ComposeTheme {
+
+      /** Must be named "invoke" to work with Kotlin function calling */
+      @Composable
+      @SuppressLint("ComposableNaming")
+      override operator fun invoke(activity: Activity, content: () -> Unit) {
+        content()
+      }
+    }
+
+/** A Compose theme which does nothing */
+@Suppress("ObjectLiteralToLambda")
+internal val NoopThemeProvider: ComposeThemeProvider =
+    object : ComposeThemeProvider {
+
+      /** Must be named "invoke" to work with Kotlin function calling */
+      @Composable
+      @SuppressLint("ComposableNaming")
+      override operator fun invoke(themeProvider: ThemeProvider, content: () -> Unit) {
+        content()
+      }
+    }

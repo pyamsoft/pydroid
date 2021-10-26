@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
 internal interface AboutComponent {
 
@@ -32,7 +32,7 @@ internal interface AboutComponent {
     data class Parameters
     internal constructor(
         internal val factory: ViewModelProvider.Factory,
-        internal val composeTheme: ComposeTheme,
+        internal val composeTheme: ComposeThemeFactory,
     )
   }
 

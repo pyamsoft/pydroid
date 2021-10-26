@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.core.Logger.d
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
 
@@ -97,7 +97,7 @@ public object PYDroid {
       override val termsConditionsUrl: String,
       override val version: Int,
       override val logger: PYDroidLogger? = null,
-      internal val theme: ComposeTheme? = null,
+      internal val theme: ComposeThemeProvider? = null,
       internal val debug: DebugParameters? = null,
   ) : BaseParameters
 

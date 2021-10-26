@@ -72,7 +72,10 @@ internal constructor(
           prefs.edit(commit = true) { putString(darkModeKey, DEFAULT_DARK_MODE) }
         }
 
-        return@withContext prefs.getString(darkModeKey, DEFAULT_DARK_MODE).requireNotNull().toThemingMode()
+        return@withContext prefs
+            .getString(darkModeKey, DEFAULT_DARK_MODE)
+            .requireNotNull()
+            .toThemingMode()
       }
 
   override suspend fun setDarkMode(mode: Mode) =

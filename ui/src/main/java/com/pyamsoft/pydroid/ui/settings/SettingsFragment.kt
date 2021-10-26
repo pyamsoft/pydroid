@@ -165,6 +165,7 @@ public abstract class SettingsFragment : Fragment() {
   @CallSuper
   override fun onDestroyView() {
     super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
     factory = null
     versionFactory = null
     ratingFactory = null

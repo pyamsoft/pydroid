@@ -116,6 +116,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
     factory = null
     purchaseClient = null
   }

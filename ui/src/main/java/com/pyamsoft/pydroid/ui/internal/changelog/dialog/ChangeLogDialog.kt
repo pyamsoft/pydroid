@@ -95,6 +95,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
     factory = null
   }
 

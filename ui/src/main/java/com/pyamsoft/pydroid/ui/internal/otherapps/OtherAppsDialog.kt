@@ -87,6 +87,7 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
     factory = null
   }
 

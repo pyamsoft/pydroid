@@ -60,7 +60,7 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           OtherAppsScreen(
               state = state,
               onNavigationErrorDismissed = { viewModel.handleHideNavigation() },

@@ -76,7 +76,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           BillingScreen(
               state = state,
               onPurchase = { viewModel.handlePurchase(it) },

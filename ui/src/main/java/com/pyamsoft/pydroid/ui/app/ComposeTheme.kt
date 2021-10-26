@@ -16,7 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 
 /** Alias for a theme type */
-internal typealias ComposeTheme = @Composable (content: @Composable () -> Unit) -> Unit
+internal typealias ComposeTheme =
+    @Composable
+    (
+        activity: Activity,
+        content: @Composable () -> Unit,
+    ) -> Unit

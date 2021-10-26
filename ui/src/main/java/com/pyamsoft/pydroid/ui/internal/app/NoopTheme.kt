@@ -19,4 +19,4 @@ package com.pyamsoft.pydroid.ui.internal.app
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 
 /** A Compose theme which does nothing */
-internal val NoopTheme: ComposeTheme = { it() }
+internal val NoopTheme: ComposeTheme = { _, content -> content() }

@@ -73,7 +73,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           ChangeLogScreen(
               state = state,
               onRateApp = { ratingViewModel.handleViewMarketPage() },

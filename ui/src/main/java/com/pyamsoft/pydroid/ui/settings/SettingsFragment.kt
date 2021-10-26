@@ -115,7 +115,7 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
             SettingsScreen(
                 state = state,

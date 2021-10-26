@@ -59,7 +59,7 @@ internal class AboutDialog : AppCompatDialogFragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           AboutScreen(
               state = state,
               onViewHomePage = { viewModel.handleOpenLibrary(it) },

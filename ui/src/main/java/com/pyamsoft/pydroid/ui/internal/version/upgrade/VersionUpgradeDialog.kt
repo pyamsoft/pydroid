@@ -66,7 +66,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           VersionUpgradeScreen(
               state = state,
               onUpgrade = { viewModel.completeUpgrade() },

@@ -61,7 +61,7 @@ internal class ResetDialog : AppCompatDialogFragment() {
       setContent {
         val state by viewModel.compose()
 
-        composeTheme {
+        composeTheme(act) {
           ResetScreen(
               state = state,
               onReset = { viewModel.handleFullReset() },

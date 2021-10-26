@@ -23,7 +23,10 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 
-/** A Compose theme which does nothing */
+/** A Compose theme which does nothing
+ *
+ * Can't use object literal or we lose @Composable context
+ * */
 @Suppress("ObjectLiteralToLambda")
 internal val NoopTheme: ComposeTheme =
     object : ComposeTheme {
@@ -36,7 +39,10 @@ internal val NoopTheme: ComposeTheme =
       }
     }
 
-/** A Compose theme which does nothing */
+/** A Compose theme provider which does nothing
+ *
+ * Can't use object literal or we lose @Composable context
+ * */
 @Suppress("ObjectLiteralToLambda")
 internal val NoopThemeProvider: ComposeThemeProvider =
     object : ComposeThemeProvider {

@@ -109,7 +109,7 @@ internal interface PYDroidComponent {
     }
 
     private val composeTheme by lazy(LazyThreadSafetyMode.NONE) {
-      ComposeThemeFactory(theming = theming, themeConsumer = params.theme)
+      ComposeThemeFactory(theming = theming, themeProvider = params.theme)
     }
 
     private val viewModelFactory by lazy(LazyThreadSafetyMode.NONE) {

@@ -20,6 +20,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
@@ -89,11 +90,38 @@ public abstract class VersionCheckActivity : ActivityBase() {
   protected fun VersionScreen(
       scaffoldState: ScaffoldState,
   ) {
+    VersionScreen(
+        snackbarHostState = scaffoldState.snackbarHostState,
+        addSnackbarHost = false,
+    )
+  }
+
+  /**
+   * Version Check screen
+   *
+   * All UI and function related to checking for new updates to Applications
+   */
+  @Composable
+  protected fun VersionScreen(
+      snackbarHostState: SnackbarHostState,
+  ) {
+    VersionScreen(
+        snackbarHostState = snackbarHostState,
+        addSnackbarHost = true,
+    )
+  }
+
+  @Composable
+  private fun VersionScreen(
+      snackbarHostState: SnackbarHostState,
+      addSnackbarHost: Boolean,
+  ) {
     val state by viewModel.compose()
 
     VersionCheckScreen(
         state = state,
-        snackbarHostState = scaffoldState.snackbarHostState,
+        addSnackbarHost = addSnackbarHost,
+        snackbarHostState = snackbarHostState,
         onNavigationErrorDismissed = { viewModel.handleHideNavigation() },
         onVersionCheckErrorDismissed = { viewModel.handleClearError() },
     )

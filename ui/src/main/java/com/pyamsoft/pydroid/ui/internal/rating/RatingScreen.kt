@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -26,10 +27,15 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 internal fun RatingScreen(
     state: RatingViewState,
+    addSnackbarHost: Boolean,
     snackbarHostState: SnackbarHostState,
     onNavigationErrorDismissed: () -> Unit,
 ) {
   val navigationError = state.navigationError
+
+  if (addSnackbarHost) {
+    SnackbarHost(hostState = snackbarHostState)
+  }
 
   NavigationError(
       snackbarHostState = snackbarHostState,
@@ -65,6 +71,7 @@ private fun PreviewRatingScreen(
             RatingViewState(
                 navigationError = navigationError,
             ),
+        addSnackbarHost = true,
         snackbarHostState = SnackbarHostState(),
         onNavigationErrorDismissed = {},
     )

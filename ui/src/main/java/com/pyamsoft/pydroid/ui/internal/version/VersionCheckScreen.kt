@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.version
 
 import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 internal fun VersionCheckScreen(
     state: VersionCheckViewState,
+    addSnackbarHost: Boolean,
     snackbarHostState: SnackbarHostState,
     onNavigationErrorDismissed: () -> Unit,
     onVersionCheckErrorDismissed: () -> Unit,
@@ -33,6 +35,10 @@ internal fun VersionCheckScreen(
   val isLoading = state.isLoading
   val versionCheckError = state.versionCheckError
   val navigationError = state.navigationError
+
+  if (addSnackbarHost) {
+    SnackbarHost(hostState = snackbarHostState)
+  }
 
   Loading(
       snackbarHost = snackbarHostState,
@@ -124,6 +130,7 @@ private fun PreviewVersionCheckScreen(
                 versionCheckError = versionCheckError,
                 navigationError = navigationError,
             ),
+        addSnackbarHost = true,
         snackbarHostState = SnackbarHostState(),
         onVersionCheckErrorDismissed = {},
         onNavigationErrorDismissed = {},

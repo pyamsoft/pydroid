@@ -20,6 +20,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.compose.material.ScaffoldState
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModelProvider
@@ -67,11 +68,38 @@ public abstract class RatingActivity : VersionCheckActivity() {
   protected fun RatingScreen(
       scaffoldState: ScaffoldState,
   ) {
+    RatingScreen(
+        snackbarHostState = scaffoldState.snackbarHostState,
+        addSnackbarHost = false,
+    )
+  }
+
+  /**
+   * Rating screen
+   *
+   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
+   */
+  @Composable
+  protected fun RatingScreen(
+      snackbarHostState: SnackbarHostState,
+  ) {
+    RatingScreen(
+        snackbarHostState = snackbarHostState,
+        addSnackbarHost = true,
+    )
+  }
+
+  @Composable
+  private fun RatingScreen(
+      snackbarHostState: SnackbarHostState,
+      addSnackbarHost: Boolean,
+  ) {
     val state by viewModel.compose()
 
     RatingScreen(
         state = state,
-        snackbarHostState = scaffoldState.snackbarHostState,
+        addSnackbarHost = addSnackbarHost,
+        snackbarHostState = snackbarHostState,
         onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
     )
   }

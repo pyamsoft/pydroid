@@ -24,6 +24,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -33,10 +34,12 @@ internal fun PreferenceGroupHeader(name: String) {
       modifier = Modifier.fillMaxWidth().padding(start = 48.dp),
   ) {
     Text(
+        modifier = Modifier.padding(16.dp),
         text = name,
         style =
-            MaterialTheme.typography.body1.copy(
+            MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.secondary,
+                fontWeight = FontWeight.Bold,
             ),
     )
   }

@@ -33,6 +33,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +41,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 import com.skydoves.landscapist.coil.CoilImage
@@ -236,6 +239,21 @@ internal fun ListPreferenceItem(
                 )
               }
             }
+
+            Row(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+            ) {
+              Spacer(
+                  modifier = Modifier.weight(1F),
+              )
+            }
+            TextButton(
+                onClick = { showDialog(false) },
+            ) {
+              Text(
+                  text = stringResource(R.string.close),
+              )
+            }
           }
         },
     )
@@ -277,7 +295,7 @@ private fun PreferenceItem(
       }
 
       Column(
-          modifier = Modifier.weight(1F),
+          modifier = Modifier.padding(start = 8.dp).weight(1F),
           verticalArrangement = Arrangement.Top,
           horizontalAlignment = Alignment.Start,
       ) {
@@ -296,7 +314,7 @@ private fun PreferenceItem(
           Box(
               modifier =
                   Modifier.padding(
-                      top = 4.dp,
+                      top = 8.dp,
                   ),
           ) {
             Text(
@@ -309,7 +327,7 @@ private fun PreferenceItem(
 
       trailing?.also { compose ->
         Box(
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.padding(start = 8.dp).size(48.dp),
             contentAlignment = Alignment.Center,
         ) { compose(enabled) }
       }

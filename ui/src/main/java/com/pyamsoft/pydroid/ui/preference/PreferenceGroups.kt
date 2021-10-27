@@ -28,10 +28,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun PreferenceGroupHeader(name: String) {
+@JvmOverloads
+internal fun PreferenceGroupHeader(
+    modifier: Modifier = Modifier,
+    name: String,
+) {
   Box(
       contentAlignment = Alignment.CenterStart,
-      modifier = Modifier.fillMaxWidth().padding(start = 48.dp),
+      modifier = modifier.fillMaxWidth().padding(16.dp).padding(start = 48.dp),
   ) {
     Text(
         modifier = Modifier.padding(16.dp),

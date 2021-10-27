@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -42,8 +40,6 @@ public fun PreferenceScreen(
 ) {
   LazyColumn(
       modifier = modifier,
-      contentPadding = PaddingValues(vertical = 8.dp),
-      verticalArrangement = Arrangement.spacedBy(8.dp),
   ) {
     val maxIndex = preferences.lastIndex
     preferences.forEachIndexed { index, preference ->
@@ -148,7 +144,11 @@ private fun renderGroupInScope(
       index = index,
       maxIndex = maxIndex,
   ) {
-    listScope.item { PreferenceGroupHeader(name) }
+    listScope.item {
+      PreferenceGroupHeader(
+          name = name,
+      )
+    }
 
     listScope.items(
         items = preferences,

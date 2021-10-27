@@ -276,7 +276,7 @@ private fun PreferenceItem(
       isEnabled = enabled,
   ) {
     Row(
-        modifier = modifier(enabled).fillMaxWidth().padding(8.dp),
+        modifier = modifier(enabled).fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {

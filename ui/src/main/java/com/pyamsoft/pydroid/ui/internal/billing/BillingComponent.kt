@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -56,6 +57,7 @@ internal interface BillingComponent {
       override fun inject(dialog: BillingDialog) {
         dialog.composeTheme = params.composeTheme
         dialog.purchaseClient = module.provideLauncher()
+        dialog.imageLoader = params.imageLoader
         dialog.factory = factory
       }
 
@@ -83,6 +85,7 @@ internal interface BillingComponent {
         internal val errorBus: EventBus<Throwable>,
         internal val interactor: ChangeLogInteractor,
         internal val composeTheme: ComposeThemeFactory,
+        internal val imageLoader: ImageLoader,
     )
   }
 

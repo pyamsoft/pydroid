@@ -21,7 +21,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.pyamsoft.pydroid.loader.glide.GlideLoader
 
-@Deprecated("Use Landscapist in Jetpack Compose UI")
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 internal abstract class GlideRequestTransformer<T : Any>
 protected constructor(
     context: Context,

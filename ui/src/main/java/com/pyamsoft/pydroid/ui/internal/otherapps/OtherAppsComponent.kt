@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
 internal interface OtherAppsComponent {
@@ -32,6 +33,7 @@ internal interface OtherAppsComponent {
     internal constructor(
         internal val factory: ViewModelProvider.Factory,
         internal val composeTheme: ComposeThemeFactory,
+        internal val imageLoader: ImageLoader,
     )
   }
 
@@ -39,6 +41,7 @@ internal interface OtherAppsComponent {
 
     override fun inject(dialog: OtherAppsDialog) {
       dialog.composeTheme = params.composeTheme
+      dialog.imageLoader = params.imageLoader
       dialog.factory = params.factory
     }
 

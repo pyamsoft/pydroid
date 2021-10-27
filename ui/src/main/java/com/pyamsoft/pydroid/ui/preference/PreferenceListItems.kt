@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.preference
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,13 +44,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
-import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 internal fun SimplePreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.SimplePreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -63,12 +67,15 @@ internal fun SimplePreferenceItem(
       text = name,
       summary = summary,
       icon = icon,
-      modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
+      imageLoader = imageLoader,
+      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 
 @Composable
 internal fun AdPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.AdPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -83,12 +90,15 @@ internal fun AdPreferenceItem(
       summary = summary,
       icon = icon,
       badge = { AdBadge() },
-      modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
+      imageLoader = imageLoader,
+      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 
 @Composable
 internal fun InAppPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.InAppPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -103,12 +113,15 @@ internal fun InAppPreferenceItem(
       summary = summary,
       icon = icon,
       badge = { InAppBadge() },
-      modifier = { enabled -> Modifier.clickable(enabled = enabled) { onClick?.invoke() } },
+      imageLoader = imageLoader,
+      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 
 @Composable
 internal fun CheckBoxPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.CheckBoxPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -130,14 +143,17 @@ internal fun CheckBoxPreferenceItem(
             onCheckedChange = onCheckedChanged,
         )
       },
+      imageLoader = imageLoader,
       modifier = { enabled ->
-        Modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
+        modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
       },
   )
 }
 
 @Composable
 internal fun SwitchPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.SwitchPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -159,14 +175,17 @@ internal fun SwitchPreferenceItem(
             onCheckedChange = onCheckedChanged,
         )
       },
+      imageLoader = imageLoader,
       modifier = { enabled ->
-        Modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
+        modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
       },
   )
 }
 
 @Composable
 internal fun ListPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.ListPreference,
 ) {
   val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
@@ -184,8 +203,9 @@ internal fun ListPreferenceItem(
       text = title,
       summary = summary,
       icon = icon,
+      imageLoader = imageLoader,
       modifier = { enabled ->
-        Modifier.clickable(enabled = enabled) { showDialog(!isDialogShown) }
+        modifier.clickable(enabled = enabled) { showDialog(!isDialogShown) }
       },
   )
 
@@ -264,6 +284,7 @@ internal fun ListPreferenceItem(
 @Composable
 private fun PreferenceItem(
     isEnabled: Boolean,
+    imageLoader: ImageLoader,
     text: String,
     summary: String,
     @DrawableRes icon: Int,
@@ -277,7 +298,7 @@ private fun PreferenceItem(
       isEnabled = enabled,
   ) {
     Row(
-        modifier = modifier(enabled).fillMaxWidth().padding(8.dp),
+        modifier = modifier(enabled).padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
@@ -287,9 +308,15 @@ private fun PreferenceItem(
       ) {
         if (icon != 0) {
           val imageTintColor = if (MaterialTheme.colors.isLight) Color.Black else Color.White
-          CoilImage(
+          Image(
               modifier = Modifier.size(24.dp),
-              imageModel = icon,
+              painter =
+                  rememberImagePainter(
+                      data = icon,
+                      imageLoader = imageLoader,
+                      builder = { crossfade(true) },
+                  ),
+              contentDescription = null,
               colorFilter = ColorFilter.tint(color = imageTintColor),
           )
         }

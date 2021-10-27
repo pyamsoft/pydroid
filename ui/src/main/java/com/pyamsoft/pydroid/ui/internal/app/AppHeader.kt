@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
@@ -27,20 +27,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.skydoves.landscapist.coil.CoilImage
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
 
 @Composable
+@JvmOverloads
 internal fun AppHeader(
+    modifier: Modifier = Modifier,
     icon: Int,
     name: String,
+    imageLoader: ImageLoader,
 ) {
   Column(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 16.dp),
+      modifier = modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
-    CoilImage(
-        imageModel = icon,
+    Image(
+        painter =
+            rememberImagePainter(
+                data = icon,
+                imageLoader = imageLoader,
+                builder = { crossfade(true) },
+            ),
+        contentDescription = "$name Icon",
         modifier = Modifier.size(56.dp),
     )
     Text(

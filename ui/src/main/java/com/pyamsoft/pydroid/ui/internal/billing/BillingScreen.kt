@@ -40,17 +40,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 internal fun BillingScreen(
+    modifier: Modifier = Modifier,
     state: BillingViewState,
+    imageLoader: ImageLoader,
     onPurchase: (index: Int) -> Unit,
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
@@ -63,11 +68,15 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface {
+  Surface(
+      modifier = modifier,
+  ) {
     Column {
       AppHeader(
+          modifier = Modifier.fillMaxWidth(),
           icon = icon,
           name = name,
+          imageLoader = imageLoader,
       )
 
       Crossfade(targetState = connection) { connected ->
@@ -128,6 +137,7 @@ private fun SkuList(
               key = { _, item -> item.id },
           ) { index, item ->
             BillingListItem(
+                modifier = Modifier.fillMaxWidth(),
                 sku = item,
                 onPurchase = { onPurchase(index) },
             )
@@ -203,6 +213,8 @@ private fun PreviewBillingScreen(
     skuList: List<BillingSku>,
     error: Throwable?,
 ) {
+  val context = LocalContext.current
+
   BillingScreen(
       state =
           BillingViewState(
@@ -212,6 +224,7 @@ private fun PreviewBillingScreen(
               skuList = skuList,
               error = error,
           ),
+      imageLoader = createNewTestImageLoader(context),
       onPurchase = {},
       onBillingErrorDismissed = {},
       onClose = {},

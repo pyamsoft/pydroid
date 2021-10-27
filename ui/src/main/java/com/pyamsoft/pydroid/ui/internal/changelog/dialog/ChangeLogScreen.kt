@@ -30,16 +30,22 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
+@JvmOverloads
 internal fun ChangeLogScreen(
+    modifier: Modifier = Modifier,
     state: ChangeLogViewState,
+    imageLoader: ImageLoader,
     onRateApp: () -> Unit,
     onClose: () -> Unit
 ) {
@@ -47,14 +53,20 @@ internal fun ChangeLogScreen(
   val name = state.name
   val changeLog = state.changeLog
 
-  Surface {
+  Surface(
+      modifier = modifier,
+  ) {
     Column {
       AppHeader(
+          modifier = Modifier.fillMaxWidth(),
           icon = icon,
           name = name,
+          imageLoader = imageLoader,
       )
 
-      ChangeLog(changeLog = changeLog)
+      ChangeLog(
+          changeLog = changeLog,
+      )
 
       Actions(
           onRateApp = onRateApp,
@@ -75,6 +87,7 @@ private fun ChangeLog(changeLog: List<ChangeLogLine>) {
         items = changeLog,
     ) { line ->
       ChangeLogListItem(
+          modifier = Modifier.fillMaxWidth(),
           line = line,
       )
     }
@@ -107,8 +120,10 @@ private fun Actions(
 
 @Composable
 private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
+  val context = LocalContext.current
   ChangeLogScreen(
       state = ChangeLogViewState(icon = 0, name = "TEST", changeLog = changeLog),
+      imageLoader = createNewTestImageLoader(context),
       onRateApp = {},
       onClose = {},
   )

@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -46,6 +47,8 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<OtherAppsViewModel> { factory.requireNotNull() }
 
+  internal var imageLoader: ImageLoader? = null
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -63,6 +66,7 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
         composeTheme(act) {
           OtherAppsScreen(
               state = state,
+              imageLoader = imageLoader.requireNotNull(),
               onNavigationErrorDismissed = { viewModel.handleHideNavigation() },
               onViewStorePage = { viewModel.handleOpenStoreUrl(it) },
               onViewSourceCode = { viewModel.handleOpenSourceCodeUrl(it) },
@@ -88,7 +92,9 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
+
     factory = null
+    imageLoader = null
   }
 
   private fun ResultWrapper<Unit>.handleNavigation() {

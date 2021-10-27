@@ -23,7 +23,7 @@ import androidx.annotation.CheckResult
  * The Loader interface which deals with how to format image loading requests into a specific
  * backend
  */
-@Deprecated("Use Landscapist in Jetpack Compose UI")
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public interface Loader<T : Any> {
 
   /**

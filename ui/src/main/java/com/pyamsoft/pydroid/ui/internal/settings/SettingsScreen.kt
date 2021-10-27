@@ -32,10 +32,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.google.accompanist.insets.systemBarsPadding
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -43,10 +46,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 @Composable
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 internal fun SettingsScreen(
+    modifier: Modifier = Modifier,
     state: SettingsViewState,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    customContent: List<Preferences>,
+    imageLoader: ImageLoader,
+    topItemMargin: Dp = 0.dp,
+    bottomItemMargin: Dp = 0.dp,
+    customContent: List<Preferences> = emptyList(),
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -72,6 +77,7 @@ internal fun SettingsScreen(
 
   val scaffoldState = rememberScaffoldState()
   Scaffold(
+      modifier = modifier,
       scaffoldState = scaffoldState,
   ) {
     Crossfade(
@@ -81,6 +87,7 @@ internal fun SettingsScreen(
         Loading()
       } else {
         SettingsList(
+            imageLoader = imageLoader,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
             customContent = customContent,
@@ -124,6 +131,7 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
+    imageLoader: ImageLoader,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     customContent: List<Preferences>,
@@ -149,6 +157,7 @@ private fun SettingsList(
   PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
+      imageLoader = imageLoader,
       preferences =
           customContent +
               listOf(
@@ -202,6 +211,8 @@ private fun NavigationError(
 
 @Composable
 private fun PreviewSettingsScreen(isLoading: Boolean) {
+  val context = LocalContext.current
+
   SettingsScreen(
       state =
           SettingsViewState(
@@ -213,6 +224,7 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
               otherApps = emptyList(),
               navigationError = null,
           ),
+      imageLoader = createNewTestImageLoader(context),
       topItemMargin = 0.dp,
       bottomItemMargin = 0.dp,
       customContent = emptyList(),

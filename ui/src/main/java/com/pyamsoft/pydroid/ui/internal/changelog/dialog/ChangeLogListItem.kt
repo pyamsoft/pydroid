@@ -33,8 +33,12 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
 @Composable
-internal fun ChangeLogListItem(line: ChangeLogLine) {
+internal fun ChangeLogListItem(
+    modifier: Modifier = Modifier,
+    line: ChangeLogLine,
+) {
   Row(
+      modifier = modifier,
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(

@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -49,6 +50,8 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
   private val ratingViewModel by activityViewModels<RatingViewModel> { factory.requireNotNull() }
+
+  internal var imageLoader: ImageLoader? = null
 
   @CheckResult
   private fun getChangelogProvider(): ChangeLogProvider {
@@ -76,6 +79,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
         composeTheme(act) {
           ChangeLogScreen(
               state = state,
+              imageLoader = imageLoader.requireNotNull(),
               onRateApp = { ratingViewModel.handleViewMarketPage() },
               onClose = { dismiss() },
           )
@@ -96,7 +100,9 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
+
     factory = null
+    imageLoader = null
   }
 
   companion object {

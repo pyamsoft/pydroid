@@ -75,7 +75,7 @@ buildscript {
 
     // Image loading
     glide = '4.12.0'
-    landscapist = "1.3.9"
+    coil = "1.4.0"
 
     // In app updates and reviews
     playCore = "1.10.2"

@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Logger
@@ -52,6 +53,8 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<BillingViewModel> { factory.requireNotNull() }
+
+  internal var imageLoader: ImageLoader? = null
 
   @CheckResult
   private fun getApplicationProvider(): AppProvider {
@@ -79,6 +82,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
         composeTheme(act) {
           BillingScreen(
               state = state,
+              imageLoader = imageLoader.requireNotNull(),
               onPurchase = { viewModel.handlePurchase(it) },
               onBillingErrorDismissed = { viewModel.handleClearError() },
               onClose = { dismiss() },
@@ -117,7 +121,9 @@ internal class BillingDialog : AppCompatDialogFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
+
     factory = null
+    imageLoader = null
     purchaseClient = null
   }
 

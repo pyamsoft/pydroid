@@ -44,58 +44,77 @@ public object OssLibraries {
     add(
         "Gradle Versions Plugin",
         "https://github.com/ben-manes/gradle-versions-plugin",
-        "Gradle plugin to discover dependency updates.")
+        "Gradle plugin to discover dependency updates.",
+    )
     add(
         "Gradle Spotless Plugin",
         "https://github.com/diffplug/spotless/tree/master/plugin-gradle",
-        "Keep your code Spotless with Gradle")
+        "Keep your code Spotless with Gradle",
+    )
   }
 
   private fun addCoreLibraries() {
     add(
         "PYDroid Core",
         "https://github.com/pyamsoft/pydroid",
-        "The core PYDroid library, providing the building blocks for extension libraries")
+        "The core PYDroid library, providing the building blocks for extension libraries",
+    )
     add(
         "Android SDK",
         "https://source.android.com",
-        "The Android SDK, which powers everything about the devices we all love.")
+        "The Android SDK, which powers everything about the devices we all love.",
+    )
     add(
         "AndroidX Lifecycle",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.")
-    add("Kotlin", "https://github.com/JetBrains/kotlin", "The Kotlin Programming Language.")
+        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
+    )
+    add(
+        "Kotlin",
+        "https://github.com/JetBrains/kotlin",
+        "The Kotlin Programming Language.",
+    )
   }
 
   private fun addUtilLibraries() {
     add(
         "PYDroid Util",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid util extensions for easier data manipulation")
+        "PYDroid util extensions for easier data manipulation",
+    )
     add(
         "AndroidX Core",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
-        "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android.")
+        "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android.",
+    )
   }
 
   private fun addBootstrapLibraries() {
     add(
         "PYDroid Bootstrap",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid bootstrap extensions for quickly spinning up new applications")
+        "PYDroid bootstrap extensions for quickly spinning up new applications",
+    )
     add(
         "Retrofit",
         "https://square.github.io/retrofit/",
-        "Type-safe HTTP client for Android and Java by Square, Inc.")
-    add("Moshi", "https://github.com/square/moshi", "A modern JSON library for Android and Java.")
+        "Type-safe HTTP client for Android and Java by Square, Inc.",
+    )
+    add(
+        "Moshi",
+        "https://github.com/square/moshi",
+        "A modern JSON library for Android and Java.",
+    )
     add(
         "OkHTTP",
         "https://github.com/square/okhttp",
-        "An HTTP+HTTP/2 client for Android and Java applications.")
+        "An HTTP+HTTP/2 client for Android and Java applications.",
+    )
     add(
         "Cachify",
         "https://github.com/pyamsoft/cachify",
-        "Simple in-memory caching of all the things")
+        "Simple in-memory caching of all the things",
+    )
     add(
         "Google Play Core Library",
         "https://developers.google.com/android/",
@@ -103,46 +122,55 @@ public object OssLibraries {
         license =
             OssLicenses.custom(
                 license = "Custom Google License",
-                location = "https://developer.android.com/distribute/play-services"))
+                location = "https://developer.android.com/distribute/play-services",
+            ))
   }
 
   private fun addUiLibraries() {
     add(
         "PYDroid UI",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid reference implementation for various UI components")
+        "PYDroid reference implementation for various UI components",
+    )
     add(
         "AndroidX Core KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
-        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.")
+        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
+    )
     add(
         "AndroidX RecyclerView",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
-        "The AndroidX Jetpack RecyclerView library. Create efficient list views.")
+        "The AndroidX Jetpack RecyclerView library. Create efficient list views.",
+    )
     add(
         "AndroidX Vector Drawable",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/vectordrawable/",
-        "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics.")
+        "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics.",
+    )
     add(
         "Material Components Android",
         "https://github.com/material-components/material-components-android",
-        "Modular and customizable Material Design UI components for Android.")
+        "Modular and customizable Material Design UI components for Android.",
+    )
     add(
         "AndroidX Preference",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
-        "The AndroidX Jetpack Preference library. Allow users to modify UI settings.")
+        "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
+    )
     add(
         "AndroidX Constraint Layout",
         "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.")
+        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
+    )
     add(
         "AndroidX Constraint Layout",
         "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.")
+        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
+    )
     add(
-        "Landscapist",
-        "https://github.com/skydoves/Landscapist",
-        "Jetpack Compose image loading library which can fetch and display network images using Glide, Coil, and Fresco",
+        "Coil Compose",
+        "https://github.com/coil-kt/Coil",
+        "An image loading library for Android backed by Kotlin Coroutines.",
     )
     addComposeUiLibraries()
   }
@@ -151,34 +179,41 @@ public object OssLibraries {
     add(
         "PYDroid Loader",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid image loader abstraction library")
+        "PYDroid image loader abstraction library",
+    )
     add(
         "Glide",
         "https://github.com/bumptech/glide",
-        "An image loading and caching library for Android focused on smooth scrolling.")
+        "An image loading and caching library for Android focused on smooth scrolling.",
+    )
   }
 
   private fun addArchLibraries() {
     add(
         "PYDroid Arch",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern")
+        "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern",
+    )
     add(
         "Highlander",
         "https://github.com/pyamsoft/highlander",
-        "There can be only one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time.")
+        "There can be only one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time.",
+    )
     add(
         "Kotlin Coroutines",
         "https://github.com/Kotlin/kotlinx.coroutines",
-        "Library support for Kotlin coroutines with multiplatform support.")
+        "Library support for Kotlin coroutines with multiplatform support.",
+    )
     add(
         "AndroidX Lifecycle ViewModel KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "Kotlin extensions for the Android Jetpack ViewModel")
+        "Kotlin extensions for the Android Jetpack ViewModel",
+    )
     add(
         "AndroidX Lifecycle ViewModel",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack ViewModel library. Model the state of your application easily.")
+        "The AndroidX Jetpack ViewModel library. Model the state of your application easily.",
+    )
     addComposeArchLibraries()
   }
 
@@ -223,14 +258,16 @@ public object OssLibraries {
     add(
         "PYDroid Notify",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid notification management abstraction library")
+        "PYDroid notification management abstraction library",
+    )
   }
 
   private fun addAutopsyLibraries() {
     add(
         "PYDroid Autopsy",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid development crash reporting screen")
+        "PYDroid development crash reporting screen",
+    )
     addComposeUiLibraries()
   }
 

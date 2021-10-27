@@ -37,14 +37,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 internal fun OtherAppsScreen(
+    modifier: Modifier = Modifier,
     state: OtherAppsViewState,
+    imageLoader: ImageLoader,
     onNavigationErrorDismissed: () -> Unit,
     onViewStorePage: (index: Int) -> Unit,
     onViewSourceCode: (index: Int) -> Unit,
@@ -58,12 +63,15 @@ internal fun OtherAppsScreen(
   val scaffoldState = rememberScaffoldState()
 
   Scaffold(
+      modifier = modifier,
       scaffoldState = scaffoldState,
   ) {
     Column {
       DialogToolbar(
+          modifier = Modifier.fillMaxWidth(),
           title = "More pyamsoft apps",
           onClose = onClose,
+          imageLoader = imageLoader,
       )
       Crossfade(
           targetState = isLoading,
@@ -81,6 +89,7 @@ internal fun OtherAppsScreen(
             } else {
               OtherAppsList(
                   apps = apps,
+                  imageLoader = imageLoader,
                   onViewStorePage = onViewStorePage,
                   onViewSourceCode = onViewSourceCode,
               )
@@ -109,6 +118,7 @@ private fun Loading() {
 @Composable
 private fun OtherAppsList(
     apps: List<OtherApp>,
+    imageLoader: ImageLoader,
     onViewStorePage: (index: Int) -> Unit,
     onViewSourceCode: (index: Int) -> Unit,
 ) {
@@ -123,7 +133,9 @@ private fun OtherAppsList(
           key = { _, item -> item.packageName },
       ) { index, item ->
         OtherAppsListItem(
+            modifier = Modifier.fillMaxWidth(),
             app = item,
+            imageLoader = imageLoader,
             onViewSource = { onViewSourceCode(index) },
             onOpenStore = { onViewStorePage(index) },
         )
@@ -167,6 +179,8 @@ private fun PreviewOtherAppsScreen(
     navigationError: Throwable?,
     appsError: Throwable?,
 ) {
+  val context = LocalContext.current
+
   OtherAppsScreen(
       state =
           OtherAppsViewState(
@@ -195,6 +209,7 @@ private fun PreviewOtherAppsScreen(
               navigationError = navigationError,
               appsError = appsError,
           ),
+      imageLoader = createNewTestImageLoader(context),
       onNavigationErrorDismissed = {},
       onViewSourceCode = {},
       onViewStorePage = {},

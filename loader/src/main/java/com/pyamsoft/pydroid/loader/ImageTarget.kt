@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.loader
 
 /** An ImageTarget is anything that an ImageLoader can load images into */
-@Deprecated("Use Landscapist in Jetpack Compose UI")
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public interface ImageTarget<T : Any> {
 
   /** Clear the image target */

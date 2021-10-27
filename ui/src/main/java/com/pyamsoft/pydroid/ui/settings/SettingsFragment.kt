@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
@@ -70,24 +71,24 @@ public abstract class SettingsFragment : Fragment() {
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
   internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val ratingViewModel by activityViewModels<RatingViewModel> {
-    ratingFactory.requireNotNull()
-  }
+  private val ratingViewModel by
+      activityViewModels<RatingViewModel> { ratingFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since VersionCheckActivity
   // should
   // be bound for us.
   internal var versionFactory: ViewModelProvider.Factory? = null
-  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
-    versionFactory.requireNotNull()
-  }
+  private val versionViewModel by
+      activityViewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
   // be bound for us.
   internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
-    changeLogFactory.requireNotNull()
-  }
+  private val changeLogViewModel by
+      activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
+
+  // ImageLoader
+  internal var imageLoader: ImageLoader? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
@@ -121,6 +122,7 @@ public abstract class SettingsFragment : Fragment() {
           CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
             SettingsScreen(
                 state = state,
+                imageLoader = imageLoader.requireNotNull(),
                 topItemMargin = customTopItemMargin(),
                 bottomItemMargin = customBottomItemMargin(),
                 customContent = customPreferences(),
@@ -170,6 +172,8 @@ public abstract class SettingsFragment : Fragment() {
     versionFactory = null
     ratingFactory = null
     changeLogFactory = null
+
+    imageLoader = null
 
     windowInsetObserver?.stop()
     windowInsetObserver = null

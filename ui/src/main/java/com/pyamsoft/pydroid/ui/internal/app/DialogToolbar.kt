@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -23,17 +24,24 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.ui.R
-import com.skydoves.landscapist.coil.CoilImage
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 internal fun DialogToolbar(
+    modifier: Modifier = Modifier,
     title: String,
+    imageLoader: ImageLoader,
     onClose: () -> Unit,
 ) {
   TopAppBar(
+      modifier = modifier,
       backgroundColor = MaterialTheme.colors.primary,
       title = {
         Text(
@@ -44,9 +52,15 @@ internal fun DialogToolbar(
         IconButton(
             onClick = onClose,
         ) {
-          CoilImage(
+          Image(
+              painter =
+                  rememberImagePainter(
+                      data = R.drawable.ic_close_24dp,
+                      imageLoader = imageLoader,
+                      builder = { crossfade(true) },
+                  ),
+              contentDescription = stringResource(R.string.close),
               modifier = Modifier.size(24.dp),
-              imageModel = R.drawable.ic_close_24dp,
           )
         }
       },
@@ -56,8 +70,11 @@ internal fun DialogToolbar(
 @Preview
 @Composable
 private fun PreviewDialogToolbar() {
+  val context = LocalContext.current
+
   DialogToolbar(
       title = "TEST",
       onClose = {},
+      imageLoader = createNewTestImageLoader(context),
   )
 }

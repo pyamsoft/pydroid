@@ -37,7 +37,6 @@ internal fun PreferenceGroupHeader(
       contentAlignment = Alignment.CenterStart,
       modifier =
           modifier
-              .fillMaxWidth()
               .padding(16.dp)
               .padding(start = 48.dp),
   ) {

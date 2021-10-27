@@ -34,13 +34,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun VersionUpgradeScreen(
+    modifier: Modifier = Modifier,
     state: VersionUpgradeViewState,
     onUpgrade: () -> Unit,
     onClose: () -> Unit,
 ) {
   val isUpgraded = state.upgraded
 
-  Surface {
+  Surface(
+      modifier = modifier,
+  ) {
     Column(
         modifier = Modifier.padding(16.dp).fillMaxWidth(),
     ) {

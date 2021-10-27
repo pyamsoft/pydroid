@@ -25,17 +25,21 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     topItemMargin: Dp = 0.dp,
     bottomItemMargin: Dp = 0.dp,
+    imageLoader: ImageLoader,
     preferences: List<Preferences>,
 ) {
   LazyColumn(
@@ -46,20 +50,24 @@ public fun PreferenceScreen(
       when (preference) {
         is Preferences.Group ->
             renderGroupInScope(
+                modifier = Modifier.fillMaxWidth(),
                 listScope = this,
                 topItemMargin = topItemMargin,
                 bottomItemMargin = bottomItemMargin,
                 index = index,
                 maxIndex = maxIndex,
+                imageLoader = imageLoader,
                 preference = preference,
             )
         is Preferences.Item ->
             renderItemInScope(
+                modifier = Modifier.fillMaxWidth(),
                 listScope = this,
                 topItemMargin = topItemMargin,
                 bottomItemMargin = bottomItemMargin,
                 index = index,
                 maxIndex = maxIndex,
+                imageLoader = imageLoader,
                 preference = preference,
             )
       }
@@ -126,11 +134,13 @@ private fun renderPaddedItemsInScope(
 //
 // until this is fixed.
 private fun renderGroupInScope(
+    modifier: Modifier = Modifier,
     listScope: LazyListScope,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
+    imageLoader: ImageLoader,
     preference: Preferences.Group
 ) {
   val name = preference.name
@@ -146,6 +156,7 @@ private fun renderGroupInScope(
   ) {
     listScope.item {
       PreferenceGroupHeader(
+          modifier = Modifier.fillMaxWidth(),
           name = name,
       )
     }
@@ -156,7 +167,13 @@ private fun renderGroupInScope(
     ) { item ->
       CompositionLocalProvider(
           LocalPreferenceEnabledStatus provides isEnabled,
-      ) { RenderItem(item) }
+      ) {
+        RenderItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = item,
+        )
+      }
     }
   }
 }
@@ -170,11 +187,13 @@ private fun renderGroupInScope(
 //
 // until this is fixed.
 private fun renderItemInScope(
+    modifier: Modifier = Modifier,
     listScope: LazyListScope,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
+    imageLoader: ImageLoader,
     preference: Preferences.Item
 ) {
   renderPaddedItemsInScope(
@@ -183,20 +202,60 @@ private fun renderItemInScope(
       bottomItemMargin = bottomItemMargin,
       index = index,
       maxIndex = maxIndex,
-  ) { listScope.item { RenderItem(preference) } }
+  ) {
+    listScope.item {
+      RenderItem(
+          modifier = modifier,
+          imageLoader = imageLoader,
+          preference = preference,
+      )
+    }
+  }
 }
 
 @Composable
 private fun RenderItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     preference: Preferences.Item,
 ) {
   return when (preference) {
-    is Preferences.SimplePreference -> SimplePreferenceItem(preference)
-    is Preferences.SwitchPreference -> SwitchPreferenceItem(preference)
-    is Preferences.CheckBoxPreference -> CheckBoxPreferenceItem(preference)
-    is Preferences.ListPreference -> ListPreferenceItem(preference)
-    is Preferences.InAppPreference -> InAppPreferenceItem(preference)
-    is Preferences.AdPreference -> AdPreferenceItem(preference)
+    is Preferences.SimplePreference ->
+        SimplePreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
+    is Preferences.SwitchPreference ->
+        SwitchPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
+    is Preferences.CheckBoxPreference ->
+        CheckBoxPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
+    is Preferences.ListPreference ->
+        ListPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
+    is Preferences.InAppPreference ->
+        InAppPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
+    is Preferences.AdPreference ->
+        AdPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
     else ->
         throw IllegalArgumentException(
             "Preference is not a consumable type for PreferenceScreen: $preference")
@@ -205,8 +264,11 @@ private fun RenderItem(
 
 @Composable
 private fun PreviewPreferenceScreen(isEnabled: Boolean) {
+  val context = LocalContext.current
+
   Surface {
     PreferenceScreen(
+        imageLoader = createNewTestImageLoader(context),
         preferences =
             listOf(
                 preferenceGroup(

@@ -22,7 +22,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -63,6 +65,7 @@ internal class ResetDialog : AppCompatDialogFragment() {
 
         composeTheme(act) {
           ResetScreen(
+              modifier = Modifier.fillMaxWidth(),
               state = state,
               onReset = { viewModel.handleFullReset() },
               onClose = { dismiss() },

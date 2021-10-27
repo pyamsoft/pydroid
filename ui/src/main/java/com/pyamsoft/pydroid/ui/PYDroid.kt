@@ -91,6 +91,7 @@ public object PYDroid {
   public data class Parameters
   @JvmOverloads
   public constructor(
+      override val imageLoader: () -> coil.ImageLoader,
       override val viewSourceUrl: String,
       override val bugReportUrl: String,
       override val privacyPolicyUrl: String,
@@ -110,6 +111,7 @@ public object PYDroid {
 
   /** Base parameters for PYDroid */
   internal interface BaseParameters {
+    val imageLoader: () -> coil.ImageLoader
     val viewSourceUrl: String
     val bugReportUrl: String
     val privacyPolicyUrl: String

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,19 +34,28 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
-import com.skydoves.landscapist.coil.CoilImage
+import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
-internal fun OtherAppsListItem(app: OtherApp, onOpenStore: () -> Unit, onViewSource: () -> Unit) {
+internal fun OtherAppsListItem(
+    modifier: Modifier = Modifier,
+    app: OtherApp,
+    imageLoader: ImageLoader,
+    onOpenStore: () -> Unit,
+    onViewSource: () -> Unit,
+) {
   Card(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = modifier,
       shape = RoundedCornerShape(size = 4.dp),
       elevation = 2.dp,
   ) {
@@ -55,10 +65,11 @@ internal fun OtherAppsListItem(app: OtherApp, onOpenStore: () -> Unit, onViewSou
     ) {
       Icon(
           app = app,
+          imageLoader = imageLoader,
       )
 
       Column(
-          modifier = Modifier.padding(start = 8.dp).weight(1F),
+          modifier = Modifier.padding(start = 16.dp).weight(1F),
       ) {
         Name(
             app = app,
@@ -98,15 +109,23 @@ private fun Name(app: OtherApp) {
 }
 
 @Composable
-private fun Icon(app: OtherApp) {
+private fun Icon(app: OtherApp, imageLoader: ImageLoader) {
+  val name = app.name
   val icon = app.icon
 
   if (icon.isNotBlank()) {
     Box(
+        modifier = Modifier.padding(start = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
-      CoilImage(
-          imageModel = app.icon,
+      Image(
+          painter =
+              rememberImagePainter(
+                  data = app.icon,
+                  imageLoader = imageLoader,
+                  builder = { crossfade(true) },
+              ),
+          contentDescription = name,
           modifier = Modifier.size(64.dp),
       )
     }
@@ -157,6 +176,8 @@ private fun OpenStore(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewOtherAppsListItem() {
+  val context = LocalContext.current
+
   OtherAppsListItem(
       app =
           OtherApp(
@@ -168,6 +189,7 @@ private fun PreviewOtherAppsListItem() {
               storeUrl = "some_url",
               sourceUrl = "some_url",
           ),
+      imageLoader = createNewTestImageLoader(context),
       onOpenStore = {},
       onViewSource = {},
   )

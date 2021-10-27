@@ -35,15 +35,18 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun ResetScreen(
+    modifier: Modifier = Modifier,
     state: ResetViewState,
     onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
   val reset = state.reset
 
-  Surface {
+  Surface(
+      modifier = modifier,
+  ) {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
     ) {
       Box(
           modifier = Modifier.padding(bottom = 8.dp),

@@ -35,20 +35,34 @@ import androidx.compose.ui.unit.sp
 import com.pyamsoft.pydroid.ui.R
 
 @Composable
-internal fun AdBadge() {
-  Badge(text = stringResource(R.string.ad_badge))
+internal fun AdBadge(
+    modifier: Modifier = Modifier,
+) {
+  Badge(
+      modifier = modifier,
+      text = stringResource(R.string.ad_badge),
+  )
 }
 
 @Composable
-internal fun InAppBadge() {
-  Badge(text = stringResource(R.string.in_app_badge))
+internal fun InAppBadge(
+    modifier: Modifier = Modifier,
+) {
+  Badge(
+      modifier = modifier,
+      text = stringResource(R.string.in_app_badge),
+  )
 }
 
 @Composable
-private fun Badge(text: String) {
+private fun Badge(
+    modifier: Modifier = Modifier,
+    text: String,
+) {
   Box(
       modifier =
-          Modifier.background(
+          modifier
+              .background(
                   brush = SolidColor(colorResource(R.color.green500)),
                   shape = RoundedCornerShape(4.dp),
               )

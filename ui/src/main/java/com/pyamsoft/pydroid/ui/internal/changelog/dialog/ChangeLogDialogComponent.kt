@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
@@ -34,6 +35,7 @@ internal interface ChangeLogDialogComponent {
     internal constructor(
         internal val interactor: ChangeLogInteractor,
         internal val composeTheme: ComposeThemeFactory,
+        internal val imageLoader: ImageLoader,
     )
   }
 
@@ -49,6 +51,7 @@ internal interface ChangeLogDialogComponent {
 
     override fun inject(dialog: ChangeLogDialog) {
       dialog.composeTheme = params.composeTheme
+      dialog.imageLoader = params.imageLoader
       dialog.factory = factory
     }
 

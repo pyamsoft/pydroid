@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.test
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.annotation.CheckResult
@@ -50,7 +51,23 @@ private class TestImageLoader(context: Context) : ImageLoader {
 
   override val bitmapPool: BitmapPool = BitmapPool(0)
   override val defaults: DefaultRequestOptions = DefaultRequestOptions()
-  override val memoryCache: MemoryCache = throw UnsupportedOperationException()
+  override val memoryCache: MemoryCache =
+      object : MemoryCache {
+        override val maxSize: Int = 1
+        override val size: Int = 0
+
+        override fun clear() {}
+
+        override fun get(key: MemoryCache.Key): Bitmap? {
+          return null
+        }
+
+        override fun remove(key: MemoryCache.Key): Boolean {
+          return false
+        }
+
+        override fun set(key: MemoryCache.Key, bitmap: Bitmap) {}
+      }
 
   override fun enqueue(request: ImageRequest): Disposable {
     request.apply {

@@ -35,10 +35,13 @@ internal fun PreferenceGroupHeader(
 ) {
   Box(
       contentAlignment = Alignment.CenterStart,
-      modifier = modifier.fillMaxWidth().padding(16.dp).padding(start = 48.dp),
+      modifier =
+          modifier
+              .fillMaxWidth()
+              .padding(16.dp)
+              .padding(start = 48.dp),
   ) {
     Text(
-        modifier = Modifier.padding(16.dp),
         text = name,
         style =
             MaterialTheme.typography.body2.copy(

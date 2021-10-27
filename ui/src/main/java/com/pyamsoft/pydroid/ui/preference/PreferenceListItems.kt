@@ -246,13 +246,14 @@ internal fun ListPreferenceItem(
               Spacer(
                   modifier = Modifier.weight(1F),
               )
-            }
-            TextButton(
-                onClick = { showDialog(false) },
-            ) {
-              Text(
-                  text = stringResource(R.string.close),
-              )
+
+              TextButton(
+                  onClick = { showDialog(false) },
+              ) {
+                Text(
+                    text = stringResource(R.string.close),
+                )
+              }
             }
           }
         },
@@ -276,7 +277,7 @@ private fun PreferenceItem(
       isEnabled = enabled,
   ) {
     Row(
-        modifier = modifier(enabled).fillMaxWidth().padding(16.dp),
+        modifier = modifier(enabled).fillMaxWidth().padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {

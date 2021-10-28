@@ -23,11 +23,12 @@ import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.Window
-import android.view.WindowInsetsController
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.Logger.d
 
 /** A listener which responds to some kind of change on WindowInsets */
 @Deprecated("Migrate to Jetpack Compose")
@@ -57,23 +58,25 @@ public fun Activity.stableLayoutHideNavigation() {
 private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
   WindowCompat.setDecorFitsSystemWindows(this, false)
 
-  if (isLandscape) {
-    this.insetsController?.systemBarsBehavior =
-        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-  }
+  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
+  //  if (isLandscape) {
+  //    this.insetsController?.systemBarsBehavior =
+  //        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+  //  }
 }
 
 @Suppress("DEPRECATION")
 private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
   WindowCompat.setDecorFitsSystemWindows(this, false)
 
-  if (isLandscape) {
-    // In landscape mode, navbar is marked immersive sticky
-    this.decorView.systemUiVisibility =
-        this.decorView.systemUiVisibility or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-  }
+  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
+  //  if (isLandscape) {
+  //    // In landscape mode, navbar is marked immersive sticky
+  //    this.decorView.systemUiVisibility =
+  //        this.decorView.systemUiVisibility or
+  //            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+  //            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+  //  }
 }
 
 /** Run a block once when the WindowInsets are applied */

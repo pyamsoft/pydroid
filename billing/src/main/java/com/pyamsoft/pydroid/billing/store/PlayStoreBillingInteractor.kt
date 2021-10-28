@@ -21,8 +21,8 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.core.Logger.w
+
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel

@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.version.upgrade
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.core.Logger.w
+
+
 
 internal class VersionUpgradeViewModel
 internal constructor(

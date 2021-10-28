@@ -23,8 +23,8 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.core.Logger.e
+
+
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

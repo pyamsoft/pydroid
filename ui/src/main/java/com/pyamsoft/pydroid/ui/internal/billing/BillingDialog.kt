@@ -32,7 +32,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
+
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R

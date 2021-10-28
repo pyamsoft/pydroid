@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.e
+
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.core.Logger.w
+
+
 
 internal class ResetViewModel
 internal constructor(

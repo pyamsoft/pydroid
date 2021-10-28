@@ -22,8 +22,8 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
-import com.pyamsoft.pydroid.core.Logger.e
+
+
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

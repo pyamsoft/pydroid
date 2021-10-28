@@ -23,7 +23,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
+
 import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID
 

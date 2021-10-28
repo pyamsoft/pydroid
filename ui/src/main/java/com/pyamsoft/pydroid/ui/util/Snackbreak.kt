@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.Logger.d
+
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.UUID

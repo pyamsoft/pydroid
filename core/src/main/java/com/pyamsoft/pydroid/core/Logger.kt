@@ -42,7 +42,7 @@ public object Logger {
 
   /** Debug level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  public fun Any.d(
+  public fun d(
       message: String,
       vararg args: Any,
   ) {
@@ -52,7 +52,7 @@ public object Logger {
 
   /** Warning level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  public fun Any.w(
+  public fun w(
       message: String,
       vararg args: Any,
   ) {
@@ -62,7 +62,7 @@ public object Logger {
 
   /** Error level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  public fun Any.e(
+  public fun e(
       throwable: Throwable,
       message: String,
       vararg args: Any,

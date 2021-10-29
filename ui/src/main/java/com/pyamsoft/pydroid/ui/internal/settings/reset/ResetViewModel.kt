@@ -20,8 +20,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.core.Logger
 
-
-
 internal class ResetViewModel
 internal constructor(
     private val interactor: SettingsInteractor,

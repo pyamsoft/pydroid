@@ -24,7 +24,6 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Logger
 
-
 /** Injects PYDroid and its managed services into a context */
 public object Injector {
 

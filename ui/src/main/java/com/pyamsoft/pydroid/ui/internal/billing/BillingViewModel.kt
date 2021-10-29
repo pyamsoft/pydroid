@@ -22,9 +22,6 @@ import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.core.Logger
-
-
-
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

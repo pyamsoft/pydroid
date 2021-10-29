@@ -55,7 +55,7 @@ internal class ComposeThemeFactory(
   /** Must be named "invoke" to work with Kotlin function calling */
   @Composable
   @SuppressLint("ComposableNaming")
-  override fun invoke(activity: Activity, content: @Composable () -> Unit) {
+  override operator fun invoke(activity: Activity, content: @Composable () -> Unit) {
     val provider = ThemeProvider { theming.isDarkTheme(activity) }
     themeProvider(themeProvider = provider, content = content)
   }

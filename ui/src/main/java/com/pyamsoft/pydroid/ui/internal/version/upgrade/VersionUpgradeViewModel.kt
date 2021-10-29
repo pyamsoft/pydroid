@@ -20,8 +20,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
 
-
-
 internal class VersionUpgradeViewModel
 internal constructor(
     private val interactor: VersionInteractor,

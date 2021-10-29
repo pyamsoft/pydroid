@@ -29,7 +29,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.pyamsoft.pydroid.core.Logger
 
-
 /** A listener which responds to some kind of change on WindowInsets */
 @Deprecated("Migrate to Jetpack Compose")
 public fun interface InsetListener {

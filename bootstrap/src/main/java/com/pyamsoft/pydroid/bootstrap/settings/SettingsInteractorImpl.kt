@@ -20,7 +20,6 @@ import android.app.ActivityManager
 import android.content.Context
 import androidx.core.content.getSystemService
 import com.pyamsoft.pydroid.core.Logger
-
 import com.pyamsoft.pydroid.core.requireNotNull
 
 internal class SettingsInteractorImpl internal constructor(context: Context) : SettingsInteractor {

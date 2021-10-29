@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.core.Logger
-
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

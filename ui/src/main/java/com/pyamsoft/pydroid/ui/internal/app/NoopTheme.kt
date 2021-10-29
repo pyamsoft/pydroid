@@ -35,7 +35,10 @@ internal val NoopTheme: ComposeTheme =
       /** Must be named "invoke" to work with Kotlin function calling */
       @Composable
       @SuppressLint("ComposableNaming")
-      override operator fun invoke(activity: Activity, content: () -> Unit) {
+      override operator fun invoke(
+          activity: Activity,
+          content: @Composable () -> Unit,
+      ) {
         content()
       }
     }
@@ -52,7 +55,10 @@ internal val NoopThemeProvider: ComposeThemeProvider =
       /** Must be named "invoke" to work with Kotlin function calling */
       @Composable
       @SuppressLint("ComposableNaming")
-      override operator fun invoke(themeProvider: ThemeProvider, content: () -> Unit) {
+      override operator fun invoke(
+          themeProvider: ThemeProvider,
+          content: @Composable () -> Unit,
+      ) {
         content()
       }
     }

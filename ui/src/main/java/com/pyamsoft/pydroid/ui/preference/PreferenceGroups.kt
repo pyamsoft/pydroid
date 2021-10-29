@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.preference
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -35,10 +34,7 @@ internal fun PreferenceGroupHeader(
 ) {
   Box(
       contentAlignment = Alignment.CenterStart,
-      modifier =
-          modifier
-              .padding(16.dp)
-              .padding(start = 48.dp),
+      modifier = modifier.padding(16.dp).padding(start = 48.dp),
   ) {
     Text(
         text = name,

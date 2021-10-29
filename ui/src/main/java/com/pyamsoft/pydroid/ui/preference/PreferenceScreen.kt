@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -75,13 +75,6 @@ public fun PreferenceScreen(
   }
 }
 
-@Composable
-private fun EmptyBox(modifier: Modifier = Modifier) {
-  Box(modifier = modifier) {
-    // EMPTY
-  }
-}
-
 // NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
 // calling applications will break with a NoClassDefFoundError
 //
@@ -100,7 +93,7 @@ private fun renderPaddedItemsInScope(
 ) {
   if (index == 0) {
     listScope.item {
-      EmptyBox(
+      Spacer(
           modifier =
               Modifier.fillMaxWidth()
                   .statusBarsHeight(
@@ -114,7 +107,7 @@ private fun renderPaddedItemsInScope(
 
   if (index == maxIndex) {
     listScope.item {
-      EmptyBox(
+      Spacer(
           modifier =
               Modifier.fillMaxWidth()
                   .navigationBarsHeight(

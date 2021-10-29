@@ -51,7 +51,8 @@ internal fun SettingsScreen(
     imageLoader: ImageLoader,
     topItemMargin: Dp = 0.dp,
     bottomItemMargin: Dp = 0.dp,
-    customContent: List<Preferences> = emptyList(),
+    customPreContent: List<Preferences> = emptyList(),
+    customPostContent: List<Preferences> = emptyList(),
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -90,7 +91,8 @@ internal fun SettingsScreen(
             imageLoader = imageLoader,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
-            customContent = customContent,
+            customPreContent = customPreContent,
+            customPostContent = customPostContent,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
             applicationName = applicationName,
@@ -134,7 +136,8 @@ private fun SettingsList(
     imageLoader: ImageLoader,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
-    customContent: List<Preferences>,
+    customPreContent: List<Preferences>,
+    customPostContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
@@ -154,41 +157,58 @@ private fun SettingsList(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
 ) {
+  val preferences =
+      mutableListOf<Preferences>().apply {
+        if (customPreContent.isNotEmpty()) {
+          addAll(customPreContent)
+        }
+
+        add(
+            createApplicationPreferencesGroup(
+                hideClearAll = hideClearAll,
+                hideUpgradeInformation = hideUpgradeInformation,
+                applicationName = applicationName,
+                darkMode = darkMode,
+                onDarkModeChanged = onDarkModeChanged,
+                onLicensesClicked = onLicensesClicked,
+                onCheckUpdateClicked = onCheckUpdateClicked,
+                onShowChangeLogClicked = onShowChangeLogClicked,
+                onResetClicked = onResetClicked,
+            ),
+        )
+        add(
+            createSupportPreferencesGroup(
+                applicationName = applicationName,
+                onRateClicked = onRateClicked,
+                onDonateClicked = onDonateClicked,
+                onBugReportClicked = onBugReportClicked,
+                onViewSourceClicked = onViewSourceClicked,
+                onViewPrivacyPolicy = onViewPrivacyPolicy,
+                onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+            ),
+        )
+        add(
+            createMoreAppsPreferencesGroup(
+                onViewMoreAppsClicked = onViewMoreAppsClicked,
+            ),
+        )
+        add(
+            createSocialMediaPreferencesGroup(
+                onViewSocialMediaClicked = onViewSocialMediaClicked,
+                onViewBlogClicked = onViewBlogClicked,
+            ),
+        )
+
+        if (customPostContent.isNotEmpty()) {
+          addAll(customPostContent)
+        }
+      }
+
   PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       imageLoader = imageLoader,
-      preferences =
-          customContent +
-              listOf(
-                  createApplicationPreferencesGroup(
-                      hideClearAll = hideClearAll,
-                      hideUpgradeInformation = hideUpgradeInformation,
-                      applicationName = applicationName,
-                      darkMode = darkMode,
-                      onDarkModeChanged = onDarkModeChanged,
-                      onLicensesClicked = onLicensesClicked,
-                      onCheckUpdateClicked = onCheckUpdateClicked,
-                      onShowChangeLogClicked = onShowChangeLogClicked,
-                      onResetClicked = onResetClicked,
-                  ),
-                  createSupportPreferencesGroup(
-                      applicationName = applicationName,
-                      onRateClicked = onRateClicked,
-                      onDonateClicked = onDonateClicked,
-                      onBugReportClicked = onBugReportClicked,
-                      onViewSourceClicked = onViewSourceClicked,
-                      onViewPrivacyPolicy = onViewPrivacyPolicy,
-                      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-                  ),
-                  createMoreAppsPreferencesGroup(
-                      onViewMoreAppsClicked = onViewMoreAppsClicked,
-                  ),
-                  createSocialMediaPreferencesGroup(
-                      onViewSocialMediaClicked = onViewSocialMediaClicked,
-                      onViewBlogClicked = onViewBlogClicked,
-                  ),
-              ),
+      preferences = preferences,
   )
 }
 
@@ -227,7 +247,8 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       imageLoader = createNewTestImageLoader(context),
       topItemMargin = 0.dp,
       bottomItemMargin = 0.dp,
-      customContent = emptyList(),
+      customPreContent = emptyList(),
+      customPostContent = emptyList(),
       onDarkModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},

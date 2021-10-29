@@ -69,24 +69,21 @@ public abstract class SettingsFragment : Fragment() {
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
   internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val ratingViewModel by activityViewModels<RatingViewModel> {
-    ratingFactory.requireNotNull()
-  }
+  private val ratingViewModel by
+      activityViewModels<RatingViewModel> { ratingFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since VersionCheckActivity
   // should
   // be bound for us.
   internal var versionFactory: ViewModelProvider.Factory? = null
-  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
-    versionFactory.requireNotNull()
-  }
+  private val versionViewModel by
+      activityViewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
   // be bound for us.
   internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
-    changeLogFactory.requireNotNull()
-  }
+  private val changeLogViewModel by
+      activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
 
   // ImageLoader
   internal var imageLoader: ImageLoader? = null
@@ -126,7 +123,8 @@ public abstract class SettingsFragment : Fragment() {
                 imageLoader = imageLoader.requireNotNull(),
                 topItemMargin = customTopItemMargin(),
                 bottomItemMargin = customBottomItemMargin(),
-                customContent = customPreferences(),
+                customPreContent = customPrePreferences(),
+                customPostContent = customPostPreferences(),
                 onDarkModeChanged = {
                   viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
                 },
@@ -206,7 +204,10 @@ public abstract class SettingsFragment : Fragment() {
   protected abstract val hideClearAll: Boolean
 
   /** Override this method to implement any custom preferences in your app */
-  @Composable @CheckResult protected abstract fun customPreferences(): List<Preferences>
+  @Composable @CheckResult protected abstract fun customPrePreferences(): List<Preferences>
+
+  /** Override this method to implement any custom preferences in your app */
+  @Composable @CheckResult protected abstract fun customPostPreferences(): List<Preferences>
 
   /** Override this method to add additional margin to the top settings item */
   @Composable @CheckResult protected abstract fun customTopItemMargin(): Dp

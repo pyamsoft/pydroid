@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHostState
@@ -62,6 +63,7 @@ internal fun AboutScreen(
   val scaffoldState = rememberScaffoldState()
 
   Scaffold(
+      backgroundColor = MaterialTheme.colors.background,
       modifier = modifier,
       scaffoldState = scaffoldState,
   ) {

@@ -69,6 +69,7 @@ internal fun BillingScreen(
   val snackbarHostState = remember { SnackbarHostState() }
 
   Surface(
+      color = MaterialTheme.colors.background,
       modifier = modifier,
   ) {
     Column {

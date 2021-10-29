@@ -63,6 +63,7 @@ internal fun OtherAppsScreen(
   val scaffoldState = rememberScaffoldState()
 
   Scaffold(
+      backgroundColor = MaterialTheme.colors.background,
       modifier = modifier,
       scaffoldState = scaffoldState,
   ) {
@@ -122,24 +123,22 @@ private fun OtherAppsList(
     onViewStorePage: (index: Int) -> Unit,
     onViewSourceCode: (index: Int) -> Unit,
 ) {
-  Box {
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(8.dp),
-    ) {
-      itemsIndexed(
-          items = apps,
-          key = { _, item -> item.packageName },
-      ) { index, item ->
-        OtherAppsListItem(
-            modifier = Modifier.fillMaxWidth(),
-            app = item,
-            imageLoader = imageLoader,
-            onViewSource = { onViewSourceCode(index) },
-            onOpenStore = { onViewStorePage(index) },
-        )
-      }
+  LazyColumn(
+      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
+      contentPadding = PaddingValues(8.dp),
+  ) {
+    itemsIndexed(
+        items = apps,
+        key = { _, item -> item.packageName },
+    ) { index, item ->
+      OtherAppsListItem(
+          modifier = Modifier.fillMaxWidth(),
+          app = item,
+          imageLoader = imageLoader,
+          onViewSource = { onViewSourceCode(index) },
+          onOpenStore = { onViewStorePage(index) },
+      )
     }
   }
 }

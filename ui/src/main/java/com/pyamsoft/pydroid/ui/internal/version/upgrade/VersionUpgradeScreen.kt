@@ -42,9 +42,12 @@ internal fun VersionUpgradeScreen(
   val isUpgraded = state.upgraded
 
   Surface(
-      modifier = modifier.padding(16.dp).fillMaxWidth(),
+      color = MaterialTheme.colors.background,
+      modifier = modifier,
   ) {
-    Column {
+    Column(
+        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+    ) {
       Box(
           modifier = Modifier.padding(bottom = 8.dp),
       ) { Title() }

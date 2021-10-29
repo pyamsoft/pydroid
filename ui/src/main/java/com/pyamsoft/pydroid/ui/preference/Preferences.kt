@@ -24,6 +24,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.compose.runtime.Composable
 import androidx.core.content.withStyledAttributes
 import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
@@ -86,6 +87,16 @@ public sealed class Preferences {
       override val summary: String,
       @DrawableRes override val icon: Int,
       internal val onClick: (() -> Unit)?,
+  ) : Item()
+
+  /** Represents a Custom Preference item */
+  internal data class CustomPreference
+  internal constructor(
+      override val name: String = "",
+      override val isEnabled: Boolean = false,
+      override val summary: String = "",
+      @DrawableRes override val icon: Int = 0,
+      internal val content: @Composable (isEnabled: Boolean) -> Unit,
   ) : Item()
 
   /** Represents a Ad Preference item */
@@ -163,6 +174,16 @@ public fun preferenceGroup(
       name = name,
       isEnabled = isEnabled,
       preferences = preferences,
+  )
+}
+
+/** Create a new Preference.AdPreference */
+@CheckResult
+public fun customPreference(
+    content: @Composable (isEnabled: Boolean) -> Unit,
+): Preferences.Item {
+  return Preferences.CustomPreference(
+      content = content,
   )
 }
 

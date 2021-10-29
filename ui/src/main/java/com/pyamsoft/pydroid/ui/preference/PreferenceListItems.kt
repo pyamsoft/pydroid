@@ -73,6 +73,30 @@ internal fun SimplePreferenceItem(
 }
 
 @Composable
+internal fun CustomPreferenceItem(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
+    preference: Preferences.CustomPreference,
+) {
+  val isEnabled = preference.isEnabled
+  val name = preference.name
+  val summary = preference.summary
+  val icon = preference.icon
+  val content = preference.content
+
+  PreferenceItem(
+      isEnabled = isEnabled,
+      text = name,
+      summary = summary,
+      icon = icon,
+      badge = { AdBadge() },
+      imageLoader = imageLoader,
+      modifier = { modifier },
+      customContent = content,
+  )
+}
+
+@Composable
 internal fun AdPreferenceItem(
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader,
@@ -291,74 +315,102 @@ private fun PreferenceItem(
     modifier: (isEnabled: Boolean) -> Modifier,
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
+    customContent: (@Composable (isEnabled: Boolean) -> Unit)? = null,
 ) {
   val enabled = LocalPreferenceEnabledStatus.current && isEnabled
 
   PreferenceAlphaWrapper(
       isEnabled = enabled,
   ) {
-    Row(
-        modifier = modifier(enabled).padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
+    if (customContent == null) {
+      DefaultPreferenceItem(
+          enabled = enabled,
+          imageLoader = imageLoader,
+          text = text,
+          summary = summary,
+          icon = icon,
+          modifier = modifier,
+          trailing = trailing,
+          badge = badge,
+      )
+    } else {
+      customContent(enabled)
+    }
+  }
+}
+
+@Composable
+private fun DefaultPreferenceItem(
+    enabled: Boolean,
+    imageLoader: ImageLoader,
+    text: String,
+    summary: String,
+    @DrawableRes icon: Int,
+    modifier: (isEnabled: Boolean) -> Modifier,
+    trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
+    badge: (@Composable () -> Unit)? = null,
+) {
+  Row(
+      modifier = modifier(enabled).padding(8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Start,
+  ) {
+    Box(
+        modifier = Modifier.size(48.dp),
+        contentAlignment = Alignment.Center,
     ) {
-      Box(
-          modifier = Modifier.size(48.dp),
-          contentAlignment = Alignment.Center,
+      if (icon != 0) {
+        val imageTintColor = if (MaterialTheme.colors.isLight) Color.Black else Color.White
+        Image(
+            modifier = Modifier.size(24.dp),
+            painter =
+                rememberImagePainter(
+                    data = icon,
+                    imageLoader = imageLoader,
+                    builder = { crossfade(true) },
+                ),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(color = imageTintColor),
+        )
+      }
+    }
+
+    Column(
+        modifier = Modifier.padding(start = 8.dp).weight(1F),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
+    ) {
+      Row(
+          verticalAlignment = Alignment.CenterVertically,
       ) {
-        if (icon != 0) {
-          val imageTintColor = if (MaterialTheme.colors.isLight) Color.Black else Color.White
-          Image(
-              modifier = Modifier.size(24.dp),
-              painter =
-                  rememberImagePainter(
-                      data = icon,
-                      imageLoader = imageLoader,
-                      builder = { crossfade(true) },
-                  ),
-              contentDescription = null,
-              colorFilter = ColorFilter.tint(color = imageTintColor),
-          )
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.body1,
+        )
+        badge?.let { compose -> Box(modifier = Modifier.padding(start = 8.dp)) { compose() } }
+        Spacer(modifier = Modifier.weight(1F))
       }
 
-      Column(
-          modifier = Modifier.padding(start = 8.dp).weight(1F),
-          verticalArrangement = Arrangement.Top,
-          horizontalAlignment = Alignment.Start,
-      ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+      if (summary.isNotBlank()) {
+        Box(
+            modifier =
+                Modifier.padding(
+                    top = 8.dp,
+                ),
         ) {
           Text(
-              text = text,
-              style = MaterialTheme.typography.body1,
+              text = summary,
+              style = MaterialTheme.typography.caption,
           )
-          badge?.let { compose -> Box(modifier = Modifier.padding(start = 8.dp)) { compose() } }
-          Spacer(modifier = Modifier.weight(1F))
-        }
-
-        if (summary.isNotBlank()) {
-          Box(
-              modifier =
-                  Modifier.padding(
-                      top = 8.dp,
-                  ),
-          ) {
-            Text(
-                text = summary,
-                style = MaterialTheme.typography.caption,
-            )
-          }
         }
       }
+    }
 
-      trailing?.also { compose ->
-        Box(
-            modifier = Modifier.padding(start = 8.dp).size(48.dp),
-            contentAlignment = Alignment.Center,
-        ) { compose(enabled) }
-      }
+    trailing?.also { compose ->
+      Box(
+          modifier = Modifier.padding(start = 8.dp).size(48.dp),
+          contentAlignment = Alignment.Center,
+      ) { compose(enabled) }
     }
   }
 }

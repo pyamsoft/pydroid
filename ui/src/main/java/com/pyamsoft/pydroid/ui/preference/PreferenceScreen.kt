@@ -256,6 +256,12 @@ private fun RenderItem(
             imageLoader = imageLoader,
             preference = preference,
         )
+    is Preferences.CustomPreference ->
+        CustomPreferenceItem(
+            modifier = modifier,
+            imageLoader = imageLoader,
+            preference = preference,
+        )
     else ->
         throw IllegalArgumentException(
             "Preference is not a consumable type for PreferenceScreen: $preference")

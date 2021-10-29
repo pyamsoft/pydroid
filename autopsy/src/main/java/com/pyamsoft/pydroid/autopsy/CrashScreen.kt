@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun CrashScreen(
+    modifier: Modifier = Modifier,
     threadName: String,
     throwableName: String,
     stackTrace: Throwable,
@@ -47,6 +48,7 @@ internal fun CrashScreen(
   val stackTraceAsString = remember { stackTrace.stackTraceToString() }
 
   Surface(
+      modifier = modifier,
       color = colorResource(R.color.crash_background_color),
       contentColor = colorResource(R.color.crash_foreground_color),
   ) {

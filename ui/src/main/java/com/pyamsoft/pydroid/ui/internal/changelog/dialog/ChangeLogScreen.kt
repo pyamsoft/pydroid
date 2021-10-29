@@ -53,24 +53,26 @@ internal fun ChangeLogScreen(
   val name = state.name
   val changeLog = state.changeLog
 
-  Column(
+  Surface(
       modifier = modifier,
   ) {
-    AppHeader(
-        modifier = Modifier.fillMaxWidth(),
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-    )
+    Column {
+      AppHeader(
+          modifier = Modifier.fillMaxWidth(),
+          icon = icon,
+          name = name,
+          imageLoader = imageLoader,
+      )
 
-    ChangeLog(
-        changeLog = changeLog,
-    )
+      ChangeLog(
+          changeLog = changeLog,
+      )
 
-    Actions(
-        onRateApp = onRateApp,
-        onClose = onClose,
-    )
+      Actions(
+          onRateApp = onRateApp,
+          onClose = onClose,
+      )
+    }
   }
 }
 
@@ -120,14 +122,12 @@ private fun Actions(
 private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
   val context = LocalContext.current
 
-  Surface {
-    ChangeLogScreen(
-        state = ChangeLogViewState(icon = 0, name = "TEST", changeLog = changeLog),
-        imageLoader = createNewTestImageLoader(context),
-        onRateApp = {},
-        onClose = {},
-    )
-  }
+  ChangeLogScreen(
+      state = ChangeLogViewState(icon = 0, name = "TEST", changeLog = changeLog),
+      imageLoader = createNewTestImageLoader(context),
+      onRateApp = {},
+      onClose = {},
+  )
 }
 
 @Preview

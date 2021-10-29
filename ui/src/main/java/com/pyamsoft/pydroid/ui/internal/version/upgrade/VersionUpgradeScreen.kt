@@ -41,22 +41,24 @@ internal fun VersionUpgradeScreen(
 ) {
   val isUpgraded = state.upgraded
 
-  Column(
+  Surface(
       modifier = modifier.padding(16.dp).fillMaxWidth(),
   ) {
-    Box(
-        modifier = Modifier.padding(bottom = 8.dp),
-    ) { Title() }
+    Column {
+      Box(
+          modifier = Modifier.padding(bottom = 8.dp),
+      ) { Title() }
 
-    Box(
-        modifier = Modifier.padding(bottom = 8.dp),
-    ) { Message() }
+      Box(
+          modifier = Modifier.padding(bottom = 8.dp),
+      ) { Message() }
 
-    Actions(
-        isUpgraded = isUpgraded,
-        onUpgrade = onUpgrade,
-        onClose = onClose,
-    )
+      Actions(
+          isUpgraded = isUpgraded,
+          onUpgrade = onUpgrade,
+          onClose = onClose,
+      )
+    }
   }
 }
 
@@ -123,13 +125,11 @@ private fun Actions(
 
 @Composable
 private fun PreviewVersionUpgradeScreen(upgraded: Boolean) {
-  Surface {
-    VersionUpgradeScreen(
-        state = VersionUpgradeViewState(upgraded = upgraded),
-        onUpgrade = {},
-        onClose = {},
-    )
-  }
+  VersionUpgradeScreen(
+      state = VersionUpgradeViewState(upgraded = upgraded),
+      onUpgrade = {},
+      onClose = {},
+  )
 }
 
 @Preview

@@ -48,7 +48,7 @@ buildscript {
     annotation = "1.2.0"
     core = "1.6.0"
     constraintLayout = "2.1.1"
-    lifecycle = "2.3.1"
+    lifecycle = "2.4.0"
     lifecycleExtensions = "2.2.0"
     preference = "1.1.1"
     recyclerView = "1.2.1"

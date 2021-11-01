@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,37 +42,34 @@ public fun PreferenceScreen(
     imageLoader: ImageLoader,
     preferences: List<Preferences>,
 ) {
-  Surface(
-      color = MaterialTheme.colors.background,
+  LazyColumn(
       modifier = modifier,
   ) {
-    LazyColumn {
-      val maxIndex = preferences.lastIndex
-      preferences.forEachIndexed { index, preference ->
-        when (preference) {
-          is Preferences.Group ->
-              renderGroupInScope(
-                  modifier = Modifier.fillMaxWidth(),
-                  listScope = this,
-                  topItemMargin = topItemMargin,
-                  bottomItemMargin = bottomItemMargin,
-                  index = index,
-                  maxIndex = maxIndex,
-                  imageLoader = imageLoader,
-                  preference = preference,
-              )
-          is Preferences.Item ->
-              renderItemInScope(
-                  modifier = Modifier.fillMaxWidth(),
-                  listScope = this,
-                  topItemMargin = topItemMargin,
-                  bottomItemMargin = bottomItemMargin,
-                  index = index,
-                  maxIndex = maxIndex,
-                  imageLoader = imageLoader,
-                  preference = preference,
-              )
-        }
+    val maxIndex = preferences.lastIndex
+    preferences.forEachIndexed { index, preference ->
+      when (preference) {
+        is Preferences.Group ->
+            renderGroupInScope(
+                modifier = Modifier.fillMaxWidth(),
+                listScope = this,
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
+                index = index,
+                maxIndex = maxIndex,
+                imageLoader = imageLoader,
+                preference = preference,
+            )
+        is Preferences.Item ->
+            renderItemInScope(
+                modifier = Modifier.fillMaxWidth(),
+                listScope = this,
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
+                index = index,
+                maxIndex = maxIndex,
+                imageLoader = imageLoader,
+                preference = preference,
+            )
       }
     }
   }
@@ -269,52 +265,54 @@ private fun RenderItem(
 private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   val context = LocalContext.current
 
-  PreferenceScreen(
-      imageLoader = createNewTestImageLoader(context),
-      preferences =
-          listOf(
-              preferenceGroup(
-                  name = "TEST",
-                  isEnabled = isEnabled,
-                  preferences =
-                      listOf(
-                          preference(
-                              name = "TEST ITEM 1",
-                          ),
-                          preference(
-                              name = "TEST ITEM 2",
-                              summary = "TESTING 123",
-                          ),
-                          adPreference(
-                              name = "TEST AD",
-                          ),
-                          inAppPreference(
-                              name = "TEST IN-APP",
-                          ),
-                          checkBoxPreference(
-                              name = "TEST CHECKBOX 1",
-                              checked = false,
-                              onCheckedChanged = {},
-                          ),
-                          checkBoxPreference(
-                              name = "TEST CHECKBOX 2",
-                              checked = true,
-                              onCheckedChanged = {},
-                          ),
-                          switchPreference(
-                              name = "TEST SWITCH 1",
-                              checked = false,
-                              onCheckedChanged = {},
-                          ),
-                          switchPreference(
-                              name = "TEST SWITCH 2",
-                              checked = true,
-                              onCheckedChanged = {},
-                          ),
-                      ),
-              ),
-          ),
-  )
+  Surface {
+    PreferenceScreen(
+        imageLoader = createNewTestImageLoader(context),
+        preferences =
+            listOf(
+                preferenceGroup(
+                    name = "TEST",
+                    isEnabled = isEnabled,
+                    preferences =
+                        listOf(
+                            preference(
+                                name = "TEST ITEM 1",
+                            ),
+                            preference(
+                                name = "TEST ITEM 2",
+                                summary = "TESTING 123",
+                            ),
+                            adPreference(
+                                name = "TEST AD",
+                            ),
+                            inAppPreference(
+                                name = "TEST IN-APP",
+                            ),
+                            checkBoxPreference(
+                                name = "TEST CHECKBOX 1",
+                                checked = false,
+                                onCheckedChanged = {},
+                            ),
+                            checkBoxPreference(
+                                name = "TEST CHECKBOX 2",
+                                checked = true,
+                                onCheckedChanged = {},
+                            ),
+                            switchPreference(
+                                name = "TEST SWITCH 1",
+                                checked = false,
+                                onCheckedChanged = {},
+                            ),
+                            switchPreference(
+                                name = "TEST SWITCH 2",
+                                checked = true,
+                                onCheckedChanged = {},
+                            ),
+                        ),
+                ),
+            ),
+    )
+  }
 }
 
 @Preview

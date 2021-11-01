@@ -18,7 +18,10 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
@@ -39,7 +42,12 @@ internal val NoopTheme: ComposeTheme =
           activity: Activity,
           content: @Composable () -> Unit,
       ) {
-        content()
+        // We update the LocalContentColor to match our onBackground. This allows the default
+        // content color to be more appropriate to the theme background
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colors.onBackground,
+            content = content,
+        )
       }
     }
 
@@ -59,6 +67,11 @@ internal val NoopThemeProvider: ComposeThemeProvider =
           themeProvider: ThemeProvider,
           content: @Composable () -> Unit,
       ) {
-        content()
+        // We update the LocalContentColor to match our onBackground. This allows the default
+        // content color to be more appropriate to the theme background
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colors.onBackground,
+            content = content,
+        )
       }
     }

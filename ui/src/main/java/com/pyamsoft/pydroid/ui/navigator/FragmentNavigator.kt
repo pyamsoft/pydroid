@@ -21,9 +21,11 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.util.commit
+import com.pyamsoft.pydroid.ui.util.commitNow
 
 /** A navigator backed by AndroidX Fragment transactions */
 public abstract class FragmentNavigator<S : Any>
@@ -42,8 +44,6 @@ protected constructor(
 
   /** Performs a fragment transaction */
   protected abstract fun performFragmentTransaction(
-      fragmentManager: FragmentManager,
-      activity: FragmentActivity,
       container: Int,
       data: FragmentTag,
       newScreen: Navigator.Screen<S>,
@@ -98,8 +98,6 @@ protected constructor(
 
       updateCurrentScreen(newScreen = screen.screen)
       performFragmentTransaction(
-          fragmentManager,
-          activity,
           fragmentContainerId,
           entry,
           screen,
@@ -110,6 +108,27 @@ protected constructor(
     } else {
       return false
     }
+  }
+
+  /** Perform a fragment transaction commit */
+  @JvmOverloads
+  protected fun commit(
+      immediate: Boolean = false,
+      transaction: FragmentTransaction.() -> FragmentTransaction,
+  ) {
+    fragmentManager.commit(
+        owner = activity,
+        immediate = immediate,
+        transaction = transaction,
+    )
+  }
+
+  /** Perform a fragment transaction commitNow */
+  protected fun commitNow(transaction: FragmentTransaction.() -> FragmentTransaction) {
+    fragmentManager.commitNow(
+        owner = activity,
+        transaction = transaction,
+    )
   }
 
   /** A mapping of string Tags to Fragment providers */

@@ -68,38 +68,40 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Column(
+  Surface(
       modifier = modifier,
   ) {
-    AppHeader(
-        modifier = Modifier.fillMaxWidth(),
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-    )
+    Column {
+      AppHeader(
+          modifier = Modifier.fillMaxWidth(),
+          icon = icon,
+          name = name,
+          imageLoader = imageLoader,
+      )
 
-    Crossfade(targetState = connection) { connected ->
-      // Remember computed value
-      val isLoading = remember { connected == BillingState.LOADING }
-      val isConnected = remember { connected == BillingState.CONNECTED }
+      Crossfade(targetState = connection) { connected ->
+        // Remember computed value
+        val isLoading = remember { connected == BillingState.LOADING }
+        val isConnected = remember { connected == BillingState.CONNECTED }
 
-      if (isLoading) {
-        Loading()
-      } else {
-        SkuList(
-            isConnected = isConnected,
-            list = skuList,
-            onPurchase = onPurchase,
-            onClose = onClose,
-        )
+        if (isLoading) {
+          Loading()
+        } else {
+          SkuList(
+              isConnected = isConnected,
+              list = skuList,
+              onPurchase = onPurchase,
+              onClose = onClose,
+          )
+        }
       }
-    }
 
-    BillingError(
-        snackbarHostState = snackbarHostState,
-        error = error,
-        onSnackbarDismissed = onBillingErrorDismissed,
-    )
+      BillingError(
+          snackbarHostState = snackbarHostState,
+          error = error,
+          onSnackbarDismissed = onBillingErrorDismissed,
+      )
+    }
   }
 }
 
@@ -213,22 +215,20 @@ private fun PreviewBillingScreen(
 ) {
   val context = LocalContext.current
 
-  Surface {
-    BillingScreen(
-        state =
-            BillingViewState(
-                icon = 0,
-                name = "TEST APPLICATION",
-                connected = connected,
-                skuList = skuList,
-                error = error,
-            ),
-        imageLoader = createNewTestImageLoader(context),
-        onPurchase = {},
-        onBillingErrorDismissed = {},
-        onClose = {},
-    )
-  }
+  BillingScreen(
+      state =
+          BillingViewState(
+              icon = 0,
+              name = "TEST APPLICATION",
+              connected = connected,
+              skuList = skuList,
+              error = error,
+          ),
+      imageLoader = createNewTestImageLoader(context),
+      onPurchase = {},
+      onBillingErrorDismissed = {},
+      onClose = {},
+  )
 }
 
 @Preview

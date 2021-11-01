@@ -42,20 +42,24 @@ internal fun ResetScreen(
 ) {
   val reset = state.reset
 
-  Column(modifier = modifier.padding(16.dp).fillMaxWidth()) {
-    Box(
-        modifier = Modifier.padding(bottom = 8.dp),
-    ) { Title() }
+  Surface(
+      modifier = modifier,
+  ) {
+    Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+      Box(
+          modifier = Modifier.padding(bottom = 8.dp),
+      ) { Title() }
 
-    Box(
-        modifier = Modifier.padding(bottom = 8.dp),
-    ) { Message() }
+      Box(
+          modifier = Modifier.padding(bottom = 8.dp),
+      ) { Message() }
 
-    Actions(
-        isReset = reset,
-        onReset = onReset,
-        onClose = onClose,
-    )
+      Actions(
+          isReset = reset,
+          onReset = onReset,
+          onClose = onClose,
+      )
+    }
   }
 }
 
@@ -131,13 +135,11 @@ private fun Actions(
 
 @Composable
 private fun PreviewResetScreen(reset: Boolean) {
-  Surface {
-    ResetScreen(
-        state = ResetViewState(reset = reset),
-        onReset = {},
-        onClose = {},
-    )
-  }
+  ResetScreen(
+      state = ResetViewState(reset = reset),
+      onReset = {},
+      onClose = {},
+  )
 }
 
 @Preview

@@ -53,17 +53,17 @@ internal fun ChangeLogScreen(
   val name = state.name
   val changeLog = state.changeLog
 
-  Surface(
+  Column(
       modifier = modifier,
   ) {
-    Column {
-      AppHeader(
-          modifier = Modifier.fillMaxWidth(),
-          icon = icon,
-          name = name,
-          imageLoader = imageLoader,
-      )
+    AppHeader(
+        modifier = Modifier.fillMaxWidth(),
+        icon = icon,
+        name = name,
+        imageLoader = imageLoader,
+    )
 
+    Surface {
       ChangeLog(
           changeLog = changeLog,
       )

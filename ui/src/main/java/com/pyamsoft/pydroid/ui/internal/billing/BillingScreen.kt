@@ -68,17 +68,17 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface(
+  Column(
       modifier = modifier,
   ) {
-    Column {
-      AppHeader(
-          modifier = Modifier.fillMaxWidth(),
-          icon = icon,
-          name = name,
-          imageLoader = imageLoader,
-      )
+    AppHeader(
+        modifier = Modifier.fillMaxWidth(),
+        icon = icon,
+        name = name,
+        imageLoader = imageLoader,
+    )
 
+    Surface {
       Crossfade(targetState = connection) { connected ->
         // Remember computed value
         val isLoading = remember { connected == BillingState.LOADING }

@@ -79,20 +79,36 @@ internal fun BillingScreen(
     )
 
     Surface {
-      Crossfade(targetState = connection) { connected ->
-        // Remember computed value
-        val isLoading = remember { connected == BillingState.LOADING }
-        val isConnected = remember { connected == BillingState.CONNECTED }
+      Column {
+        Crossfade(targetState = connection) { connected ->
+          // Remember computed value
+          val isLoading = remember { connected == BillingState.LOADING }
+          val isConnected = remember { connected == BillingState.CONNECTED }
 
-        if (isLoading) {
-          Loading()
-        } else {
-          SkuList(
-              isConnected = isConnected,
-              list = skuList,
-              onPurchase = onPurchase,
-              onClose = onClose,
+          if (isLoading) {
+            Loading()
+          } else {
+            SkuList(
+                isConnected = isConnected,
+                list = skuList,
+                onPurchase = onPurchase,
+            )
+          }
+        }
+
+        Row(
+            modifier = Modifier.padding(16.dp),
+        ) {
+          Spacer(
+              modifier = Modifier.weight(1F),
           )
+          TextButton(
+              onClick = onClose,
+          ) {
+            Text(
+                text = stringResource(R.string.close),
+            )
+          }
         }
       }
 
@@ -110,54 +126,36 @@ private fun SkuList(
     isConnected: Boolean,
     list: List<BillingSku>,
     onPurchase: (index: Int) -> Unit,
-    onClose: () -> Unit,
 ) {
-  Column {
-    // Remember the computed ready state
-    val readyState = remember {
-      ReadyState(
-          isConnected = isConnected,
-          isEmpty = list.isEmpty(),
-      )
-    }
+  // Remember the computed ready state
+  val readyState = remember {
+    ReadyState(
+        isConnected = isConnected,
+        isEmpty = list.isEmpty(),
+    )
+  }
 
-    Crossfade(
-        targetState = readyState,
-    ) { ready ->
-      if (ready.isEmpty || !isConnected) {
-        ErrorText()
-      } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-          itemsIndexed(
-              items = list,
-              key = { _, item -> item.id },
-          ) { index, item ->
-            BillingListItem(
-                modifier = Modifier.fillMaxWidth(),
-                sku = item,
-                onPurchase = { onPurchase(index) },
-            )
-          }
-        }
-      }
-    }
-
-    Row(
-        modifier = Modifier.padding(16.dp),
-    ) {
-      Spacer(
-          modifier = Modifier.weight(1F),
-      )
-      TextButton(
-          onClick = onClose,
+  Crossfade(
+      targetState = readyState,
+  ) { ready ->
+    if (ready.isEmpty || !isConnected) {
+      ErrorText()
+    } else {
+      LazyColumn(
+          modifier = Modifier.fillMaxWidth(),
+          verticalArrangement = Arrangement.spacedBy(8.dp),
+          contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
       ) {
-        Text(
-            text = stringResource(R.string.close),
-        )
+        itemsIndexed(
+            items = list,
+            key = { _, item -> item.id },
+        ) { index, item ->
+          BillingListItem(
+              modifier = Modifier.fillMaxWidth(),
+              sku = item,
+              onPurchase = { onPurchase(index) },
+          )
+        }
       }
     }
   }

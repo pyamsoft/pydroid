@@ -58,7 +58,11 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
   init {
     Logger.d("Construct new interactor and billing client")
 
-    val packageName = context.applicationContext.packageName
+    val rawPackageName = context.applicationContext.packageName
+    val packageName =
+        if (rawPackageName.endsWith(DEV_SUFFIX))
+            rawPackageName.substring(0 until rawPackageName.length - DEV_SUFFIX.length)
+        else rawPackageName
     appSkuList =
         listOf(
             "$packageName.iap_one",
@@ -204,6 +208,8 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
   private data class State(val state: BillingState, val list: List<BillingSku>)
 
   companion object {
+
+    private const val DEV_SUFFIX = ".dev"
 
     @JvmStatic
     @CheckResult

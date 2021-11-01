@@ -23,13 +23,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +43,8 @@ import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
+private const val ICON_SIZE = 56
+
 @Composable
 @JvmOverloads
 internal fun AppHeader(
@@ -47,6 +53,9 @@ internal fun AppHeader(
     name: String,
     imageLoader: ImageLoader,
 ) {
+  var textHeight by remember { mutableStateOf(0) }
+  val spaceHeight = textHeight / 2
+
   Box(
       modifier = modifier,
   ) {
@@ -54,19 +63,21 @@ internal fun AppHeader(
         modifier = Modifier.matchParentSize(),
     ) {
       Spacer(
-          modifier = Modifier.weight(0.75F).fillMaxWidth(),
+          modifier = Modifier.height(spaceHeight.dp).fillMaxWidth(),
       )
-      Surface(
+      Spacer(
           modifier =
-              Modifier.weight(1F).background(color = MaterialTheme.colors.surface).fillMaxWidth(),
-          shape =
-              MaterialTheme.shapes.medium.copy(
-                  bottomEnd = ZeroCornerSize,
-                  bottomStart = ZeroCornerSize,
-              ),
-      ) {
-        // Empty
-      }
+              Modifier.height((ICON_SIZE + spaceHeight).dp)
+                  .background(
+                      color = MaterialTheme.colors.surface,
+                      shape =
+                          MaterialTheme.shapes.medium.copy(
+                              bottomEnd = ZeroCornerSize,
+                              bottomStart = ZeroCornerSize,
+                          ),
+                  )
+                  .fillMaxWidth(),
+      )
     }
 
     Column(
@@ -82,11 +93,12 @@ internal fun AppHeader(
                   builder = { crossfade(true) },
               ),
           contentDescription = "$name Icon",
-          modifier = Modifier.size(56.dp),
+          modifier = Modifier.size(ICON_SIZE.dp),
       )
       Text(
           text = name,
           style = MaterialTheme.typography.h5,
+          onTextLayout = { textHeight = it.size.height },
       )
     }
   }

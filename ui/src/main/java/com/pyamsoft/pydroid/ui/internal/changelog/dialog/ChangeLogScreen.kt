@@ -64,14 +64,16 @@ internal fun ChangeLogScreen(
     )
 
     Surface {
-      ChangeLog(
-          changeLog = changeLog,
-      )
+      Column {
+        ChangeLog(
+            changeLog = changeLog,
+        )
 
-      Actions(
-          onRateApp = onRateApp,
-          onClose = onClose,
-      )
+        Actions(
+            onRateApp = onRateApp,
+            onClose = onClose,
+        )
+      }
     }
   }
 }

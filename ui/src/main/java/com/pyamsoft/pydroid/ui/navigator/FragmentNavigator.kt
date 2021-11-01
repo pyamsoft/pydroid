@@ -34,8 +34,9 @@ protected constructor(
     @IdRes private val fragmentContainerId: Int,
 ) : BaseNavigator<S>() {
 
-  private val fragmentTagMap: Map<S, FragmentTag> by
-      lazy(LazyThreadSafetyMode.NONE) { provideFragmentTagMap() }
+  private val fragmentTagMap: Map<S, FragmentTag> by lazy(LazyThreadSafetyMode.NONE) {
+    provideFragmentTagMap()
+  }
 
   private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { activity.supportFragmentManager }
 

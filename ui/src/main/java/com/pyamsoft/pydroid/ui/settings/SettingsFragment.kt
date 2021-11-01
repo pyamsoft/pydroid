@@ -69,21 +69,24 @@ public abstract class SettingsFragment : Fragment() {
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
   internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val ratingViewModel by
-      activityViewModels<RatingViewModel> { ratingFactory.requireNotNull() }
+  private val ratingViewModel by activityViewModels<RatingViewModel> {
+    ratingFactory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since VersionCheckActivity
   // should
   // be bound for us.
   internal var versionFactory: ViewModelProvider.Factory? = null
-  private val versionViewModel by
-      activityViewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
+  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
+    versionFactory.requireNotNull()
+  }
 
   // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
   // be bound for us.
   internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val changeLogViewModel by
-      activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
+  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
+    changeLogFactory.requireNotNull()
+  }
 
   // ImageLoader
   internal var imageLoader: ImageLoader? = null

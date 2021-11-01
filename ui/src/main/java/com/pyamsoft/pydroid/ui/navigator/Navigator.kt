@@ -57,9 +57,7 @@ public interface Navigator<S : Any> {
       force: Boolean,
   ): Boolean
 
-  /**
-   * A screen object
-   */
+  /** A screen object */
   public interface Screen<S : Any> {
     /** The screen */
     public val screen: S

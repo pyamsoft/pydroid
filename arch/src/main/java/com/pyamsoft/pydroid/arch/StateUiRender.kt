@@ -1,5 +1,6 @@
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CheckResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 private class StateUiRender<S>(private val state: S) : UiRender<S> {
 
   override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
@@ -23,6 +25,8 @@ private class StateUiRender<S>(private val state: S) : UiRender<S> {
 }
 
 /** Convert data into a UiRender<S> */
+@CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun <S : UiViewState> S.asUiRender(): UiRender<S> {
   return StateUiRender(this)
 }

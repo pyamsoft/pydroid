@@ -23,12 +23,14 @@ import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.Window
-import android.view.WindowInsetsController
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.pyamsoft.pydroid.core.Logger
 
 /** A listener which responds to some kind of change on WindowInsets */
+@Deprecated("Migrate to Jetpack Compose")
 public fun interface InsetListener {
 
   /** Cancel the inset listener */
@@ -53,32 +55,32 @@ public fun Activity.stableLayoutHideNavigation() {
 
 @SuppressLint("NewApi")
 private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
-  this.setDecorFitsSystemWindows(false)
-  if (isLandscape) {
-    this.insetsController?.systemBarsBehavior =
-        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-  }
+  WindowCompat.setDecorFitsSystemWindows(this, false)
+
+  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
+  //  if (isLandscape) {
+  //    this.insetsController?.systemBarsBehavior =
+  //        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+  //  }
 }
 
 @Suppress("DEPRECATION")
 private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
-  this.decorView.systemUiVisibility =
-      this.decorView.systemUiVisibility or
-          View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-          View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  WindowCompat.setDecorFitsSystemWindows(this, false)
 
-  if (isLandscape) {
-    // In landscape mode, navbar is marked immersive sticky
-    this.decorView.systemUiVisibility =
-        this.decorView.systemUiVisibility or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-  }
+  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
+  //  if (isLandscape) {
+  //    // In landscape mode, navbar is marked immersive sticky
+  //    this.decorView.systemUiVisibility =
+  //        this.decorView.systemUiVisibility or
+  //            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+  //            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+  //  }
 }
 
 /** Run a block once when the WindowInsets are applied */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun View.doOnApplyWindowInsets(
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ): InsetListener {
@@ -103,6 +105,7 @@ public inline fun View.doOnApplyWindowInsets(
 }
 
 /** The representation of the originalk padding of the application before it was modified */
+@Deprecated("Migrate to Jetpack Compose")
 public data class InitialPadding
 internal constructor(
     /** Top padding */
@@ -120,6 +123,7 @@ internal constructor(
 
 @CheckResult
 @PublishedApi
+@Deprecated("Migrate to Jetpack Compose")
 internal fun recordInitialPaddingForView(view: View): InitialPadding {
   return InitialPadding(
       top = view.paddingTop,
@@ -129,6 +133,7 @@ internal fun recordInitialPaddingForView(view: View): InitialPadding {
 }
 
 @PublishedApi
+@Deprecated("Migrate to Jetpack Compose")
 internal fun View.requestApplyInsetsWhenAttached() {
   if (isAttachedToWindow) {
     // We're already attached, just request as normal

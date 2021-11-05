@@ -21,11 +21,11 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 internal class VersionCheckViewModel
 internal constructor(private val interactor: VersionInteractor) :
@@ -33,7 +33,7 @@ internal constructor(private val interactor: VersionInteractor) :
         initialState =
             VersionCheckViewState(
                 isLoading = false,
-                throwable = null,
+                versionCheckError = null,
                 navigationError = null,
             )) {
 
@@ -45,23 +45,21 @@ internal constructor(private val interactor: VersionInteractor) :
   init {
     viewModelScope.launch(context = Dispatchers.Default) {
       interactor.watchForDownloadComplete {
-        Timber.d("App update download ready!")
+        Logger.d("App update download ready!")
         publish(VersionCheckControllerEvent.UpgradeReady)
       }
     }
   }
 
   private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
-    setState { copy(throwable = throwable) }
+    setState { copy(versionCheckError = throwable) }
   }
 
   internal fun handleClearError() {
-    setState { copy(throwable = null) }
+    setState { copy(versionCheckError = null) }
   }
 
-  internal fun handleVersionCheckComplete() {
-    setState { copy(isLoading = false) }
-  }
+  internal fun handleVersionCheckComplete() {}
 
   internal fun handleHideNavigation() {
     setState { copy(navigationError = null) }
@@ -76,7 +74,7 @@ internal constructor(private val interactor: VersionInteractor) :
   }
 
   internal fun handleCheckForUpdates(force: Boolean) {
-    Timber.d("Begin check for updates")
+    Logger.d("Begin check for updates")
     viewModelScope.setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
@@ -85,8 +83,9 @@ internal constructor(private val interactor: VersionInteractor) :
               .onSuccess {
                 publish(VersionCheckControllerEvent.LaunchUpdate(it.isFallbackEnabled, it.launcher))
               }
-              .onFailure { Timber.e(it, "Error checking for latest version") }
+              .onFailure { Logger.e(it, "Error checking for latest version") }
               .onFailure { handleVersionCheckError(it) }
+              .onFinally { setState { copy(isLoading = false) } }
         })
   }
 

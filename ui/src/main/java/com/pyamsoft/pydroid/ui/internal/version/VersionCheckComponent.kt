@@ -17,13 +17,12 @@
 package com.pyamsoft.pydroid.ui.internal.version
 
 import android.content.Context
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -36,24 +35,19 @@ internal interface VersionCheckComponent {
 
   interface Factory {
 
-    @CheckResult
-    fun create(owner: LifecycleOwner, snackbarRootProvider: () -> ViewGroup): VersionCheckComponent
+    @CheckResult fun create(): VersionCheckComponent
 
     data class Parameters
     internal constructor(
         internal val context: Context,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean
+        internal val isFakeUpgradeAvailable: Boolean,
+        internal val composeTheme: ComposeThemeFactory,
     )
   }
 
-  class Impl
-  private constructor(
-      private val snackbarRootProvider: () -> ViewGroup,
-      private val owner: LifecycleOwner,
-      params: Factory.Parameters,
-  ) : VersionCheckComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
 
     private val checkFactory: ViewModelProvider.Factory
     private val upgradeFactory: ViewModelProvider.Factory
@@ -75,21 +69,18 @@ internal interface VersionCheckComponent {
 
     override fun inject(activity: VersionCheckActivity) {
       activity.versionFactory = checkFactory
-      activity.versionCheckView = VersionCheckView(owner, snackbarRootProvider)
     }
 
     override fun inject(dialog: VersionUpgradeDialog) {
+      dialog.composeTheme = params.composeTheme
       dialog.factory = upgradeFactory
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(
-          owner: LifecycleOwner,
-          snackbarRootProvider: () -> ViewGroup
-      ): VersionCheckComponent {
-        return Impl(snackbarRootProvider, owner, params)
+      override fun create(): VersionCheckComponent {
+        return Impl(params)
       }
     }
   }

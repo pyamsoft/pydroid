@@ -28,15 +28,15 @@ public fun Context.isDebugMode(): Boolean {
 }
 
 @CheckResult
-private fun nameResolver(context: Context): CharSequence {
+private fun nameResolver(context: Context): String {
   val appContext = context.applicationContext
   return appContext.applicationInfo.loadLabel(appContext.packageManager).toString()
 }
 
 @CheckResult
-private fun resolveApplicationName(): (Context) -> CharSequence {
-  return fun(context: Context): CharSequence {
-    var applicationName: CharSequence? = null
+private fun resolveApplicationName(): (Context) -> String {
+  return fun(context: Context): String {
+    var applicationName: String? = null
 
     if (applicationName == null) {
       applicationName = nameResolver(context)
@@ -49,7 +49,7 @@ private fun resolveApplicationName(): (Context) -> CharSequence {
 private val applicationNameResolver = resolveApplicationName()
 
 /** Load the name of the Application from the package manager */
-public val Context.applicationDisplayName: CharSequence
+public val Context.applicationDisplayName: String
   @get:CheckResult
   get() {
     return applicationNameResolver(this.applicationContext)

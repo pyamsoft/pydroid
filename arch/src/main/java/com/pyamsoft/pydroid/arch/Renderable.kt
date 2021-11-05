@@ -23,6 +23,7 @@ import androidx.annotation.UiThread
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public fun interface Renderable<S : UiViewState> {
 
   /** Render a state */

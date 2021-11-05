@@ -21,10 +21,10 @@ import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class OtherAppsInteractorNetwork
 internal constructor(context: Context, private val service: OtherAppsService) :
@@ -46,7 +46,7 @@ internal constructor(context: Context, private val service: OtherAppsService) :
                     entry.source())
               })
         } catch (throwable: Throwable) {
-          Timber.e(throwable, "Unable to fetch other apps payload")
+          Logger.e(throwable, "Unable to fetch other apps payload")
           ResultWrapper.failure(throwable)
         }
       }

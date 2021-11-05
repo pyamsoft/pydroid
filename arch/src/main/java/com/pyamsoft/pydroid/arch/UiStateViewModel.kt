@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
@@ -52,6 +54,13 @@ internal constructor(
       return delegate.state
     }
 
+  /** Get VM state as a Composable object */
+  @Composable
+  @CheckResult
+  public fun compose(): State<S> {
+    return delegate.compose()
+  }
+
   /**
    * Bind renderables to this ViewModel.
    *
@@ -59,6 +68,7 @@ internal constructor(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   protected fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
     return delegate.bindState(scope, *renderables)
   }
@@ -70,6 +80,7 @@ internal constructor(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   protected inline fun bindState(
       scope: CoroutineScope,
       crossinline onRender: (UiRender<S>) -> Unit
@@ -78,6 +89,7 @@ internal constructor(
   }
 
   // internal instead of protected so that only callers in the module can use this
+  @Deprecated("Migrate to Jetpack Compose")
   internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
     delegate.internalBindState(renderables)
   }

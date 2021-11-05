@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 
 /** The UiController drives the events. It orchestrates events between the UiView and UiViewModel */
-public interface UiController<C : UiControllerEvent> {
+public fun interface UiController<C : UiControllerEvent> {
 
   /** Respond to a published UiControllerEvent */
   public fun onControllerEvent(event: C)
@@ -34,11 +34,7 @@ public interface UiController<C : UiControllerEvent> {
 public inline fun <C : UiControllerEvent> newUiController(
     crossinline onEvent: (C) -> Unit
 ): UiController<C> {
-  return object : UiController<C> {
-    override fun onControllerEvent(event: C) {
-      return onEvent(event)
-    }
-  }
+  return UiController { event -> onEvent(event) }
 }
 
 private object UiControllers {

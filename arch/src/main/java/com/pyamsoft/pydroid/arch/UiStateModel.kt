@@ -19,6 +19,9 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import com.pyamsoft.pydroid.arch.debug.UiViewStateDebug
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -61,6 +64,13 @@ public open class UiStateModel<S : UiViewState>(
     get() {
       return modelState.get()
     }
+
+  /** Get VM state as a Composable object */
+  @Composable
+  @CheckResult
+  public fun compose(): State<S> {
+    return modelState.compose()
+  }
 
   /**
    * Modify the state from the previous
@@ -118,11 +128,13 @@ public open class UiStateModel<S : UiViewState>(
    */
   @UiThread
   @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
   public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
     return scope.launch(context = Dispatchers.Main) { internalBindState(renderables) }
   }
 
   // internal instead of protected so that only callers in the module can use this
+  @Deprecated("Migrate to Jetpack Compose")
   internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
     val state = modelState
 
@@ -130,7 +142,13 @@ public open class UiStateModel<S : UiViewState>(
   }
 
   private class MutableUiVMState<S : UiViewState>(private val flow: MutableStateFlow<S>) :
-      UiVMState<S>(flow), UiRender<S> {
+      UiVMState<S>(flow) {
+
+    @Composable
+    @CheckResult
+    fun compose(): State<S> {
+      return flow.collectAsState()
+    }
 
     @CheckResult
     fun get(): S {
@@ -146,12 +164,10 @@ public open class UiStateModel<S : UiViewState>(
    * This is a separate interface so that mapChanged will not expose the implementation
    * MutableUiVMState get() or set() functions
    */
-  private open class UiVMState<S>(
-      private val flow: Flow<S>,
-  ) : UiRender<S> {
+  private open class UiVMState<S>(private val flow: Flow<S>) : UiRender<S> {
 
     override fun <T> mapChanged(change: (state: S) -> T): UiRender<T> {
-      return UiVMState(flow.distinctUntilChangedBy(change).map { change(it) })
+      return UiVMState(flow.map { change(it) }.distinctUntilChanged())
     }
 
     final override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {

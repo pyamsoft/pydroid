@@ -21,9 +21,6 @@ android {
 }
 
 dependencies {
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
-
   // Moshi
   implementation "com.squareup.moshi:moshi:$moshi"
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"

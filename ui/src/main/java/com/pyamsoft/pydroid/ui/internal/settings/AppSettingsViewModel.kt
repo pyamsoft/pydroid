@@ -22,11 +22,12 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.toMode
+import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@Deprecated("Migrate to Jetpack Compose")
 internal class AppSettingsViewModel
 internal constructor(
     private val theming: Theming,
@@ -74,7 +75,7 @@ internal constructor(
   }
 
   internal fun handleChangeDarkMode(mode: String) {
-    val newMode = mode.toMode()
+    val newMode = mode.toThemingMode()
 
     viewModelScope.launch(context = Dispatchers.Main) {
       theming.setDarkTheme(newMode)

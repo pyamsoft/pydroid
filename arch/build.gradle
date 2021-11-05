@@ -18,14 +18,23 @@ android {
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'
   }
+
+  buildFeatures {
+    compose true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion "$compose_version"
+  }
 }
 
 dependencies {
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
-
   // View Binding
   implementation "androidx.databinding:viewbinding:$agp_version"
+
+  // Compose
+  implementation "androidx.compose.compiler:compiler:$compose_version"
+  implementation "androidx.compose.runtime:runtime:$compose_version"
 
   // ViewModel
   // We publish these one since consumers use it to access a coroutine scope and view model saved state

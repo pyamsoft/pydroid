@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 internal class GlideByteArrayBitmapLoader
 internal constructor(context: Context, private val data: ByteArray) :
     GlideBitmapTransformer(context) {

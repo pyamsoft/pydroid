@@ -17,18 +17,18 @@
 package com.pyamsoft.pydroid.autopsy
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.content.res.Resources.Theme
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
-import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.system.exitProcess
 
@@ -37,16 +37,11 @@ import kotlin.system.exitProcess
  *
  * Will also log the crash to logcat
  */
-internal class CrashActivity internal constructor() : Activity() {
-
-  private val logger = Logger.tag(this)
+internal class CrashActivity internal constructor() : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     actionBar?.hide()
-
-    val binding = ActivityCrashBinding.inflate(layoutInflater)
-    setContentView(binding.root)
 
     val backgroundColor = getColor(resources, R.color.crash_background_color, theme)
 
@@ -63,28 +58,15 @@ internal class CrashActivity internal constructor() : Activity() {
     val throwableName = intent.getStringExtra(KEY_THROWABLE).requireNotNull()
     val stackTrace = intent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
 
-    // Set the thread name
-    setText(binding.crashThreadName, "Uncaught exception in $threadName thread")
-
-    // Set the throwable name
-    setText(binding.crashException, throwableName)
-
-    // Set the message
-    stackTrace.message?.also { setText(binding.crashMessage, it) }
-
-    // Allow the stack trace to scroll
-    stackTrace.message?.also { setText(binding.crashMessage, it) }
-
-    // Allow the stack trace to scroll
-    setText(binding.crashTrace, stackTrace.stackTraceToString())
-    binding.crashTrace.apply {
-      isVerticalScrollBarEnabled = true
-      movementMethod = ScrollingMovementMethod()
+    setContent {
+      CrashScreen(
+          threadName = threadName,
+          throwableName = throwableName,
+          stackTrace = stackTrace,
+      )
     }
 
-    logger.e("===================")
-    logger.e(stackTrace, "APPLICATION CRASHED")
-    logger.e("===================")
+    Log.e(TAG, "APPLICATION CRASHED", stackTrace)
   }
 
   override fun onStop() {
@@ -98,6 +80,8 @@ internal class CrashActivity internal constructor() : Activity() {
   }
 
   companion object {
+
+    private const val TAG = "CrashActivity"
 
     @JvmStatic
     @SuppressLint("SetTextI18n")

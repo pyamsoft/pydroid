@@ -23,10 +23,10 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class PlayStoreAppUpdateLauncher
 internal constructor(
@@ -40,24 +40,24 @@ internal constructor(
         Enforcer.assertOnMainThread()
 
         return@withContext try {
-          Timber.d("Begin update flow $requestCode $info")
+          Logger.d("Begin update flow $requestCode $info")
           if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
-            Timber.d("Update flow has started")
+            Logger.d("Update flow has started")
             if (manager is FakeAppUpdateManager) {
-              Timber.d("User accepts fake update")
+              Logger.d("User accepts fake update")
               manager.userAcceptsUpdate()
 
-              Timber.d("Start a fake download")
+              Logger.d("Start a fake download")
               manager.downloadStarts()
 
-              Timber.d("Complete a fake download")
+              Logger.d("Complete a fake download")
               manager.downloadCompletes()
             }
           }
 
           ResultWrapper.success(Unit)
         } catch (e: Throwable) {
-          Timber.e(e, "Failed to launch In-App update flow")
+          Logger.e(e, "Failed to launch In-App update flow")
           ResultWrapper.failure(e)
         }
       }

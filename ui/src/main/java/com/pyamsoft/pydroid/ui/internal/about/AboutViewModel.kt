@@ -20,7 +20,6 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.CoroutineScope
 
 internal class AboutViewModel
@@ -32,11 +31,10 @@ internal constructor(
             AboutViewState(
                 isLoading = false,
                 licenses = emptyList(),
-                loadError = null,
-                navigationError = null)) {
+                navigationError = null,
+            )) {
 
-  private val licenseRunner =
-      highlander<ResultWrapper<List<OssLibrary>>, Boolean> { interactor.loadLicenses(it) }
+  private val licenseRunner = highlander<List<OssLibrary>, Boolean> { interactor.loadLicenses(it) }
 
   internal fun handleOpenLibrary(index: Int) {
     return openUrl(index) { it.libraryUrl }
@@ -60,9 +58,8 @@ internal constructor(
     setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
-          licenseRunner.call(false).onSuccess { handleLicensesLoaded(it) }.onFailure {
-            handleLicenseLoadError(it)
-          }
+          val licenses = licenseRunner.call(false)
+          handleLicensesLoaded(licenses)
           setState { copy(isLoading = false) }
         })
   }
@@ -71,23 +68,15 @@ internal constructor(
     setState { copy(licenses = licenses) }
   }
 
-  private fun CoroutineScope.handleLicenseLoadError(throwable: Throwable) {
-    setState { copy(loadError = throwable) }
-  }
-
   internal fun navigationFailed(throwable: Throwable) {
     setState { copy(navigationError = throwable) }
   }
 
   internal fun navigationSuccess() {
-    handleHideNavigation()
+    handleHideNavigationError()
   }
 
-  internal fun handleClearLoadError() {
-    setState { copy(loadError = null) }
-  }
-
-  internal fun handleHideNavigation() {
+  internal fun handleHideNavigationError() {
     setState { copy(navigationError = null) }
   }
 }

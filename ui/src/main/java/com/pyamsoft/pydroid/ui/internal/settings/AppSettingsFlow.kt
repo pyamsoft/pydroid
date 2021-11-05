@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
+@Deprecated("Migrate to Jetpack Compose")
 internal data class AppSettingsViewState
 internal constructor(
     val applicationName: CharSequence,
@@ -34,6 +35,7 @@ internal constructor(
   data class DarkTheme internal constructor(val dark: Boolean)
 }
 
+@Deprecated("Migrate to Jetpack Compose")
 internal sealed class AppSettingsViewEvent : UiViewEvent {
 
   object MoreApps : AppSettingsViewEvent()
@@ -56,6 +58,7 @@ internal sealed class AppSettingsViewEvent : UiViewEvent {
   data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
 }
 
+@Deprecated("Migrate to Jetpack Compose")
 internal sealed class AppSettingsControllerEvent : UiControllerEvent {
 
   object NavigateDeveloperPage : AppSettingsControllerEvent()

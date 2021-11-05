@@ -24,4 +24,7 @@ public interface ThemingPreferences {
 
   /** Is application in dark mode */
   @CheckResult public suspend fun getDarkMode(): Mode
+
+  /** Set application dark mode preference */
+  public suspend fun setDarkMode(mode: Mode)
 }

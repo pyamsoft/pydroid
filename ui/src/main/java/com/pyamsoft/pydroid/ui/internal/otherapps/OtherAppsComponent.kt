@@ -16,41 +16,39 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
 internal interface OtherAppsComponent {
 
-  fun inject(fragment: OtherAppsFragment)
+  fun inject(dialog: OtherAppsDialog)
 
   interface Factory {
 
-    @CheckResult fun create(parent: ViewGroup, owner: LifecycleOwner): OtherAppsComponent
+    @CheckResult fun create(): OtherAppsComponent
 
-    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+    data class Parameters
+    internal constructor(
+        internal val factory: ViewModelProvider.Factory,
+        internal val composeTheme: ComposeThemeFactory,
+        internal val imageLoader: ImageLoader,
+    )
   }
 
-  class Impl
-  private constructor(
-      private val parent: ViewGroup,
-      private val owner: LifecycleOwner,
-      private val params: Factory.Parameters
-  ) : OtherAppsComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : OtherAppsComponent {
 
-    override fun inject(fragment: OtherAppsFragment) {
-      val listView = OtherAppsList(owner, parent)
-      val errorView = OtherAppsErrors(owner, parent)
-      fragment.factory = params.factory
-      fragment.listView = listView
-      fragment.errorView = errorView
+    override fun inject(dialog: OtherAppsDialog) {
+      dialog.composeTheme = params.composeTheme
+      dialog.imageLoader = params.imageLoader
+      dialog.factory = params.factory
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-      override fun create(parent: ViewGroup, owner: LifecycleOwner): OtherAppsComponent {
-        return Impl(parent, owner, params)
+      override fun create(): OtherAppsComponent {
+        return Impl(params)
       }
     }
   }

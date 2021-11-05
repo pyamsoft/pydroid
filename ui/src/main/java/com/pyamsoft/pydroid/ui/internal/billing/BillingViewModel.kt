@@ -21,10 +21,10 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 internal class BillingViewModel
 internal constructor(
@@ -55,7 +55,7 @@ internal constructor(
 
     viewModelScope.launch(context = Dispatchers.Default) {
       interactor.watchSkuList { connected, list ->
-        Timber.d("SKU list updated: $connected $list")
+        Logger.d("SKU list updated: $connected $list")
         setState {
           copy(
               connected = connected,
@@ -67,7 +67,7 @@ internal constructor(
 
     viewModelScope.launch(context = Dispatchers.Default) {
       interactor.watchErrors { error ->
-        Timber.e(error, "Billing error received")
+        Logger.e(error, "Billing error received")
         setState { copy(error = error) }
       }
     }
@@ -86,7 +86,7 @@ internal constructor(
   ) {
     val skuList = state.skuList
     if (skuList.isEmpty() || skuList.size <= index) {
-      Timber.e("SKU index out of bounds: $index ${skuList.size}")
+      Logger.w("SKU index out of bounds: $index ${skuList.size}")
       setState { copy(error = IllegalStateException("Unable to purchase in-app item")) }
       return
     }

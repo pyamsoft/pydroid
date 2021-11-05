@@ -24,17 +24,18 @@ import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.viewbinding.ViewBinding
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import timber.log.Timber
 
 /**
  * A basic Android View based implementation of a UiView
  *
  * NOTE: Will be removed in the future in favor of Jetpack Compose
  */
+@Deprecated("Migrate to Jetpack Compose")
 public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding>
 protected constructor(parent: ViewGroup) : UiView<S, V>() {
 
@@ -96,7 +97,7 @@ protected constructor(parent: ViewGroup) : UiView<S, V>() {
   }
 
   final override fun onFinalTeardown() {
-    Timber.d("Teardown complete, unbind")
+    Logger.d("Teardown complete, unbind")
     _binding = null
   }
 

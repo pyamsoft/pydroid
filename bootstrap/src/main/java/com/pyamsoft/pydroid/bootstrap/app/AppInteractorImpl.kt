@@ -27,7 +27,7 @@ protected constructor(
     private val context: Context,
 ) : AppInteractor {
 
-  final override suspend fun getDisplayName(): CharSequence =
+  final override suspend fun getDisplayName(): String =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
         return@withContext context.applicationDisplayName

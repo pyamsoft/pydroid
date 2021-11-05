@@ -26,7 +26,8 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
-import com.pyamsoft.pydroid.ui.theme.toMode
+import com.pyamsoft.pydroid.ui.theme.toRawString
+import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -36,30 +37,15 @@ internal constructor(
     private val versionCode: Int,
 ) : ThemingPreferences, ChangeLogPreferences {
 
-  private var oldPreferencesCleared: Boolean = false
   private val darkModeKey = context.getString(R.string.dark_mode_key)
   private val prefs by lazy {
     Enforcer.assertOffMainThread()
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
-  private fun clearOldPreferences() {
-    if (oldPreferencesCleared) {
-      return
-    }
-
-    oldPreferencesCleared = true
-    prefs.edit {
-      remove(LAST_SHOWN_RATING_DATE)
-      remove(LAST_SHOWN_RATING_VERSION)
-    }
-  }
-
   override suspend fun showChangelog(): Boolean =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
-
-        clearOldPreferences()
 
         // If the changelog has not yet been seen
         val lastShown = prefs.getInt(LAST_SHOWN_CHANGELOG, -1)
@@ -73,8 +59,6 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        clearOldPreferences()
-
         // Mark the changelog as shown for this version
         return@withContext prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
       }
@@ -83,18 +67,27 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        clearOldPreferences()
+        // Initialize this key here so the preference screen can be populated
+        if (!prefs.contains(darkModeKey)) {
+          prefs.edit(commit = true) { putString(darkModeKey, DEFAULT_DARK_MODE) }
+        }
 
         return@withContext prefs
-            .getString(darkModeKey, SYSTEM.toRawString())
+            .getString(darkModeKey, DEFAULT_DARK_MODE)
             .requireNotNull()
-            .toMode()
+            .toThemingMode()
+      }
+
+  override suspend fun setDarkMode(mode: Mode) =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext prefs.edit(commit = true) { putString(darkModeKey, mode.toRawString()) }
       }
 
   companion object {
 
-    private const val LAST_SHOWN_RATING_DATE = "rate_app_last_shown_date"
-    private const val LAST_SHOWN_RATING_VERSION = "rate_app_last_shown_version"
+    private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
     private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"
   }
 }

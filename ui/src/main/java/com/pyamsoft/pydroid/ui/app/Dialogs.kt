@@ -66,6 +66,9 @@ public fun DialogFragment.makeFullHeight(useMatchParent: Boolean = false) {
   setSizes(fullHeight = true, fullWidth = false, useMatchParent = useMatchParent)
 }
 
+private const val MATCH = WindowManager.LayoutParams.MATCH_PARENT
+private const val WRAP = WindowManager.LayoutParams.WRAP_CONTENT
+
 private fun DialogFragment.setSizes(
     fullWidth: Boolean,
     fullHeight: Boolean,
@@ -75,9 +78,6 @@ private fun DialogFragment.setSizes(
   val owner = self.viewLifecycleOwner
   owner.lifecycle.addObserver(
       object : LifecycleObserver {
-
-        private val MATCH = WindowManager.LayoutParams.MATCH_PARENT
-        private val WRAP = WindowManager.LayoutParams.WRAP_CONTENT
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         fun onResume() {

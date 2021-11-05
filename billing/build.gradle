@@ -22,10 +22,9 @@ android {
 
 dependencies {
   api project(':bus')
-
-  // Timber logging
-  implementation "com.jakewharton.timber:timber:$timber"
+  api project(':util')
 
   implementation "androidx.annotation:annotation:$annotation"
+  implementation "androidx.appcompat:appcompat:$appCompat"
   implementation "com.android.billingclient:billing:$playBilling"
 }

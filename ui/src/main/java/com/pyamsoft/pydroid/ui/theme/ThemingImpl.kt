@@ -18,19 +18,22 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import android.content.res.Configuration
+import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /** Handles getting current dark mode state and setting dark mode state */
-internal class ThemingImpl internal constructor(private val preferences: ThemingPreferences) :
-    Theming {
+internal class ThemingImpl
+internal constructor(
+    private val preferences: ThemingPreferences,
+) : Theming {
 
   override suspend fun init() =
       withContext(context = Dispatchers.IO) {
-        // Now even though this will take work, it will defer until all other handler work is done
-        val mode = preferences.getDarkMode()
-        withContext(context = Dispatchers.Main) { setDarkTheme(mode) }
+        // Make sure we set the AppCompatDelegate from the saved preference mode
+        val mode = getMode()
+        applyDarkTheme(mode)
       }
 
   /** Is activity dark mode */
@@ -39,8 +42,30 @@ internal class ThemingImpl internal constructor(private val preferences: Theming
     return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
   }
 
-  /** Set application wide dark mode */
-  override fun setDarkTheme(mode: Theming.Mode) {
-    AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
+  /** Which mode are we in right now? */
+  override suspend fun getMode(): Theming.Mode {
+    return preferences.getDarkMode()
   }
+
+  /** Set application wide dark mode */
+  override suspend fun setDarkTheme(mode: Theming.Mode) =
+      withContext(context = Dispatchers.IO) {
+        preferences.setDarkMode(mode)
+        applyDarkTheme(mode)
+      }
+
+  private suspend fun applyDarkTheme(mode: Theming.Mode) =
+      withContext(context = Dispatchers.Main) {
+        // Needs to run on main thread
+        val appCompatMode = mode.toAppCompatMode()
+        AppCompatDelegate.setDefaultNightMode(appCompatMode)
+      }
+
+  @CheckResult
+  private fun Theming.Mode.toAppCompatMode(): Int =
+      when (this) {
+        Theming.Mode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        Theming.Mode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+        Theming.Mode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+      }
 }

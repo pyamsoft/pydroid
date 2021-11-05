@@ -23,6 +23,7 @@ import androidx.annotation.CheckResult
  * The base loader class. Specific implementations are backed by an image loader backend, like
  * Glide, Picasso, or Coil
  */
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
   private var startAction: (() -> Unit)? = null

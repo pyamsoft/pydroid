@@ -21,6 +21,7 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,24 +32,29 @@ internal constructor(
 ) :
     UiViewModel<OtherAppsViewState, OtherAppsControllerEvent>(
         initialState =
-            OtherAppsViewState(apps = emptyList(), appsError = null, navigationError = null)) {
+            OtherAppsViewState(
+                apps = emptyList(),
+                appsError = null,
+                navigationError = null,
+                isLoading = false,
+            )) {
 
   private val appsRunner =
-      highlander<Unit, Boolean> { force ->
-        interactor.getApps(force).onSuccess { handleAppsLoaded(it) }.onFailure {
-          handleHideError(it)
-        }
-      }
+      highlander<ResultWrapper<List<OtherApp>>, Boolean> { force -> interactor.getApps(force) }
 
   init {
     // This may be cached in many cases
-    viewModelScope.launch(context = Dispatchers.Default) { appsRunner.call(false) }
-  }
-
-  internal fun handleHideError() {
-    viewModelScope.setState(
-        stateChange = { copy(appsError = null) },
-        andThen = { publish(OtherAppsControllerEvent.LaunchFallback) })
+    viewModelScope.launch(context = Dispatchers.Default) {
+      setState(
+          stateChange = { copy(isLoading = true) },
+          andThen = {
+            appsRunner
+                .call(false)
+                .onSuccess { handleAppsLoaded(it) }
+                .onFailure { handleHideError(it) }
+                .onFinally { setState { copy(isLoading = false) } }
+          })
+    }
   }
 
   internal fun handleOpenStoreUrl(index: Int) {

@@ -24,6 +24,7 @@ import androidx.annotation.CheckResult
  * format. You do not need to consume the library via the module, but it is a quick easy way to get
  * started.
  */
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public class LoaderModule(params: Parameters) {
 
   private val impl = ImageLoaderImpl(params.context.applicationContext)

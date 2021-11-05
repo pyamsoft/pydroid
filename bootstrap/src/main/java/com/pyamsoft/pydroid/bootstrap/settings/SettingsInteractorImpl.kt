@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.bootstrap.settings
 import android.app.ActivityManager
 import android.content.Context
 import androidx.core.content.getSystemService
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import timber.log.Timber
 
 internal class SettingsInteractorImpl internal constructor(context: Context) : SettingsInteractor {
 
@@ -29,7 +29,7 @@ internal class SettingsInteractorImpl internal constructor(context: Context) : S
   }
 
   override suspend fun wipeData() {
-    Timber.d("Resetting all application user data")
+    Logger.d("Resetting all application user data")
     activityManager.clearApplicationUserData()
   }
 }

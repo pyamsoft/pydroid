@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 
 /** Layout a set of constraints */
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
   val set = ConstraintSet()
   set.clone(this)

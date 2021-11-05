@@ -33,6 +33,8 @@ public interface ModuleProvider {
     @CheckResult public fun theming(): Theming
 
     /** Provide an image loader interface */
-    @CheckResult public fun imageLoader(): ImageLoader
+    @Deprecated("Use Coil-Compose in Jetpack Compose UI")
+    @CheckResult
+    public fun imageLoader(): ImageLoader
   }
 }

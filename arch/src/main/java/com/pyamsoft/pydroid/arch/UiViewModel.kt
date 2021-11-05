@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.UiThread
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
@@ -44,6 +46,7 @@ protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
    * This is automatically scoped to the life of the [scope]
    */
   @UiThread
+  @Deprecated("Migrate to Jetpack Compose")
   public fun <V : UiViewEvent> bindViews(
       scope: CoroutineScope,
       savedInstanceState: UiSavedStateReader,
@@ -64,6 +67,16 @@ protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
       // Bind state
       internalBindState(views)
     }
+  }
+
+  /**
+   * Bind this UiViewModel to be driven by a UiController
+   *
+   * This is automatically scoped to the life of the [owner]
+   */
+  @UiThread
+  public fun bindController(owner: LifecycleOwner, controller: UiController<C>) {
+    bindController(owner.lifecycleScope, controller)
   }
 
   /**

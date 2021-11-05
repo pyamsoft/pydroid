@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
-import com.pyamsoft.pydroid.ui.internal.timber.LinkDebugTree
+import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.ui.internal.app.NoopThemeProvider
 import com.pyamsoft.pydroid.util.isDebugMode
-import timber.log.Timber
 
 internal data class PYDroidInitializer
 internal constructor(
@@ -32,32 +32,35 @@ internal constructor(
 
     @JvmStatic
     internal fun create(application: Application, params: PYDroid.Parameters): PYDroidInitializer {
-      val enabled = params.debug?.enabled ?: application.isDebugMode()
+      val isDebug = params.debug?.enabled ?: application.isDebugMode()
 
-      if (enabled) {
+      if (isDebug) {
         setStrictMode()
-        Timber.plant(LinkDebugTree())
       }
-
-      Timber.d("Initializing PYDroid")
 
       val impl =
           PYDroidComponent.ComponentImpl.FactoryImpl()
               .create(
                   PYDroidComponent.Component.Parameters(
                       application = application,
-                      sourceUrl = params.viewSourceUrl,
-                      reportUrl = params.bugReportUrl,
+                      viewSourceUrl = params.viewSourceUrl,
+                      bugReportUrl = params.bugReportUrl,
                       privacyPolicyUrl = params.privacyPolicyUrl,
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
+                      theme = params.theme ?: NoopThemeProvider,
+                      logger = params.logger,
+                      imageLoader = params.imageLoader,
+                      googlePlayLicenseVerificationKey = params.googlePlayLicenseVerificationKey,
                       debug =
                           PYDroidComponent.Component.DebugParameters(
-                              enabled = enabled,
+                              enabled = isDebug,
                               upgradeAvailable = params.debug?.upgradeAvailable ?: false,
                           ),
                   ),
               )
+
+      Logger.d("Initializing PYDroid")
 
       return PYDroidInitializer(impl, impl.moduleProvider())
     }

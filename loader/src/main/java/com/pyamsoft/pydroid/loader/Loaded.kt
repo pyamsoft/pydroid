@@ -21,6 +21,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** A representation of an image target which is currently loaded */
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public interface Loaded {
 
   /** Dispose of any data loaded into an image target */
@@ -28,11 +29,13 @@ public interface Loaded {
 }
 
 /** Dispose the Loaded resource once the lifecycle hits destroy */
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public fun Loaded.disposeOnDestroy(owner: LifecycleOwner) {
   this.disposeOnDestroy(owner.lifecycle)
 }
 
 /** Dispose the Loaded resource once the lifecycle hits destroy */
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 public fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
   lifecycle.doOnDestroy { this.dispose() }
 }

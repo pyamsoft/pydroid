@@ -31,6 +31,7 @@ private fun getInputMethodManager(context: Context): InputMethodManager {
 
 /** Show the soft keyboard once the view already has focus */
 @JvmOverloads
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.showKeyboard(
     inputMethodManager: InputMethodManager = getInputMethodManager(this.context)
 ) {
@@ -44,6 +45,7 @@ public fun View.showKeyboard(
 
 /** Focus the keyboard and then show the keyboard once it is focused. */
 @JvmOverloads
+@Deprecated("Migrate to Jetpack Compose")
 public fun View.focusAndShowKeyboard(
     inputMethodManager: InputMethodManager = getInputMethodManager(this.context)
 ) {

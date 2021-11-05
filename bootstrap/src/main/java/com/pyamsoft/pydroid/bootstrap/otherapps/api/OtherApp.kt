@@ -18,7 +18,8 @@ package com.pyamsoft.pydroid.bootstrap.otherapps.api
 
 /** A representation of an other pyamsoft application */
 public data class OtherApp
-internal constructor(
+// No longer internal to allow preview to work
+/*internal*/ constructor(
     /** Package name */
     val packageName: String,
 

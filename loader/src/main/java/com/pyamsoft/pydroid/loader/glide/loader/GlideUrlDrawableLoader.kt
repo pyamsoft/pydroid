@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 internal class GlideUrlDrawableLoader
 internal constructor(context: Context, private val url: String) :
     GlideDrawableTransformer(context) {

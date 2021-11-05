@@ -20,11 +20,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -36,8 +32,6 @@ import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
 /** An activity which displays an in-app changelog */
 public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
-
-  private var stateSaver: StateSaver? = null
 
   internal var changeLogFactory: ViewModelProvider.Factory? = null
   private val viewModel by viewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
@@ -52,26 +46,16 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
 
     Injector.obtainFromApplication<PYDroidComponent>(this).plusChangeLog().create().inject(this)
 
-    stateSaver =
-        createComponent<UnitViewState, UnitViewEvent, ChangeLogControllerEvent>(
-            savedInstanceState,
-            this,
-            viewModel,
-            controller =
-                newUiController {
-                  return@newUiController when (it) {
-                    is ChangeLogControllerEvent.ShowChangeLog -> ChangeLogDialog.open(this)
-                  }
-                }) {
-          // Empty
-        }
+    viewModel.bindController(this) { event ->
+      return@bindController when (event) {
+        is ChangeLogControllerEvent.ShowChangeLog -> showChangeLog()
+      }
+    }
   }
 
-  /** On save instance state */
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    stateSaver?.saveState(outState)
+  private fun showChangeLog() {
+    Logger.d("Show Change log")
+    ChangeLogDialog.open(this)
   }
 
   /** On destroy */
@@ -79,7 +63,6 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
   override fun onDestroy() {
     super.onDestroy()
     changeLogFactory = null
-    stateSaver = null
   }
 
   /** On post resume, we can show Dialogs */
@@ -88,6 +71,6 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // Called in onPostResume so that the DialogFragment can be shown correctly.
-    viewModel.show(false)
+    viewModel.handleShow(false)
   }
 }

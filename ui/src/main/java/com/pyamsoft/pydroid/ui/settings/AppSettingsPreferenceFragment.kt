@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -42,17 +43,15 @@ import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
-import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.MarketLinker
-import timber.log.Timber
 
 /** Preference fragment level for displaying a preference screen */
+@Deprecated("Migrate to Jetpack Compose via com.pyamsoft.pydroid.ui.settings.SettingsFragment")
 public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   /** XML resource id */
@@ -69,8 +68,6 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   private var versionStateSaver: StateSaver? = null
 
   internal var settingsView: AppSettingsView? = null
-
-  internal var versionCheckView: VersionCheckView? = null
 
   internal var factory: ViewModelProvider.Factory? = null
   private val settingsViewModel by activityViewModels<AppSettingsViewModel> {
@@ -113,10 +110,8 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
     super.onViewCreated(view, savedInstanceState)
 
     Injector.obtainFromApplication<PYDroidComponent>(view.context)
-        .plusSettings()
-        .create(viewLifecycleOwner, preferenceScreen, hideClearAll, hideUpgradeInformation) {
-          listView
-        }
+        .plusAppSettings()
+        .create(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
     settingsStateSaver =
@@ -140,9 +135,9 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
             is AppSettingsViewEvent.ClearData -> openClearDataDialog()
             is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
             is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
-            is AppSettingsViewEvent.RateApp -> ratingViewModel.loadMarketPage()
+            is AppSettingsViewEvent.RateApp -> ratingViewModel.handleViewMarketPage()
             is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
-            is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
+            is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.handleShow(true)
             is AppSettingsViewEvent.ToggleDarkTheme ->
                 settingsViewModel.handleChangeDarkMode(it.mode)
             is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
@@ -153,14 +148,14 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   }
 
   private fun openDonationDialog() {
-    Timber.d("Launch donation dialog")
+    Logger.d("Launch donation dialog")
     BillingDialog.open(requireActivity())
   }
 
   private fun openOtherAppsPage(apps: List<OtherApp>) {
     onViewMorePyamsoftAppsClicked(false)
-    Timber.d("Show other apps fragment: $apps")
-    OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
+    Logger.d("Show other apps fragment: $apps")
+    OtherAppsDialog.show(requireActivity())
   }
 
   /** On destroy */
@@ -203,7 +198,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
    * end result of clearing user application data will be enforced by the library.
    */
   protected open fun onClearAllPrompt() {
-    SettingsClearConfigDialog.newInstance().show(requireActivity(), SettingsClearConfigDialog.TAG)
+    ResetDialog.open(requireActivity())
   }
 
   private fun openLicensesPage() {
@@ -226,14 +221,14 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
   /** Toggles dark theme, override or extend to use unique implementation */
   @CallSuper
   protected open fun onDarkThemeClicked(mode: Theming.Mode) {
-    Timber.d("Dark theme set: $mode")
+    Logger.d("Dark theme set: $mode")
   }
 
   /** Shows a page for Open Source licenses, override or extend to use unique implementation */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    Timber.d("Show about licenses fragment")
-    AboutDialog().show(requireActivity(), AboutDialog.TAG)
+    Logger.d("Show about licenses fragment")
+    AboutDialog.show(requireActivity())
   }
 
   /** Shows a page for Source licenses, override or extend to use unique implementation */

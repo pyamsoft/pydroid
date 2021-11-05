@@ -16,5 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.compose.runtime.Stable
+
 /** A stateless UiViewState */
-public object UnitViewState : UiViewState
+@Stable public object UnitViewState : UiViewState

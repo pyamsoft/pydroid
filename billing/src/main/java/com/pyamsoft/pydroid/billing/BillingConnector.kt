@@ -1,11 +1,14 @@
 package com.pyamsoft.pydroid.billing
 
+import androidx.appcompat.app.AppCompatActivity
+
 /** Abstracts the Play Store Billing client */
 public interface BillingConnector {
 
-  /** Connect the billing client */
-  public fun connect()
-
-  /** Disconnect the billing client */
-  public fun disconnect()
+  /**
+   * Start the billing client
+   *
+   * Will automatically manage connections
+   */
+  public fun start(activity: AppCompatActivity)
 }

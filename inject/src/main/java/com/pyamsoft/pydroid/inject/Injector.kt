@@ -22,7 +22,7 @@ import android.app.Application
 import android.app.Service
 import android.content.Context
 import androidx.annotation.CheckResult
-import timber.log.Timber
+import com.pyamsoft.pydroid.core.Logger
 
 /** Injects PYDroid and its managed services into a context */
 public object Injector {
@@ -117,8 +117,9 @@ public object Injector {
 
   @JvmStatic
   private fun serviceNotFound(context: Context, name: String): Nothing {
-    Timber.e("Unable to find service $name in context: $context")
-    throw IllegalArgumentException("Unable to find service: $name")
+    val error = IllegalArgumentException("Unable to find service: $name in context: $context")
+    Logger.e(error, "Service not found")
+    throw error
   }
 
   @JvmStatic

@@ -75,6 +75,7 @@ private fun Toolbar.showUpIcon(customIcon: Drawable? = null) {
 
 /** Show the toolbar up arrow */
 @JvmOverloads
+@Deprecated("Migrate to Jetpack Compose")
 public fun Toolbar.setUpEnabled(up: Boolean, customIcon: Drawable? = null) {
   if (up) {
     showUpIcon(customIcon)

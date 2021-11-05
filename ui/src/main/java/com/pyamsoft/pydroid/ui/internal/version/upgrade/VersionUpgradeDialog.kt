@@ -16,22 +16,34 @@
 
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
-import android.app.Dialog
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.makeFullWidth
+import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
-import timber.log.Timber
 
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
+
+  /** May be provided by PYDroid, otherwise this is just a noop */
+  internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<VersionUpgradeViewModel> { factory.requireNotNull() }
@@ -41,30 +53,49 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     isCancelable = false
   }
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    Injector.obtainFromActivity<VersionCheckComponent>(requireActivity()).inject(this)
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View {
+    val act = requireActivity()
+    Injector.obtainFromActivity<VersionCheckComponent>(act).inject(this)
 
-    return AlertDialog.Builder(requireActivity())
-        .setTitle("Upgrade Available")
-        .setMessage(
-            """
-                    A new version has been downloaded!
+    return ComposeView(act).apply {
+      id = R.id.dialog_upgrade
 
-                    Click to restart the app and upgrade to the latest version!
-                """.trimIndent())
-        .setNegativeButton("Later") { _, _ -> dismiss() }
-        .setPositiveButton("Restart") { _, _ ->
-          viewModel.completeUpgrade {
-            Timber.d("Upgrade completed, dismiss")
-            dismiss()
-          }
+      setContent {
+        val state by viewModel.compose()
+
+        composeTheme(act) {
+          VersionUpgradeScreen(
+              modifier = Modifier.fillMaxWidth(),
+              state = state,
+              onUpgrade = { viewModel.completeUpgrade() },
+              onClose = { dismiss() },
+          )
         }
-        .setCancelable(false)
-        .create()
+      }
+    }
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    makeFullWidth()
+
+    viewModel.bindController(viewLifecycleOwner) { event ->
+      return@bindController when (event) {
+        is VersionUpgradeControllerEvent.UpgradeComplete -> {
+          Logger.d("Upgrade complete, dismiss")
+          dismiss()
+        }
+      }
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
     factory = null
   }
 

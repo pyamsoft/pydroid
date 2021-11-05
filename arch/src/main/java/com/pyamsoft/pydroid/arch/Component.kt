@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 
 /** Component internals */
 @PublishedApi
+@Deprecated("Migrate to Jetpack Compose")
 internal object Internals {
 
   /** A bundle reader with no data */
@@ -90,6 +91,7 @@ internal object Internals {
 
 /** Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
@@ -109,6 +111,7 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
 
 /** Bind a ViewHolder to the pydroid-arch style using one or more UiViews */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     vararg views: UiView<S, out V>,
     crossinline onViewEvent: (event: V) -> Unit

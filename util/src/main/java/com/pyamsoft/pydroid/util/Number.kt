@@ -71,25 +71,33 @@ private fun dpAsPxRawContext(c: Context, @Dimension(unit = Dimension.DP) dp: Int
  *
  * Prefer this method over the one that only takes a context [Number.asDp]
  */
-@CheckResult public fun Number.asDp(activity: Activity): Int = pxAsDp(activity, this.toInt())
+@Deprecated("Migrate to Jetpack Compose")
+@CheckResult
+public fun Number.asDp(activity: Activity): Int = pxAsDp(activity, this.toInt())
 
 /**
  * Convert a number in Pixels to DP
  *
  * Prefer the method that takes an activity over this one [Number.asDp]
  */
-@CheckResult public fun Number.asDp(c: Context): Int = pxAsDpRawContext(c, this.toInt())
+@Deprecated("Migrate to Jetpack Compose")
+@CheckResult
+public fun Number.asDp(c: Context): Int = pxAsDpRawContext(c, this.toInt())
 
 /**
  * Convert a number in DP to Pixels
  *
  * Prefer this method over the one that only takes a context [Number.asPx]
  */
-@CheckResult public fun Number.asPx(activity: Activity): Int = dpAsPx(activity, this.toInt())
+@Deprecated("Migrate to Jetpack Compose")
+@CheckResult
+public fun Number.asPx(activity: Activity): Int = dpAsPx(activity, this.toInt())
 
 /**
  * Convert a number in DP to Pixels
  *
  * Prefer the method that takes an activity over this one [Number.asPx]
  */
-@CheckResult public fun Number.asPx(c: Context): Int = dpAsPxRawContext(c, this.toInt())
+@Deprecated("Migrate to Jetpack Compose")
+@CheckResult
+public fun Number.asPx(c: Context): Int = dpAsPxRawContext(c, this.toInt())

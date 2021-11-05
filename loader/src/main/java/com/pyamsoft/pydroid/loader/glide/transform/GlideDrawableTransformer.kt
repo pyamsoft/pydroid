@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.pyamsoft.pydroid.loader.glide.loader.GlideRequestTransformer
 
+@Deprecated("Use Coil-Compose in Jetpack Compose UI")
 internal abstract class GlideDrawableTransformer
 protected constructor(
     context: Context,

@@ -267,6 +267,7 @@ internal fun ListPreferenceItem(
                               },
                           )
                           .padding(16.dp),
+                  verticalAlignment = Alignment.CenterVertically,
               ) {
                 RadioButton(
                     modifier = Modifier.padding(end = 16.dp),
@@ -279,7 +280,7 @@ internal fun ListPreferenceItem(
                 )
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.body1,
                 )
               }
             }

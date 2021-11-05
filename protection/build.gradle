@@ -16,8 +16,12 @@
 
 dependencies {
     implementation "androidx.core:core:$core"
+    implementation "androidx.appcompat:appcompat:$appCompat"
+
+    implementation "com.github.javiersantos:PiracyChecker:1.2.8"
 
     api project(':core')
+    api project(':util')
 }
 
 android {

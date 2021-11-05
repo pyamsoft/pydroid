@@ -16,13 +16,27 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import androidx.annotation.AttrRes
 import androidx.annotation.CheckResult
 
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
-@Deprecated("Migrate to Jetpack Compose")
-public fun Activity.valueFromCurrentTheme(attr: Int): Int {
-  val attributes = this.obtainStyledAttributes(intArrayOf(attr))
-  return attributes.getResourceId(0, 0).also { attributes.recycle() }
+@SuppressLint("ResourceType")
+public fun Activity.valueFromCurrentTheme(@AttrRes attr: Int): Int {
+  return this.valuesFromCurrentTheme(attr)[0]
+}
+
+/** Pulls an attribute from the current Activity theme */
+@CheckResult
+@SuppressLint("ResourceType")
+public fun Activity.valuesFromCurrentTheme(@AttrRes vararg attrs: Int): IntArray {
+  val attributes = this.obtainStyledAttributes(attrs)
+  val styled = IntArray(attrs.size)
+  for (index in attrs.indices) {
+    styled[index] = attributes.getResourceId(index, 0)
+  }
+  attributes.recycle()
+  return styled
 }

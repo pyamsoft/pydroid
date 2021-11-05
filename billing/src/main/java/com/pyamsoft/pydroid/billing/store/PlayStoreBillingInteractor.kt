@@ -3,6 +3,7 @@ package com.pyamsoft.pydroid.billing.store
 import android.app.Activity
 import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatActivity
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -21,6 +22,8 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.doOnCreate
+import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -72,14 +75,26 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
         )
   }
 
-  override fun connect() {
+  override fun start(activity: AppCompatActivity) {
+    activity.lifecycle.doOnCreate {
+      Logger.d("Attempt to connect Billing on Activity create")
+      connect()
+    }
+
+    activity.lifecycle.doOnDestroy {
+      Logger.d("Attempt disconnect Billing on Activity destroy")
+      disconnect()
+    }
+  }
+
+  private fun connect() {
     if (!client.isReady) {
       Logger.d("Connect to Billing Client")
       client.startConnection(this)
     }
   }
 
-  override fun disconnect() {
+  private fun disconnect() {
     Logger.d("Disconnect from billing client")
     client.endConnection()
 

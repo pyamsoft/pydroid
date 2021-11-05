@@ -22,7 +22,9 @@ android {
 
 dependencies {
   api project(':bus')
+  api project(':util')
 
   implementation "androidx.annotation:annotation:$annotation"
+  implementation "androidx.appcompat:appcompat:$appCompat"
   implementation "com.android.billingclient:billing:$playBilling"
 }

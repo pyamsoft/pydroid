@@ -69,5 +69,6 @@ dependencies {
   api project(':bootstrap')
   api project(':inject')
   api project(':loader')
+  implementation project(':protection')
   api project(':util')
 }

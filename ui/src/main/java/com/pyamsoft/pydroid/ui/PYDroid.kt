@@ -90,6 +90,7 @@ public object PYDroid {
   public data class Parameters
   @JvmOverloads
   public constructor(
+      override val googlePlayLicenseVerificationKey: String,
       override val imageLoader: () -> coil.ImageLoader,
       override val viewSourceUrl: String,
       override val bugReportUrl: String,
@@ -110,6 +111,7 @@ public object PYDroid {
 
   /** Base parameters for PYDroid */
   internal interface BaseParameters {
+    val googlePlayLicenseVerificationKey: String
     val imageLoader: () -> coil.ImageLoader
     val viewSourceUrl: String
     val bugReportUrl: String

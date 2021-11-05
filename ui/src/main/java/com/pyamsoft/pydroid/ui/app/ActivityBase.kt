@@ -49,6 +49,16 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
   /** Activity protection */
   internal var protection: Protection? = null
 
+  /**
+   * Disable the billing component
+   */
+  protected open val disableBilling: Boolean = false
+
+  /**
+   * Disable the protection component
+   */
+  protected open val disableProtection: Boolean = false
+
   init {
     protectApplication()
     connectBilling()
@@ -66,6 +76,11 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
 
   /** Attempts to connect to in-app billing */
   private fun connectBilling() {
+    if (disableBilling) {
+      Logger.w("Application has disabled the billing component")
+      return
+    }
+
     Logger.d("Prepare application billing connection on create callback")
     this.doOnCreate {
       Logger.d("Attempt Connect Billing")
@@ -84,8 +99,12 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
 
   /** Attempts to load and secure the application */
   private fun protectApplication() {
-    Logger.d("Prepare application protection on create callback")
+    if (disableProtection) {
+      Logger.w("Application has disabled the protection component")
+      return
+    }
 
+    Logger.d("Prepare application protection on create callback")
     this.doOnCreate {
       Logger.d("Attempt protection")
       val protector = protection

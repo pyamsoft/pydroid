@@ -15,17 +15,17 @@
  */
 
 dependencies {
-    implementation "androidx.core:core:$core"
-    implementation "androidx.appcompat:appcompat:$appCompat"
+  implementation "androidx.core:core:$core"
+  implementation "androidx.appcompat:appcompat:$appCompat"
 
-    implementation "com.github.javiersantos:PiracyChecker:1.2.8"
+  implementation "com.github.javiersantos:PiracyChecker:1.2.8"
 
-    api project(':core')
-    api project(':util')
+  api project(':core')
+  api project(':util')
 }
 
 android {
-    kotlinOptions {
-        freeCompilerArgs += '-Xexplicit-api=strict'
-    }
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }

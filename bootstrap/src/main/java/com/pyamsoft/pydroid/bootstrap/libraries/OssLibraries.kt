@@ -32,7 +32,7 @@ public object OssLibraries {
   public var usingAutopsy: Boolean = false
 
   /** Using pydroid-loader library */
-  public var usingLoader: Boolean = false
+  @Deprecated("Migrate to Jetpack Compose") public var usingLoader: Boolean = false
 
   /** Using pydroid-notify library */
   public var usingNotify: Boolean = false
@@ -63,11 +63,6 @@ public object OssLibraries {
         "Android SDK",
         "https://source.android.com",
         "The Android SDK, which powers everything about the devices we all love.",
-    )
-    add(
-        "AndroidX Lifecycle",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
     )
     add(
         "Kotlin",
@@ -127,11 +122,11 @@ public object OssLibraries {
   }
 
   private fun addUiLibraries() {
-      add(
-          "PYDroid Protection",
-          "https://github.com/pyamsoft/pydroid",
-          "Secure applications from bad actors.",
-      )
+    add(
+        "PYDroid Protection",
+        "https://github.com/pyamsoft/pydroid",
+        "Secure applications from bad actors.",
+    )
     add(
         "PYDroid UI",
         "https://github.com/pyamsoft/pydroid",
@@ -141,11 +136,6 @@ public object OssLibraries {
         "AndroidX Core KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
         "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
-    )
-    add(
-        "AndroidX RecyclerView",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
-        "The AndroidX Jetpack RecyclerView library. Create efficient list views.",
     )
     add(
         "AndroidX Vector Drawable",
@@ -158,6 +148,19 @@ public object OssLibraries {
         "Modular and customizable Material Design UI components for Android.",
     )
     add(
+        "Coil Compose",
+        "https://github.com/coil-kt/Coil",
+        "An image loading library for Android backed by Kotlin Coroutines.",
+    )
+    addComposeUiLibraries()
+
+    // To remove
+    add(
+        "AndroidX RecyclerView",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
+        "The AndroidX Jetpack RecyclerView library. Create efficient list views.",
+    )
+    add(
         "AndroidX Preference",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
         "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
@@ -167,19 +170,9 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
         "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
     )
-    add(
-        "AndroidX Constraint Layout",
-        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
-    )
-    add(
-        "Coil Compose",
-        "https://github.com/coil-kt/Coil",
-        "An image loading library for Android backed by Kotlin Coroutines.",
-    )
-    addComposeUiLibraries()
   }
 
+  @Deprecated("Migrate to Jetpack Compose")
   private fun addLoaderLibraries() {
     add(
         "PYDroid Loader",
@@ -208,6 +201,11 @@ public object OssLibraries {
         "Kotlin Coroutines",
         "https://github.com/Kotlin/kotlinx.coroutines",
         "Library support for Kotlin coroutines with multiplatform support.",
+    )
+    add(
+        "AndroidX Lifecycle",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
+        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
     )
     add(
         "AndroidX Lifecycle ViewModel KTX",
@@ -268,6 +266,11 @@ public object OssLibraries {
   }
 
   private fun addAutopsyLibraries() {
+    add(
+        "AndroidX Startup",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/",
+        "Helps with Application initialization",
+    )
     add(
         "PYDroid Autopsy",
         "https://github.com/pyamsoft/pydroid",

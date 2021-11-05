@@ -127,6 +127,11 @@ public object OssLibraries {
   }
 
   private fun addUiLibraries() {
+      add(
+          "PYDroid Protection",
+          "https://github.com/pyamsoft/pydroid",
+          "Secure applications from bad actors.",
+      )
     add(
         "PYDroid UI",
         "https://github.com/pyamsoft/pydroid",

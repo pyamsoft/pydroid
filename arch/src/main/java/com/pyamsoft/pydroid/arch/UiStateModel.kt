@@ -33,8 +33,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
@@ -47,9 +45,6 @@ public open class UiStateModel<S : UiViewState>(
     /** Initial state */
     public val initialState: S,
 ) {
-
-  // Mutex to make sure that setState operations happen in order
-  private val mutex = Mutex()
 
   private val modelState = MutableUiVMState(MutableStateFlow(initialState))
 
@@ -76,8 +71,10 @@ public open class UiStateModel<S : UiViewState>(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    */
-  public fun CoroutineScope.setState(stateChange: suspend S.() -> S) {
+  public fun CoroutineScope.setState(stateChange: S.() -> S) {
     this.setState(stateChange = stateChange, andThen = {})
   }
 
@@ -85,37 +82,40 @@ public open class UiStateModel<S : UiViewState>(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
-   *
-   * There is no threading guarantee for the andThen callback
+   * There is no threading guarantee for the andThen callback, though it currently fires in an IO
+   * context
    */
   public fun CoroutineScope.setState(
-      stateChange: suspend S.() -> S,
+      stateChange: S.() -> S,
       andThen: suspend CoroutineScope.(newState: S) -> Unit
   ) {
-    this.launch(context = Dispatchers.IO) {
-      val newState = processStateChange { stateChange(it) }
-      andThen(newState)
-    }
+    val newState = processStateChange { stateChange(it) }
+    this.launch(context = Dispatchers.IO) { andThen(newState) }
   }
 
   /** Return the new state, which may be the same as the old state */
   @CheckResult
-  private suspend inline fun processStateChange(handleChange: (S) -> S): S {
+  private inline fun processStateChange(handleChange: (S) -> S): S {
     Enforcer.assertOffMainThread()
 
     // Use this mutex to make sure that setState changes happen in the order they are called.
-    return mutex.withLock {
-      val oldState = state
-      val newState = handleChange(oldState)
+    val oldState = state
+    val newState = handleChange(oldState)
 
-      // If we are in debug mode, perform the state change twice and make sure that it produces
-      // the same state both times.
-      UiViewStateDebug.checkStateEquality(newState) { handleChange(oldState) }
+    // If we are in debug mode, perform the state change twice and make sure that it produces
+    // the same state both times.
+    UiViewStateDebug.checkStateEquality(newState) { handleChange(oldState) }
 
-      return@withLock if (oldState == newState) newState else newState.also { modelState.set(it) }
+    // Update newState if it has changed
+    if (oldState != newState) {
+      modelState.set(newState)
     }
+
+    return newState
   }
 
   /** Clear the state model */

@@ -98,12 +98,14 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    *
    * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use the
    * CoroutineScope.setState(stateChange) function instead as it is explicitly scoped. If you decide
    * to use this convenience function, be sure to not leak a shorter lived context.
    */
-  protected fun setState(stateChange: suspend S.() -> S) {
+  protected fun setState(stateChange: S.() -> S) {
     viewModelScope.setState(stateChange)
   }
 
@@ -111,8 +113,10 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    */
-  protected fun CoroutineScope.setState(stateChange: suspend S.() -> S) {
+  protected fun CoroutineScope.setState(stateChange: S.() -> S) {
     val scope = this
 
     // Call the extension on the delegate
@@ -123,10 +127,11 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
    * If the stateChange payload does not cause a state update, the andThen call will not be fired.
-   *
    * There is no threading guarantee for the andThen callback
    *
    * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use the
@@ -134,7 +139,7 @@ internal constructor(
    * you decide to use this convenience function, be sure to not leak a shorter lived context.
    */
   protected fun setState(
-      stateChange: suspend S.() -> S,
+      stateChange: S.() -> S,
       andThen: suspend CoroutineScope.(newState: S) -> Unit
   ) {
     viewModelScope.setState(stateChange, andThen)
@@ -144,14 +149,15 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
+   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
+   * method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
    * If the stateChange payload does not cause a state update, the andThen call will not be fired.
-   *
    * There is no threading guarantee for the andThen callback
    */
   protected fun CoroutineScope.setState(
-      stateChange: suspend S.() -> S,
+      stateChange: S.() -> S,
       andThen: suspend CoroutineScope.(newState: S) -> Unit
   ) {
     val scope = this

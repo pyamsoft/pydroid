@@ -86,9 +86,10 @@ internal constructor(
     scope.setState(
         stateChange = { copy(isLoading = true) },
         andThen = {
+          val newMode = theming.getMode()
           setState {
             copy(
-                darkMode = theming.getMode(),
+                darkMode = newMode,
                 isLoading = false,
             )
           }

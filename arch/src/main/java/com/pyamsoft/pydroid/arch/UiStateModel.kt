@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import com.pyamsoft.pydroid.arch.debug.UiViewStateDebug
-import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -100,8 +99,6 @@ public open class UiStateModel<S : UiViewState>(
   /** Return the new state, which may be the same as the old state */
   @CheckResult
   private inline fun processStateChange(handleChange: (S) -> S): S {
-    Enforcer.assertOffMainThread()
-
     // Use this mutex to make sure that setState changes happen in the order they are called.
     val oldState = state
     val newState = handleChange(oldState)

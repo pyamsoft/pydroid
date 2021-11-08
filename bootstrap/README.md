@@ -15,7 +15,14 @@ repositories {
   maven {
     url 'https://jitpack.io'
     content {
+      // PYDroid
       includeGroup("com.github.pyamsoft.pydroid")
+
+      // Needed by pydroid-protection
+      includeGroup("com.github.javiersantos")
+
+      // pyamsoft Cachify and Highlander
+      includeGroup("com.github.pyamsoft")
     }
   }
 }

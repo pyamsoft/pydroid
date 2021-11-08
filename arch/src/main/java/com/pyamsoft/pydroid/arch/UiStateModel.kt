@@ -71,8 +71,8 @@ public open class UiStateModel<S : UiViewState>(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    */
   public fun CoroutineScope.setState(stateChange: S.() -> S) {
     this.setState(stateChange = stateChange, andThen = {})
@@ -82,8 +82,8 @@ public open class UiStateModel<S : UiViewState>(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
    * There is no threading guarantee for the andThen callback, though it currently fires in an IO

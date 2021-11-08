@@ -49,14 +49,10 @@ public abstract class ActivityBase : AppCompatActivity(), AppProvider {
   /** Activity protection */
   internal var protection: Protection? = null
 
-  /**
-   * Disable the billing component
-   */
+  /** Disable the billing component */
   protected open val disableBilling: Boolean = false
 
-  /**
-   * Disable the protection component
-   */
+  /** Disable the protection component */
   protected open val disableProtection: Boolean = false
 
   init {

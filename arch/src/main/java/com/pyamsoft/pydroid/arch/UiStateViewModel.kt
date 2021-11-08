@@ -98,8 +98,8 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    *
    * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use the
    * CoroutineScope.setState(stateChange) function instead as it is explicitly scoped. If you decide
@@ -113,8 +113,8 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    */
   protected fun CoroutineScope.setState(stateChange: S.() -> S) {
     val scope = this
@@ -127,8 +127,8 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
    * If the stateChange payload does not cause a state update, the andThen call will not be fired.
@@ -149,8 +149,8 @@ internal constructor(
    * Modify the state from the previous
    *
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple DataClass.copy()
-   * method.
+   * Note that your stateChange block should be quick, it generally is just a simple
+   * DataClass.copy() method.
    *
    * The andThen callback will be fired after the state has changed and the view has been notified.
    * If the stateChange payload does not cause a state update, the andThen call will not be fired.

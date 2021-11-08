@@ -8,7 +8,7 @@ The reference Injector to access a service locator
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

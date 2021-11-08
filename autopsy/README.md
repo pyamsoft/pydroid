@@ -8,7 +8,7 @@ A simple crash reporter screen which displays the stack trace.
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

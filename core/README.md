@@ -8,7 +8,7 @@ This is the core that all other PYDroid libraries are built on.
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

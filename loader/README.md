@@ -8,7 +8,7 @@ An image loader abstraction with a default Glide implementation
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

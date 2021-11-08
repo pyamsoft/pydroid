@@ -8,7 +8,7 @@ Simple utility Kotlin extension functions for easier application development
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

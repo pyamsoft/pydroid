@@ -8,7 +8,7 @@ A simple scalable notification system.
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

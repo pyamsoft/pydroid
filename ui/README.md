@@ -8,7 +8,7 @@ The reference UI implementation for PYDroid components
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

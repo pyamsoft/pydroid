@@ -9,7 +9,7 @@ The strict MVI based architecture framework for PYDroid applications
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

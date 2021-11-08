@@ -8,7 +8,7 @@ A simple implementation of Android In-App Billing
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

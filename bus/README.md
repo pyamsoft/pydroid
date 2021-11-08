@@ -8,7 +8,7 @@ A simple event bus powered by coroutines
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

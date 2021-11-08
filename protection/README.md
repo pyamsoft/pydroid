@@ -8,7 +8,7 @@ Secure applications from bad actors.
 ## Install
 
 In your module's `build.gradle`:
-```
+```groovy
 repositories {
 
   maven {

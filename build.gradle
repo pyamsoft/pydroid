@@ -29,10 +29,6 @@ buildscript {
     mavenCentral()
 
     maven {
-      url "https://jitpack.io/"
-    }
-
-    maven {
       url "https://plugins.gradle.org/m2/"
     }
   }
@@ -88,7 +84,7 @@ buildscript {
     classpath "com.android.tools.build:gradle:$agp_version"
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
 
     // Kotlin
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -109,7 +105,7 @@ subprojects {
   apply plugin: 'maven-publish'
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "24.0.0"
+  final POM_VERSION = "24.0.1"
 
   // Kapt flags
   kapt {
@@ -249,10 +245,6 @@ allprojects {
     mavenLocal()
     google()
     mavenCentral()
-
-    maven {
-      url "https://jitpack.io/"
-    }
 
     maven {
       url "https://plugins.gradle.org/m2/"

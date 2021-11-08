@@ -10,6 +10,16 @@ The data layers for bootstrapping a new application quickly
 
 In your module's `build.gradle`:
 ```
+repositories {
+
+  maven {
+    url 'https://jitpack.io'
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+    }
+  }
+}
+
 dependencies {
     implementation "com.github.pyamsoft.pydroid:bootstrap:<version>"
 }

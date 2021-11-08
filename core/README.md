@@ -9,6 +9,16 @@ This is the core that all other PYDroid libraries are built on.
 
 In your module's `build.gradle`:
 ```
+repositories {
+
+  maven {
+    url 'https://jitpack.io'
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+    }
+  }
+}
+
 dependencies {
     implementation "com.github.pyamsoft.pydroid:core:<version>"
 }

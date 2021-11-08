@@ -9,6 +9,16 @@ A simple implementation of Android In-App Billing
 
 In your module's `build.gradle`:
 ```
+repositories {
+
+  maven {
+    url 'https://jitpack.io'
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+    }
+  }
+}
+
 dependencies {
     implementation "com.github.pyamsoft.pydroid:billing:<version>"
 }

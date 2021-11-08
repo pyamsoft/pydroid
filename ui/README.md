@@ -9,6 +9,16 @@ The reference UI implementation for PYDroid components
 
 In your module's `build.gradle`:
 ```
+repositories {
+
+  maven {
+    url 'https://jitpack.io'
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+    }
+  }
+}
+
 dependencies {
     implementation "com.github.pyamsoft.pydroid:ui:<version>"
 }

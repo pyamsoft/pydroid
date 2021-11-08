@@ -9,6 +9,16 @@ A simple crash reporter screen which displays the stack trace.
 
 In your module's `build.gradle`:
 ```
+repositories {
+
+  maven {
+    url 'https://jitpack.io'
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+    }
+  }
+}
+
 dependencies {
     debugImplementation "com.github.pyamsoft.pydroid:autopsy:<version>"
 }

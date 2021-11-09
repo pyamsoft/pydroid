@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -69,9 +68,7 @@ internal constructor(
   }
 
   internal fun handleSyncDarkThemeState(activity: Activity) {
-    setState {
-      copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity)))
-    }
+    setState { copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity))) }
   }
 
   internal fun handleChangeDarkMode(mode: String) {

@@ -38,7 +38,7 @@ protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
   private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
   private val onClearEvents by onClearEventDelegate
 
-  private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
+  private val controllerEventBus = EventBus.create<C>()
 
   /**
    * Bind one or more UiViews to be driven by this UiViewModel

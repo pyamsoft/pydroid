@@ -68,8 +68,8 @@ internal constructor(
     }
   }
 
-  internal fun handleSyncDarkThemeState(scope: CoroutineScope, activity: Activity) {
-    scope.setState {
+  internal fun handleSyncDarkThemeState(activity: Activity) {
+    setState {
       copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity)))
     }
   }

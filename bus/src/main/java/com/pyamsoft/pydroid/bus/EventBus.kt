@@ -20,6 +20,8 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.internal.RealBus
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 
 /** A basic EventBus interface with send and receive methods */
 public interface EventBus<T : Any> : EventConsumer<T> {
@@ -32,22 +34,17 @@ public interface EventBus<T : Any> : EventConsumer<T> {
     /**
      * The EventBus will event the event in the following cases
      *
-     * If [emitOnlyWhenActive] is false, the event will always emit immediately If
-     * [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening on
-     * the bus
+     * The EventBus is backed by a SharedFlow and follows it's implementation for behavior regarding
+     * sending and collecting of events
      *
-     * If [emitOnlyWhenActive] is true, and no subscribers are present for an event emission, the
-     * event will be queued. Once a subscriber joins the bus, all subscribers will then receive all
-     * events up to that point that were queued. Once a subscriber joins the bus, events will always
-     * emit immediately.
+     * See [MutableSharedFlow.emit] and [collectLatest]
      */
     @JvmStatic
     @CheckResult
     @JvmOverloads
     public fun <T : Any> create(
-        emitOnlyWhenActive: Boolean,
         replayCount: Int = 0,
         context: CoroutineContext = EmptyCoroutineContext
-    ): EventBus<T> = RealBus(emitOnlyWhenActive, replayCount, context)
+    ): EventBus<T> = RealBus(replayCount, context)
   }
 }

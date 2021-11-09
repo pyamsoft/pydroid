@@ -39,7 +39,7 @@ import kotlinx.coroutines.withContext
 public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() :
     Renderable<S> {
 
-  private val viewEventBus = EventBus.create<V>(emitOnlyWhenActive = true)
+  private val viewEventBus = EventBus.create<V>()
 
   private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(UiSavedStateReader) -> Unit>() }
   private val onInflateEvents by onInflateEventDelegate

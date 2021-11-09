@@ -144,7 +144,7 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
           }
         }
 
-    settingsViewModel.handleSyncDarkThemeState(viewLifecycleOwner.lifecycleScope, requireActivity())
+    settingsViewModel.handleSyncDarkThemeState(requireActivity())
   }
 
   private fun openDonationDialog() {

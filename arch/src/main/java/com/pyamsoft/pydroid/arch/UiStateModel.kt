@@ -110,7 +110,6 @@ public open class UiStateModel<S : UiViewState>(
 
   /** Return the new state, which may be the same as the old state */
   private inline fun processStateChange(handleChange: (S) -> S) {
-    // Use this mutex to make sure that setState changes happen in the order they are called.
     val oldState = state
     val newState = handleChange(oldState)
 

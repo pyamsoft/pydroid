@@ -3,7 +3,7 @@ PYDroid library for pyamsoft applications
 
 ## What is PYDroid
 
-The current version is `24.1.0`
+The current version is `24.1.2`
 
 PYDroid is the **py**amsoft An**droid** library. It contains common  
 functions and classes that are used in multiple pyamsoft projects.  
@@ -17,8 +17,10 @@ such is not meant for use outside of pyamsoft projects.
 [bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap)
 [bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 [core](https://github.com/pyamsoft/pydroid/tree/main/core)
+[inject](https://github.com/pyamsoft/pydroid/tree/main/inject)
 [loader](https://github.com/pyamsoft/pydroid/tree/main/loader)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
+[protection](https://github.com/pyamsoft/pydroid/tree/main/protection)
 [ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
 [util](https://github.com/pyamsoft/pydroid/tree/main/util)
 

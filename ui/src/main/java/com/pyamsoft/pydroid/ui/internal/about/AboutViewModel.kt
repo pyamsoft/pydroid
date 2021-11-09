@@ -20,7 +20,6 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import kotlinx.coroutines.CoroutineScope
 
 internal class AboutViewModel
 internal constructor(
@@ -59,13 +58,8 @@ internal constructor(
         stateChange = { copy(isLoading = true) },
         andThen = {
           val licenses = licenseRunner.call(false)
-          handleLicensesLoaded(licenses)
-          setState { copy(isLoading = false) }
+          setState { copy(licenses = licenses, isLoading = false) }
         })
-  }
-
-  private fun CoroutineScope.handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState { copy(licenses = licenses) }
   }
 
   internal fun navigationFailed(throwable: Throwable) {

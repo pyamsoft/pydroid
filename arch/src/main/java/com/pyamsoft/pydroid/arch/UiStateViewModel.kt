@@ -24,6 +24,8 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
@@ -57,8 +59,8 @@ internal constructor(
   /** Get VM state as a Composable object */
   @Composable
   @CheckResult
-  public fun compose(): State<S> {
-    return delegate.compose()
+  public fun compose(context: CoroutineContext = EmptyCoroutineContext): State<S> {
+    return delegate.compose(context = context)
   }
 
   /**
@@ -100,27 +102,10 @@ internal constructor(
    * Note that, like calling this.setState() in React, this operation does not happen immediately.
    * Note that your stateChange block should be quick, it generally is just a simple
    * DataClass.copy() method.
-   *
-   * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use the
-   * CoroutineScope.setState(stateChange) function instead as it is explicitly scoped. If you decide
-   * to use this convenience function, be sure to not leak a shorter lived context.
    */
   protected fun setState(stateChange: S.() -> S) {
-    viewModelScope.setState(stateChange)
-  }
-
-  /**
-   * Modify the state from the previous
-   *
-   * Note that, like calling this.setState() in React, this operation does not happen immediately.
-   * Note that your stateChange block should be quick, it generally is just a simple
-   * DataClass.copy() method.
-   */
-  protected fun CoroutineScope.setState(stateChange: S.() -> S) {
-    val scope = this
-
     // Call the extension on the delegate
-    delegate.apply { scope.setState(stateChange) }
+    delegate.setState(stateChange)
   }
 
   /**
@@ -161,6 +146,8 @@ internal constructor(
       andThen: suspend CoroutineScope.(newState: S) -> Unit
   ) {
     val scope = this
+
+    // Call the extension on the CoroutineScope of the delegeate
     delegate.apply { scope.setState(stateChange, andThen) }
   }
 

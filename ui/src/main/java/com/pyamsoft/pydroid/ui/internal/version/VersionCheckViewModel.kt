@@ -51,15 +51,13 @@ internal constructor(private val interactor: VersionInteractor) :
     }
   }
 
-  private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
+  private fun handleVersionCheckError(throwable: Throwable) {
     setState { copy(versionCheckError = throwable) }
   }
 
   internal fun handleClearError() {
     setState { copy(versionCheckError = null) }
   }
-
-  internal fun handleVersionCheckComplete() {}
 
   internal fun handleHideNavigation() {
     setState { copy(navigationError = null) }

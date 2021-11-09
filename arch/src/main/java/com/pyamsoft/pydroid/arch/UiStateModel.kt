@@ -23,6 +23,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import com.pyamsoft.pydroid.arch.debug.UiViewStateDebug
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +35,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 
 /**
  * A State model managing a single state object.
@@ -62,8 +65,8 @@ public open class UiStateModel<S : UiViewState>(
   /** Get VM state as a Composable object */
   @Composable
   @CheckResult
-  public fun compose(): State<S> {
-    return modelState.compose()
+  public fun compose(context: CoroutineContext = EmptyCoroutineContext): State<S> {
+    return modelState.compose(context = context)
   }
 
   /**
@@ -73,8 +76,9 @@ public open class UiStateModel<S : UiViewState>(
    * Note that your stateChange block should be quick, it generally is just a simple
    * DataClass.copy() method.
    */
-  public fun CoroutineScope.setState(stateChange: S.() -> S) {
-    this.setState(stateChange = stateChange, andThen = {})
+  public fun setState(stateChange: S.() -> S) {
+    // Does not launch a coroutine for the change andThen
+    processStateChange(stateChange)
   }
 
   /**
@@ -92,13 +96,20 @@ public open class UiStateModel<S : UiViewState>(
       stateChange: S.() -> S,
       andThen: suspend CoroutineScope.(newState: S) -> Unit
   ) {
-    val newState = processStateChange { stateChange(it) }
-    this.launch(context = Dispatchers.IO) { andThen(newState) }
+    processStateChange { stateChange(it) }
+
+    // Launch an andThen which
+    this.launch(context = Dispatchers.IO) {
+      // Do any other scope related work first since the andThen can be fired at any time.
+      yield()
+
+      val newState = state
+      andThen(newState)
+    }
   }
 
   /** Return the new state, which may be the same as the old state */
-  @CheckResult
-  private inline fun processStateChange(handleChange: (S) -> S): S {
+  private inline fun processStateChange(handleChange: (S) -> S) {
     // Use this mutex to make sure that setState changes happen in the order they are called.
     val oldState = state
     val newState = handleChange(oldState)
@@ -111,8 +122,6 @@ public open class UiStateModel<S : UiViewState>(
     if (oldState != newState) {
       modelState.set(newState)
     }
-
-    return newState
   }
 
   /** Clear the state model */
@@ -143,8 +152,8 @@ public open class UiStateModel<S : UiViewState>(
 
     @Composable
     @CheckResult
-    fun compose(): State<S> {
-      return flow.collectAsState()
+    fun compose(context: CoroutineContext): State<S> {
+      return flow.collectAsState(context = context)
     }
 
     @CheckResult

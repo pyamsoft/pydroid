@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.ResultWrapper
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -75,11 +74,11 @@ internal constructor(
     }
   }
 
-  private fun CoroutineScope.handleAppsLoaded(apps: List<OtherApp>) {
+  private fun handleAppsLoaded(apps: List<OtherApp>) {
     setState { copy(apps = apps) }
   }
 
-  private fun CoroutineScope.handleHideError(throwable: Throwable) {
+  private fun handleHideError(throwable: Throwable) {
     setState { copy(appsError = throwable) }
   }
 

@@ -24,6 +24,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
@@ -35,6 +36,8 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModel
 import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
@@ -62,7 +65,7 @@ internal interface AppComponent {
         internal val context: Context,
         internal val theming: Theming,
         internal val errorBus: EventBus<Throwable>,
-        internal val interactor: ChangeLogInteractor,
+        internal val changeLogInteractor: ChangeLogInteractor,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
         internal val isFake: Boolean,
@@ -142,6 +145,10 @@ internal interface AppComponent {
       // Change Log
       val changeLogViewModel by activity.viewModels<ChangeLogViewModel> { params.rootFactory }
       activity.changelog = ChangeLogDelegate(pyDroidActivity, changeLogViewModel)
+
+      // Data Policy
+      val dataPolicyViewModel by activity.viewModels<DataPolicyViewModel> { params.rootFactory }
+      activity.dataPolicy = DataPolicyDelegate(pyDroidActivity, dataPolicyViewModel)
     }
 
     override fun plusBilling(): BillingComponent.DialogComponent.Factory {
@@ -151,7 +158,7 @@ internal interface AppComponent {
               context = params.context,
               theming = params.theming,
               errorBus = params.errorBus,
-              interactor = params.interactor,
+              interactor = params.changeLogInteractor,
               composeTheme = params.composeTheme,
               imageLoader = params.imageLoader,
           ),

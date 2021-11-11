@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.MarketLinker
+import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,11 +41,13 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
   fun bindEvents() {
     val act = activity.requireNotNull()
 
-    viewModel.requireNotNull().bindController(act) { event ->
-      return@bindController when (event) {
-        is VersionCheckControllerEvent.LaunchUpdate ->
-            showVersionUpgrade(act, event.isFallbackEnabled, event.launcher)
-        is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(act)
+    act.doOnCreate {
+      viewModel.requireNotNull().bindController(act) { event ->
+        return@bindController when (event) {
+          is VersionCheckControllerEvent.LaunchUpdate ->
+              showVersionUpgrade(act, event.isFallbackEnabled, event.launcher)
+          is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(act)
+        }
       }
     }
 

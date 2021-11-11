@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
@@ -41,6 +42,9 @@ import com.pyamsoft.pydroid.util.doOnCreate
  * You are required to extend this class so that other ui bits work.
  */
 public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
+
+  /** DataPolicy Delegate */
+  internal var dataPolicy: DataPolicyDelegate? = null
 
   /** Billing Delegate */
   internal var billing: BillingDelegate? = null
@@ -72,6 +76,9 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
   /** Disable the change log component */
   protected open val disableChangeLog: Boolean = false
 
+  /** Disable the data policy component */
+  protected open val disableDataPolicy: Boolean = false
+
   /** Injector component for Dialog and Fragment injection */
   private var injectorComponent: AppComponent? = null
 
@@ -82,6 +89,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
     connectRating()
     connectVersionCheck()
     connectChangeLog()
+    connectDataPolicy()
   }
 
   /** On activity create */
@@ -95,9 +103,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
         }
   }
 
-  /**
-   * On Resume show changelog if possible
-   */
+  /** On Resume show changelog if possible */
   @CallSuper
   override fun onPostResume() {
     super.onPostResume()
@@ -130,6 +136,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
     rating = null
     versionCheck = null
     changelog = null
+    dataPolicy = null
     injectorComponent = null
   }
 
@@ -156,6 +163,19 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
     this.doOnCreate {
       Logger.d("Attempt Connect Rating")
       rating.requireNotNull().bindEvents()
+    }
+  }
+
+  /** Attempts to connect to in-app data policy dialog */
+  private fun connectDataPolicy() {
+    if (disableDataPolicy) {
+      Logger.w("Application has disabled the Data Policy component")
+      return
+    }
+
+    this.doOnCreate {
+      Logger.d("Attempt Connect Data Policy")
+      dataPolicy.requireNotNull().bindEvents()
     }
   }
 

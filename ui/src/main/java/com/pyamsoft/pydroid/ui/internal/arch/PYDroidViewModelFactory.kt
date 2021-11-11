@@ -20,10 +20,12 @@ import androidx.lifecycle.ViewModel
 import com.pyamsoft.pydroid.arch.ViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetViewModel
@@ -45,11 +47,13 @@ internal constructor(
           AboutViewModel::class to { AboutViewModel(params.aboutInteractor) },
           ChangeLogViewModel::class to { ChangeLogViewModel(params.changeLogInteractor) },
           OtherAppsViewModel::class to { OtherAppsViewModel(params.otherAppsInteractor) },
+          DataPolicyViewModel::class to { DataPolicyViewModel(params.dataPolicyInteractor) },
+          ResetViewModel::class to { ResetViewModel(params.settingsInteractor) },
           AppSettingsViewModel::class to
               {
                 AppSettingsViewModel(params.theming, params.otherAppsInteractor)
               },
-          ResetViewModel::class to { ResetViewModel(params.settingsInteractor) })
+      )
 
   override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
     return viewModelProviders[modelClass.kotlin]?.invoke() ?: fail(modelClass)
@@ -61,6 +65,7 @@ internal constructor(
       internal val aboutInteractor: AboutInteractor,
       internal val changeLogInteractor: ChangeLogInteractor,
       internal val otherAppsInteractor: OtherAppsInteractor,
-      internal val settingsInteractor: SettingsInteractor
+      internal val settingsInteractor: SettingsInteractor,
+      internal val dataPolicyInteractor: DataPolicyInteractor,
   )
 }

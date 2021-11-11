@@ -17,6 +17,7 @@
 <resources>
     <item name="dialog_about" type="id" />
     <item name="dialog_otherapps" type="id" />
+    <item name="dialog_dpd" type="id" />
     <item name="dialog_billing" type="id" />
     <item name="dialog_changelog" type="id" />
     <item name="dialog_upgrade" type="id" />

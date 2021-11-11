@@ -45,6 +45,7 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
   /** Bind Activity for related Rating events */
   fun bindEvents() {
     val act = activity.requireNotNull()
+
     act.doOnCreate {
       viewModel.requireNotNull().bindController(act) { event ->
         return@bindController when (event) {

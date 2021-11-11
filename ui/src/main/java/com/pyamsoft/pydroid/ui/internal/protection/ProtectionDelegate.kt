@@ -30,7 +30,7 @@ internal class ProtectionDelegate(activity: PYDroidActivity, protection: Protect
   private var activity: PYDroidActivity? = activity
   private var protection: Protection? = protection
 
-  /** Connect to the billing service */
+  /** Connect to the protection service */
   fun connect() {
     val act = activity.requireNotNull()
     protectApplication(act)

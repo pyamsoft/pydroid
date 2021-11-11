@@ -20,6 +20,7 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
@@ -144,13 +145,23 @@ internal interface PYDroidComponent {
                   changeLogInteractor = changeLogModule.provideInteractor(),
                   otherAppsInteractor = otherAppsModule.provideInteractor(),
                   settingsInteractor = settingsModule.provideInteractor(),
-              ))
+                  dataPolicyInteractor = dataPolicyModule.provideInteractor(),
+              ),
+          )
         }
 
     @Deprecated("Use Coil-Compose in Jetpack Compose UI")
     private val loaderModule by
         lazy(LazyThreadSafetyMode.NONE) {
           LoaderModule(LoaderModule.Parameters(context = context.applicationContext))
+        }
+
+    private val dataPolicyModule by
+        lazy(LazyThreadSafetyMode.NONE) {
+          DataPolicyModule(
+              DataPolicyModule.Parameters(
+                  preferences = preferences,
+              ))
         }
 
     private val settingsModule by
@@ -295,7 +306,7 @@ internal interface PYDroidComponent {
               context = context.applicationContext,
               theming = theming,
               errorBus = billingErrorBus,
-              interactor = changeLogModule.provideInteractor(),
+              changeLogInteractor = changeLogModule.provideInteractor(),
               composeTheme = composeTheme,
               imageLoader = imageLoader,
               protection = protection,

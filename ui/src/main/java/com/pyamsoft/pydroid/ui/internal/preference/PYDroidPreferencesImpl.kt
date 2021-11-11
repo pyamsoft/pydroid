@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
@@ -35,7 +36,7 @@ internal class PYDroidPreferencesImpl
 internal constructor(
     context: Context,
     private val versionCode: Int,
-) : ThemingPreferences, ChangeLogPreferences {
+) : ThemingPreferences, ChangeLogPreferences, DataPolicyPreferences {
 
   private val darkModeKey = context.getString(R.string.dark_mode_key)
   private val prefs by lazy {
@@ -85,9 +86,29 @@ internal constructor(
         return@withContext prefs.edit(commit = true) { putString(darkModeKey, mode.toRawString()) }
       }
 
+  override suspend fun isPolicyAccepted(): Boolean =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext prefs.getBoolean(
+            KEY_DATA_POLICY_CONSENTED, DEFAULT_DATA_POLICY_CONSENTED)
+      }
+
+  override suspend fun respondToPolicy(accepted: Boolean) =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext prefs.edit(commit = true) {
+          putBoolean(KEY_DATA_POLICY_CONSENTED, accepted)
+        }
+      }
+
   companion object {
 
     private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
     private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"
+
+    private const val DEFAULT_DATA_POLICY_CONSENTED = false
+    private const val KEY_DATA_POLICY_CONSENTED = "data_policy_consented_v1"
   }
 }

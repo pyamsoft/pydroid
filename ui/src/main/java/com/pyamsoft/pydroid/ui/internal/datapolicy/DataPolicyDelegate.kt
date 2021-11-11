@@ -14,30 +14,33 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.internal.datapolicy
 
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
-import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
+import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
+import com.pyamsoft.pydroid.util.doOnResume
 
-internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLogViewModel) {
+/** Handles Billing related work in an Activity */
+internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPolicyViewModel) {
 
   private var activity: PYDroidActivity? = activity
-  private var viewModel: ChangeLogViewModel? = viewModel
+  private var viewModel: DataPolicyViewModel? = viewModel
 
-  /** Bind Activity for related ChangeLog events */
+  /** Bind Activity for related DataPolicy events */
   fun bindEvents() {
     val act = activity.requireNotNull()
 
     act.doOnCreate {
       viewModel.requireNotNull().bindController(act) { event ->
         return@bindController when (event) {
-          is ChangeLogControllerEvent.ShowChangeLog -> ChangeLogDialog.open(act)
+          is DataPolicyControllerEvent.ShowPolicy -> DataPolicyDisclosureDialog.show(act)
         }
       }
+      showDataPolicyDisclosure(act)
     }
 
     act.doOnDestroy {
@@ -46,13 +49,21 @@ internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLog
     }
   }
 
-  /** Check for in-app updates */
-  fun showChangelog() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot show changelog, ViewModel is null")
-    } else {
-      vm.handleShow(false)
+  /** Attempts to load and secure the application */
+  private fun showDataPolicyDisclosure(activity: PYDroidActivity) {
+    Logger.d("Prepare data policy disclosure")
+    activity.doOnResume {
+      Logger.d("Attempt show DPD")
+      val vm = viewModel
+      if (vm == null) {
+        val msg = "DataPolicy is not initialized!"
+        val error = IllegalStateException(msg)
+        Logger.e(error, msg)
+        throw error
+      } else {
+        Logger.d("Application is created, protect")
+        vm.handleShowDisclosure(false)
+      }
     }
   }
 }

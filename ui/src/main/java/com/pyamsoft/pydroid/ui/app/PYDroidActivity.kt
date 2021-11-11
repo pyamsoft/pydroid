@@ -110,6 +110,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
             .create(
                 activity = this,
                 disableDataPolicy = disableDataPolicy,
+                disableChangeLog = disableChangeLog,
             )
             .also { component -> component.inject(this) }
 
@@ -117,6 +118,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
       return@bindController when (event) {
         is AppInternalControllerEvent.ShowChangeLog -> showChangelog()
         is AppInternalControllerEvent.ShowDataPolicy -> showDataPolicyDisclosure()
+        is AppInternalControllerEvent.ShowVersionCheck -> checkUpdates()
       }
     }
   }
@@ -257,6 +259,11 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
    * is up to Google
    */
   protected fun loadInAppRating() {
+    if (disableRating) {
+      Logger.w("Application has disabled the Rating component")
+      return
+    }
+
     rating.requireNotNull().loadInAppRating()
   }
 
@@ -294,6 +301,11 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Check for in-app updates */
   protected fun checkUpdates() {
+    if (disableVersionCheck) {
+      Logger.w("Application has disabled the VersionCheck component")
+      return
+    }
+
     versionCheck.requireNotNull().checkUpdates()
   }
 

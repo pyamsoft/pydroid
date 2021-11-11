@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 internal class AppInternalViewModel
 internal constructor(
     private val disableDataPolicy: Boolean,
+    private val disableChangeLog: Boolean,
     private val dataPolicyInteractor: DataPolicyInteractor,
 ) :
     UiViewModel<AppInternalViewState, AppInternalControllerEvent>(
@@ -32,21 +33,30 @@ internal constructor(
     ) {
 
   /**
-   * Show the Data policy disclosure if it is not disabled
-   *
-   * If it has been shown or is disabled, show the changelog
+   * Decides the correct dialog to show so we don't spam dialogs
    *
    * This does not guarantee that a dialog will be shown, but simply notifies a given dialog that it
    * should be shown if possible
    */
   internal fun handleShowCorrectDialog() {
     viewModelScope.launch(context = Dispatchers.Default) {
-      if (disableDataPolicy) {
-        publish(AppInternalControllerEvent.ShowChangeLog)
-      } else if (!dataPolicyInteractor.isPolicyAccepted()) {
-        publish(AppInternalControllerEvent.ShowDataPolicy)
+      if (disableDataPolicy && disableChangeLog) {
+        // If data policy and changelog are disabled, show Version
+        publish(AppInternalControllerEvent.ShowVersionCheck)
       } else {
-        publish(AppInternalControllerEvent.ShowChangeLog)
+        // If data policy is disabled show changelog
+        if (disableDataPolicy) {
+          publish(AppInternalControllerEvent.ShowChangeLog)
+        } else {
+          // If data policy is enabled, show it if you can
+          if (!dataPolicyInteractor.isPolicyAccepted()) {
+            publish(AppInternalControllerEvent.ShowDataPolicy)
+          } else if (disableChangeLog) {
+            publish(AppInternalControllerEvent.ShowVersionCheck)
+          } else {
+            publish(AppInternalControllerEvent.ShowChangeLog)
+          }
+        }
       }
     }
   }

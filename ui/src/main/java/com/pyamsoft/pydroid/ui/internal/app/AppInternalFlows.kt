@@ -27,4 +27,6 @@ internal sealed class AppInternalControllerEvent : UiControllerEvent {
   object ShowDataPolicy : AppInternalControllerEvent()
 
   object ShowChangeLog : AppInternalControllerEvent()
+
+  object ShowVersionCheck : AppInternalControllerEvent()
 }

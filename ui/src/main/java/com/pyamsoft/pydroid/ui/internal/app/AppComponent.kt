@@ -61,6 +61,7 @@ internal interface AppComponent {
     fun create(
         activity: PYDroidActivity,
         disableDataPolicy: Boolean,
+        disableChangeLog: Boolean,
     ): AppComponent
 
     data class Parameters
@@ -86,6 +87,7 @@ internal interface AppComponent {
       private val params: Factory.Parameters,
       private val pyDroidActivity: PYDroidActivity,
       private val disableDataPolicy: Boolean,
+      private val disableChangeLog: Boolean,
   ) : AppComponent {
 
     // Make this module each time since if it falls out of scope, the in-app billing system
@@ -135,6 +137,7 @@ internal interface AppComponent {
     private val appInternalFactory = createViewModelFactory {
       AppInternalViewModel(
           disableDataPolicy = disableDataPolicy,
+          disableChangeLog = disableChangeLog,
           dataPolicyInteractor = params.dataPolicyInteractor,
       )
     }
@@ -188,9 +191,18 @@ internal interface AppComponent {
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-      override fun create(activity: PYDroidActivity, disableDataPolicy: Boolean): AppComponent {
+      override fun create(
+          activity: PYDroidActivity,
+          disableDataPolicy: Boolean,
+          disableChangeLog: Boolean,
+      ): AppComponent {
         OssLibraries.usingUi = true
-        return Impl(params, activity, disableDataPolicy)
+        return Impl(
+            params,
+            activity,
+            disableDataPolicy,
+            disableChangeLog,
+        )
       }
     }
   }

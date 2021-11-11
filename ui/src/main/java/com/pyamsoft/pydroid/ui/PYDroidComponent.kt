@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
+import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
@@ -75,6 +76,8 @@ internal interface PYDroidComponent {
   @CheckResult fun plusRating(): RatingComponent.Factory
 
   @CheckResult fun plusProtection(): ProtectionComponent.Factory
+
+  @CheckResult fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory
 
   @CheckResult fun plusApp(): AppComponent.Factory
 
@@ -160,8 +163,10 @@ internal interface PYDroidComponent {
         lazy(LazyThreadSafetyMode.NONE) {
           DataPolicyModule(
               DataPolicyModule.Parameters(
+                  context = context.applicationContext,
                   preferences = preferences,
-              ))
+              ),
+          )
         }
 
     private val settingsModule by
@@ -268,6 +273,15 @@ internal interface PYDroidComponent {
               isFakeUpgradeChecker = params.debug.enabled,
               isFakeUpgradeAvailable = params.debug.upgradeAvailable,
               composeTheme = composeTheme,
+          )
+        }
+
+    private val dataPolicyDialogParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          DataPolicyDialogComponent.Factory.Parameters(
+              interactor = dataPolicyModule.provideInteractor(),
+              composeTheme = composeTheme,
+              imageLoader = imageLoader,
           )
         }
 
@@ -388,6 +402,10 @@ internal interface PYDroidComponent {
 
     override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
+    }
+
+    override fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory {
+      return DataPolicyDialogComponent.Impl.FactoryImpl(dataPolicyDialogParams)
     }
 
     override fun plusProtection(): ProtectionComponent.Factory {

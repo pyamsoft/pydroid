@@ -34,16 +34,12 @@ internal constructor(
     private val viewSourceUrl: String,
     private val privacyPolicyUrl: String,
     private val termsConditionsUrl: String,
-    hideClearAll: Boolean,
-    hideUpgradeInformation: Boolean,
     private val theming: Theming,
     interactor: OtherAppsInteractor,
 ) :
     UiViewModel<SettingsViewState, SettingsControllerEvent>(
         initialState =
             SettingsViewState(
-                hideClearAll = hideClearAll,
-                hideUpgradeInformation = hideUpgradeInformation,
                 applicationName = "",
                 darkMode = Theming.Mode.SYSTEM,
                 otherApps = emptyList(),

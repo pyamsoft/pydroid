@@ -26,6 +26,7 @@
 
     <string name="support_pyamsoft">Support pyamsoft</string>
 
+    <string name="data_policy">Data Policy Disclosure</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_conditions">Terms &amp; Conditions</string>
 
@@ -34,6 +35,9 @@
     <string name="open_store">Play Store</string>
     <string name="view_source">Source Code</string>
     <string name="close">Close</string>
+
+    <string name="dpd_accept">I Accept the Data Policy Terms</string>
+    <string name="dpd_reject">I Do Not Accept the Data Policy Terms</string>
 
     <string name="ad_badge">AD</string>
     <string name="in_app_badge">IN-APP</string>

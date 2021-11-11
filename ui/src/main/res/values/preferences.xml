@@ -51,6 +51,9 @@
     <string name="view_privacy_title">@string/privacy_policy</string>
     <string name="view_privacy_summary">Read our Privacy Policy!</string>
 
+    <string name="view_data_policy_title">@string/data_policy</string>
+    <string name="view_data_policy_summary">Read our Data Policy Disclosure!</string>
+
     <string name="view_terms_key">view_terms</string>
     <string name="view_terms_title">@string/terms_conditions</string>
     <string name="view_terms_summary">Read our Terms &amp; Conditions!</string>

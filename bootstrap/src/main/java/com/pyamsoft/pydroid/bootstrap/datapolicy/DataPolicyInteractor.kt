@@ -17,11 +17,10 @@
 package com.pyamsoft.pydroid.bootstrap.datapolicy
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.app.AppInteractor
 
-/**
- * Interactor which handles consent of Data policy
- */
-public interface DataPolicyInteractor {
+/** Interactor which handles consent of Data policy */
+public interface DataPolicyInteractor : AppInteractor {
 
   /** Has the user consented */
   @CheckResult public suspend fun isPolicyAccepted(): Boolean

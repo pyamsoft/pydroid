@@ -19,19 +19,35 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class DataPolicyDialogViewModel
 internal constructor(
+    private val provider: AppProvider,
     private val interactor: DataPolicyInteractor,
 ) :
     UiViewModel<DataPolicyDialogViewState, DataPolicyDialogControllerEvent>(
         initialState =
             DataPolicyDialogViewState(
+                name = "",
+                icon = 0,
                 navigationError = null,
             ),
     ) {
+
+  init {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      val displayName = interactor.getDisplayName()
+      setState {
+        copy(
+            name = displayName,
+            icon = provider.applicationIcon,
+        )
+      }
+    }
+  }
 
   internal fun handleAccept() {
     viewModelScope.launch(context = Dispatchers.Default) {

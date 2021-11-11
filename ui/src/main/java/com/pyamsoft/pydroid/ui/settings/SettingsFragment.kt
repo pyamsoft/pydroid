@@ -42,10 +42,12 @@ import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
+import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsControllerEvent
@@ -69,30 +71,39 @@ public abstract class SettingsFragment : Fragment() {
   // Don't need to create a component or bind this to the controller, since RatingActivity should
   // be bound for us.
   internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val ratingViewModel by activityViewModels<RatingViewModel> {
-    ratingFactory.requireNotNull()
-  }
+  private val ratingViewModel by
+      activityViewModels<RatingViewModel> { ratingFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since VersionCheckActivity
   // should
   // be bound for us.
   internal var versionFactory: ViewModelProvider.Factory? = null
-  private val versionViewModel by activityViewModels<VersionCheckViewModel> {
-    versionFactory.requireNotNull()
-  }
+  private val versionViewModel by
+      activityViewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
 
   // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
   // be bound for us.
   internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val changeLogViewModel by activityViewModels<ChangeLogViewModel> {
-    changeLogFactory.requireNotNull()
-  }
+  private val changeLogViewModel by
+      activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
+
+  // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
+  // be bound for us.
+  internal var dataPolicyFactory: ViewModelProvider.Factory? = null
+  private val dataPolicyViewModel by
+      activityViewModels<DataPolicyViewModel> { dataPolicyFactory.requireNotNull() }
 
   // ImageLoader
   internal var imageLoader: ImageLoader? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
+
+  @CheckResult
+  private fun hideDataPolicy(): Boolean {
+    // Data Policy is only supported when Activity is PYDroidActivity, hide it otherwise
+    return requireActivity() !is PYDroidActivity
+  }
 
   final override fun onCreateView(
       inflater: LayoutInflater,
@@ -103,10 +114,7 @@ public abstract class SettingsFragment : Fragment() {
 
     Injector.obtainFromApplication<PYDroidComponent>(act)
         .plusSettings()
-        .create(
-            hideClearAll = hideClearAll,
-            hideUpgradeInformation = hideUpgradeInformation,
-        )
+        .create()
         .inject(this)
 
     return ComposeView(act).apply {
@@ -123,6 +131,9 @@ public abstract class SettingsFragment : Fragment() {
           CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
             SettingsScreen(
                 state = state,
+                hideClearAll = hideClearAll,
+                hideUpgradeInformation = hideUpgradeInformation,
+                hideDataPolicy = hideDataPolicy(),
                 imageLoader = imageLoader.requireNotNull(),
                 topItemMargin = customTopItemMargin(),
                 bottomItemMargin = customBottomItemMargin(),
@@ -139,7 +150,8 @@ public abstract class SettingsFragment : Fragment() {
                 onDonateClicked = { BillingDialog.open(act) },
                 onBugReportClicked = { viewModel.handleReportBug() },
                 onViewSourceClicked = { viewModel.handleViewSourceCode() },
-                onViewPrivacyPolicy = { viewModel.handleViewPrivacyPolicy() },
+                onViewDataPolicyClicked = { dataPolicyViewModel.handleShowDisclosure(true) },
+                onViewPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy() },
                 onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
                 onViewMoreAppsClicked = { viewModel.handleViewMoreApps() },
                 onViewSocialMediaClicked = { viewModel.handleViewSocialMedia() },
@@ -174,6 +186,7 @@ public abstract class SettingsFragment : Fragment() {
     versionFactory = null
     ratingFactory = null
     changeLogFactory = null
+    dataPolicyFactory = null
 
     imageLoader = null
 

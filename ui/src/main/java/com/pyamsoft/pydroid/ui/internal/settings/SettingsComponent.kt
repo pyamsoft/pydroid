@@ -31,11 +31,7 @@ internal interface SettingsComponent {
 
   interface Factory {
 
-    @CheckResult
-    fun create(
-        hideClearAll: Boolean,
-        hideUpgradeInformation: Boolean,
-    ): SettingsComponent
+    @CheckResult fun create(): SettingsComponent
 
     data class Parameters
     internal constructor(
@@ -51,12 +47,7 @@ internal interface SettingsComponent {
     )
   }
 
-  class Impl
-  private constructor(
-      private val hideClearAll: Boolean,
-      private val hideUpgradeInformation: Boolean,
-      private val params: Factory.Parameters
-  ) : SettingsComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : SettingsComponent {
 
     private val factory = createViewModelFactory {
       SettingsViewModel(
@@ -64,30 +55,27 @@ internal interface SettingsComponent {
           privacyPolicyUrl = params.privacyPolicyUrl,
           termsConditionsUrl = params.termsConditionsUrl,
           viewSourceUrl = params.viewSourceUrl,
-          hideClearAll = hideClearAll,
-          hideUpgradeInformation = hideUpgradeInformation,
           theming = params.theming,
           interactor = params.otherAppsModule.provideInteractor(),
       )
     }
 
     override fun inject(fragment: SettingsFragment) {
-      fragment.composeTheme = params.composeTheme
       fragment.changeLogFactory = params.factory
       fragment.ratingFactory = params.factory
       fragment.versionFactory = params.factory
-      fragment.imageLoader = params.imageLoader
+      fragment.dataPolicyFactory = params.factory
       fragment.factory = factory
+
+      fragment.composeTheme = params.composeTheme
+      fragment.imageLoader = params.imageLoader
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(
-          hideClearAll: Boolean,
-          hideUpgradeInformation: Boolean,
-      ): SettingsComponent {
-        return Impl(hideClearAll, hideUpgradeInformation, params)
+      override fun create(): SettingsComponent {
+        return Impl(params)
       }
     }
   }

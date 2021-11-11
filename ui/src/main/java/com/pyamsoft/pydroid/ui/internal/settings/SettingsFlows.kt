@@ -25,8 +25,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 @Stable
 internal data class SettingsViewState
 internal constructor(
-    val hideClearAll: Boolean,
-    val hideUpgradeInformation: Boolean,
     val applicationName: CharSequence,
     val darkMode: Theming.Mode,
     val otherApps: List<OtherApp>,

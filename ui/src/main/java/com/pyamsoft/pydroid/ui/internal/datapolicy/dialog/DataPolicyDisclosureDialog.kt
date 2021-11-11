@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -30,9 +31,12 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.hyperlink
@@ -48,14 +52,28 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
 
   internal var imageLoader: ImageLoader? = null
 
+  @CheckResult
+  private fun getAppProvider(): AppProvider {
+    return requireActivity() as AppProvider
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    // The DPD is not cancellable except by the button interaction
+    isCancelable = false
+  }
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    //
-    // Injector.obtainFromApplication<PYDroidComponent>(act).plusOtherApps().create().inject(this)
+    Injector.obtainFromApplication<PYDroidComponent>(act)
+        .plusDataPolicyDialog()
+        .create(getAppProvider())
+        .inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_dpd

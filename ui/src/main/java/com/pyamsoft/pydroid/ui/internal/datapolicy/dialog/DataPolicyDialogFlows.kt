@@ -16,13 +16,18 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
 @Stable
-internal data class DataPolicyDialogViewState internal constructor(val navigationError: Throwable?) :
-    UiViewState
+internal data class DataPolicyDialogViewState
+internal constructor(
+    val name: String,
+    @DrawableRes val icon: Int,
+    val navigationError: Throwable?,
+) : UiViewState
 
 internal sealed class DataPolicyDialogControllerEvent : UiControllerEvent {
 

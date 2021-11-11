@@ -24,7 +24,6 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
@@ -144,7 +143,7 @@ internal interface AppComponent {
 
       // Change Log
       val changeLogViewModel by activity.viewModels<ChangeLogViewModel> { params.rootFactory }
-      activity.changelog = ChangeLogDelegate(pyDroidActivity, changeLogViewModel)
+      activity.changeLog = ChangeLogDelegate(pyDroidActivity, changeLogViewModel)
 
       // Data Policy
       val dataPolicyViewModel by activity.viewModels<DataPolicyViewModel> { params.rootFactory }

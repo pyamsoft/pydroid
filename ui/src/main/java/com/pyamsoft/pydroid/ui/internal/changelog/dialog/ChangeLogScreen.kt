@@ -29,6 +29,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -66,10 +67,12 @@ internal fun ChangeLogScreen(
     Surface {
       Column {
         ChangeLog(
+            modifier = Modifier.fillMaxWidth(),
             changeLog = changeLog,
         )
 
         Actions(
+            modifier = Modifier.fillMaxWidth(),
             onRateApp = onRateApp,
             onClose = onClose,
         )
@@ -79,9 +82,12 @@ internal fun ChangeLogScreen(
 }
 
 @Composable
-private fun ChangeLog(changeLog: List<ChangeLogLine>) {
+private fun ChangeLog(
+    modifier: Modifier = Modifier,
+    changeLog: List<ChangeLogLine>,
+) {
   LazyColumn(
-      modifier = Modifier.fillMaxWidth(),
+      modifier = modifier,
       verticalArrangement = Arrangement.spacedBy(8.dp),
       contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
   ) {
@@ -98,10 +104,15 @@ private fun ChangeLog(changeLog: List<ChangeLogLine>) {
 
 @Composable
 private fun Actions(
+    modifier: Modifier = Modifier,
     onRateApp: () -> Unit,
     onClose: () -> Unit,
 ) {
-  Row(modifier = Modifier.padding(16.dp)) {
+  Row(
+      modifier = modifier.padding(16.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Start,
+  ) {
     TextButton(
         onClick = onRateApp,
     ) {

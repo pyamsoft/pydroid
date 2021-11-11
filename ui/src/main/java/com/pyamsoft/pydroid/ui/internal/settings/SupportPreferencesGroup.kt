@@ -28,12 +28,14 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 @Composable
 @CheckResult
 internal fun createSupportPreferencesGroup(
+    hideDataPolicy: Boolean,
     applicationName: CharSequence,
     onRateClicked: () -> Unit,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
-    onViewPrivacyPolicy: () -> Unit,
+    onViewDataPolicyClicked: () -> Unit,
+    onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
 ): Preferences.Group {
   return preferenceGroup(
@@ -53,14 +55,36 @@ internal fun createSupportPreferencesGroup(
               sourceCodePreference(
                   onViewSourceClicked = onViewSourceClicked,
               ),
-              privacyPolicyPreference(
-                  onViewPrivacyPolicy = onViewPrivacyPolicy,
+          ) +
+              decideDataPolicyPreference(
+                  hideDataPolicy = hideDataPolicy,
+                  onViewDataPolicyClicked = onViewDataPolicyClicked,
+              ) +
+              listOf(
+                  privacyPolicyPreference(
+                      onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+                  ),
+                  termsOfServicePreference(
+                      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+                  ),
               ),
-              termsOfServicePreference(
-                  onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-              ),
-          ),
   )
+}
+
+@Composable
+@CheckResult
+private fun decideDataPolicyPreference(
+    hideDataPolicy: Boolean,
+    onViewDataPolicyClicked: () -> Unit,
+): List<Preferences.Item> {
+  return if (hideDataPolicy) emptyList()
+  else {
+    listOf(
+        dataPolicyPreference(
+            onViewDataPolicyClicked = onViewDataPolicyClicked,
+        ),
+    )
+  }
 }
 
 @Composable
@@ -118,14 +142,27 @@ private fun sourceCodePreference(
 
 @Composable
 @CheckResult
+private fun dataPolicyPreference(
+    onViewDataPolicyClicked: () -> Unit,
+): Preferences.Item {
+  return preference(
+      name = stringResource(R.string.view_data_policy_title),
+      summary = stringResource(R.string.view_data_policy_summary),
+      icon = R.drawable.ic_policy_24dp,
+      onClick = onViewDataPolicyClicked,
+  )
+}
+
+@Composable
+@CheckResult
 private fun privacyPolicyPreference(
-    onViewPrivacyPolicy: () -> Unit,
+    onViewPrivacyPolicyClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
       name = stringResource(R.string.view_privacy_title),
       summary = stringResource(R.string.view_privacy_summary),
       icon = R.drawable.ic_policy_24dp,
-      onClick = onViewPrivacyPolicy,
+      onClick = onViewPrivacyPolicyClicked,
   )
 }
 

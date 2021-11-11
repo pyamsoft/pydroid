@@ -27,9 +27,9 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
@@ -41,7 +41,7 @@ import com.pyamsoft.pydroid.util.doOnCreate
  *
  * You are required to extend this class so that other ui bits work.
  */
-public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
+public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** DataPolicy Delegate */
   internal var dataPolicy: DataPolicyDelegate? = null
@@ -59,7 +59,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
   internal var versionCheck: VersionCheckDelegate? = null
 
   /** Change Log Delegate */
-  internal var changelog: ChangeLogDelegate? = null
+  internal var changeLog: ChangeLogDelegate? = null
 
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
@@ -115,7 +115,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
     }
 
     // Attempt to show the changelog if we are not disabled
-    changelog.requireNotNull().showChangelog()
+    changeLog.requireNotNull().showChangeLog()
   }
 
   /** Get system service */
@@ -135,7 +135,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
     protection = null
     rating = null
     versionCheck = null
-    changelog = null
+    changeLog = null
     dataPolicy = null
     injectorComponent = null
   }
@@ -188,7 +188,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), AppProvider {
 
     this.doOnCreate {
       Logger.d("Attempt Connect Change Log")
-      changelog.requireNotNull().bindEvents()
+      changeLog.requireNotNull().bindEvents()
     }
   }
 

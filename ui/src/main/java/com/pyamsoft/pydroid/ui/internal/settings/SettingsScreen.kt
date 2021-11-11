@@ -47,6 +47,9 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    hideClearAll: Boolean,
+    hideUpgradeInformation: Boolean,
+    hideDataPolicy: Boolean,
     state: SettingsViewState,
     imageLoader: ImageLoader,
     topItemMargin: Dp = 0.dp,
@@ -62,7 +65,8 @@ internal fun SettingsScreen(
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
-    onViewPrivacyPolicy: () -> Unit,
+    onViewDataPolicyClicked: () -> Unit,
+    onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
     onViewMoreAppsClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
@@ -72,8 +76,6 @@ internal fun SettingsScreen(
   val isLoading = state.isLoading
   val applicationName = state.applicationName
   val darkMode = state.darkMode
-  val hideClearAll = state.hideClearAll
-  val hideUpgradeInformation = state.hideUpgradeInformation
   val navigationError = state.navigationError
 
   val scaffoldState = rememberScaffoldState()
@@ -95,6 +97,7 @@ internal fun SettingsScreen(
             customPostContent = customPostContent,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
+            hideDataPolicy = hideDataPolicy,
             applicationName = applicationName,
             darkMode = darkMode,
             onDarkModeChanged = onDarkModeChanged,
@@ -106,7 +109,8 @@ internal fun SettingsScreen(
             onDonateClicked = onDonateClicked,
             onBugReportClicked = onBugReportClicked,
             onViewSourceClicked = onViewSourceClicked,
-            onViewPrivacyPolicy = onViewPrivacyPolicy,
+            onViewDataPolicyClicked = onViewDataPolicyClicked,
+            onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
             onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
             onViewMoreAppsClicked = onViewMoreAppsClicked,
             onViewSocialMediaClicked = onViewSocialMediaClicked,
@@ -140,6 +144,7 @@ private fun SettingsList(
     customPostContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
+    hideDataPolicy: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
@@ -151,7 +156,8 @@ private fun SettingsList(
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
-    onViewPrivacyPolicy: () -> Unit,
+    onViewDataPolicyClicked: () -> Unit,
+    onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
     onViewMoreAppsClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
@@ -178,12 +184,14 @@ private fun SettingsList(
         )
         add(
             createSupportPreferencesGroup(
+                hideDataPolicy = hideDataPolicy,
                 applicationName = applicationName,
                 onRateClicked = onRateClicked,
                 onDonateClicked = onDonateClicked,
                 onBugReportClicked = onBugReportClicked,
                 onViewSourceClicked = onViewSourceClicked,
-                onViewPrivacyPolicy = onViewPrivacyPolicy,
+                onViewDataPolicyClicked = onViewDataPolicyClicked,
+                onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
                 onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
             ),
         )
@@ -237,13 +245,14 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       state =
           SettingsViewState(
               isLoading = isLoading,
-              hideClearAll = false,
-              hideUpgradeInformation = false,
               applicationName = "TEST",
               darkMode = Theming.Mode.LIGHT,
               otherApps = emptyList(),
               navigationError = null,
           ),
+      hideClearAll = false,
+      hideUpgradeInformation = false,
+      hideDataPolicy = false,
       imageLoader = createNewTestImageLoader(context),
       topItemMargin = 0.dp,
       bottomItemMargin = 0.dp,
@@ -258,7 +267,8 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       onDonateClicked = {},
       onBugReportClicked = {},
       onViewSourceClicked = {},
-      onViewPrivacyPolicy = {},
+      onViewDataPolicyClicked = {},
+      onViewPrivacyPolicyClicked = {},
       onViewTermsOfServiceClicked = {},
       onViewMoreAppsClicked = {},
       onViewSocialMediaClicked = {},

@@ -16,12 +16,15 @@
 
 package com.pyamsoft.pydroid.bootstrap.datapolicy
 
+import android.content.Context
+import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class DataPolicyInteractorImpl
-internal constructor(private val preferences: DataPolicyPreferences) : DataPolicyInteractor {
+internal constructor(context: Context, private val preferences: DataPolicyPreferences) :
+    AppInteractorImpl(context), DataPolicyInteractor {
 
   override suspend fun isPolicyAccepted(): Boolean =
       withContext(context = Dispatchers.IO) {

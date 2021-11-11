@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.util.doOnCreate
  *
  * You are required to extend this class so that other ui bits work.
  */
+@Deprecated("Use PYDroidActivity instead.")
 public abstract class ActivityBase : AppCompatActivity(), AppProvider {
 
   /** The activity scoped component graph for the BillingDialog */

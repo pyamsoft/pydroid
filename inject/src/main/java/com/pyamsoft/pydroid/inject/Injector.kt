@@ -117,7 +117,7 @@ public object Injector {
 
   @JvmStatic
   private fun serviceNotFound(context: Context, name: String): Nothing {
-    val error = IllegalArgumentException("Unable to find service: $name in context: $context")
+    val error = ServiceNotFoundException("Unable to find service: $name in context: $context")
     Logger.e(error, "Service not found")
     throw error
   }
@@ -132,3 +132,8 @@ public object Injector {
     @Suppress("UNCHECKED_CAST") return service as T
   }
 }
+
+/** Could not find a service in the Injector */
+public data class ServiceNotFoundException(
+    override val message: String,
+) : IllegalArgumentException(message)

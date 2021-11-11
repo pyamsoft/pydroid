@@ -112,10 +112,7 @@ public abstract class SettingsFragment : Fragment() {
   ): View {
     val act = requireActivity()
 
-    Injector.obtainFromApplication<PYDroidComponent>(act)
-        .plusSettings()
-        .create()
-        .inject(this)
+    Injector.obtainFromApplication<PYDroidComponent>(act).plusSettings().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.fragment_settings

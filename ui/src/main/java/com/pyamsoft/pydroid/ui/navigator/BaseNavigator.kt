@@ -26,9 +26,8 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
   protected abstract val defaultScreen: Navigator.Screen<S>
 
-  private val screen: MutableState<S> by lazy(LazyThreadSafetyMode.NONE) {
-    mutableStateOf(defaultScreen.screen)
-  }
+  private val screen: MutableState<S> by
+      lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(defaultScreen.screen) }
 
   final override fun currentScreen(): S {
     return screen.value

@@ -33,9 +33,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.inject.ServiceNotFoundException
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
+import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
@@ -59,7 +61,14 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromActivity<VersionCheckComponent>(act).inject(this)
+
+    try {
+      // TODO(Peter): Once 25 releases and removes the ActivityBase we can remove this as it will
+      // enforce Library consumers on PYDroidActivity
+      Injector.obtainFromActivity<VersionCheckComponent>(act).inject(this)
+    } catch (e: ServiceNotFoundException) {
+      Injector.obtainFromActivity<AppComponent>(act).inject(this)
+    }
 
     return ComposeView(act).apply {
       id = R.id.dialog_upgrade

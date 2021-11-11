@@ -39,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /** Activity which handles displaying an in-app rating prompt */
+@Deprecated("Use PYDroidActivity instead.")
 public abstract class RatingActivity : VersionCheckActivity() {
 
   internal var ratingFactory: ViewModelProvider.Factory? = null

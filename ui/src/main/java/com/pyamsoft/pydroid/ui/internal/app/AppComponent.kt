@@ -16,49 +16,158 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import android.content.Context
+import androidx.activity.viewModels
 import androidx.annotation.CheckResult
+import androidx.lifecycle.ViewModelProvider
+import coil.ImageLoader
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.protection.Protection
+import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
+import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
+import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
+import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface AppComponent {
 
   fun inject(activity: PYDroidActivity)
 
-  @CheckResult fun plusDialog(): BillingComponent.DialogComponent.Factory
+  @CheckResult fun plusBilling(): BillingComponent.DialogComponent.Factory
+
+  fun inject(dialog: VersionUpgradeDialog)
 
   interface Factory {
 
-    @CheckResult fun create(): AppComponent
+    @CheckResult fun create(activity: PYDroidActivity): AppComponent
+
+    data class Parameters
+    internal constructor(
+        internal val rootFactory: ViewModelProvider.Factory,
+        internal val context: Context,
+        internal val theming: Theming,
+        internal val errorBus: EventBus<Throwable>,
+        internal val interactor: ChangeLogInteractor,
+        internal val composeTheme: ComposeThemeFactory,
+        internal val imageLoader: ImageLoader,
+        internal val isFake: Boolean,
+        internal val protection: Protection,
+        internal val version: Int,
+        internal val isFakeUpgradeChecker: Boolean,
+        internal val isFakeUpgradeAvailable: Boolean,
+    )
   }
 
-  class Impl private constructor(private val params: BillingComponent.Factory.Parameters) :
-      AppComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+      private val pyDroidActivity: PYDroidActivity,
+  ) : AppComponent {
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
-    private val module =
+    private val billingModule =
         BillingModule(
             BillingModule.Parameters(
                 context = params.context.applicationContext,
                 errorBus = params.errorBus,
-            ))
+            ),
+        )
+
+    // Make this module each time since if it falls out of scope, the in-app rating system
+    // will crash
+    private val ratingModule =
+        RatingModule(
+            RatingModule.Parameters(
+                context = params.context.applicationContext,
+                isFake = params.isFake,
+            ),
+        )
+
+    // Make this module each time since if it falls out of scope, the in-app update system
+    // will crash
+    private val versionModule =
+        VersionModule(
+            VersionModule.Parameters(
+                context = params.context.applicationContext,
+                version = params.version,
+                isFakeUpgradeChecker = params.isFakeUpgradeChecker,
+                isFakeUpgradeAvailable = params.isFakeUpgradeAvailable,
+            ),
+        )
+
+    private val versionCheckFactory = createViewModelFactory {
+      VersionCheckViewModel(versionModule.provideInteractor())
+    }
+
+    private val versionUpgradeFactory = createViewModelFactory {
+      VersionUpgradeViewModel(versionModule.provideInteractor())
+    }
+
+    private val ratingFactory = createViewModelFactory {
+      RatingViewModel(ratingModule.provideInteractor())
+    }
 
     override fun inject(activity: PYDroidActivity) {
-      activity.billing = BillingDelegate(this, module.provideConnector())
+      // Billing
+      activity.billing = BillingDelegate(pyDroidActivity, billingModule.provideConnector())
+
+      // Protection
+      activity.protection = ProtectionDelegate(pyDroidActivity, params.protection)
+
+      // Rating
+      val ratingViewModel by activity.viewModels<RatingViewModel> { ratingFactory }
+      activity.rating = RatingDelegate(pyDroidActivity, ratingViewModel)
+
+      // Version Check
+      val versionCheckViewModel by
+          activity.viewModels<VersionCheckViewModel> { versionCheckFactory }
+      activity.versionCheck = VersionCheckDelegate(pyDroidActivity, versionCheckViewModel)
+
+      // Change Log
+      val changeLogViewModel by activity.viewModels<ChangeLogViewModel> { params.rootFactory }
+      activity.changelog = ChangeLogDelegate(pyDroidActivity, changeLogViewModel)
     }
 
-    override fun plusDialog(): BillingComponent.DialogComponent.Factory {
-      return BillingComponent.DialogComponent.Impl.FactoryImpl(module, params)
+    override fun plusBilling(): BillingComponent.DialogComponent.Factory {
+      return BillingComponent.DialogComponent.Impl.FactoryImpl(
+          billingModule,
+          BillingComponent.Factory.Parameters(
+              context = params.context,
+              theming = params.theming,
+              errorBus = params.errorBus,
+              interactor = params.interactor,
+              composeTheme = params.composeTheme,
+              imageLoader = params.imageLoader,
+          ),
+      )
     }
 
-    class FactoryImpl
-    internal constructor(private val params: BillingComponent.Factory.Parameters) : Factory {
+    override fun inject(dialog: VersionUpgradeDialog) {
+      dialog.composeTheme = params.composeTheme
+      dialog.factory = versionUpgradeFactory
+    }
 
-      override fun create(): AppComponent {
+    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
+
+      override fun create(activity: PYDroidActivity): AppComponent {
         OssLibraries.usingUi = true
-        return Impl(params)
+        return Impl(params, activity)
       }
     }
   }

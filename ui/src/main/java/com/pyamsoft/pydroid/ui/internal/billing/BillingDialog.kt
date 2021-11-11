@@ -78,7 +78,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
           .inject(this)
     } catch (e: ServiceNotFoundException) {
       Injector.obtainFromActivity<AppComponent>(act)
-          .plusDialog()
+          .plusBilling()
           .create(getApplicationProvider())
           .inject(this)
     }

@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
 /** An activity which displays an in-app changelog */
+@Deprecated("Use PYDroidActivity instead.")
 public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
 
   internal var changeLogFactory: ViewModelProvider.Factory? = null

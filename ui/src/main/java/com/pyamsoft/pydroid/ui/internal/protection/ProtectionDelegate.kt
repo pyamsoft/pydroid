@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.ui.internal.protection
 
 import androidx.appcompat.app.AppCompatActivity
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.protection.Protection
+import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
-internal class ProtectionDelegate(protection: Protection) {
+internal class ProtectionDelegate(activity: PYDroidActivity, protection: Protection) {
 
+  private var activity: PYDroidActivity? = activity
   private var protection: Protection? = protection
 
   /** Connect to the billing service */
-  fun connect(activity: AppCompatActivity) {
-    protectApplication(activity)
+  fun connect() {
+    val act = activity.requireNotNull()
+    protectApplication(act)
 
-    activity.doOnDestroy { protection = null }
+    act.doOnDestroy {
+      protection = null
+      activity = null
+    }
   }
 
   /** Attempts to load and secure the application */

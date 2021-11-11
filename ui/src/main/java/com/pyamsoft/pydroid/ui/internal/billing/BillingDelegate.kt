@@ -14,31 +14,34 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
 internal class BillingDelegate(
-    component: AppComponent,
+    activity: PYDroidActivity,
     connector: BillingConnector,
 ) {
 
-  private var component: AppComponent? = component
+  private var activity: PYDroidActivity? = activity
   private var connector: BillingConnector? = connector
 
   /** Connect to the billing service */
-  fun connect(activity: AppCompatActivity) {
-    connectBilling(activity)
-    activity.doOnDestroy {
-      component = null
+  fun connect() {
+    val act = activity.requireNotNull()
+
+    connectBilling(act)
+
+    act.doOnDestroy {
       connector = null
+      activity = null
     }
   }
 
@@ -59,12 +62,4 @@ internal class BillingDelegate(
       }
     }
   }
-
-  /** Get system service */
-  @CheckResult
-  fun getSystemService(name: String): Any? =
-      when (name) {
-        AppComponent::class.java.name -> component.requireNotNull()
-        else -> null
-      }
 }

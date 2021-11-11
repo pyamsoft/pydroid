@@ -42,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /** Activity that handles checking for a new version update */
+@Deprecated("Use PYDroidActivity instead.")
 public abstract class VersionCheckActivity : ActivityBase() {
 
   /** Check for updates automatically */

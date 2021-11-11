@@ -113,6 +113,8 @@ internal interface PYDroidComponent {
 
     private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
 
+    private val billingErrorBus by lazy(LazyThreadSafetyMode.NONE) { EventBus.create<Throwable>() }
+
     private val protection by
         lazy(LazyThreadSafetyMode.NONE) {
           Protection.create(
@@ -279,10 +281,28 @@ internal interface PYDroidComponent {
           BillingComponent.Factory.Parameters(
               context = context.applicationContext,
               theming = theming,
-              errorBus = EventBus.create(),
+              errorBus = billingErrorBus,
               interactor = changeLogModule.provideInteractor(),
               composeTheme = composeTheme,
               imageLoader = imageLoader,
+          )
+        }
+
+    private val appParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          AppComponent.Factory.Parameters(
+              rootFactory = viewModelFactory,
+              context = context.applicationContext,
+              theming = theming,
+              errorBus = billingErrorBus,
+              interactor = changeLogModule.provideInteractor(),
+              composeTheme = composeTheme,
+              imageLoader = imageLoader,
+              protection = protection,
+              version = params.version,
+              isFakeUpgradeChecker = params.debug.enabled,
+              isFakeUpgradeAvailable = params.debug.upgradeAvailable,
+              isFake = params.debug.enabled,
           )
         }
 
@@ -340,7 +360,7 @@ internal interface PYDroidComponent {
     }
 
     override fun plusApp(): AppComponent.Factory {
-      return AppComponent.Impl.FactoryImpl(billingParams)
+      return AppComponent.Impl.FactoryImpl(appParams)
     }
 
     override fun plusAppSettings(): AppSettingsComponent.Factory {

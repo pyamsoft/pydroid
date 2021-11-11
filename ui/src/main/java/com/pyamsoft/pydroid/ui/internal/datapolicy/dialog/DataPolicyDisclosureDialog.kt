@@ -90,7 +90,6 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
               onReject = { viewModel.handleReject() },
               onPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy() },
               onTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
-              onUrlClicked = { viewModel.handleOpenUrl(it) },
           )
         }
       }

@@ -84,8 +84,4 @@ internal constructor(
   internal fun handleViewPrivacyPolicy() {
     publish(DataPolicyDialogControllerEvent.OpenUrl(privacyPolicyUrl))
   }
-
-  internal fun handleOpenUrl(url: String) {
-    publish(DataPolicyDialogControllerEvent.OpenUrl(url))
-  }
 }

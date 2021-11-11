@@ -53,7 +53,6 @@ internal fun DataPolicyDisclosureScreen(
     imageLoader: ImageLoader,
     onPrivacyPolicyClicked: () -> Unit,
     onTermsOfServiceClicked: () -> Unit,
-    onUrlClicked: (String) -> Unit,
     onNavigationErrorDismissed: () -> Unit,
     onAccept: () -> Unit,
     onReject: () -> Unit,
@@ -78,9 +77,10 @@ internal fun DataPolicyDisclosureScreen(
     Surface {
       Column {
         Disclosure(
+            modifier = Modifier.fillMaxWidth(),
+            name = name,
             onPrivacyPolicyClicked = onPrivacyPolicyClicked,
             onTermsOfServiceClicked = onTermsOfServiceClicked,
-            onUrlClicked = onUrlClicked,
         )
         Actions(
             modifier = Modifier.fillMaxWidth(),
@@ -101,20 +101,50 @@ internal fun DataPolicyDisclosureScreen(
 @Composable
 private fun Disclosure(
     modifier: Modifier = Modifier,
+    name: String,
     onPrivacyPolicyClicked: () -> Unit,
     onTermsOfServiceClicked: () -> Unit,
-    onUrlClicked: (String) -> Unit,
 ) {
   val scrollState = rememberScrollState()
   Column(
-      modifier = modifier.verticalScroll(scrollState),
+      modifier = modifier.verticalScroll(scrollState).padding(16.dp),
   ) {
+    Text(
+        text = "$name is free and open source software.",
+        style = MaterialTheme.typography.body1,
+    )
+
+    Text(
+        modifier = Modifier.padding(top = 8.dp),
+        text =
+            """
+        Because it is distributed on the Google Play Store, the developer is provided
+        by default with certain analytics related to your usage of the application called Vitals.
+        You can opt out of these analytics from your device's system settings."""
+                .trimIndent()
+                .replace("\n", " "),
+        style = MaterialTheme.typography.body2,
+    )
+
+    Text(
+        modifier = Modifier.padding(top = 8.dp),
+        text =
+            """
+              Aside from these Google Play Store Vitals, your application data is never knowingly
+              collected, shared, transported, or shown to any other party, including the developer.
+              """
+                .trimIndent()
+                .replace("\n", " "),
+        style = MaterialTheme.typography.body2,
+    )
+
     Column(
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
       Text(
-          modifier = Modifier.clickable { onTermsOfServiceClicked() },
+          modifier = Modifier.clickable { onTermsOfServiceClicked() }.padding(bottom = 8.dp),
           text = "View our Terms and Conditions",
           style =
               MaterialTheme.typography.caption.copy(
@@ -190,7 +220,6 @@ private fun PreviewDataPolicyDisclosureScreen() {
   DataPolicyDisclosureScreen(
       state = DataPolicyDialogViewState(icon = 0, name = "TEST", navigationError = null),
       imageLoader = createNewTestImageLoader(context),
-      onUrlClicked = {},
       onPrivacyPolicyClicked = {},
       onTermsOfServiceClicked = {},
       onNavigationErrorDismissed = {},

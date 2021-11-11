@@ -46,7 +46,7 @@ internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLog
     }
   }
 
-  /** Check for in-app updates */
+  /** Show changelog */
   fun showChangeLog() {
     val vm = viewModel
     if (vm == null) {

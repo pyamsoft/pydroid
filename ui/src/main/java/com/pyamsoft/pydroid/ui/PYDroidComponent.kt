@@ -34,7 +34,6 @@ import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.ProtectionComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
@@ -42,6 +41,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponen
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
+import com.pyamsoft.pydroid.ui.internal.protection.ProtectionComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
@@ -321,6 +321,7 @@ internal interface PYDroidComponent {
               theming = theming,
               errorBus = billingErrorBus,
               changeLogInteractor = changeLogModule.provideInteractor(),
+              dataPolicyInteractor = dataPolicyModule.provideInteractor(),
               composeTheme = composeTheme,
               imageLoader = imageLoader,
               protection = protection,

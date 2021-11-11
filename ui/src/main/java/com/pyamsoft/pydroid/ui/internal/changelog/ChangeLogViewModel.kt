@@ -31,7 +31,15 @@ internal constructor(private val interactor: ChangeLogInteractor) :
       force: Boolean,
   ) {
     viewModelScope.launch(context = Dispatchers.Default) {
-      if (interactor.showChangelog(force)) {
+      var show = false
+      if (force) {
+        show = true
+      } else if (interactor.canShowChangeLog()) {
+        show = true
+      }
+
+      if (show) {
+        interactor.markChangeLogShown()
         publish(ChangeLogControllerEvent.ShowChangeLog)
       }
     }

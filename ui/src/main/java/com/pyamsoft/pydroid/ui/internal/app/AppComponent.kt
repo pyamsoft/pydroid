@@ -24,6 +24,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
@@ -56,7 +57,11 @@ internal interface AppComponent {
 
   interface Factory {
 
-    @CheckResult fun create(activity: PYDroidActivity): AppComponent
+    @CheckResult
+    fun create(
+        activity: PYDroidActivity,
+        disableDataPolicy: Boolean,
+    ): AppComponent
 
     data class Parameters
     internal constructor(
@@ -65,6 +70,7 @@ internal interface AppComponent {
         internal val theming: Theming,
         internal val errorBus: EventBus<Throwable>,
         internal val changeLogInteractor: ChangeLogInteractor,
+        internal val dataPolicyInteractor: DataPolicyInteractor,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
         internal val isFake: Boolean,
@@ -79,6 +85,7 @@ internal interface AppComponent {
   private constructor(
       private val params: Factory.Parameters,
       private val pyDroidActivity: PYDroidActivity,
+      private val disableDataPolicy: Boolean,
   ) : AppComponent {
 
     // Make this module each time since if it falls out of scope, the in-app billing system
@@ -125,6 +132,13 @@ internal interface AppComponent {
       RatingViewModel(ratingModule.provideInteractor())
     }
 
+    private val appInternalFactory = createViewModelFactory {
+      AppInternalViewModel(
+          disableDataPolicy = disableDataPolicy,
+          dataPolicyInteractor = params.dataPolicyInteractor,
+      )
+    }
+
     override fun inject(activity: PYDroidActivity) {
       // Billing
       activity.billing = BillingDelegate(pyDroidActivity, billingModule.provideConnector())
@@ -148,6 +162,9 @@ internal interface AppComponent {
       // Data Policy
       val dataPolicyViewModel by activity.viewModels<DataPolicyViewModel> { params.rootFactory }
       activity.dataPolicy = DataPolicyDelegate(pyDroidActivity, dataPolicyViewModel)
+
+      // App Internal
+      activity.factory = appInternalFactory
     }
 
     override fun plusBilling(): BillingComponent.DialogComponent.Factory {
@@ -171,9 +188,9 @@ internal interface AppComponent {
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-      override fun create(activity: PYDroidActivity): AppComponent {
+      override fun create(activity: PYDroidActivity, disableDataPolicy: Boolean): AppComponent {
         OssLibraries.usingUi = true
-        return Impl(params, activity)
+        return Impl(params, activity, disableDataPolicy)
       }
     }
   }

@@ -26,13 +26,15 @@ internal class ChangeLogInteractorImpl
 internal constructor(context: Context, private val preferences: ChangeLogPreferences) :
     AppInteractorImpl(context), ChangeLogInteractor {
 
-  override suspend fun showChangelog(force: Boolean): Boolean =
+  override suspend fun canShowChangeLog(): Boolean =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        return@withContext (force || preferences.showChangelog()).also { show ->
-          if (show) {
-            preferences.markChangeLogShown()
-          }
-        }
+        return@withContext preferences.showChangelog()
+      }
+
+  override suspend fun markChangeLogShown() =
+      withContext(context = Dispatchers.Default) {
+        Enforcer.assertOffMainThread()
+        preferences.markChangeLogShown()
       }
 }

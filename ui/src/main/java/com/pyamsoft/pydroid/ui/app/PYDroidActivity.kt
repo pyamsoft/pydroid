@@ -17,16 +17,20 @@
 package com.pyamsoft.pydroid.ui.app
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.app.AppInternalControllerEvent
+import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModel
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -82,6 +86,10 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Injector component for Dialog and Fragment injection */
   private var injectorComponent: AppComponent? = null
 
+  /** Injector component for Dialog and Fragment injection */
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by viewModels<AppInternalViewModel> { factory.requireNotNull() }
+
   init {
     protectApplication()
 
@@ -97,10 +105,20 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     injectorComponent =
-        Injector.obtainFromApplication<PYDroidComponent>(this).plusApp().create(this).also {
-            component ->
-          component.inject(this)
-        }
+        Injector.obtainFromApplication<PYDroidComponent>(this)
+            .plusApp()
+            .create(
+                activity = this,
+                disableDataPolicy = disableDataPolicy,
+            )
+            .also { component -> component.inject(this) }
+
+    viewModel.bindController(this) { event ->
+      return@bindController when (event) {
+        is AppInternalControllerEvent.ShowChangeLog -> showChangelog()
+        is AppInternalControllerEvent.ShowDataPolicy -> showDataPolicyDisclosure()
+      }
+    }
   }
 
   /** On Resume show changelog if possible */
@@ -109,13 +127,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // DialogFragments cannot be shown safely until at least onPostResume
-    if (disableChangeLog) {
-      Logger.w("Application has disabled the Change Log component")
-      return
-    }
-
-    // Attempt to show the changelog if we are not disabled
-    changeLog.requireNotNull().showChangeLog()
+    viewModel.handleShowCorrectDialog()
   }
 
   /** Get system service */
@@ -137,7 +149,29 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     versionCheck = null
     changeLog = null
     dataPolicy = null
+
     injectorComponent = null
+    factory = null
+  }
+
+  private fun showChangelog() {
+    if (disableChangeLog) {
+      Logger.w("Application has disabled the Change Log component")
+      return
+    }
+
+    // Attempt to show the changelog if we are not disabled
+    changeLog.requireNotNull().showChangeLog()
+  }
+
+  private fun showDataPolicyDisclosure() {
+    if (disableDataPolicy) {
+      Logger.w("Application has disabled the Data Policy component")
+      return
+    }
+
+    // Attempt to show the data policy if we are not disabled
+    dataPolicy.requireNotNull().showDataPolicyDisclosure()
   }
 
   /** Attempts to connect to in-app billing */

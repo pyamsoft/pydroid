@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.changelog
+package com.pyamsoft.pydroid.ui.internal.app
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.app.AppInteractor
+import androidx.compose.runtime.Stable
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-/** Interactor for displaying an application changelog */
-public interface ChangeLogInteractor : AppInteractor {
+@Stable internal object AppInternalViewState : UiViewState
 
-  /** Show a changelog if allowed. */
-  @CheckResult public suspend fun canShowChangeLog(): Boolean
+internal sealed class AppInternalControllerEvent : UiControllerEvent {
 
-  /** Mark change log as shown. */
-  public suspend fun markChangeLogShown()
+  object ShowDataPolicy : AppInternalControllerEvent()
+
+  object ShowChangeLog : AppInternalControllerEvent()
 }

@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
-import com.pyamsoft.pydroid.util.doOnResume
 
 /** Handles Billing related work in an Activity */
 internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPolicyViewModel) {
@@ -40,7 +39,6 @@ internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPoli
           is DataPolicyControllerEvent.ShowPolicy -> DataPolicyDisclosureDialog.show(act)
         }
       }
-      showDataPolicyDisclosure(act)
     }
 
     act.doOnDestroy {
@@ -49,21 +47,13 @@ internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPoli
     }
   }
 
-  /** Attempts to load and secure the application */
-  private fun showDataPolicyDisclosure(activity: PYDroidActivity) {
-    Logger.d("Prepare data policy disclosure")
-    activity.doOnResume {
-      Logger.d("Attempt show DPD")
-      val vm = viewModel
-      if (vm == null) {
-        val msg = "DataPolicy is not initialized!"
-        val error = IllegalStateException(msg)
-        Logger.e(error, msg)
-        throw error
-      } else {
-        Logger.d("Application is created, protect")
-        vm.handleShowDisclosure(false)
-      }
+  /** Show Data policy */
+  fun showDataPolicyDisclosure() {
+    val vm = viewModel
+    if (vm == null) {
+      Logger.w("Cannot show data policy, ViewModel is null")
+    } else {
+      vm.handleShowDisclosure(false)
     }
   }
 }

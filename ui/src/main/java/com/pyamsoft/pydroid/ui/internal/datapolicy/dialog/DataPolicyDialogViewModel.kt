@@ -60,7 +60,7 @@ internal constructor(
 
   internal fun handleReject() {
     viewModelScope.launch(context = Dispatchers.Default) {
-      interactor.acceptPolicy()
+      interactor.rejectPolicy()
       publish(DataPolicyDialogControllerEvent.RejectPolicy)
     }
   }

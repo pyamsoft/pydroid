@@ -16,11 +16,15 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -47,6 +51,9 @@ internal fun DataPolicyDisclosureScreen(
     modifier: Modifier = Modifier,
     state: DataPolicyDialogViewState,
     imageLoader: ImageLoader,
+    onPrivacyPolicyClicked: () -> Unit,
+    onTermsOfServiceClicked: () -> Unit,
+    onUrlClicked: (String) -> Unit,
     onNavigationErrorDismissed: () -> Unit,
     onAccept: () -> Unit,
     onReject: () -> Unit,
@@ -70,6 +77,11 @@ internal fun DataPolicyDisclosureScreen(
 
     Surface {
       Column {
+        Disclosure(
+            onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+            onTermsOfServiceClicked = onTermsOfServiceClicked,
+            onUrlClicked = onUrlClicked,
+        )
         Actions(
             modifier = Modifier.fillMaxWidth(),
             onAccept = onAccept,
@@ -82,6 +94,41 @@ internal fun DataPolicyDisclosureScreen(
             onSnackbarDismissed = onNavigationErrorDismissed,
         )
       }
+    }
+  }
+}
+
+@Composable
+private fun Disclosure(
+    modifier: Modifier = Modifier,
+    onPrivacyPolicyClicked: () -> Unit,
+    onTermsOfServiceClicked: () -> Unit,
+    onUrlClicked: (String) -> Unit,
+) {
+  val scrollState = rememberScrollState()
+  Column(
+      modifier = modifier.verticalScroll(scrollState),
+  ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+      Text(
+          modifier = Modifier.clickable { onTermsOfServiceClicked() },
+          text = "View our Terms and Conditions",
+          style =
+              MaterialTheme.typography.caption.copy(
+                  color = MaterialTheme.colors.primary,
+              ),
+      )
+      Text(
+          modifier = Modifier.clickable { onPrivacyPolicyClicked() },
+          text = "View our Privacy Policy",
+          style =
+              MaterialTheme.typography.caption.copy(
+                  color = MaterialTheme.colors.primary,
+              ),
+      )
     }
   }
 }
@@ -143,6 +190,9 @@ private fun PreviewDataPolicyDisclosureScreen() {
   DataPolicyDisclosureScreen(
       state = DataPolicyDialogViewState(icon = 0, name = "TEST", navigationError = null),
       imageLoader = createNewTestImageLoader(context),
+      onUrlClicked = {},
+      onPrivacyPolicyClicked = {},
+      onTermsOfServiceClicked = {},
       onNavigationErrorDismissed = {},
       onAccept = {},
       onReject = {},

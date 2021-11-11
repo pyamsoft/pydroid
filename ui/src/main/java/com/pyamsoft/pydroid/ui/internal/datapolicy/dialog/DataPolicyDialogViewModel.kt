@@ -25,6 +25,8 @@ import kotlinx.coroutines.launch
 
 internal class DataPolicyDialogViewModel
 internal constructor(
+    private val privacyPolicyUrl: String,
+    private val termsConditionsUrl: String,
     private val provider: AppProvider,
     private val interactor: DataPolicyInteractor,
 ) :
@@ -73,5 +75,17 @@ internal constructor(
 
   internal fun handleHideNavigation() {
     setState { copy(navigationError = null) }
+  }
+
+  internal fun handleViewTermsOfService() {
+    publish(DataPolicyDialogControllerEvent.OpenUrl(termsConditionsUrl))
+  }
+
+  internal fun handleViewPrivacyPolicy() {
+    publish(DataPolicyDialogControllerEvent.OpenUrl(privacyPolicyUrl))
+  }
+
+  internal fun handleOpenUrl(url: String) {
+    publish(DataPolicyDialogControllerEvent.OpenUrl(url))
   }
 }

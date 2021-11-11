@@ -36,6 +36,8 @@ internal interface DataPolicyDialogComponent {
 
     data class Parameters
     internal constructor(
+        internal val privacyPolicyUrl: String,
+        internal val termsConditionsUrl: String,
         internal val interactor: DataPolicyInteractor,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
@@ -48,7 +50,14 @@ internal interface DataPolicyDialogComponent {
       private val params: Factory.Parameters,
   ) : DataPolicyDialogComponent {
 
-    private val factory = createViewModelFactory { DataPolicyDialogViewModel(provider, params.interactor) }
+    private val factory = createViewModelFactory {
+      DataPolicyDialogViewModel(
+          params.privacyPolicyUrl,
+          params.termsConditionsUrl,
+          provider,
+          params.interactor,
+      )
+    }
 
     override fun inject(dialog: DataPolicyDisclosureDialog) {
       dialog.composeTheme = params.composeTheme

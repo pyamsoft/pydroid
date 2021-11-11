@@ -279,6 +279,8 @@ internal interface PYDroidComponent {
     private val dataPolicyDialogParams by
         lazy(LazyThreadSafetyMode.NONE) {
           DataPolicyDialogComponent.Factory.Parameters(
+              privacyPolicyUrl = params.privacyPolicyUrl,
+              termsConditionsUrl = params.termsConditionsUrl,
               interactor = dataPolicyModule.provideInteractor(),
               composeTheme = composeTheme,
               imageLoader = imageLoader,

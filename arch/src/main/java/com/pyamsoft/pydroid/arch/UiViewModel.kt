@@ -33,7 +33,14 @@ import kotlinx.coroutines.withContext
  * UiController to become a full UiComponent
  */
 public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent>
-protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
+protected constructor(delegate: UiStateModel<S>) : UiStateViewModel<S>(delegate = delegate) {
+
+  /** Construct with default delegate using initialState */
+  protected constructor(
+      initialState: S
+  ) : this(
+      delegate = UiStateModel(initialState = initialState),
+  )
 
   private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
   private val onClearEvents by onClearEventDelegate

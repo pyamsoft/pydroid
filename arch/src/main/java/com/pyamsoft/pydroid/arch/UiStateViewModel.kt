@@ -38,11 +38,7 @@ import kotlinx.coroutines.Job
  * class.
  */
 public abstract class UiStateViewModel<S : UiViewState>
-internal constructor(
-    initialState: S,
-) : ViewModel() {
-
-  private val delegate = UiStateModel(initialState)
+internal constructor(private val delegate: UiStateModel<S>) : ViewModel() {
 
   /**
    * The current state

@@ -28,9 +28,7 @@ import androidx.compose.runtime.State
  *
  * Does not care or maintain a backstack in any way.
  *
- * Applications that will need a backstack will first want to extend this interface with their own
- * interface which understands their backstack needs at an interface level, and then inject an
- * implementation which implements that interface, not this base Navigator interface.
+ * Applications that will need a backstack will want to extend from [BackstackNavigator]
  */
 public interface Navigator<S : Any> {
 

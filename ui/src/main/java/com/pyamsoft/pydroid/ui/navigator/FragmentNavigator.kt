@@ -21,7 +21,9 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.commit
@@ -30,14 +32,25 @@ import com.pyamsoft.pydroid.ui.util.commitNow
 /** A navigator backed by AndroidX Fragment transactions */
 public abstract class FragmentNavigator<S : Any>
 protected constructor(
-    private val activity: FragmentActivity,
+    lifecycleOwner: () -> LifecycleOwner,
+    fragmentManager: () -> FragmentManager,
     @IdRes private val fragmentContainerId: Int,
-) : BaseNavigator<S>() {
+) : BaseNavigator<S>(), BackstackNavigator<S> {
+
+  protected constructor(
+      activity: FragmentActivity,
+      @IdRes fragmentContainerId: Int,
+  ) : this(
+      lifecycleOwner = { activity },
+      fragmentManager = { activity.supportFragmentManager },
+      fragmentContainerId = fragmentContainerId,
+  )
 
   private val fragmentTagMap: Map<S, FragmentTag> by
       lazy(LazyThreadSafetyMode.NONE) { provideFragmentTagMap() }
 
-  private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { activity.supportFragmentManager }
+  private val lifecycleOwner by lazy(LazyThreadSafetyMode.NONE) { lifecycleOwner() }
+  private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { fragmentManager() }
 
   /** Provides a map of Screen types to FragmentTypes */
   @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>
@@ -61,6 +74,19 @@ protected constructor(
         Logger.d("Loaded initial screen: ${defaultScreen.screen}")
       }
     }
+  }
+
+  final override fun handleBack() {
+    fragmentManager.popBackStack()
+  }
+
+  /** Go back immediately based on the FM back stack */
+  protected fun handleBackNow() {
+    fragmentManager.popBackStackImmediate()
+  }
+
+  final override fun backStackSize(): Int {
+    return fragmentManager.backStackEntryCount
   }
 
   final override fun select(screen: Navigator.Screen<S>, force: Boolean): Boolean {
@@ -117,7 +143,7 @@ protected constructor(
       transaction: FragmentTransaction.() -> FragmentTransaction,
   ) {
     fragmentManager.commit(
-        owner = activity,
+        owner = lifecycleOwner,
         immediate = immediate,
         transaction = transaction,
     )
@@ -126,7 +152,7 @@ protected constructor(
   /** Perform a fragment transaction commitNow */
   protected fun commitNow(transaction: FragmentTransaction.() -> FragmentTransaction) {
     fragmentManager.commitNow(
-        owner = activity,
+        owner = lifecycleOwner,
         transaction = transaction,
     )
   }

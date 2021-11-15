@@ -17,18 +17,16 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
-  /** The default screen */
-  protected abstract val defaultScreen: Navigator.Screen<S>
+  /** A representation of a blank screen */
+  protected abstract val blankScreen: S
 
-  private val screen: MutableState<S> by
-      lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(defaultScreen.screen) }
+  private val screen by lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(blankScreen) }
 
   final override fun currentScreen(): S {
     return screen.value

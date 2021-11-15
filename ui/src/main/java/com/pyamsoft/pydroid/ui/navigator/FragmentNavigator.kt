@@ -68,21 +68,20 @@ protected constructor(
     return fragmentManager.findFragmentById(fragmentContainerId)
   }
 
-  final override fun restore(savedInstanceState: Bundle?) {
+  final override fun restore(onLoadDefaultScreen: (Selector<S>) -> Unit) {
     val existing = getPossibleCurrentFragment()
     if (existing == null) {
-      if (select(defaultScreen, force = true)) {
-        Logger.d("Loaded initial screen: ${defaultScreen.screen}")
-      }
+      Logger.d("No existing Fragment, load default screen")
+      onLoadDefaultScreen(this)
     } else {
       // Look up the previous screen in the map
-      val currentScreen = fragmentTagMap.entries.find { it.value.tag == existing.tag }?.key
-      if (currentScreen != null) {
-        Logger.d("Restore current screen from fragment tag map")
-        updateCurrentScreen(currentScreen)
-      } else {
-        Logger.w("Failed to restore current screen from fragment tag map. UI will be out of sync")
-      }
+      val currentScreen =
+          fragmentTagMap.entries.find { it.value.tag == existing.tag }?.key.requireNotNull {
+            "Failed to restore current screen from fragment tag map."
+          }
+
+      Logger.d("Restore current screen from fragment tag map")
+      updateCurrentScreen(currentScreen)
     }
   }
 

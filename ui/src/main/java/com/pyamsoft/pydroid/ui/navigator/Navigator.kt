@@ -30,7 +30,7 @@ import androidx.compose.runtime.State
  *
  * Applications that will need a backstack will want to extend from [BackstackNavigator]
  */
-public interface Navigator<S : Any> {
+public interface Navigator<S : Any> : Selector<S> {
 
   /** Get the current screen */
   @CheckResult public fun currentScreen(): S
@@ -39,14 +39,7 @@ public interface Navigator<S : Any> {
   @Composable @CheckResult public fun currentScreenState(): State<S>
 
   /** Restores the state after process recreation */
-  public fun restore(savedInstanceState: Bundle?)
-
-  /**
-   * Select a new screen.
-   *
-   * If the screen cannot be committed, this action will not perform a navigation
-   */
-  @CheckResult public fun select(screen: Screen<S>): Boolean
+  public fun restore(onLoadDefaultScreen: (selector: Selector<S>) -> Unit)
 
   /** Select a new screen (optionally force commit the selection) */
   @CheckResult
@@ -63,4 +56,15 @@ public interface Navigator<S : Any> {
     /** Any arguments to construct the screen */
     public val arguments: Bundle?
   }
+}
+
+/** A basic screen selection interface */
+public interface Selector<S : Any> {
+
+  /**
+   * Select a new screen.
+   *
+   * If the screen cannot be committed, this action will not perform a navigation
+   */
+  @CheckResult public fun select(screen: Navigator.Screen<S>): Boolean
 }

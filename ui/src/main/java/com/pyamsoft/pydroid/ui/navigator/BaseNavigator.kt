@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
+  /** The default screen */
   protected abstract val defaultScreen: Navigator.Screen<S>
 
   private val screen: MutableState<S> by

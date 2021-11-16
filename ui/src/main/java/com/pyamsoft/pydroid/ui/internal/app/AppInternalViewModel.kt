@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ internal constructor(
     private val disableDataPolicy: Boolean,
     private val disableChangeLog: Boolean,
     private val dataPolicyInteractor: DataPolicyInteractor,
+    private val changeLogInteractor: ChangeLogInteractor,
 ) :
     UiViewModel<AppInternalViewState, AppInternalControllerEvent>(
         initialState = AppInternalViewState,
@@ -51,10 +53,19 @@ internal constructor(
           // If data policy is enabled, show it if you can
           if (!dataPolicyInteractor.isPolicyAccepted()) {
             publish(AppInternalControllerEvent.ShowDataPolicy)
-          } else if (disableChangeLog) {
-            publish(AppInternalControllerEvent.ShowVersionCheck)
           } else {
-            publish(AppInternalControllerEvent.ShowChangeLog)
+            // If changelog is disabled, show version check
+            if (disableChangeLog) {
+              publish(AppInternalControllerEvent.ShowVersionCheck)
+            } else {
+              // If changelog is enabled, show it if you can
+              if (changeLogInteractor.canShowChangeLog()) {
+                publish(AppInternalControllerEvent.ShowChangeLog)
+              } else {
+                // Else fallback to update check
+                publish(AppInternalControllerEvent.ShowVersionCheck)
+              }
+            }
           }
         }
       }

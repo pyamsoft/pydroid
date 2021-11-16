@@ -17,9 +17,11 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.icons.LibraryAdd
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.adPreference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
@@ -48,7 +50,7 @@ private fun moreAppsPreference(
   return adPreference(
       name = stringResource(R.string.more_apps_title),
       summary = stringResource(R.string.rating_summary),
-      icon = R.drawable.ic_library_add_24dp,
+      icon = Icons.Outlined.LibraryAdd,
       onClick = onViewMoreAppsClicked,
   )
 }

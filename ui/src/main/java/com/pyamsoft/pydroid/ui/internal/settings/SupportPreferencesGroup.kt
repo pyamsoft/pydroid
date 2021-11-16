@@ -17,9 +17,16 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.icons.BugReport
+import com.pyamsoft.pydroid.ui.icons.Business
+import com.pyamsoft.pydroid.ui.icons.Code
+import com.pyamsoft.pydroid.ui.icons.Policy
+import com.pyamsoft.pydroid.ui.icons.Redeem
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.inAppPreference
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -96,7 +103,7 @@ private fun ratePreference(
   return preference(
       name = "Rate $applicationName",
       summary = stringResource(R.string.rating_summary),
-      icon = R.drawable.ic_star_24dp,
+      icon = Icons.Outlined.Star,
       onClick = onRateClicked,
   )
 }
@@ -109,7 +116,7 @@ private fun donatePreference(
   return inAppPreference(
       name = stringResource(R.string.donate_title),
       summary = stringResource(R.string.donate_summary),
-      icon = R.drawable.ic_gift_24dp,
+      icon = Icons.Outlined.Redeem,
       onClick = onDonateClicked,
   )
 }
@@ -122,7 +129,7 @@ private fun bugReportPreference(
   return preference(
       name = stringResource(R.string.bugreport_title),
       summary = stringResource(R.string.bugreport_summary),
-      icon = R.drawable.ic_bug_report_24dp,
+      icon = Icons.Outlined.BugReport,
       onClick = onBugReportClicked,
   )
 }
@@ -135,7 +142,7 @@ private fun sourceCodePreference(
   return preference(
       name = stringResource(R.string.view_source_title),
       summary = stringResource(R.string.view_source_summary),
-      icon = R.drawable.ic_code_24dp,
+      icon = Icons.Outlined.Code,
       onClick = onViewSourceClicked,
   )
 }
@@ -148,7 +155,7 @@ private fun dataPolicyPreference(
   return preference(
       name = stringResource(R.string.view_data_policy_title),
       summary = stringResource(R.string.view_data_policy_summary),
-      icon = R.drawable.ic_policy_24dp,
+      icon = Icons.Outlined.Policy,
       onClick = onViewDataPolicyClicked,
   )
 }
@@ -161,7 +168,7 @@ private fun privacyPolicyPreference(
   return preference(
       name = stringResource(R.string.view_privacy_title),
       summary = stringResource(R.string.view_privacy_summary),
-      icon = R.drawable.ic_policy_24dp,
+      icon = Icons.Outlined.Policy,
       onClick = onViewPrivacyPolicyClicked,
   )
 }
@@ -174,7 +181,7 @@ private fun termsOfServicePreference(
   return preference(
       name = stringResource(R.string.view_terms_title),
       summary = stringResource(R.string.view_terms_summary),
-      icon = R.drawable.ic_terms_24dp,
+      icon = Icons.Outlined.Business,
       onClick = onViewTermsOfServiceClicked,
   )
 }

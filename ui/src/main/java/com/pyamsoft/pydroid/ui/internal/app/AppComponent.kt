@@ -139,6 +139,7 @@ internal interface AppComponent {
           disableDataPolicy = disableDataPolicy,
           disableChangeLog = disableChangeLog,
           dataPolicyInteractor = params.dataPolicyInteractor,
+          changeLogInteractor = params.changeLogInteractor,
       )
     }
 

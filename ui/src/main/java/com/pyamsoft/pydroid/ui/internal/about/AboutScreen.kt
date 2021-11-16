@@ -37,21 +37,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
-import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
 internal fun AboutScreen(
     modifier: Modifier = Modifier,
     state: AboutViewState,
-    imageLoader: ImageLoader,
     onNavigationErrorDismissed: () -> Unit,
     onViewHomePage: (index: Int) -> Unit,
     onViewLicense: (index: Int) -> Unit,
@@ -72,7 +68,6 @@ internal fun AboutScreen(
           modifier = Modifier.fillMaxWidth(),
           title = "Open Source Licenses",
           onClose = onClose,
-          imageLoader = imageLoader,
       )
       Crossfade(
           targetState = isLoading,
@@ -154,8 +149,6 @@ private fun PreviewAboutScreen(
     isLoading: Boolean,
     error: Throwable?,
 ) {
-  val context = LocalContext.current
-
   AboutScreen(
       state =
           AboutViewState(
@@ -163,7 +156,6 @@ private fun PreviewAboutScreen(
               licenses = OssLibraries.libraries().sortedBy { it.name.lowercase() },
               navigationError = error,
           ),
-      imageLoader = createNewTestImageLoader(context),
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},

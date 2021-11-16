@@ -22,9 +22,9 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.content.withStyledAttributes
 import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
@@ -76,7 +76,7 @@ public sealed class Preferences {
     internal abstract val summary: String
 
     /** Icon */
-    internal abstract val icon: Int
+    internal abstract val icon: ImageVector?
   }
 
   /** Represents a simple Preference item */
@@ -85,7 +85,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
@@ -95,7 +95,7 @@ public sealed class Preferences {
       override val name: String = "",
       override val isEnabled: Boolean = false,
       override val summary: String = "",
-      @DrawableRes override val icon: Int = 0,
+      override val icon: ImageVector? = null,
       internal val content: @Composable (isEnabled: Boolean) -> Unit,
   ) : Item()
 
@@ -105,7 +105,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
@@ -115,7 +115,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
@@ -125,7 +125,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val value: String,
       internal val entries: Map<String, String>,
       internal val onPreferenceSelected: (key: String, value: String) -> Unit,
@@ -137,7 +137,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val checked: Boolean,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
   ) : Item()
@@ -148,7 +148,7 @@ public sealed class Preferences {
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
-      @DrawableRes override val icon: Int,
+      override val icon: ImageVector?,
       internal val checked: Boolean,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
   ) : Item()
@@ -194,7 +194,7 @@ public fun preference(
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.SimplePreference(
@@ -213,7 +213,7 @@ public fun adPreference(
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.AdPreference(
@@ -232,7 +232,7 @@ public fun inAppPreference(
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.InAppPreference(
@@ -253,7 +253,7 @@ public fun listPreference(
     entries: Map<String, String>,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     onPreferenceSelected: (key: String, value: String) -> Unit,
 ): Preferences.Item {
   return Preferences.ListPreference(
@@ -274,7 +274,7 @@ public fun checkBoxPreference(
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     checked: Boolean,
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {
@@ -295,7 +295,7 @@ public fun switchPreference(
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
-    @DrawableRes icon: Int = 0,
+    icon: ImageVector? = null,
     checked: Boolean,
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {

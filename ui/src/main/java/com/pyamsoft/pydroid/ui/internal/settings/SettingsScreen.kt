@@ -36,9 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.google.accompanist.insets.systemBarsPadding
-import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -51,7 +49,6 @@ internal fun SettingsScreen(
     hideUpgradeInformation: Boolean,
     hideDataPolicy: Boolean,
     state: SettingsViewState,
-    imageLoader: ImageLoader,
     topItemMargin: Dp = 0.dp,
     bottomItemMargin: Dp = 0.dp,
     customPreContent: List<Preferences> = emptyList(),
@@ -90,7 +87,6 @@ internal fun SettingsScreen(
         Loading()
       } else {
         SettingsList(
-            imageLoader = imageLoader,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
             customPreContent = customPreContent,
@@ -137,7 +133,6 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
-    imageLoader: ImageLoader,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     customPreContent: List<Preferences>,
@@ -215,7 +210,6 @@ private fun SettingsList(
   PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
-      imageLoader = imageLoader,
       preferences = preferences,
   )
 }
@@ -253,7 +247,6 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       hideClearAll = false,
       hideUpgradeInformation = false,
       hideDataPolicy = false,
-      imageLoader = createNewTestImageLoader(context),
       topItemMargin = 0.dp,
       bottomItemMargin = 0.dp,
       customPreContent = emptyList(),

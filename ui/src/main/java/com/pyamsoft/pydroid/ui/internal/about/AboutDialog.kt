@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -44,8 +43,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
 
   internal var factory: ViewModelProvider.Factory? = null
   private val viewModel by activityViewModels<AboutViewModel> { factory.requireNotNull() }
-
-  internal var imageLoader: ImageLoader? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -65,7 +62,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
         composeTheme(act) {
           AboutScreen(
               state = state,
-              imageLoader = imageLoader.requireNotNull(),
               onViewHomePage = { viewModel.handleOpenLibrary(it) },
               onViewLicense = { viewModel.handleOpenLicense(it) },
               onNavigationErrorDismissed = { viewModel.handleHideNavigationError() },
@@ -93,7 +89,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
     factory = null
-    imageLoader = null
   }
 
   private fun handleOpenUrl(url: String) {

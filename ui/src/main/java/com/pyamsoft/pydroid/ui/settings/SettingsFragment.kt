@@ -31,7 +31,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import coil.ImageLoader
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
@@ -93,9 +92,6 @@ public abstract class SettingsFragment : Fragment() {
   private val dataPolicyViewModel by
       activityViewModels<DataPolicyViewModel> { dataPolicyFactory.requireNotNull() }
 
-  // ImageLoader
-  internal var imageLoader: ImageLoader? = null
-
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
 
@@ -131,7 +127,6 @@ public abstract class SettingsFragment : Fragment() {
                 hideClearAll = hideClearAll,
                 hideUpgradeInformation = hideUpgradeInformation,
                 hideDataPolicy = hideDataPolicy(),
-                imageLoader = imageLoader.requireNotNull(),
                 topItemMargin = customTopItemMargin(),
                 bottomItemMargin = customBottomItemMargin(),
                 customPreContent = customPrePreferences(),
@@ -184,8 +179,6 @@ public abstract class SettingsFragment : Fragment() {
     ratingFactory = null
     changeLogFactory = null
     dataPolicyFactory = null
-
-    imageLoader = null
 
     windowInsetObserver?.stop()
     windowInsetObserver = null

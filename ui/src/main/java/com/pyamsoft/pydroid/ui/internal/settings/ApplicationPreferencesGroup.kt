@@ -17,10 +17,16 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.icons.Download
+import com.pyamsoft.pydroid.ui.icons.LibraryBooks
+import com.pyamsoft.pydroid.ui.icons.Visibility
+import com.pyamsoft.pydroid.ui.icons.Whatshot
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.listPreference
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -116,7 +122,7 @@ private fun darkThemePreference(
   return listPreference(
       name = stringResource(R.string.dark_mode_title),
       summary = stringResource(R.string.dark_mode_summary),
-      icon = R.drawable.ic_visibility_24dp,
+      icon = Icons.Outlined.Visibility,
       value = darkMode.toRawString(),
       entries = names.mapIndexed { index, name -> name to values[index] }.toMap(),
       onPreferenceSelected = { _, value -> onDarkModeChanged(value.toThemingMode()) })
@@ -130,7 +136,7 @@ private fun licensesPreference(
   return preference(
       name = stringResource(R.string.about_license_title),
       summary = stringResource(R.string.about_license_summary),
-      icon = R.drawable.ic_library_24dp,
+      icon = Icons.Outlined.LibraryBooks,
       onClick = onLicensesClicked,
   )
 }
@@ -143,7 +149,7 @@ private fun updatePreference(
   return preference(
       name = stringResource(R.string.check_version_title),
       summary = stringResource(R.string.check_version_summary),
-      icon = R.drawable.ic_get_app_24dp,
+      icon = Icons.Outlined.Download,
       onClick = onCheckUpdateClicked,
   )
 }
@@ -156,7 +162,7 @@ private fun changeLogPreference(
   return preference(
       name = stringResource(R.string.upgrade_info_title),
       summary = stringResource(R.string.upgrade_info_summary),
-      icon = R.drawable.ic_whatshot_24dp,
+      icon = Icons.Outlined.Whatshot,
       onClick = onShowChangeLogClicked,
   )
 }
@@ -167,7 +173,7 @@ private fun resetPreference(onResetClicked: () -> Unit): Preferences.Item {
   return preference(
       name = stringResource(R.string.clear_all_title),
       summary = stringResource(R.string.clear_all_summary),
-      icon = R.drawable.ic_warning_24dp,
+      icon = Icons.Outlined.Warning,
       onClick = onResetClicked,
   )
 }

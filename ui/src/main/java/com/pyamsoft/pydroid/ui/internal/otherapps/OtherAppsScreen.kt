@@ -72,7 +72,6 @@ internal fun OtherAppsScreen(
           modifier = Modifier.fillMaxWidth(),
           title = "More pyamsoft apps",
           onClose = onClose,
-          imageLoader = imageLoader,
       )
       Crossfade(
           targetState = isLoading,

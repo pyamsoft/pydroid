@@ -222,7 +222,6 @@ internal interface PYDroidComponent {
               composeTheme = composeTheme,
               theming = theming,
               otherAppsModule = otherAppsModule,
-              imageLoader = imageLoader,
           )
         }
 
@@ -231,7 +230,6 @@ internal interface PYDroidComponent {
           AboutComponent.Factory.Parameters(
               factory = viewModelFactory,
               composeTheme = composeTheme,
-              imageLoader = imageLoader,
           )
         }
 

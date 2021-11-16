@@ -29,17 +29,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
-import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     topItemMargin: Dp = 0.dp,
     bottomItemMargin: Dp = 0.dp,
-    imageLoader: ImageLoader,
     preferences: List<Preferences>,
 ) {
   Surface(
@@ -57,7 +54,6 @@ public fun PreferenceScreen(
                   bottomItemMargin = bottomItemMargin,
                   index = index,
                   maxIndex = maxIndex,
-                  imageLoader = imageLoader,
                   preference = preference,
               )
           is Preferences.Item ->
@@ -68,7 +64,6 @@ public fun PreferenceScreen(
                   bottomItemMargin = bottomItemMargin,
                   index = index,
                   maxIndex = maxIndex,
-                  imageLoader = imageLoader,
                   preference = preference,
               )
         }
@@ -135,7 +130,6 @@ private fun renderGroupInScope(
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
-    imageLoader: ImageLoader,
     preference: Preferences.Group
 ) {
   val name = preference.name
@@ -165,7 +159,6 @@ private fun renderGroupInScope(
       ) {
         RenderItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = item,
         )
       }
@@ -188,7 +181,6 @@ private fun renderItemInScope(
     bottomItemMargin: Dp,
     index: Int,
     maxIndex: Int,
-    imageLoader: ImageLoader,
     preference: Preferences.Item
 ) {
   renderPaddedItemsInScope(
@@ -201,7 +193,6 @@ private fun renderItemInScope(
     listScope.item {
       RenderItem(
           modifier = modifier,
-          imageLoader = imageLoader,
           preference = preference,
       )
     }
@@ -211,50 +202,42 @@ private fun renderItemInScope(
 @Composable
 private fun RenderItem(
     modifier: Modifier = Modifier,
-    imageLoader: ImageLoader,
     preference: Preferences.Item,
 ) {
   return when (preference) {
     is Preferences.SimplePreference ->
         SimplePreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.SwitchPreference ->
         SwitchPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.CheckBoxPreference ->
         CheckBoxPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.ListPreference ->
         ListPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.InAppPreference ->
         InAppPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.AdPreference ->
         AdPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     is Preferences.CustomPreference ->
         CustomPreferenceItem(
             modifier = modifier,
-            imageLoader = imageLoader,
             preference = preference,
         )
     else ->
@@ -268,7 +251,6 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   val context = LocalContext.current
 
   PreferenceScreen(
-      imageLoader = createNewTestImageLoader(context),
       preferences =
           listOf(
               preferenceGroup(

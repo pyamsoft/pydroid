@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
-import coil.ImageLoader
 import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
@@ -43,7 +42,6 @@ internal interface SettingsComponent {
         internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val otherAppsModule: OtherAppsModule,
-        internal val imageLoader: ImageLoader,
     )
   }
 
@@ -68,7 +66,6 @@ internal interface SettingsComponent {
       fragment.factory = factory
 
       fragment.composeTheme = params.composeTheme
-      fragment.imageLoader = params.imageLoader
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :

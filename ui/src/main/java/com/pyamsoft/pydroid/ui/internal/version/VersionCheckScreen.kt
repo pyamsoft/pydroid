@@ -22,10 +22,13 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
+@JvmOverloads
 internal fun VersionCheckScreen(
+    modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     addSnackbarHost: Boolean,
     snackbarHostState: SnackbarHostState,
@@ -37,7 +40,10 @@ internal fun VersionCheckScreen(
   val navigationError = state.navigationError
 
   if (addSnackbarHost) {
-    SnackbarHost(hostState = snackbarHostState)
+    SnackbarHost(
+        modifier = modifier,
+        hostState = snackbarHostState,
+    )
   }
 
   Loading(

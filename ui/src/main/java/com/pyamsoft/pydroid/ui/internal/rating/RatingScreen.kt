@@ -22,10 +22,13 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
+@JvmOverloads
 internal fun RatingScreen(
+    modifier: Modifier = Modifier,
     state: RatingViewState,
     addSnackbarHost: Boolean,
     snackbarHostState: SnackbarHostState,
@@ -34,7 +37,10 @@ internal fun RatingScreen(
   val navigationError = state.navigationError
 
   if (addSnackbarHost) {
-    SnackbarHost(hostState = snackbarHostState)
+    SnackbarHost(
+        modifier = modifier,
+        hostState = snackbarHostState,
+    )
   }
 
   NavigationError(

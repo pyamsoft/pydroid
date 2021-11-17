@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -290,11 +291,13 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
    */
   @Composable
   protected fun RatingScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
   ) {
     rating
         .requireNotNull()
         .Ratings(
+            modifier = modifier,
             snackbarHostState = snackbarHostState,
         )
   }
@@ -332,11 +335,13 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
    */
   @Composable
   protected fun VersionCheckScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
   ) {
     versionCheck
         .requireNotNull()
         .VersionCheck(
+            modifier = modifier,
             snackbarHostState = snackbarHostState,
         )
   }

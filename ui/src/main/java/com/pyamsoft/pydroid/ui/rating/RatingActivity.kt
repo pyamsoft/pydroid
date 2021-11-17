@@ -23,6 +23,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
@@ -80,10 +81,13 @@ public abstract class RatingActivity : VersionCheckActivity() {
    * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
    */
   @Composable
+  @JvmOverloads
   protected fun RatingScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
   ) {
     RatingScreen(
+        modifier = modifier,
         snackbarHostState = snackbarHostState,
         addSnackbarHost = true,
     )
@@ -91,12 +95,14 @@ public abstract class RatingActivity : VersionCheckActivity() {
 
   @Composable
   private fun RatingScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
       addSnackbarHost: Boolean,
   ) {
     val state by viewModel.compose()
 
     RatingScreen(
+        modifier = modifier,
         state = state,
         addSnackbarHost = addSnackbarHost,
         snackbarHostState = snackbarHostState,

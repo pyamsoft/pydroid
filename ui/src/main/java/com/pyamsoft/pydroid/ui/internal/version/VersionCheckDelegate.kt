@@ -20,6 +20,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
@@ -88,10 +89,13 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
    * All UI and function related to checking for new updates to Applications
    */
   @Composable
+  @JvmOverloads
   fun VersionCheck(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
   ) {
     VersionCheck(
+        modifier = modifier,
         snackbarHostState = snackbarHostState,
         addSnackbarHost = true,
     )
@@ -99,6 +103,7 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
 
   @Composable
   private fun VersionCheck(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
       addSnackbarHost: Boolean,
   ) {
@@ -106,6 +111,7 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
     val state by vm.compose()
 
     VersionCheckScreen(
+        modifier = modifier,
         state = state,
         addSnackbarHost = addSnackbarHost,
         snackbarHostState = snackbarHostState,

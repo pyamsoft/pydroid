@@ -23,6 +23,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
@@ -102,10 +103,13 @@ public abstract class VersionCheckActivity : ActivityBase() {
    * All UI and function related to checking for new updates to Applications
    */
   @Composable
+  @JvmOverloads
   protected fun VersionScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
   ) {
     VersionScreen(
+        modifier = modifier,
         snackbarHostState = snackbarHostState,
         addSnackbarHost = true,
     )
@@ -113,12 +117,14 @@ public abstract class VersionCheckActivity : ActivityBase() {
 
   @Composable
   private fun VersionScreen(
+      modifier: Modifier = Modifier,
       snackbarHostState: SnackbarHostState,
       addSnackbarHost: Boolean,
   ) {
     val state by viewModel.compose()
 
     VersionCheckScreen(
+        modifier = modifier,
         state = state,
         addSnackbarHost = addSnackbarHost,
         snackbarHostState = snackbarHostState,

@@ -228,7 +228,7 @@ internal interface PYDroidComponent {
     private val aboutParams by
         lazy(LazyThreadSafetyMode.NONE) {
           AboutComponent.Factory.Parameters(
-              factory = viewModelFactory,
+              interactor = aboutModule.provideInteractor(),
               composeTheme = composeTheme,
           )
         }

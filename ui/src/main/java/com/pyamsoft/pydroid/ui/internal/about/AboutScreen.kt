@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -49,8 +49,8 @@ internal fun AboutScreen(
     modifier: Modifier = Modifier,
     state: AboutViewState,
     onNavigationErrorDismissed: () -> Unit,
-    onViewHomePage: (index: Int) -> Unit,
-    onViewLicense: (index: Int) -> Unit,
+    onViewHomePage: (library: OssLibrary) -> Unit,
+    onViewLicense: (library: OssLibrary) -> Unit,
     onClose: () -> Unit,
 ) {
   val list = state.licenses
@@ -103,8 +103,8 @@ private fun Loading() {
 @Composable
 private fun AboutList(
     list: List<OssLibrary>,
-    onViewHomePage: (index: Int) -> Unit,
-    onViewLicense: (index: Int) -> Unit,
+    onViewHomePage: (library: OssLibrary) -> Unit,
+    onViewLicense: (library: OssLibrary) -> Unit,
 ) {
   Box {
     LazyColumn(
@@ -112,15 +112,15 @@ private fun AboutList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(8.dp),
     ) {
-      itemsIndexed(
+      items(
           items = list,
-          key = { _, item -> "${item.name}:${item.libraryUrl}" },
-      ) { index, item ->
+          key = { "${it.name}:${it.libraryUrl}" },
+      ) { item ->
         AboutListItem(
             modifier = Modifier.fillMaxWidth(),
             library = item,
-            onViewHomePage = { onViewHomePage(index) },
-            onViewLicense = { onViewLicense(index) },
+            onViewHomePage = { onViewHomePage(item) },
+            onViewLicense = { onViewLicense(item) },
         )
       }
     }
@@ -149,13 +149,16 @@ private fun PreviewAboutScreen(
     isLoading: Boolean,
     error: Throwable?,
 ) {
+
+  val state =
+      object : AboutViewState {
+        override val isLoading: Boolean = isLoading
+        override val licenses: List<OssLibrary> = OssLibraries.libraries().sortedBy { it.name }
+        override val navigationError: Throwable? = error
+      }
+
   AboutScreen(
-      state =
-          AboutViewState(
-              isLoading = isLoading,
-              licenses = OssLibraries.libraries().sortedBy { it.name.lowercase() },
-              navigationError = error,
-          ),
+      state = state,
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},

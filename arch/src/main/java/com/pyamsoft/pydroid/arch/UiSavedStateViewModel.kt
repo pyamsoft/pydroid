@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
  *
  * Knows how to save and restore state from an androidx.SavedStateHandle
  */
+@Deprecated("Use your own UiViewStates managed by Presenters")
 public abstract class UiSavedStateViewModel<S : UiViewState, C : UiControllerEvent>
 protected constructor(
     savedState: UiSavedState,

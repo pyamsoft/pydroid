@@ -19,4 +19,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.compose.runtime.Stable
 
 /** A stateless UiViewState */
-@Stable public object UnitViewState : UiViewState
+@Deprecated("Use your own UiViewStates managed by Presenters")
+@Stable
+public object UnitViewState : UiViewState

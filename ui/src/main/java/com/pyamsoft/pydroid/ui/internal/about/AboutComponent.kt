@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
@@ -31,8 +31,8 @@ internal interface AboutComponent {
 
     data class Parameters
     internal constructor(
-        internal val factory: ViewModelProvider.Factory,
         internal val composeTheme: ComposeThemeFactory,
+        internal val interactor: AboutInteractor,
     )
   }
 
@@ -40,7 +40,7 @@ internal interface AboutComponent {
 
     override fun inject(dialog: AboutDialog) {
       dialog.composeTheme = params.composeTheme
-      dialog.factory = params.factory
+      dialog.viewModel = AboutViewModel(params.interactor)
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

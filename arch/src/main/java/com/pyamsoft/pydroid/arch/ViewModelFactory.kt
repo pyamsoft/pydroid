@@ -26,6 +26,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.arch.internal.HandleUiSavedState
 
 /** A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances. */
+@Deprecated("Use your own UiViewStates managed by Presenters")
 public abstract class ViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
   /** Resolve the requested UiViewModel */

@@ -44,7 +44,6 @@ internal constructor(
 
   private val viewModelProviders =
       mapOf<KClass<out ViewModel>, () -> ViewModel>(
-          AboutViewModel::class to { AboutViewModel(params.aboutInteractor) },
           ChangeLogViewModel::class to { ChangeLogViewModel(params.changeLogInteractor) },
           OtherAppsViewModel::class to { OtherAppsViewModel(params.otherAppsInteractor) },
           DataPolicyViewModel::class to { DataPolicyViewModel(params.dataPolicyInteractor) },

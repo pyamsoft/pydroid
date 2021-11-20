@@ -43,6 +43,7 @@ import kotlinx.coroutines.yield
  * Access the current state via state and manipulate it via setState. The setState call is
  * asynchronous.
  */
+@Deprecated("Use your own UiViewStates managed by Presenters")
 public open class UiStateModel<S : UiViewState>(
     /** Initial state */
     public val initialState: S,

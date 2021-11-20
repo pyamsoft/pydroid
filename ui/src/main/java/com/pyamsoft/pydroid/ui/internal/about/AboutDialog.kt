@@ -21,11 +21,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -34,15 +35,14 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutDialog : AppCompatDialogFragment() {
 
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<AboutViewModel> { factory.requireNotNull() }
+  /** Provided by PYDroid */
+  internal var viewModel: AboutViewModel? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -52,19 +52,20 @@ internal class AboutDialog : AppCompatDialogFragment() {
     val act = requireActivity()
 
     Injector.obtainFromApplication<PYDroidComponent>(act).plusAbout().create().inject(this)
+    val vm = viewModel.requireNotNull()
 
     return ComposeView(act).apply {
       id = R.id.dialog_about
 
       setContent {
-        val state by viewModel.compose()
+        val handler = LocalUriHandler.current
 
         composeTheme(act) {
           AboutScreen(
-              state = state,
-              onViewHomePage = { viewModel.handleOpenLibrary(it) },
-              onViewLicense = { viewModel.handleOpenLicense(it) },
-              onNavigationErrorDismissed = { viewModel.handleHideNavigationError() },
+              state = vm.state(),
+              onViewHomePage = { openLibrary(handler, it) },
+              onViewLicense = { openLicense(handler, it) },
+              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
               onClose = { dismiss() },
           )
         }
@@ -72,31 +73,40 @@ internal class AboutDialog : AppCompatDialogFragment() {
     }
   }
 
+  private fun openLicense(handler: UriHandler, library: OssLibrary) {
+    openPage(
+        handler = handler,
+        url = library.libraryUrl,
+    )
+  }
+
+  private fun openLibrary(handler: UriHandler, library: OssLibrary) {
+    openPage(
+        handler = handler,
+        url = library.libraryUrl,
+    )
+  }
+
+  private fun openPage(handler: UriHandler, url: String) {
+    try {
+      handler.openUri(url)
+    } catch (e: Throwable) {
+      viewModel.requireNotNull().handleFailedNavigation(e)
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
 
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is AboutControllerEvent.OpenUrl -> handleOpenUrl(event.url)
-      }
-    }
-
-    viewModel.handleLoadLicenses()
+    viewModel.requireNotNull().handleLoadLicenses(viewLifecycleOwner.lifecycleScope)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
-    factory = null
-  }
 
-  private fun handleOpenUrl(url: String) {
-    url
-        .hyperlink(requireActivity())
-        .navigate()
-        .onSuccess { viewModel.navigationSuccess() }
-        .onFailure { viewModel.navigationFailed(it) }
+    viewModel = null
   }
 
   companion object {

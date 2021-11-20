@@ -16,61 +16,51 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.highlander.highlander
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.ViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal class AboutViewModel
 internal constructor(
     interactor: AboutInteractor,
-) :
-    UiViewModel<AboutViewState, AboutControllerEvent>(
-        initialState =
-            AboutViewState(
-                isLoading = false,
-                licenses = emptyList(),
-                navigationError = null,
-            )) {
+) : ViewModel<AboutViewState>, AboutViewState {
+
+  private var _isLoading: Boolean by mutableStateOf(false)
+  private var _licenses: List<OssLibrary> by mutableStateOf(emptyList())
+  private var _navigationError: Throwable? by mutableStateOf(null)
+
+  override val isLoading: Boolean = _isLoading
+  override val licenses: List<OssLibrary> = _licenses
+  override val navigationError: Throwable? = _navigationError
 
   private val licenseRunner = highlander<List<OssLibrary>, Boolean> { interactor.loadLicenses(it) }
 
-  internal fun handleOpenLibrary(index: Int) {
-    return openUrl(index) { it.libraryUrl }
+  @Composable
+  override fun state(): AboutViewState {
+    return this
   }
 
-  internal fun handleOpenLicense(index: Int) {
-    return openUrl(index) { it.licenseUrl }
-  }
-
-  private inline fun openUrl(
-      index: Int,
-      crossinline resolveUrl: (library: OssLibrary) -> String,
-  ) {
-    val l = state.licenses
-    if (l.isNotEmpty()) {
-      l.getOrNull(index)?.let { lib -> publish(AboutControllerEvent.OpenUrl(resolveUrl(lib))) }
+  internal fun handleLoadLicenses(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) {
+      _isLoading = true
+      _licenses = licenseRunner.call(false)
+      _isLoading = false
     }
   }
 
-  internal fun handleLoadLicenses() {
-    setState(
-        stateChange = { copy(isLoading = true) },
-        andThen = {
-          val licenses = licenseRunner.call(false)
-          setState { copy(licenses = licenses, isLoading = false) }
-        })
+  internal fun handleFailedNavigation(e: Throwable) {
+    _navigationError = e
   }
 
-  internal fun navigationFailed(throwable: Throwable) {
-    setState { copy(navigationError = throwable) }
-  }
-
-  internal fun navigationSuccess() {
-    handleHideNavigationError()
-  }
-
-  internal fun handleHideNavigationError() {
-    setState { copy(navigationError = null) }
+  internal fun handleDismissFailedNavigation() {
+    _navigationError = null
   }
 }

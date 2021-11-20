@@ -16,20 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-@Stable
-internal data class AboutViewState
-internal constructor(
-    val isLoading: Boolean,
-    val licenses: List<OssLibrary>,
-    val navigationError: Throwable?
-) : UiViewState
-
-internal sealed class AboutControllerEvent : UiControllerEvent {
-
-  data class OpenUrl internal constructor(val url: String) : AboutControllerEvent()
+internal interface AboutViewState : UiViewState {
+  val isLoading: Boolean
+  val licenses: List<OssLibrary>
+  val navigationError: Throwable?
 }

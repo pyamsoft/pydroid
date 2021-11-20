@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,11 @@
 
 package com.pyamsoft.pydroid.arch
 
-/** A no-op UiControllerEvent */
-@Deprecated("Use your own UiViewStates managed by Presenters")
-public object UnitControllerEvent : UiControllerEvent
+import androidx.annotation.CheckResult
+import androidx.compose.runtime.Composable
+
+/** A ViewModel */
+public interface ViewModel<S : UiViewState> {
+
+  @Composable @CheckResult public fun state(): S
+}

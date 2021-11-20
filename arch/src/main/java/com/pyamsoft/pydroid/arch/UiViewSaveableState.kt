@@ -16,6 +16,9 @@
 
 package com.pyamsoft.pydroid.arch
 
-/** A no-op UiControllerEvent */
-@Deprecated("Use your own UiViewStates managed by Presenters")
-public object UnitControllerEvent : UiControllerEvent
+/** A Saveable ViewState */
+public interface UiViewSaveableState {
+
+  /** Save state into a writer */
+  public fun saveState(writer: UiSavedStateWriter)
+}

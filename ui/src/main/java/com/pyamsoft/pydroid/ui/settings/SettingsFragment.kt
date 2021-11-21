@@ -93,11 +93,13 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleChangeDarkMode(mode: Theming.Mode) {
+      val act = requireActivity()
     viewModel
         .requireNotNull()
         .handleChangeDarkMode(
-            scope = requireActivity().lifecycleScope,
+            scope = act.lifecycleScope,
             mode = mode,
+            onDarkThemeChanged = { act.recreate() },
         )
   }
 

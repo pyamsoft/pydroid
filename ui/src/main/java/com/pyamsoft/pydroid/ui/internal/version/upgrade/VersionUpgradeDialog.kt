@@ -46,14 +46,16 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   internal var viewModel: VersionUpgradeViewModeler? = null
 
   private fun handleCompleteUpgrade() {
+    val act = requireActivity()
     viewModel
         .requireNotNull()
         .completeUpgrade(
-            scope = requireActivity().lifecycleScope,
+            scope = act.lifecycleScope,
             onUpgradeComplete = {
               Logger.d("Upgrade complete, dismiss")
-              dismiss()
-            })
+              act.finish()
+            },
+        )
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {

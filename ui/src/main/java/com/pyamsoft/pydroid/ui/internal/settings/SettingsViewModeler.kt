@@ -79,10 +79,15 @@ internal constructor(
     }
   }
 
-  internal fun handleChangeDarkMode(scope: CoroutineScope, mode: Theming.Mode) {
+  internal fun handleChangeDarkMode(
+      scope: CoroutineScope,
+      mode: Theming.Mode,
+      onDarkThemeChanged: () -> Unit,
+  ) {
     scope.launch(context = Dispatchers.Main) {
       state.darkMode = mode
       theming.setDarkTheme(mode)
+      onDarkThemeChanged()
     }
   }
 

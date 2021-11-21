@@ -96,7 +96,7 @@ public abstract class SettingsFragment : Fragment() {
     viewModel
         .requireNotNull()
         .handleChangeDarkMode(
-            scope = viewLifecycleOwner.lifecycleScope,
+            scope = requireActivity().lifecycleScope,
             mode = mode,
         )
   }

@@ -24,39 +24,41 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ViewWindowInsetObserver
-import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
+import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModel
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
+import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.SettingsControllerEvent
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
-import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModel
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.MarketLinker
-import com.pyamsoft.pydroid.util.hyperlink
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /** Fragment for displaying a settings page */
 public abstract class SettingsFragment : Fragment() {
@@ -64,33 +66,11 @@ public abstract class SettingsFragment : Fragment() {
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<SettingsViewModel> { factory.requireNotNull() }
-
-  // Don't need to create a component or bind this to the controller, since RatingActivity should
-  // be bound for us.
-  internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val ratingViewModel by
-      activityViewModels<RatingViewModel> { ratingFactory.requireNotNull() }
-
-  // Don't need to create a component or bind this to the controller, since VersionCheckActivity
-  // should
-  // be bound for us.
-  internal var versionFactory: ViewModelProvider.Factory? = null
-  private val versionViewModel by
-      activityViewModels<VersionCheckViewModel> { versionFactory.requireNotNull() }
-
-  // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
-  // be bound for us.
-  internal var changeLogFactory: ViewModelProvider.Factory? = null
-  private val changeLogViewModel by
-      activityViewModels<ChangeLogViewModel> { changeLogFactory.requireNotNull() }
-
-  // Don't need to create a component or bind this to the controller, since ChangeLogActivity should
-  // be bound for us.
-  internal var dataPolicyFactory: ViewModelProvider.Factory? = null
-  private val dataPolicyViewModel by
-      activityViewModels<DataPolicyViewModel> { dataPolicyFactory.requireNotNull() }
+  internal var viewModel: SettingsViewModeler? = null
+  internal var ratingViewModel: RatingViewModeler? = null
+  internal var versionViewModel: VersionCheckViewModeler? = null
+  internal var changeLogViewModel: ChangeLogViewModeler? = null
+  internal var dataPolicyViewModel: DataPolicyViewModeler? = null
 
   // Watches the window insets
   private var windowInsetObserver: ViewWindowInsetObserver? = null
@@ -101,6 +81,26 @@ public abstract class SettingsFragment : Fragment() {
     return requireActivity() !is PYDroidActivity
   }
 
+  private fun openPage(handler: UriHandler, url: String) {
+    val vm = viewModel.requireNotNull()
+
+    try {
+      vm.handleClearNavigationError()
+      handler.openUri(url)
+    } catch (e: Throwable) {
+      vm.handleNavigationFailed(e)
+    }
+  }
+
+  private fun handleChangeDarkMode(mode: Theming.Mode) {
+    viewModel
+        .requireNotNull()
+        .handleChangeDarkMode(
+            scope = viewLifecycleOwner.lifecycleScope,
+            mode = mode,
+        )
+  }
+
   final override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -108,7 +108,7 @@ public abstract class SettingsFragment : Fragment() {
   ): View {
     val act = requireActivity()
 
-    Injector.obtainFromApplication<PYDroidComponent>(act).plusSettings().create().inject(this)
+    Injector.obtainFromActivity<AppComponent>(act).plusSettings().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.fragment_settings
@@ -117,40 +117,174 @@ public abstract class SettingsFragment : Fragment() {
       val windowInsets = observer.start()
       windowInsetObserver = observer
 
+      val vm = viewModel.requireNotNull()
       setContent {
-        val state by viewModel.compose()
+        val handler = LocalUriHandler.current
 
-        composeTheme(act) {
-          CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-            SettingsScreen(
-                state = state,
-                hideClearAll = hideClearAll,
-                hideUpgradeInformation = hideUpgradeInformation,
-                hideDataPolicy = hideDataPolicy(),
-                topItemMargin = customTopItemMargin(),
-                bottomItemMargin = customBottomItemMargin(),
-                customPreContent = customPrePreferences(),
-                customPostContent = customPostPreferences(),
-                onDarkModeChanged = {
-                  viewModel.handleChangeDarkMode(viewLifecycleOwner.lifecycleScope, it)
-                },
-                onLicensesClicked = { AboutDialog.show(act) },
-                onCheckUpdateClicked = { versionViewModel.handleCheckForUpdates(force = true) },
-                onShowChangeLogClicked = { changeLogViewModel.handleShow(force = true) },
-                onResetClicked = { ResetDialog.open(act) },
-                onRateClicked = { ratingViewModel.handleViewMarketPage() },
-                onDonateClicked = { BillingDialog.open(act) },
-                onBugReportClicked = { viewModel.handleReportBug() },
-                onViewSourceClicked = { viewModel.handleViewSourceCode() },
-                onViewDataPolicyClicked = { dataPolicyViewModel.handleShowDisclosure(true) },
-                onViewPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy() },
-                onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService() },
-                onViewMoreAppsClicked = { viewModel.handleViewMoreApps() },
-                onViewSocialMediaClicked = { viewModel.handleViewSocialMedia() },
-                onViewBlogClicked = { viewModel.handleViewBlog() },
-                onNavigationErrorDismissed = { viewModel.handleClearNavigationError() },
-            )
+        vm.Render { state ->
+          composeTheme(act) {
+            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+              SettingsScreen(
+                  state = state,
+                  hideClearAll = hideClearAll,
+                  hideUpgradeInformation = hideUpgradeInformation,
+                  hideDataPolicy = hideDataPolicy(),
+                  topItemMargin = customTopItemMargin(),
+                  bottomItemMargin = customBottomItemMargin(),
+                  customPreContent = customPrePreferences(),
+                  customPostContent = customPostPreferences(),
+                  onDarkModeChanged = { handleChangeDarkMode(it) },
+                  onLicensesClicked = { AboutDialog.show(act) },
+                  onCheckUpdateClicked = { handleCheckForUpdates() },
+                  onShowChangeLogClicked = { handleShowChangeLog() },
+                  onResetClicked = { ResetDialog.open(act) },
+                  onRateClicked = { handleViewMarketPage() },
+                  onDonateClicked = { BillingDialog.open(act) },
+                  onBugReportClicked = { handleReportBug(handler) },
+                  onViewSourceClicked = { handleViewSourceCode(handler) },
+                  onViewDataPolicyClicked = { handleShowDisclosure() },
+                  onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
+                  onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
+                  onViewMoreAppsClicked = { handleViewMoreApps() },
+                  onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
+                  onViewBlogClicked = { handleViewBlog(handler) },
+                  onNavigationErrorDismissed = { vm.handleClearNavigationError() },
+              )
+            }
           }
+        }
+      }
+    }
+  }
+
+  private fun handleViewBlog(handler: UriHandler) {
+    viewModel.requireNotNull().handleViewBlog { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleViewSocialMedia(handler: UriHandler) {
+    viewModel.requireNotNull().handleViewSocialMedia { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleViewTermsOfService(handler: UriHandler) {
+    viewModel.requireNotNull().handleViewTermsOfService { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleViewPrivacyPolicy(handler: UriHandler) {
+    viewModel.requireNotNull().handleViewPrivacyPolicy { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleViewSourceCode(handler: UriHandler) {
+    viewModel.requireNotNull().handleReportBug { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleReportBug(handler: UriHandler) {
+    viewModel.requireNotNull().handleReportBug { url ->
+      openPage(
+          handler = handler,
+          url = url,
+      )
+    }
+  }
+
+  private fun handleViewMoreApps() {
+    viewModel
+        .requireNotNull()
+        .handleViewMoreApps(
+            onOpenDeveloperPage = { handleOpenDeveloperPage() },
+            onOpenOtherApps = { OtherAppsDialog.show(requireActivity()) },
+        )
+  }
+
+  private fun handleShowDisclosure() {
+    dataPolicyViewModel
+        .requireNotNull()
+        .handleShowDisclosure(
+            scope = viewLifecycleOwner.lifecycleScope,
+            force = true,
+            onShowPolicy = { DataPolicyDisclosureDialog.show(requireActivity()) },
+        )
+  }
+
+  private fun handleViewMarketPage() {
+    ratingViewModel
+        .requireNotNull()
+        .handleViewMarketPage(
+            scope = viewLifecycleOwner.lifecycleScope,
+            onLauchMarketPage = { launcher ->
+              val act = requireActivity()
+              act.lifecycleScope.launch(context = Dispatchers.Main) {
+                launcher.rate(act).onFailure {
+                  Logger.e(it, "Unable to show Market page from settings")
+                }
+              }
+            },
+        )
+  }
+
+  private fun handleShowChangeLog() {
+    changeLogViewModel
+        .requireNotNull()
+        .handleShow(
+            scope = viewLifecycleOwner.lifecycleScope,
+            force = true,
+            onShowChangeLog = { ChangeLogDialog.open(requireActivity()) },
+        )
+  }
+
+  private fun handleCheckForUpdates() {
+    versionViewModel
+        .requireNotNull()
+        .handleCheckForUpdates(
+            scope = viewLifecycleOwner.lifecycleScope,
+            force = true,
+            onLaunchUpdate = { isFallback, launcher ->
+              showVersionUpgrade(
+                  activity = requireActivity(),
+                  isFallbackEnabled = isFallback,
+                  launcher = launcher,
+              )
+            })
+  }
+
+  private fun showVersionUpgrade(
+      activity: FragmentActivity,
+      isFallbackEnabled: Boolean,
+      launcher: AppUpdateLauncher
+  ) {
+    // Enforce that we do this on the Main thread
+    activity.lifecycleScope.launch(context = Dispatchers.Main) {
+      launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
+        Logger.e(err, "Unable to launch in-app update flow")
+        if (isFallbackEnabled) {
+          val vm = viewModel.requireNotNull()
+          MarketLinker.linkToMarketPage(activity)
+              .onSuccess { vm.handleClearNavigationError() }
+              .onFailure { vm.handleNavigationFailed(it) }
         }
       }
     }
@@ -159,48 +293,36 @@ public abstract class SettingsFragment : Fragment() {
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is SettingsControllerEvent.NavigateDeveloperPage -> handleOpenDeveloperPage()
-        is SettingsControllerEvent.OpenOtherAppsScreen -> handleOpenOtherAppsPage(event.others)
-        is SettingsControllerEvent.NavigateHyperlink -> handleHyperlink(event.url)
-      }
-    }
 
-    viewModel.handleLoadPreferences(viewLifecycleOwner.lifecycleScope)
+    val vm = viewModel.requireNotNull()
+    vm.bind(
+        scope = viewLifecycleOwner.lifecycleScope,
+    )
+    vm.handleLoadPreferences(
+        scope = viewLifecycleOwner.lifecycleScope,
+    )
   }
 
   @CallSuper
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
-    factory = null
-    versionFactory = null
-    ratingFactory = null
-    changeLogFactory = null
-    dataPolicyFactory = null
+    viewModel = null
+    changeLogViewModel = null
+    dataPolicyViewModel = null
+    ratingViewModel = null
+    versionViewModel = null
 
     windowInsetObserver?.stop()
     windowInsetObserver = null
   }
 
   private fun handleOpenDeveloperPage() {
-    MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
-  }
-
-  private fun handleHyperlink(url: String) {
-    url.hyperlink(requireActivity()).navigate().handleNavigation()
-  }
-
-  private fun handleOpenOtherAppsPage(apps: List<OtherApp>) {
-    Logger.d("Show other apps fragment: $apps")
-    OtherAppsDialog.show(requireActivity())
-  }
-
-  private fun ResultWrapper<Unit>.handleNavigation() {
-    this.onSuccess { viewModel.handleNavigationSuccess() }
-        .onFailure { Logger.e(it, "Failed to navigate hyperlink") }
-        .onFailure { viewModel.handleNavigationFailed(it) }
+    val vm = viewModel.requireNotNull()
+    MarketLinker.linkToDeveloperPage(requireContext())
+        .onSuccess { vm.handleClearNavigationError() }
+        .onFailure { Logger.e(it, "Failed to navigate to market page") }
+        .onFailure { vm.handleNavigationFailed(it) }
   }
 
   /** Hide upgrade */
@@ -220,4 +342,10 @@ public abstract class SettingsFragment : Fragment() {
 
   /** Override this method to add additional margin to the top settings item */
   @Composable @CheckResult protected abstract fun customBottomItemMargin(): Dp
+
+  public companion object {
+
+    // Only bottom 16 bits.
+    private const val RC_APP_UPDATE = 146
+  }
 }

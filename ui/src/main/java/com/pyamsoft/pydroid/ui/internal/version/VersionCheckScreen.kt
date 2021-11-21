@@ -131,11 +131,11 @@ private fun PreviewVersionCheckScreen(
   Surface {
     VersionCheckScreen(
         state =
-            VersionCheckViewState(
-                isLoading = isLoading,
-                versionCheckError = versionCheckError,
-                navigationError = navigationError,
-            ),
+            MutableVersionCheckViewState().apply {
+              this.isLoading = isLoading
+              this.versionCheckError = versionCheckError
+              this.navigationError = navigationError
+            },
         addSnackbarHost = true,
         snackbarHostState = SnackbarHostState(),
         onVersionCheckErrorDismissed = {},

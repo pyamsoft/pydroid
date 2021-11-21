@@ -16,31 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
-import com.pyamsoft.pydroid.core.Logger
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
-import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
-internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLogViewModel) {
+internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLogViewModeler) {
 
   private var activity: PYDroidActivity? = activity
-  private var viewModel: ChangeLogViewModel? = viewModel
+  private var viewModel: ChangeLogViewModeler? = viewModel
 
   /** Bind Activity for related ChangeLog events */
   fun bindEvents() {
-    val act = activity.requireNotNull()
-
-    act.doOnCreate {
-      viewModel.requireNotNull().bindController(act) { event ->
-        return@bindController when (event) {
-          is ChangeLogControllerEvent.ShowChangeLog -> ChangeLogDialog.open(act)
-        }
-      }
-    }
-
-    act.doOnDestroy {
+    activity.requireNotNull().doOnDestroy {
       viewModel = null
       activity = null
     }
@@ -48,11 +37,10 @@ internal class ChangeLogDelegate(activity: PYDroidActivity, viewModel: ChangeLog
 
   /** Show changelog */
   fun showChangeLog() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot show changelog, ViewModel is null")
-    } else {
-      vm.handleShow(false)
-    }
+    val act = activity.requireNotNull()
+    viewModel.requireNotNull().handleShow(
+            scope = act.lifecycleScope,
+            force = false,
+        ) { ChangeLogDialog.open(act) }
   }
 }

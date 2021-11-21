@@ -19,40 +19,25 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.MarketLinker
-import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: VersionCheckViewModel) {
+internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: VersionCheckViewModeler) {
 
   private var activity: PYDroidActivity? = activity
-  private var viewModel: VersionCheckViewModel? = viewModel
+  private var viewModel: VersionCheckViewModeler? = viewModel
 
   /** Bind Activity for related VersionCheck events */
   fun bindEvents() {
-    val act = activity.requireNotNull()
-
-    act.doOnCreate {
-      viewModel.requireNotNull().bindController(act) { event ->
-        return@bindController when (event) {
-          is VersionCheckControllerEvent.LaunchUpdate ->
-              showVersionUpgrade(act, event.isFallbackEnabled, event.launcher)
-          is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(act)
-        }
-      }
-    }
-
-    act.doOnDestroy {
+    activity.requireNotNull().doOnDestroy {
       viewModel = null
       activity = null
     }
@@ -60,12 +45,20 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
 
   /** Check for in-app updates */
   fun checkUpdates() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot check for updates, ViewModel is null")
-    } else {
-      vm.handleCheckForUpdates(false)
-    }
+    val act = activity.requireNotNull()
+    viewModel
+        .requireNotNull()
+        .handleCheckForUpdates(
+            scope = act.lifecycleScope,
+            force = false,
+            onLaunchUpdate = { isFallback, launcher ->
+              showVersionUpgrade(
+                  activity = act,
+                  isFallbackEnabled = isFallback,
+                  launcher = launcher,
+              )
+            },
+        )
   }
 
   /**
@@ -108,16 +101,17 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
       addSnackbarHost: Boolean,
   ) {
     val vm = viewModel.requireNotNull()
-    val state by vm.compose()
 
-    VersionCheckScreen(
-        modifier = modifier,
-        state = state,
-        addSnackbarHost = addSnackbarHost,
-        snackbarHostState = snackbarHostState,
-        onNavigationErrorDismissed = { vm.handleHideNavigation() },
-        onVersionCheckErrorDismissed = { vm.handleClearError() },
-    )
+    vm.Render { state ->
+      VersionCheckScreen(
+          modifier = modifier,
+          state = state,
+          addSnackbarHost = addSnackbarHost,
+          snackbarHostState = snackbarHostState,
+          onNavigationErrorDismissed = { vm.handleHideNavigation() },
+          onVersionCheckErrorDismissed = { vm.handleClearError() },
+      )
+    }
   }
 
   private fun showVersionUpgrade(
@@ -132,7 +126,7 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
         if (isFallbackEnabled) {
           val vm = viewModel.requireNotNull()
           MarketLinker.linkToMarketPage(activity)
-              .onSuccess { vm.handleNavigationSuccess() }
+              .onSuccess { vm.handleHideNavigation() }
               .onFailure { vm.handleNavigationFailed(it) }
         }
       }

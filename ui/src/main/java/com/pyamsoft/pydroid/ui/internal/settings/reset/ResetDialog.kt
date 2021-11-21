@@ -23,20 +23,18 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
+import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
 
@@ -45,8 +43,18 @@ internal class ResetDialog : AppCompatDialogFragment() {
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<ResetViewModel> { factory.requireNotNull() }
+  internal var viewModel: ResetViewModeler? = null
+
+  private fun handleFullReset() {
+    viewModel
+        .requireNotNull()
+        .handleFullReset(
+            scope = requireActivity().lifecycleScope,
+            onResetComplete = {
+              Logger.d("Reset complete, dismiss")
+              dismiss()
+            })
+  }
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -54,21 +62,22 @@ internal class ResetDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromApplication<PYDroidComponent>(act).plusReset().create().inject(this)
+    Injector.obtainFromActivity<AppComponent>(act).plusReset().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_reset
 
+      val vm = viewModel.requireNotNull()
       setContent {
-        val state by viewModel.compose()
-
-        composeTheme(act) {
-          ResetScreen(
-              modifier = Modifier.fillMaxWidth(),
-              state = state,
-              onReset = { viewModel.handleFullReset() },
-              onClose = { dismiss() },
-          )
+        vm.Render { state ->
+          composeTheme(act) {
+            ResetScreen(
+                modifier = Modifier.fillMaxWidth(),
+                state = state,
+                onReset = { handleFullReset() },
+                onClose = { dismiss() },
+            )
+          }
         }
       }
     }
@@ -77,21 +86,12 @@ internal class ResetDialog : AppCompatDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is ResetControllerEvent.ResetComplete -> {
-          Logger.d("Reset complete, dismiss")
-          dismiss()
-        }
-      }
-    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
-    factory = null
+    viewModel = null
   }
 
   companion object {

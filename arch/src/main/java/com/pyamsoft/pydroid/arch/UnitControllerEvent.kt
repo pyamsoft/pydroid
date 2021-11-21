@@ -17,5 +17,6 @@
 package com.pyamsoft.pydroid.arch
 
 /** A no-op UiControllerEvent */
-@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
+@Deprecated(
+    "PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 public object UnitControllerEvent : UiControllerEvent

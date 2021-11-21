@@ -16,104 +16,56 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import android.content.Context
 import androidx.annotation.CheckResult
 import coil.ImageLoader
-import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
-import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface BillingComponent {
 
-  fun inject(activity: ActivityBase)
-
-  @CheckResult fun plusDialog(): DialogComponent.Factory
-
-  interface DialogComponent {
-
-    fun inject(dialog: BillingDialog)
-
-    interface Factory {
-
-      @CheckResult fun create(provider: AppProvider): DialogComponent
-    }
-
-    class Impl
-    private constructor(
-        private val module: BillingModule,
-        private val params: BillingComponent.Factory.Parameters,
-        provider: AppProvider,
-    ) : DialogComponent {
-
-      private val factory = createViewModelFactory {
-        BillingViewModeler(params.interactor, module.provideInteractor(), provider)
-      }
-
-      override fun inject(dialog: BillingDialog) {
-        dialog.composeTheme = params.composeTheme
-        dialog.purchaseClient = module.provideLauncher()
-        dialog.imageLoader = params.imageLoader
-        dialog.factory = factory
-      }
-
-      internal class FactoryImpl
-      internal constructor(
-          private val module: BillingModule,
-          private val params: BillingComponent.Factory.Parameters,
-      ) : Factory {
-
-        override fun create(provider: AppProvider): DialogComponent {
-          return Impl(module, params, provider)
-        }
-      }
-    }
-  }
+  fun inject(dialog: BillingDialog)
 
   interface Factory {
 
-    @CheckResult fun create(): BillingComponent
+    @CheckResult fun create(provider: AppProvider): BillingComponent
 
     data class Parameters
     internal constructor(
-        internal val context: Context,
-        internal val theming: Theming,
-        internal val errorBus: EventBus<Throwable>,
-        internal val interactor: ChangeLogInteractor,
+        internal val changeLogModule: ChangeLogModule,
+        internal val billingModule: BillingModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : BillingComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+      private val provider: AppProvider,
+  ) : BillingComponent {
 
-    // Make this module each time since if it falls out of scope, the in-app billing system
-    // will crash
-    private val module =
-        BillingModule(
-            BillingModule.Parameters(
-                context = params.context.applicationContext,
-                errorBus = params.errorBus,
-            ))
-
-    override fun inject(activity: ActivityBase) {
-      activity.billingConnector = module.provideConnector()
-      activity.theming = params.theming
+    override fun inject(dialog: BillingDialog) {
+      dialog.imageLoader = params.imageLoader
+      dialog.composeTheme = params.composeTheme
+      dialog.purchaseClient = params.billingModule.provideLauncher()
+      dialog.viewModel =
+          BillingViewModeler(
+              state = MutableBillingViewState(),
+              changeLogInteractor = params.changeLogModule.provideInteractor(),
+              interactor = params.billingModule.provideInteractor(),
+              provider = provider,
+          )
     }
 
-    override fun plusDialog(): DialogComponent.Factory {
-      return DialogComponent.Impl.FactoryImpl(module, params)
-    }
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
-
-      override fun create(): BillingComponent {
-        return Impl(params)
+      override fun create(provider: AppProvider): BillingComponent {
+        return Impl(params, provider)
       }
     }
   }

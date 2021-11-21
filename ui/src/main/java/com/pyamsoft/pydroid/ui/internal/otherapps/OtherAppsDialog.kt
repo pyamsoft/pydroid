@@ -21,33 +21,55 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
+import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.util.MarketLinker
-import com.pyamsoft.pydroid.util.hyperlink
 
 internal class OtherAppsDialog : AppCompatDialogFragment() {
 
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<OtherAppsViewModel> { factory.requireNotNull() }
+  internal var viewModel: OtherAppsViewModeler? = null
 
   internal var imageLoader: ImageLoader? = null
+
+  private fun openSourceCode(handler: UriHandler, app: OtherApp) {
+    openPage(
+        handler = handler,
+        url = app.sourceUrl,
+    )
+  }
+
+  private fun openStorePage(handler: UriHandler, app: OtherApp) {
+    openPage(
+        handler = handler,
+        url = app.storeUrl,
+    )
+  }
+
+  private fun openPage(handler: UriHandler, url: String) {
+    val vm = viewModel.requireNotNull()
+
+    try {
+      vm.handleHideNavigation()
+      handler.openUri(url)
+    } catch (e: Throwable) {
+      vm.handleNavigationFailed(e)
+    }
+  }
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -55,23 +77,27 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromApplication<PYDroidComponent>(act).plusOtherApps().create().inject(this)
+    Injector.obtainFromActivity<AppComponent>(act).plusOtherApps().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_otherapps
 
+      val vm = viewModel.requireNotNull()
+      val imageLoader = imageLoader.requireNotNull()
       setContent {
-        val state by viewModel.compose()
+        val handler = LocalUriHandler.current
 
-        composeTheme(act) {
-          OtherAppsScreen(
-              state = state,
-              imageLoader = imageLoader.requireNotNull(),
-              onNavigationErrorDismissed = { viewModel.handleHideNavigation() },
-              onViewStorePage = { viewModel.handleOpenStoreUrl(it) },
-              onViewSourceCode = { viewModel.handleOpenSourceCodeUrl(it) },
-              onClose = { dismiss() },
-          )
+        vm.Render { state ->
+          composeTheme(act) {
+            OtherAppsScreen(
+                state = state,
+                imageLoader = imageLoader,
+                onNavigationErrorDismissed = { vm.handleHideNavigation() },
+                onViewStorePage = { openStorePage(handler, it) },
+                onViewSourceCode = { openSourceCode(handler, it) },
+                onClose = { dismiss() },
+            )
+          }
         }
       }
     }
@@ -81,35 +107,19 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
 
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
-        is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(event.url)
-      }
-    }
+    viewModel
+        .requireNotNull()
+        .bind(
+            scope = viewLifecycleOwner.lifecycleScope,
+        )
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
 
-    factory = null
+    viewModel = null
     imageLoader = null
-  }
-
-  private fun ResultWrapper<Unit>.handleNavigation() {
-    this.onSuccess { viewModel.handleNavigationSuccess() }.onFailure {
-      viewModel.handleNavigationFailed(it)
-    }
-  }
-
-  private fun openDeveloperPage() {
-    // If we cannot load we have nothing to do here
-    MarketLinker.linkToDeveloperPage(requireActivity()).handleNavigation()
-  }
-
-  private fun navigateToExternalUrl(url: String) {
-    url.hyperlink(requireActivity()).navigate().handleNavigation()
   }
 
   companion object {

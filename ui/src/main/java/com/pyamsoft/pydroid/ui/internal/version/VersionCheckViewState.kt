@@ -16,24 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
-@Stable
-internal data class VersionCheckViewState
-internal constructor(
-    val isLoading: Boolean,
-    val versionCheckError: Throwable?,
-    val navigationError: Throwable?,
-) : UiViewState
+internal interface VersionCheckViewState : UiViewState {
+  val isLoading: Boolean
+  val versionCheckError: Throwable?
+  val navigationError: Throwable?
+}
 
-internal sealed class VersionCheckControllerEvent : UiControllerEvent {
-
-  data class LaunchUpdate
-  internal constructor(val isFallbackEnabled: Boolean, val launcher: AppUpdateLauncher) :
-      VersionCheckControllerEvent()
-
-  object UpgradeReady : VersionCheckControllerEvent()
+internal class MutableVersionCheckViewState : VersionCheckViewState {
+  override var isLoading by mutableStateOf(false)
+  override var versionCheckError by mutableStateOf<Throwable?>(null)
+  override var navigationError by mutableStateOf<Throwable?>(null)
 }

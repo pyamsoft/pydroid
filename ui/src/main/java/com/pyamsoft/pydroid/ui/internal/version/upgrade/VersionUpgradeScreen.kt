@@ -128,7 +128,7 @@ private fun Actions(
 @Composable
 private fun PreviewVersionUpgradeScreen(upgraded: Boolean) {
   VersionUpgradeScreen(
-      state = VersionUpgradeViewState(upgraded = upgraded),
+      state = MutableVersionUpgradeViewState().apply { this.upgraded = upgraded },
       onUpgrade = {},
       onClose = {},
   )

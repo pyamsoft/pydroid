@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.version.upgrade
+package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
-@Stable
-internal data class VersionUpgradeViewState(
-    val upgraded: Boolean,
-) : UiViewState
+internal interface ResetViewState : UiViewState {
+  val reset: Boolean
+}
 
-internal sealed class VersionUpgradeControllerEvent : UiControllerEvent {
-
-  object UpgradeComplete : VersionUpgradeControllerEvent()
+internal class MutableResetViewState : ResetViewState {
+  override var reset by mutableStateOf(false)
 }

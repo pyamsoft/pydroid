@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.inject.ServiceNotFoundException
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
@@ -74,31 +73,22 @@ internal class BillingDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-
-    try {
-      // TODO(Peter): Once 25 releases and removes the ActivityBase we can remove this as it will
-      // enforce Library consumers on PYDroidActivity
-      Injector.obtainFromActivity<BillingComponent>(act)
-          .plusDialog()
-          .create(getApplicationProvider())
-          .inject(this)
-    } catch (e: ServiceNotFoundException) {
-      Injector.obtainFromActivity<AppComponent>(act)
-          .plusBilling()
-          .create(getApplicationProvider())
-          .inject(this)
-    }
+    Injector.obtainFromActivity<AppComponent>(act)
+        .plusBilling()
+        .create(getApplicationProvider())
+        .inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_billing
 
       val vm = viewModel.requireNotNull()
+      val imageLoader = imageLoader.requireNotNull()
       setContent {
         vm.Render { state ->
           composeTheme(act) {
             BillingScreen(
                 state = state,
-                imageLoader = imageLoader.requireNotNull(),
+                imageLoader = imageLoader,
                 onPurchase = { launchPurchase(it) },
                 onBillingErrorDismissed = { vm.handleClearError() },
                 onClose = { dismiss() },
@@ -112,12 +102,20 @@ internal class BillingDialog : AppCompatDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-    viewModel.requireNotNull().bind(viewLifecycleOwner.lifecycleScope)
+    viewModel
+        .requireNotNull()
+        .bind(
+            scope = viewLifecycleOwner.lifecycleScope,
+        )
   }
 
   override fun onResume() {
     super.onResume()
-    viewModel.requireNotNull().handleRefresh(viewLifecycleOwner.lifecycleScope)
+    viewModel
+        .requireNotNull()
+        .handleRefresh(
+            scope = viewLifecycleOwner.lifecycleScope,
+        )
   }
 
   override fun onDestroyView() {

@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
 internal interface ResetComponent {
@@ -30,7 +30,7 @@ internal interface ResetComponent {
 
     data class Parameters
     internal constructor(
-        internal val factory: ViewModelProvider.Factory,
+        internal val module: SettingsModule,
         internal val composeTheme: ComposeThemeFactory,
     )
   }
@@ -38,8 +38,12 @@ internal interface ResetComponent {
   class Impl internal constructor(private val params: Factory.Parameters) : ResetComponent {
 
     override fun inject(dialog: ResetDialog) {
-      dialog.factory = params.factory
       dialog.composeTheme = params.composeTheme
+      dialog.viewModel =
+          ResetViewModeler(
+              state = MutableResetViewState(),
+              interactor = params.module.provideInteractor(),
+          )
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

@@ -16,9 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.Logger
@@ -28,111 +27,97 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class SettingsViewModel
+internal class SettingsViewModeler
 internal constructor(
+    private val state: MutableSettingsViewState,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
     private val privacyPolicyUrl: String,
     private val termsConditionsUrl: String,
     private val theming: Theming,
-    interactor: OtherAppsInteractor,
-) :
-    UiViewModel<SettingsViewState, SettingsControllerEvent>(
-        initialState =
-            SettingsViewState(
-                applicationName = "",
-                darkMode = Theming.Mode.SYSTEM,
-                otherApps = emptyList(),
-                navigationError = null,
-                isLoading = false,
-            ),
-    ) {
+    private val interactor: OtherAppsInteractor,
+) : AbstractViewModeler<SettingsViewState>(state) {
 
   private val otherAppsRunner =
       highlander<ResultWrapper<List<OtherApp>>, Boolean> { force -> interactor.getApps(force) }
 
-  init {
-    viewModelScope.launch(context = Dispatchers.Default) {
+  internal fun bind(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) {
       otherAppsRunner
           .call(false)
-          .onSuccess { setState { copy(otherApps = it) } }
+          .onSuccess { state.otherApps = it }
           .onFailure { Logger.e(it, "Failed to fetch other apps from network") }
-          .onFailure { setState { copy(otherApps = emptyList()) } }
+          .onFailure { state.otherApps = emptyList() }
     }
 
-    viewModelScope.launch(context = Dispatchers.Default) {
+    scope.launch(context = Dispatchers.Main) {
       val name = interactor.getDisplayName()
-      setState { copy(applicationName = name) }
+      state.applicationName = name
     }
   }
 
-  internal fun handleViewMoreApps() {
+  internal fun handleViewMoreApps(
+      onOpenDeveloperPage: () -> Unit,
+      onOpenOtherApps: (List<OtherApp>) -> Unit,
+  ) {
     state.otherApps.let { others ->
       if (others.isEmpty()) {
         Logger.w("Other apps list is empty, fallback to developer store page")
-        publish(SettingsControllerEvent.NavigateDeveloperPage)
+        onOpenDeveloperPage()
       } else {
         Logger.w("We have a list of Other apps, show them")
-        publish(SettingsControllerEvent.OpenOtherAppsScreen(others))
+        onOpenOtherApps(others)
       }
     }
   }
 
   internal fun handleLoadPreferences(scope: CoroutineScope) {
-    scope.setState(
-        stateChange = { copy(isLoading = true) },
-        andThen = {
-          val newMode = theming.getMode()
-          setState {
-            copy(
-                darkMode = newMode,
-                isLoading = false,
-            )
-          }
-        })
+    scope.launch(context = Dispatchers.Main) {
+      state.isLoading = true
+      state.darkMode = theming.getMode()
+      state.isLoading = false
+    }
   }
 
   internal fun handleChangeDarkMode(scope: CoroutineScope, mode: Theming.Mode) {
-    scope.setState(
-        stateChange = { copy(darkMode = mode) },
-        andThen = { theming.setDarkTheme(mode) },
-    )
+    scope.launch(context = Dispatchers.Main) {
+      state.darkMode = mode
+      theming.setDarkTheme(mode)
+    }
   }
 
   internal fun handleClearNavigationError() {
-    setState { copy(navigationError = null) }
+    state.navigationError = null
   }
 
   internal fun handleNavigationFailed(error: Throwable) {
-    setState { copy(navigationError = error) }
+    state.navigationError = error
   }
 
-  internal fun handleNavigationSuccess() {
-    setState { copy(navigationError = null) }
+  internal fun handleViewSocialMedia(
+      onOpenUrl: (String) -> Unit,
+  ) {
+    onOpenUrl(FACEBOOK)
   }
 
-  internal fun handleViewSocialMedia() {
-    publish(SettingsControllerEvent.NavigateHyperlink(FACEBOOK))
+  internal fun handleViewBlog(onOpenUrl: (String) -> Unit) {
+    onOpenUrl(BLOG)
   }
 
-  internal fun handleViewBlog() {
-    publish(SettingsControllerEvent.NavigateHyperlink(BLOG))
+  internal fun handleViewTermsOfService(onOpenUrl: (String) -> Unit) {
+    onOpenUrl(termsConditionsUrl)
   }
 
-  internal fun handleViewTermsOfService() {
-    publish(SettingsControllerEvent.NavigateHyperlink(termsConditionsUrl))
+  internal fun handleViewPrivacyPolicy(onOpenUrl: (String) -> Unit) {
+    onOpenUrl(privacyPolicyUrl)
   }
 
-  internal fun handleViewPrivacyPolicy() {
-    publish(SettingsControllerEvent.NavigateHyperlink(privacyPolicyUrl))
+  internal fun handleViewSourceCode(onOpenUrl: (String) -> Unit) {
+    onOpenUrl(viewSourceUrl)
   }
 
-  internal fun handleViewSourceCode() {
-    publish(SettingsControllerEvent.NavigateHyperlink(viewSourceUrl))
-  }
-
-  internal fun handleReportBug() {
-    publish(SettingsControllerEvent.NavigateHyperlink(bugReportUrl))
+  internal fun handleReportBug(onOpenUrl: (String) -> Unit) {
+    onOpenUrl(bugReportUrl)
   }
 
   companion object {

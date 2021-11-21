@@ -32,7 +32,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -233,17 +232,15 @@ private fun NavigationError(
 
 @Composable
 private fun PreviewSettingsScreen(isLoading: Boolean) {
-  val context = LocalContext.current
-
   SettingsScreen(
       state =
-          SettingsViewState(
-              isLoading = isLoading,
-              applicationName = "TEST",
-              darkMode = Theming.Mode.LIGHT,
-              otherApps = emptyList(),
-              navigationError = null,
-          ),
+          MutableSettingsViewState().apply {
+            this.isLoading = isLoading
+            applicationName = "TEST"
+            darkMode = Theming.Mode.LIGHT
+            otherApps = emptyList()
+            navigationError = null
+          },
       hideClearAll = false,
       hideUpgradeInformation = false,
       hideDataPolicy = false,

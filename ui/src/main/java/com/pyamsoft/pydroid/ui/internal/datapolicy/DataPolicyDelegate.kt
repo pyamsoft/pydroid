@@ -16,32 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
-import com.pyamsoft.pydroid.core.Logger
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
-import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
-internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPolicyViewModel) {
+internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPolicyViewModeler) {
 
   private var activity: PYDroidActivity? = activity
-  private var viewModel: DataPolicyViewModel? = viewModel
+  private var viewModel: DataPolicyViewModeler? = viewModel
 
   /** Bind Activity for related DataPolicy events */
   fun bindEvents() {
-    val act = activity.requireNotNull()
-
-    act.doOnCreate {
-      viewModel.requireNotNull().bindController(act) { event ->
-        return@bindController when (event) {
-          is DataPolicyControllerEvent.ShowPolicy -> DataPolicyDisclosureDialog.show(act)
-        }
-      }
-    }
-
-    act.doOnDestroy {
+    activity.requireNotNull().doOnDestroy {
       viewModel = null
       activity = null
     }
@@ -49,11 +38,13 @@ internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPoli
 
   /** Show Data policy */
   fun showDataPolicyDisclosure() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot show data policy, ViewModel is null")
-    } else {
-      vm.handleShowDisclosure(false)
-    }
+    val act = activity.requireNotNull()
+    viewModel
+        .requireNotNull()
+        .handleShowDisclosure(
+            scope = act.lifecycleScope,
+            force = false,
+            onShowPolicy = { DataPolicyDisclosureDialog.show(act) },
+        )
   }
 }

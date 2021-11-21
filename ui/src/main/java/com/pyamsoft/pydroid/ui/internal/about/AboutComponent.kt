@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
+import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 
@@ -32,7 +32,7 @@ internal interface AboutComponent {
     data class Parameters
     internal constructor(
         internal val composeTheme: ComposeThemeFactory,
-        internal val interactor: AboutInteractor,
+        internal val module: AboutModule,
     )
   }
 
@@ -43,7 +43,7 @@ internal interface AboutComponent {
       dialog.viewModel =
           AboutViewModeler(
               state = MutableAboutViewState(),
-              interactor = params.interactor,
+              interactor = params.module.provideInteractor(),
           )
     }
 

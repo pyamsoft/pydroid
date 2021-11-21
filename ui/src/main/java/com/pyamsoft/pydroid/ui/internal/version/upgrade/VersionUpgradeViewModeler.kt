@@ -16,35 +16,36 @@
 
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-internal class VersionUpgradeViewModel
+internal class VersionUpgradeViewModeler
 internal constructor(
+    private val state: MutableVersionUpgradeViewState,
     private val interactor: VersionInteractor,
-) :
-    UiViewModel<VersionUpgradeViewState, VersionUpgradeControllerEvent>(
-        initialState =
-            VersionUpgradeViewState(
-                upgraded = false,
-            ),
-    ) {
+) : AbstractViewModeler<VersionUpgradeViewState>(state) {
 
-  internal fun completeUpgrade() {
+  internal fun completeUpgrade(
+      scope: CoroutineScope,
+      onUpgradeComplete: () -> Unit,
+  ) {
     if (state.upgraded) {
       Logger.w("Already upgraded, do nothing")
       return
     }
 
-    setState(
-        stateChange = { copy(upgraded = true) },
-        andThen = {
-          Logger.d("Updating app, restart via update manager!")
-          interactor.completeUpdate()
+    scope.launch(context = Dispatchers.Main) {
+      state.upgraded = true
 
-          Logger.d("App update completed, publish finish!")
-          publish(VersionUpgradeControllerEvent.UpgradeComplete)
-        })
+      Logger.d("Updating app, restart via update manager!")
+      interactor.completeUpdate()
+
+      Logger.d("App update completed, publish finish!")
+      onUpgradeComplete()
+    }
   }
 }

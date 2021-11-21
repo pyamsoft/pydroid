@@ -37,7 +37,8 @@ import kotlinx.coroutines.Job
  * NOTE: You should not use this class directly. You should use UiViewModel which extends this
  * class.
  */
-@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
+@Deprecated(
+    "PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 public abstract class UiStateViewModel<S : UiViewState>
 internal constructor(private val delegate: UiStateModel<S>) : ViewModel() {
 

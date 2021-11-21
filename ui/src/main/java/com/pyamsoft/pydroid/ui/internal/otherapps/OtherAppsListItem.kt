@@ -51,8 +51,8 @@ internal fun OtherAppsListItem(
     modifier: Modifier = Modifier,
     app: OtherApp,
     imageLoader: ImageLoader,
-    onOpenStore: () -> Unit,
-    onViewSource: () -> Unit,
+    onOpenStore: (OtherApp) -> Unit,
+    onViewSource: (OtherApp) -> Unit,
 ) {
   Card(
       modifier = modifier,
@@ -79,13 +79,13 @@ internal fun OtherAppsListItem(
         )
         Row {
           ViewSource(
-              onClick = onViewSource,
+              onClick = { onViewSource(app) },
           )
           Box(
               modifier = Modifier.padding(start = 8.dp),
           ) {
             OpenStore(
-                onClick = onOpenStore,
+                onClick = { onOpenStore(app) },
             )
           }
         }

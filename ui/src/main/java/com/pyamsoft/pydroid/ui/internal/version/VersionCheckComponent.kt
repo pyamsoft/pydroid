@@ -16,20 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
-import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModeler
 
 internal interface VersionCheckComponent {
-
-  fun inject(activity: VersionCheckActivity)
 
   fun inject(dialog: VersionUpgradeDialog)
 
@@ -39,41 +33,20 @@ internal interface VersionCheckComponent {
 
     data class Parameters
     internal constructor(
-        internal val context: Context,
-        internal val version: Int,
-        internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean,
+        internal val module: VersionModule,
         internal val composeTheme: ComposeThemeFactory,
     )
   }
 
   class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
 
-    private val checkFactory: ViewModelProvider.Factory
-    private val upgradeFactory: ViewModelProvider.Factory
-
-    init {
-      // Make this module each time since if it falls out of scope, the in-app update system
-      // will crash
-      val module =
-          VersionModule(
-              Parameters(
-                  context = params.context.applicationContext,
-                  version = params.version,
-                  isFakeUpgradeChecker = params.isFakeUpgradeChecker,
-                  isFakeUpgradeAvailable = params.isFakeUpgradeAvailable))
-      checkFactory = createViewModelFactory { VersionCheckViewModel(module.provideInteractor()) }
-      upgradeFactory =
-          createViewModelFactory { VersionUpgradeViewModel(module.provideInteractor()) }
-    }
-
-    override fun inject(activity: VersionCheckActivity) {
-      activity.versionFactory = checkFactory
-    }
-
     override fun inject(dialog: VersionUpgradeDialog) {
       dialog.composeTheme = params.composeTheme
-      dialog.factory = upgradeFactory
+      dialog.viewModel =
+          VersionUpgradeViewModeler(
+              state = MutableVersionUpgradeViewState(),
+              interactor = params.module.provideInteractor(),
+          )
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :

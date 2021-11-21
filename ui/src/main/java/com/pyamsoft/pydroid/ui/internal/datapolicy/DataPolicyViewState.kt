@@ -16,13 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-@Stable internal object DataPolicyViewState : UiViewState
+internal interface DataPolicyViewState : UiViewState
 
-internal sealed class DataPolicyControllerEvent : UiControllerEvent {
-
-  object ShowPolicy : DataPolicyControllerEvent()
-}
+internal class MutableDataPolicyViewState : DataPolicyViewState

@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 /** Provide constructed objects from PYDroid to outside consumers */
@@ -31,10 +30,5 @@ public interface ModuleProvider {
 
     /** Provide a dark-light theming interface */
     @CheckResult public fun theming(): Theming
-
-    /** Provide an image loader interface */
-    @Deprecated("Use Coil-Compose in Jetpack Compose UI")
-    @CheckResult
-    public fun imageLoader(): ImageLoader
   }
 }

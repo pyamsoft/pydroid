@@ -17,10 +17,20 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.createViewModelFactory
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
+import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
+import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
+import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.theme.Theming
 
@@ -38,34 +48,50 @@ internal interface SettingsComponent {
         internal val viewSourceUrl: String,
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val factory: ViewModelProvider.Factory,
         internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val otherAppsModule: OtherAppsModule,
+        internal val ratingModule: RatingModule,
+        internal val versionModule: VersionModule,
+        internal val dataPolicyModule: DataPolicyModule,
+        internal val changeLogModule: ChangeLogModule,
     )
   }
 
   class Impl private constructor(private val params: Factory.Parameters) : SettingsComponent {
 
-    private val factory = createViewModelFactory {
-      SettingsViewModel(
-          bugReportUrl = params.bugReportUrl,
-          privacyPolicyUrl = params.privacyPolicyUrl,
-          termsConditionsUrl = params.termsConditionsUrl,
-          viewSourceUrl = params.viewSourceUrl,
-          theming = params.theming,
-          interactor = params.otherAppsModule.provideInteractor(),
-      )
-    }
-
     override fun inject(fragment: SettingsFragment) {
-      fragment.changeLogFactory = params.factory
-      fragment.ratingFactory = params.factory
-      fragment.versionFactory = params.factory
-      fragment.dataPolicyFactory = params.factory
-      fragment.factory = factory
-
       fragment.composeTheme = params.composeTheme
+      fragment.viewModel =
+          SettingsViewModeler(
+              state = MutableSettingsViewState(),
+              bugReportUrl = params.bugReportUrl,
+              privacyPolicyUrl = params.privacyPolicyUrl,
+              termsConditionsUrl = params.termsConditionsUrl,
+              viewSourceUrl = params.viewSourceUrl,
+              theming = params.theming,
+              interactor = params.otherAppsModule.provideInteractor(),
+          )
+      fragment.dataPolicyViewModel =
+          DataPolicyViewModeler(
+              state = MutableDataPolicyViewState(),
+              interactor = params.dataPolicyModule.provideInteractor(),
+          )
+      fragment.ratingViewModel =
+          RatingViewModeler(
+              state = MutableRatingViewState(),
+              interactor = params.ratingModule.provideInteractor(),
+          )
+      fragment.changeLogViewModel =
+          ChangeLogViewModeler(
+              state = MutableChangeLogViewState(),
+              interactor = params.changeLogModule.provideInteractor(),
+          )
+      fragment.versionViewModel =
+          VersionCheckViewModeler(
+              state = MutableVersionCheckViewState(),
+              interactor = params.versionModule.provideInteractor(),
+          )
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :

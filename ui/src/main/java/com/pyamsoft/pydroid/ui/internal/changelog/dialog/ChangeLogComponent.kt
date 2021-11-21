@@ -18,22 +18,25 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.annotation.CheckResult
 import coil.ImageLoader
-import com.pyamsoft.pydroid.arch.createViewModelFactory
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 
-internal interface ChangeLogDialogComponent {
+internal interface ChangeLogComponent {
 
   fun inject(dialog: ChangeLogDialog)
 
   interface Factory {
 
-    @CheckResult fun create(provider: ChangeLogProvider): ChangeLogDialogComponent
+    @CheckResult fun create(provider: ChangeLogProvider): ChangeLogComponent
 
     data class Parameters
     internal constructor(
-        internal val interactor: ChangeLogInteractor,
+        internal val changeLogModule: ChangeLogModule,
+        internal val ratingModule: RatingModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
     )
@@ -43,22 +46,28 @@ internal interface ChangeLogDialogComponent {
   private constructor(
       private val provider: ChangeLogProvider,
       private val params: Factory.Parameters,
-  ) : ChangeLogDialogComponent {
-
-    private val factory = createViewModelFactory {
-      ChangeLogDialogViewModel(params.interactor, provider)
-    }
+  ) : ChangeLogComponent {
 
     override fun inject(dialog: ChangeLogDialog) {
       dialog.composeTheme = params.composeTheme
       dialog.imageLoader = params.imageLoader
-      dialog.factory = factory
+      dialog.ratingViewModel =
+          RatingViewModeler(
+              state = MutableRatingViewState(),
+              interactor = params.ratingModule.provideInteractor(),
+          )
+      dialog.viewModel =
+          ChangeLogDialogViewModeler(
+              state = MutableChangeLogViewState(),
+              interactor = params.changeLogModule.provideInteractor(),
+              provider = provider,
+          )
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(provider: ChangeLogProvider): ChangeLogDialogComponent {
+      override fun create(provider: ChangeLogProvider): ChangeLogComponent {
         return Impl(provider, params)
       }
     }

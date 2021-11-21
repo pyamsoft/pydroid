@@ -16,31 +16,36 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.core.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-internal class ResetViewModel
+internal class ResetViewModeler
 internal constructor(
+    private val state: MutableResetViewState,
     private val interactor: SettingsInteractor,
-) :
-    UiViewModel<ResetViewState, ResetControllerEvent>(
-        initialState = ResetViewState(reset = false)) {
+) : AbstractViewModeler<ResetViewState>(state) {
 
-  internal fun handleFullReset() {
+  internal fun handleFullReset(
+      scope: CoroutineScope,
+      onResetComplete: () -> Unit,
+  ) {
     if (state.reset) {
       Logger.w("Already reset, do nothing")
       return
     }
 
-    setState(
-        stateChange = { copy(reset = true) },
-        andThen = {
-          Logger.d("Completely reset application")
-          interactor.wipeData()
+    scope.launch(context = Dispatchers.Main) {
+      state.reset = true
 
-          Logger.d("Reset completed, broadcast!")
-          publish(ResetControllerEvent.ResetComplete)
-        })
+      Logger.d("Completely reset application")
+      interactor.wipeData()
+
+      Logger.d("Reset completed, broadcast!")
+      onResetComplete()
+    }
   }
 }

@@ -17,7 +17,8 @@
 package com.pyamsoft.pydroid.arch.debug
 
 /** Error when two state objects do not match up */
-@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
+@Deprecated(
+    "PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 internal class DeterministicStateError
 internal constructor(state1: Any?, state2: Any?, prop: String?) :
     IllegalStateException(

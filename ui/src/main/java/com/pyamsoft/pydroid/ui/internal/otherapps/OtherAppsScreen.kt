@@ -25,7 +25,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -51,8 +51,8 @@ internal fun OtherAppsScreen(
     state: OtherAppsViewState,
     imageLoader: ImageLoader,
     onNavigationErrorDismissed: () -> Unit,
-    onViewStorePage: (index: Int) -> Unit,
-    onViewSourceCode: (index: Int) -> Unit,
+    onViewStorePage: (OtherApp) -> Unit,
+    onViewSourceCode: (OtherApp) -> Unit,
     onClose: () -> Unit,
 ) {
   val isLoading = state.isLoading
@@ -119,24 +119,24 @@ private fun Loading() {
 private fun OtherAppsList(
     apps: List<OtherApp>,
     imageLoader: ImageLoader,
-    onViewStorePage: (index: Int) -> Unit,
-    onViewSourceCode: (index: Int) -> Unit,
+    onViewStorePage: (OtherApp) -> Unit,
+    onViewSourceCode: (OtherApp) -> Unit,
 ) {
   LazyColumn(
       modifier = Modifier.fillMaxWidth().fillMaxHeight(),
       verticalArrangement = Arrangement.spacedBy(8.dp),
       contentPadding = PaddingValues(8.dp),
   ) {
-    itemsIndexed(
+    items(
         items = apps,
-        key = { _, item -> item.packageName },
-    ) { index, item ->
+        key = { it.packageName },
+    ) { item ->
       OtherAppsListItem(
           modifier = Modifier.fillMaxWidth(),
           app = item,
           imageLoader = imageLoader,
-          onViewSource = { onViewSourceCode(index) },
-          onOpenStore = { onViewStorePage(index) },
+          onViewSource = onViewSourceCode,
+          onOpenStore = onViewStorePage,
       )
     }
   }
@@ -181,32 +181,32 @@ private fun PreviewOtherAppsScreen(
 
   OtherAppsScreen(
       state =
-          OtherAppsViewState(
-              isLoading = isLoading,
-              apps =
-                  listOf(
-                      OtherApp(
-                          packageName = "test1",
-                          name = "Test App 1",
-                          description = "Just a test app",
-                          icon =
-                              "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
-                          storeUrl = "some_url",
-                          sourceUrl = "some_url",
-                      ),
-                      OtherApp(
-                          packageName = "test2",
-                          name = "Test App 2",
-                          description = "Just another test app",
-                          icon =
-                              "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
-                          storeUrl = "some_url",
-                          sourceUrl = "some_url",
-                      ),
-                  ),
-              navigationError = navigationError,
-              appsError = appsError,
-          ),
+          MutableOtherAppsViewState().apply {
+            this.isLoading = isLoading
+            this.apps =
+                listOf(
+                    OtherApp(
+                        packageName = "test1",
+                        name = "Test App 1",
+                        description = "Just a test app",
+                        icon =
+                            "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
+                        storeUrl = "some_url",
+                        sourceUrl = "some_url",
+                    ),
+                    OtherApp(
+                        packageName = "test2",
+                        name = "Test App 2",
+                        description = "Just another test app",
+                        icon =
+                            "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/pasterino.png",
+                        storeUrl = "some_url",
+                        sourceUrl = "some_url",
+                    ),
+                )
+            this.navigationError = navigationError
+            this.appsError = appsError
+          },
       imageLoader = createNewTestImageLoader(context),
       onNavigationErrorDismissed = {},
       onViewSourceCode = {},

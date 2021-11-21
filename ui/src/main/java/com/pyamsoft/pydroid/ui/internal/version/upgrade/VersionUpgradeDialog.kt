@@ -23,23 +23,19 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.inject.ServiceNotFoundException
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
 
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
@@ -47,8 +43,18 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<VersionUpgradeViewModel> { factory.requireNotNull() }
+  internal var viewModel: VersionUpgradeViewModeler? = null
+
+  private fun handleCompleteUpgrade() {
+    viewModel
+        .requireNotNull()
+        .completeUpgrade(
+            scope = requireActivity().lifecycleScope,
+            onUpgradeComplete = {
+              Logger.d("Upgrade complete, dismiss")
+              dismiss()
+            })
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -61,28 +67,22 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-
-    try {
-      // TODO(Peter): Once 25 releases and removes the ActivityBase we can remove this as it will
-      // enforce Library consumers on PYDroidActivity
-      Injector.obtainFromActivity<VersionCheckComponent>(act).inject(this)
-    } catch (e: ServiceNotFoundException) {
-      Injector.obtainFromActivity<AppComponent>(act).inject(this)
-    }
+    Injector.obtainFromActivity<AppComponent>(act).inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_upgrade
 
+      val vm = viewModel.requireNotNull()
       setContent {
-        val state by viewModel.compose()
-
-        composeTheme(act) {
-          VersionUpgradeScreen(
-              modifier = Modifier.fillMaxWidth(),
-              state = state,
-              onUpgrade = { viewModel.completeUpgrade() },
-              onClose = { dismiss() },
-          )
+        vm.Render { state ->
+          composeTheme(act) {
+            VersionUpgradeScreen(
+                modifier = Modifier.fillMaxWidth(),
+                state = state,
+                onUpgrade = { handleCompleteUpgrade() },
+                onClose = { dismiss() },
+            )
+          }
         }
       }
     }
@@ -91,21 +91,12 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is VersionUpgradeControllerEvent.UpgradeComplete -> {
-          Logger.d("Upgrade complete, dismiss")
-          dismiss()
-        }
-      }
-    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
-    factory = null
+    viewModel = null
   }
 
   companion object {

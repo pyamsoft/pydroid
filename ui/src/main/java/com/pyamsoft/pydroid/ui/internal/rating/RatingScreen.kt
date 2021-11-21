@@ -73,10 +73,7 @@ private fun PreviewRatingScreen(
 ) {
   Surface {
     RatingScreen(
-        state =
-            RatingViewState(
-                navigationError = navigationError,
-            ),
+        state = MutableRatingViewState().apply { this.navigationError = navigationError },
         addSnackbarHost = true,
         snackbarHostState = SnackbarHostState(),
         onNavigationErrorDismissed = {},

@@ -16,28 +16,25 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 
-@Stable
-internal data class SettingsViewState
-internal constructor(
-    val applicationName: CharSequence,
-    val darkMode: Theming.Mode,
-    val otherApps: List<OtherApp>,
-    val navigationError: Throwable?,
-    val isLoading: Boolean,
-) : UiViewState
+internal interface SettingsViewState : UiViewState {
+  val applicationName: CharSequence
+  val darkMode: Theming.Mode
+  val otherApps: List<OtherApp>
+  val navigationError: Throwable?
+  val isLoading: Boolean
+}
 
-internal sealed class SettingsControllerEvent : UiControllerEvent {
-
-  object NavigateDeveloperPage : SettingsControllerEvent()
-
-  data class NavigateHyperlink internal constructor(val url: String) : SettingsControllerEvent()
-
-  data class OpenOtherAppsScreen internal constructor(val others: List<OtherApp>) :
-      SettingsControllerEvent()
+internal class MutableSettingsViewState : SettingsViewState {
+  override var applicationName by mutableStateOf("")
+  override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
+  override var otherApps by mutableStateOf(emptyList<OtherApp>())
+  override var navigationError by mutableStateOf<Throwable?>(null)
+  override var isLoading by mutableStateOf(false)
 }

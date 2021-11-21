@@ -136,7 +136,12 @@ private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
   val context = LocalContext.current
 
   ChangeLogScreen(
-      state = ChangeLogViewState(icon = 0, name = "TEST", changeLog = changeLog),
+      state =
+          MutableChangeLogViewState().apply {
+            icon = 0
+            name = "TEST"
+            this.changeLog = changeLog
+          },
       imageLoader = createNewTestImageLoader(context),
       onRateApp = {},
       onClose = {},

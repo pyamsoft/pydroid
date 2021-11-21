@@ -18,8 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import androidx.annotation.CheckResult
 import coil.ImageLoader
-import com.pyamsoft.pydroid.arch.createViewModelFactory
-import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 
@@ -38,9 +37,9 @@ internal interface DataPolicyDialogComponent {
     internal constructor(
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val interactor: DataPolicyInteractor,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
+        internal val module: DataPolicyModule,
     )
   }
 
@@ -50,19 +49,17 @@ internal interface DataPolicyDialogComponent {
       private val params: Factory.Parameters,
   ) : DataPolicyDialogComponent {
 
-    private val factory = createViewModelFactory {
-      DataPolicyDialogViewModel(
-          params.privacyPolicyUrl,
-          params.termsConditionsUrl,
-          provider,
-          params.interactor,
-      )
-    }
-
     override fun inject(dialog: DataPolicyDisclosureDialog) {
       dialog.composeTheme = params.composeTheme
       dialog.imageLoader = params.imageLoader
-      dialog.factory = factory
+      dialog.viewModel =
+          DataPolicyDialogViewModeler(
+              state = MutableDataPolicyDialogViewState(),
+              interactor = params.module.provideInteractor(),
+              provider = provider,
+              privacyPolicyUrl = params.privacyPolicyUrl,
+              termsConditionsUrl = params.termsConditionsUrl,
+          )
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :

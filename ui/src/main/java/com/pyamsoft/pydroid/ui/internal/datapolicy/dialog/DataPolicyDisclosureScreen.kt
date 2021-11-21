@@ -218,7 +218,12 @@ private fun PreviewDataPolicyDisclosureScreen() {
   val context = LocalContext.current
 
   DataPolicyDisclosureScreen(
-      state = DataPolicyDialogViewState(icon = 0, name = "TEST", navigationError = null),
+      state =
+          MutableDataPolicyDialogViewState().apply {
+            icon = 0
+            name = "TEST"
+            navigationError = null
+          },
       imageLoader = createNewTestImageLoader(context),
       onPrivacyPolicyClicked = {},
       onTermsOfServiceClicked = {},

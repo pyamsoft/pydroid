@@ -19,22 +19,20 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
-import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewModel) {
+internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewModeler) {
 
   private var activity: PYDroidActivity? = activity
-  private var viewModel: RatingViewModel? = viewModel
+  private var viewModel: RatingViewModeler? = viewModel
 
   private fun showRating(activity: PYDroidActivity, launcher: AppRatingLauncher) {
     // Enforce that we do this on the Main thread
@@ -45,18 +43,7 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
 
   /** Bind Activity for related Rating events */
   fun bindEvents() {
-    val act = activity.requireNotNull()
-
-    act.doOnCreate {
-      viewModel.requireNotNull().bindController(act) { event ->
-        return@bindController when (event) {
-          is RatingControllerEvent.LaunchMarketPage -> showRating(act, event.launcher)
-          is RatingControllerEvent.LaunchRating -> showRating(act, event.launcher)
-        }
-      }
-    }
-
-    act.doOnDestroy {
+    activity.requireNotNull().doOnDestroy {
       viewModel = null
       activity = null
     }
@@ -67,12 +54,13 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
    * to Google
    */
   fun loadInAppRating() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot load in-app rating, ViewModel is null")
-    } else {
-      vm.loadInAppRating()
-    }
+    val act = activity.requireNotNull()
+    viewModel
+        .requireNotNull()
+        .loadInAppRating(
+            scope = act.lifecycleScope,
+            onLaunchInAppRating = { showRating(act, it) },
+        )
   }
 
   /**
@@ -115,14 +103,14 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
       addSnackbarHost: Boolean,
   ) {
     val vm = viewModel.requireNotNull()
-    val state by vm.compose()
-
-    RatingScreen(
-        modifier = modifier,
-        state = state,
-        addSnackbarHost = addSnackbarHost,
-        snackbarHostState = snackbarHostState,
-        onNavigationErrorDismissed = { vm.handleClearNavigationError() },
-    )
+    vm.Render { state ->
+      RatingScreen(
+          modifier = modifier,
+          state = state,
+          addSnackbarHost = addSnackbarHost,
+          snackbarHostState = snackbarHostState,
+          onNavigationErrorDismissed = { vm.handleClearNavigationError() },
+      )
+    }
   }
 }

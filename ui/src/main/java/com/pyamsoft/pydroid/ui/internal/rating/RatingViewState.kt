@@ -16,18 +16,15 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 
-@Stable internal data class RatingViewState(val navigationError: Throwable?) : UiViewState
+internal interface RatingViewState : UiViewState {
+  val navigationError: Throwable?
+}
 
-internal sealed class RatingControllerEvent : UiControllerEvent {
-
-  data class LaunchRating internal constructor(val launcher: AppRatingLauncher) :
-      RatingControllerEvent()
-
-  data class LaunchMarketPage internal constructor(val launcher: AppRatingLauncher) :
-      RatingControllerEvent()
+internal class MutableRatingViewState : RatingViewState {
+  override var navigationError by mutableStateOf<Throwable?>(null)
 }

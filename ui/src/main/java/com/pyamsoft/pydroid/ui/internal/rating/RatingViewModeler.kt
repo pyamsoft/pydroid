@@ -16,22 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class RatingViewModel
+internal class RatingViewModeler
 internal constructor(
+    private val state: MutableRatingViewState,
     interactor: RatingInteractor,
-) :
-    UiViewModel<RatingViewState, RatingControllerEvent>(
-        initialState = RatingViewState(navigationError = null)) {
+) : AbstractViewModeler<RatingViewState>(state) {
 
   private val loadRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
@@ -39,37 +38,43 @@ internal constructor(
   private val marketRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.loadMarketLauncher() }
 
-  internal fun handleViewMarketPage() {
-    viewModelScope.launch(context = Dispatchers.Default) {
+  internal fun handleViewMarketPage(
+      scope: CoroutineScope,
+      onLauchMarketPage: (AppRatingLauncher) -> Unit,
+  ) {
+    scope.launch(context = Dispatchers.Main) {
       marketRunner
           .call()
-          .onSuccess {
-            Logger.d("Launching market page: $it")
-            publish(RatingControllerEvent.LaunchMarketPage(it))
+          .onSuccess { launcher ->
+            Logger.d("Launching market page: $launcher")
+            onLauchMarketPage(launcher)
           }
           .onFailure { e ->
             Logger.e(e, "Unable to launch market page")
-            setState { copy(navigationError = e) }
+            state.navigationError = e
           }
     }
   }
 
-  internal fun loadInAppRating() {
-    viewModelScope.launch(context = Dispatchers.Default) {
+  internal fun loadInAppRating(
+      scope: CoroutineScope,
+      onLaunchInAppRating: (AppRatingLauncher) -> Unit
+  ) {
+    scope.launch(context = Dispatchers.Main) {
       loadRunner
           .call()
-          .onSuccess {
-            Logger.d("Launch in-app rating")
-            publish(RatingControllerEvent.LaunchRating(it))
+          .onSuccess { launcher ->
+            Logger.d("Launch in-app rating: $launcher")
+            onLaunchInAppRating(launcher)
           }
           .onFailure { e ->
             Logger.e(e, "Unable to launch rating flow")
-            setState { copy(navigationError = e) }
+            state.navigationError = e
           }
     }
   }
 
   internal fun handleClearNavigationError() {
-    setState { copy(navigationError = null) }
+    state.navigationError = null
   }
 }

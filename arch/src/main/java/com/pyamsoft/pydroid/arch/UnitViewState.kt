@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.arch
 import androidx.compose.runtime.Stable
 
 /** A stateless UiViewState */
-@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
+@Deprecated(
+    "PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 @Stable
 public object UnitViewState : UiViewState

@@ -16,9 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-internal sealed class ChangeLogControllerEvent : UiControllerEvent {
+internal interface ChangeLogViewState : UiViewState
 
-  object ShowChangeLog : ChangeLogControllerEvent()
-}
+internal class MutableChangeLogViewState : ChangeLogViewState

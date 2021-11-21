@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class ChangeLogViewModel
-internal constructor(private val interactor: ChangeLogInteractor) :
-    UiViewModel<UnitViewState, ChangeLogControllerEvent>(initialState = UnitViewState) {
+internal class ChangeLogDialogViewModeler
+internal constructor(
+    private val state: MutableChangeLogViewState,
+    private val interactor: ChangeLogInteractor,
+    private val provider: ChangeLogProvider
+) : AbstractViewModeler<ChangeLogViewState>(state) {
 
-  internal fun handleShow(
-      force: Boolean,
-  ) {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      var show = false
-      if (force) {
-        show = true
-      } else if (interactor.canShowChangeLog()) {
-        show = true
-      }
-
-      if (show) {
-        interactor.markChangeLogShown()
-        publish(ChangeLogControllerEvent.ShowChangeLog)
+  fun bind(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) {
+      val displayName = interactor.getDisplayName()
+      state.apply {
+        name = displayName
+        icon = provider.applicationIcon
+        changeLog = provider.changelog.build()
       }
     }
   }

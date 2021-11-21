@@ -136,7 +136,7 @@ private fun Actions(
 @Composable
 private fun PreviewResetScreen(reset: Boolean) {
   ResetScreen(
-      state = ResetViewState(reset = reset),
+      state = MutableResetViewState().apply { this.reset = reset },
       onReset = {},
       onClose = {},
   )

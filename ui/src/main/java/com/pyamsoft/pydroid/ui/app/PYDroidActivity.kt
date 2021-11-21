@@ -311,7 +311,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     viewModel
         .requireNotNull()
         .handleShowCorrectDialog(
-            lifecycleScope,
+            scope = lifecycleScope,
             onShowDataPolicy = { showDataPolicyDisclosure() },
             onShowChangeLog = { showChangelog() },
             onShowVersionCheck = { checkUpdates() },

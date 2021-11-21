@@ -16,23 +16,22 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-@Stable
-internal data class OtherAppsViewState
-internal constructor(
-    val isLoading: Boolean,
-    val apps: List<OtherApp>,
-    val appsError: Throwable?,
-    val navigationError: Throwable?
-) : UiViewState
+internal interface OtherAppsViewState : UiViewState {
+  val isLoading: Boolean
+  val apps: List<OtherApp>
+  val appsError: Throwable?
+  val navigationError: Throwable?
+}
 
-internal sealed class OtherAppsControllerEvent : UiControllerEvent {
-
-  object LaunchFallback : OtherAppsControllerEvent()
-
-  data class OpenUrl internal constructor(val url: String) : OtherAppsControllerEvent()
+internal class MutableOtherAppsViewState : OtherAppsViewState {
+  override var isLoading by mutableStateOf(false)
+  override var apps by mutableStateOf(emptyList<OtherApp>())
+  override var appsError by mutableStateOf<Throwable?>(null)
+  override var navigationError by mutableStateOf<Throwable?>(null)
 }

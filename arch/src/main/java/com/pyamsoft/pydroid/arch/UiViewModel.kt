@@ -32,7 +32,8 @@ import kotlinx.coroutines.withContext
  * A default implementation of a UiStateViewModel which knows how to set up along with UiViews and a
  * UiController to become a full UiComponent
  */
-@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
+@Deprecated(
+    "PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent>
 protected constructor(delegate: UiStateModel<S>) : UiStateViewModel<S>(delegate = delegate) {
 

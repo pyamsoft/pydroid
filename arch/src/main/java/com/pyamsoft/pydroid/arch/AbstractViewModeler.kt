@@ -19,6 +19,9 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.compose.runtime.Composable
 
+/**
+ * A base class ViewModeler which implements a simple Render function and can handle saving state
+ */
 public abstract class AbstractViewModeler<S : UiViewState>
 protected constructor(
     private val state: S,

@@ -51,7 +51,7 @@ internal interface BillingComponent {
     ) : DialogComponent {
 
       private val factory = createViewModelFactory {
-        BillingViewModel(params.interactor, module.provideInteractor(), provider)
+        BillingViewModeler(params.interactor, module.provideInteractor(), provider)
       }
 
       override fun inject(dialog: BillingDialog) {

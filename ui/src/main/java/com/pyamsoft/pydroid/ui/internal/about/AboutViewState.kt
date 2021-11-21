@@ -29,7 +29,6 @@ internal interface AboutViewState : UiViewState {
 }
 
 internal class MutableAboutViewState : AboutViewState {
-
   override var isLoading: Boolean by mutableStateOf(false)
   override var licenses: List<OssLibrary> by mutableStateOf(emptyList())
   override var navigationError: Throwable? by mutableStateOf(null)

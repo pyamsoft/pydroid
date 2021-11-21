@@ -16,17 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-@Stable internal object AppInternalViewState : UiViewState
+internal interface AppInternalViewState : UiViewState
 
-internal sealed class AppInternalControllerEvent : UiControllerEvent {
-
-  object ShowDataPolicy : AppInternalControllerEvent()
-
-  object ShowChangeLog : AppInternalControllerEvent()
-
-  object ShowVersionCheck : AppInternalControllerEvent()
-}
+internal class MutableAppInternalViewState : AppInternalViewState

@@ -35,11 +35,11 @@ import com.pyamsoft.pydroid.billing.BillingSku
 internal fun BillingListItem(
     modifier: Modifier = Modifier,
     sku: BillingSku,
-    onPurchase: () -> Unit,
+    onPurchase: (BillingSku) -> Unit,
 ) {
 
   Row(
-      modifier = modifier.clickable { onPurchase() },
+      modifier = modifier.clickable { onPurchase(sku) },
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1F)) {

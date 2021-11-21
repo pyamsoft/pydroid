@@ -22,11 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -52,14 +49,23 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   internal var purchaseClient: BillingLauncher? = null
 
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by activityViewModels<BillingViewModel> { factory.requireNotNull() }
+  internal var viewModel: BillingViewModeler? = null
 
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
   private fun getApplicationProvider(): AppProvider {
     return requireActivity() as AppProvider
+  }
+
+  private fun launchPurchase(sku: BillingSku) {
+    requireActivity().also { a ->
+      // Enforce on main thread
+      a.lifecycleScope.launch(context = Dispatchers.Main) {
+        Logger.d("Start purchase flow for $sku")
+        purchaseClient.requireNotNull().purchase(a, sku)
+      }
+    }
   }
 
   override fun onCreateView(
@@ -86,17 +92,18 @@ internal class BillingDialog : AppCompatDialogFragment() {
     return ComposeView(act).apply {
       id = R.id.dialog_billing
 
+      val vm = viewModel.requireNotNull()
       setContent {
-        val state by viewModel.compose()
-
-        composeTheme(act) {
-          BillingScreen(
-              state = state,
-              imageLoader = imageLoader.requireNotNull(),
-              onPurchase = { viewModel.handlePurchase(it) },
-              onBillingErrorDismissed = { viewModel.handleClearError() },
-              onClose = { dismiss() },
-          )
+        vm.Render { state ->
+          composeTheme(act) {
+            BillingScreen(
+                state = state,
+                imageLoader = imageLoader.requireNotNull(),
+                onPurchase = { launchPurchase(it) },
+                onBillingErrorDismissed = { vm.handleClearError() },
+                onClose = { dismiss() },
+            )
+          }
         }
       }
     }
@@ -105,34 +112,19 @@ internal class BillingDialog : AppCompatDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-
-    viewModel.bindController(viewLifecycleOwner) { event ->
-      return@bindController when (event) {
-        is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
-      }
-    }
+    viewModel.requireNotNull().bind(viewLifecycleOwner.lifecycleScope)
   }
 
   override fun onResume() {
     super.onResume()
-    viewModel.handleRefresh()
-  }
-
-  private fun launchPurchase(sku: BillingSku) {
-    requireActivity().also { a ->
-      // Enforce on main thread
-      a.lifecycleScope.launch(context = Dispatchers.Main) {
-        Logger.d("Start purchase flow for $sku")
-        purchaseClient.requireNotNull().purchase(a, sku)
-      }
-    }
+    viewModel.requireNotNull().handleRefresh(viewLifecycleOwner.lifecycleScope)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()
 
-    factory = null
+    viewModel = null
     imageLoader = null
     purchaseClient = null
   }

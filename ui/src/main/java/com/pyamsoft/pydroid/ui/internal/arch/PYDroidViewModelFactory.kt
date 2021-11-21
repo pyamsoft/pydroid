@@ -36,6 +36,8 @@ import kotlin.reflect.KClass
  *
  * The main view model factory
  */
+
+@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 internal class PYDroidViewModelFactory
 internal constructor(
     private val params: Parameters,

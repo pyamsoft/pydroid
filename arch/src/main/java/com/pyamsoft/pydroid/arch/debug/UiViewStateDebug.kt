@@ -20,7 +20,7 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.core.RemoveInRelease
 
 /** Debugging functions for UiViewState processing */
-@Deprecated("Use your own UiViewStates managed by Presenters")
+@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 internal object UiViewStateDebug {
 
   /**

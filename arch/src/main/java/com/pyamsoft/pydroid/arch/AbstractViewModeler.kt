@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 
 public abstract class AbstractViewModeler<S : UiViewState>
@@ -27,4 +28,10 @@ protected constructor(
   final override fun Render(content: @Composable (state: S) -> Unit) {
     content(state)
   }
+
+  final override fun saveState(outState: Bundle) {
+    super.saveState(outState)
+  }
+
+  override fun saveState(outState: UiSavedStateWriter) {}
 }

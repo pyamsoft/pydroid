@@ -43,7 +43,7 @@ import kotlinx.coroutines.yield
  * Access the current state via state and manipulate it via setState. The setState call is
  * asynchronous.
  */
-@Deprecated("Use your own UiViewStates managed by Presenters")
+@Deprecated("PYDroid has migrated to ViewModeler and handling Activity configChanges as recommended by Compose")
 public open class UiStateModel<S : UiViewState>(
     /** Initial state */
     public val initialState: S,

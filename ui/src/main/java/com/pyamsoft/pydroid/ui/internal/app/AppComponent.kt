@@ -134,15 +134,6 @@ internal interface AppComponent {
       RatingViewModel(ratingModule.provideInteractor())
     }
 
-    private val appInternalFactory = createViewModelFactory {
-      AppInternalViewModel(
-          disableDataPolicy = disableDataPolicy,
-          disableChangeLog = disableChangeLog,
-          dataPolicyInteractor = params.dataPolicyInteractor,
-          changeLogInteractor = params.changeLogInteractor,
-      )
-    }
-
     override fun inject(activity: PYDroidActivity) {
       // Billing
       activity.billing = BillingDelegate(pyDroidActivity, billingModule.provideConnector())
@@ -168,7 +159,14 @@ internal interface AppComponent {
       activity.dataPolicy = DataPolicyDelegate(pyDroidActivity, dataPolicyViewModel)
 
       // App Internal
-      activity.factory = appInternalFactory
+      activity.viewModel =
+          AppInternalViewModeler(
+              state = MutableAppInternalViewState(),
+              disableChangeLog = disableChangeLog,
+              disableDataPolicy = disableDataPolicy,
+              dataPolicyInteractor = params.dataPolicyInteractor,
+              changeLogInteractor = params.changeLogInteractor,
+          )
     }
 
     override fun plusBilling(): BillingComponent.DialogComponent.Factory {

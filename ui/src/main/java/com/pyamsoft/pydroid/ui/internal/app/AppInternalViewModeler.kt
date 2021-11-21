@@ -16,23 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class AppInternalViewModel
+internal class AppInternalViewModeler
 internal constructor(
+    state: MutableAppInternalViewState,
     private val disableDataPolicy: Boolean,
     private val disableChangeLog: Boolean,
     private val dataPolicyInteractor: DataPolicyInteractor,
     private val changeLogInteractor: ChangeLogInteractor,
-) :
-    UiViewModel<AppInternalViewState, AppInternalControllerEvent>(
-        initialState = AppInternalViewState,
-    ) {
+) : AbstractViewModeler<AppInternalViewState>(state) {
 
   /**
    * Decides the correct dialog to show so we don't spam dialogs
@@ -40,30 +38,35 @@ internal constructor(
    * This does not guarantee that a dialog will be shown, but simply notifies a given dialog that it
    * should be shown if possible
    */
-  internal fun handleShowCorrectDialog() {
-    viewModelScope.launch(context = Dispatchers.Default) {
+  internal fun handleShowCorrectDialog(
+      scope: CoroutineScope,
+      onShowDataPolicy: () -> Unit,
+      onShowChangeLog: () -> Unit,
+      onShowVersionCheck: () -> Unit,
+  ) {
+    scope.launch(context = Dispatchers.Main) {
       if (disableDataPolicy && disableChangeLog) {
         // If data policy and changelog are disabled, show Version
-        publish(AppInternalControllerEvent.ShowVersionCheck)
+        onShowVersionCheck()
       } else {
         // If data policy is disabled show changelog
         if (disableDataPolicy) {
-          publish(AppInternalControllerEvent.ShowChangeLog)
+          onShowChangeLog()
         } else {
           // If data policy is enabled, show it if you can
           if (!dataPolicyInteractor.isPolicyAccepted()) {
-            publish(AppInternalControllerEvent.ShowDataPolicy)
+            onShowDataPolicy()
           } else {
             // If changelog is disabled, show version check
             if (disableChangeLog) {
-              publish(AppInternalControllerEvent.ShowVersionCheck)
+              onShowVersionCheck()
             } else {
               // If changelog is enabled, show it if you can
               if (changeLogInteractor.canShowChangeLog()) {
-                publish(AppInternalControllerEvent.ShowChangeLog)
+                onShowChangeLog()
               } else {
                 // Else fallback to update check
-                publish(AppInternalControllerEvent.ShowVersionCheck)
+                onShowVersionCheck()
               }
             }
           }

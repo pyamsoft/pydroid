@@ -17,21 +17,19 @@
 package com.pyamsoft.pydroid.ui.app
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalControllerEvent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModel
+import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -87,9 +85,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Injector component for Dialog and Fragment injection */
   private var injectorComponent: AppComponent? = null
 
-  /** Injector component for Dialog and Fragment injection */
-  internal var factory: ViewModelProvider.Factory? = null
-  private val viewModel by viewModels<AppInternalViewModel> { factory.requireNotNull() }
+  /** ViewModel */
+  internal var viewModel: AppInternalViewModeler? = null
 
   init {
     protectApplication()
@@ -99,62 +96,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     connectVersionCheck()
     connectChangeLog()
     connectDataPolicy()
-  }
-
-  /** On activity create */
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    injectorComponent =
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusApp()
-            .create(
-                activity = this,
-                disableDataPolicy = disableDataPolicy,
-                disableChangeLog = disableChangeLog,
-            )
-            .also { component -> component.inject(this) }
-
-    viewModel.bindController(this) { event ->
-      return@bindController when (event) {
-        is AppInternalControllerEvent.ShowChangeLog -> showChangelog()
-        is AppInternalControllerEvent.ShowDataPolicy -> showDataPolicyDisclosure()
-        is AppInternalControllerEvent.ShowVersionCheck -> checkUpdates()
-      }
-    }
-  }
-
-  /** On Resume show changelog if possible */
-  @CallSuper
-  override fun onPostResume() {
-    super.onPostResume()
-
-    // DialogFragments cannot be shown safely until at least onPostResume
-    viewModel.handleShowCorrectDialog()
-  }
-
-  /** Get system service */
-  @CallSuper
-  override fun getSystemService(name: String): Any? =
-      when (name) {
-        AppComponent::class.java.name -> injectorComponent.requireNotNull()
-        else -> super.getSystemService(name)
-      }
-
-  /** On activity destroy */
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-
-    billing = null
-    protection = null
-    rating = null
-    versionCheck = null
-    changeLog = null
-    dataPolicy = null
-
-    injectorComponent = null
-    factory = null
   }
 
   private fun showChangelog() {
@@ -344,5 +285,67 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
             modifier = modifier,
             snackbarHostState = snackbarHostState,
         )
+  }
+
+  /** On activity create */
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    injectorComponent =
+        Injector.obtainFromApplication<PYDroidComponent>(this)
+            .plusApp()
+            .create(
+                activity = this,
+                disableDataPolicy = disableDataPolicy,
+                disableChangeLog = disableChangeLog,
+            )
+            .also { component -> component.inject(this) }
+  }
+
+  /** On Resume show changelog if possible */
+  @CallSuper
+  override fun onPostResume() {
+    super.onPostResume()
+
+    // DialogFragments cannot be shown safely until at least onPostResume
+    viewModel
+        .requireNotNull()
+        .handleShowCorrectDialog(
+            lifecycleScope,
+            onShowDataPolicy = { showDataPolicyDisclosure() },
+            onShowChangeLog = { showChangelog() },
+            onShowVersionCheck = { checkUpdates() },
+        )
+  }
+
+  /** Save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
+  }
+
+  /** Get system service */
+  @CallSuper
+  override fun getSystemService(name: String): Any? =
+      when (name) {
+        AppComponent::class.java.name -> injectorComponent.requireNotNull()
+        else -> super.getSystemService(name)
+      }
+
+  /** On activity destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+
+    billing = null
+    protection = null
+    rating = null
+    versionCheck = null
+    changeLog = null
+    dataPolicy = null
+
+    injectorComponent = null
+    viewModel = null
   }
 }

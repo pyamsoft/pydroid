@@ -26,7 +26,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
@@ -56,7 +56,7 @@ internal fun BillingScreen(
     modifier: Modifier = Modifier,
     state: BillingViewState,
     imageLoader: ImageLoader,
-    onPurchase: (index: Int) -> Unit,
+    onPurchase: (BillingSku) -> Unit,
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
@@ -125,7 +125,7 @@ internal fun BillingScreen(
 private fun SkuList(
     isConnected: Boolean,
     list: List<BillingSku>,
-    onPurchase: (index: Int) -> Unit,
+    onPurchase: (BillingSku) -> Unit,
 ) {
   // Remember the computed ready state
   val readyState = remember {
@@ -146,14 +146,14 @@ private fun SkuList(
           verticalArrangement = Arrangement.spacedBy(8.dp),
           contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
       ) {
-        itemsIndexed(
+        items(
             items = list,
-            key = { _, item -> item.id },
-        ) { index, item ->
+            key = { it.id },
+        ) { item ->
           BillingListItem(
               modifier = Modifier.fillMaxWidth(),
               sku = item,
-              onPurchase = { onPurchase(index) },
+              onPurchase = onPurchase,
           )
         }
       }
@@ -215,13 +215,12 @@ private fun PreviewBillingScreen(
 
   BillingScreen(
       state =
-          BillingViewState(
-              icon = 0,
-              name = "TEST APPLICATION",
-              connected = connected,
-              skuList = skuList,
-              error = error,
-          ),
+          MutableBillingViewState().apply {
+            this.name = "TEST APPLICATION"
+            this.connected = connected
+            this.skuList = skuList
+            this.error = error
+          },
       imageLoader = createNewTestImageLoader(context),
       onPurchase = {},
       onBillingErrorDismissed = {},

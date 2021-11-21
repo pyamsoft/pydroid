@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 
 /** An interface which can save the state of an object into a Bundle */
-@Deprecated("Migrate to Jetpack Compose")
 public interface StateSaver {
 
   /** Save the state of the object into the given Bundle */

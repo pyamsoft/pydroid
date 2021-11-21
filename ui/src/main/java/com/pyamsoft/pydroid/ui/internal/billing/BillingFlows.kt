@@ -16,23 +16,25 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 
-@Stable
-internal data class BillingViewState
-internal constructor(
-    override val icon: Int,
-    override val name: String,
-    val connected: BillingState,
-    val skuList: List<BillingSku>,
-    val error: Throwable?
-) : AppViewState
+internal interface BillingViewState : AppViewState {
+  override val icon: Int
+  override val name: String
+  val connected: BillingState
+  val skuList: List<BillingSku>
+  val error: Throwable?
+}
 
-internal sealed class BillingControllerEvent : UiControllerEvent {
-
-  data class Purchase internal constructor(val sku: BillingSku) : BillingControllerEvent()
+internal class MutableBillingViewState : BillingViewState {
+  override var skuList by mutableStateOf(emptyList<BillingSku>())
+  override var connected by mutableStateOf(BillingState.LOADING)
+  override var error by mutableStateOf<Throwable?>(null)
+  override var icon by mutableStateOf(0)
+  override var name by mutableStateOf("")
 }

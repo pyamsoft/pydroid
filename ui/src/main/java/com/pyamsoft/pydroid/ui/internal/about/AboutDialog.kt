@@ -44,6 +44,28 @@ internal class AboutDialog : AppCompatDialogFragment() {
   /** Provided by PYDroid */
   internal var viewModel: AboutViewModeler? = null
 
+  private fun openLicense(handler: UriHandler, library: OssLibrary) {
+    openPage(
+        handler = handler,
+        url = library.libraryUrl,
+    )
+  }
+
+  private fun openLibrary(handler: UriHandler, library: OssLibrary) {
+    openPage(
+        handler = handler,
+        url = library.libraryUrl,
+    )
+  }
+
+  private fun openPage(handler: UriHandler, url: String) {
+    try {
+      handler.openUri(url)
+    } catch (e: Throwable) {
+      viewModel.requireNotNull().handleFailedNavigation(e)
+    }
+  }
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -75,33 +97,16 @@ internal class AboutDialog : AppCompatDialogFragment() {
     }
   }
 
-  private fun openLicense(handler: UriHandler, library: OssLibrary) {
-    openPage(
-        handler = handler,
-        url = library.libraryUrl,
-    )
-  }
-
-  private fun openLibrary(handler: UriHandler, library: OssLibrary) {
-    openPage(
-        handler = handler,
-        url = library.libraryUrl,
-    )
-  }
-
-  private fun openPage(handler: UriHandler, url: String) {
-    try {
-      handler.openUri(url)
-    } catch (e: Throwable) {
-      viewModel.requireNotNull().handleFailedNavigation(e)
-    }
-  }
-
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
 
     viewModel.requireNotNull().handleLoadLicenses(viewLifecycleOwner.lifecycleScope)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
   }
 
   override fun onDestroyView() {

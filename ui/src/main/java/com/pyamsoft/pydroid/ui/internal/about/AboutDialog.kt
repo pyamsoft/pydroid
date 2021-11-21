@@ -42,7 +42,7 @@ internal class AboutDialog : AppCompatDialogFragment() {
   internal var composeTheme: ComposeTheme = NoopTheme
 
   /** Provided by PYDroid */
-  internal var viewModel: AboutViewModel? = null
+  internal var viewModel: AboutViewModeler? = null
 
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -60,14 +60,16 @@ internal class AboutDialog : AppCompatDialogFragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        composeTheme(act) {
-          AboutScreen(
-              state = vm.state(),
-              onViewHomePage = { openLibrary(handler, it) },
-              onViewLicense = { openLicense(handler, it) },
-              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
-              onClose = { dismiss() },
-          )
+        vm.Render { state ->
+          composeTheme(act) {
+            AboutScreen(
+                state = state,
+                onViewHomePage = { openLibrary(handler, it) },
+                onViewLicense = { openLicense(handler, it) },
+                onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
+                onClose = { dismiss() },
+            )
+          }
         }
       }
     }

@@ -16,51 +16,38 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.pyamsoft.highlander.highlander
-import com.pyamsoft.pydroid.arch.ViewModel
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class AboutViewModel
+internal class AboutViewModeler
 internal constructor(
+    private val state: MutableAboutViewState,
     interactor: AboutInteractor,
-) : ViewModel<AboutViewState>, AboutViewState {
+) : AbstractViewModeler<AboutViewState>(state) {
 
-  private var _isLoading: Boolean by mutableStateOf(false)
-  private var _licenses: List<OssLibrary> by mutableStateOf(emptyList())
-  private var _navigationError: Throwable? by mutableStateOf(null)
-
-  override val isLoading: Boolean = _isLoading
-  override val licenses: List<OssLibrary> = _licenses
-  override val navigationError: Throwable? = _navigationError
-
-  private val licenseRunner = highlander<List<OssLibrary>, Boolean> { interactor.loadLicenses(it) }
-
-  @Composable
-  override fun state(): AboutViewState {
-    return this
-  }
+  private val licenseRunner =
+      highlander<List<OssLibrary>, Boolean> { force -> interactor.loadLicenses(force) }
 
   internal fun handleLoadLicenses(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
-      _isLoading = true
-      _licenses = licenseRunner.call(false)
-      _isLoading = false
+      state.apply {
+        isLoading = true
+        licenses = licenseRunner.call(false)
+        isLoading = false
+      }
     }
   }
 
   internal fun handleFailedNavigation(e: Throwable) {
-    _navigationError = e
+    state.navigationError = e
   }
 
   internal fun handleDismissFailedNavigation() {
-    _navigationError = null
+    state.navigationError = null
   }
 }

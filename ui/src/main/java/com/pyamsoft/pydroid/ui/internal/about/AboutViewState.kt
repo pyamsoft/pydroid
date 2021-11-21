@@ -16,6 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
@@ -23,4 +26,11 @@ internal interface AboutViewState : UiViewState {
   val isLoading: Boolean
   val licenses: List<OssLibrary>
   val navigationError: Throwable?
+}
+
+internal class MutableAboutViewState : AboutViewState {
+
+  override var isLoading: Boolean by mutableStateOf(false)
+  override var licenses: List<OssLibrary> by mutableStateOf(emptyList())
+  override var navigationError: Throwable? by mutableStateOf(null)
 }

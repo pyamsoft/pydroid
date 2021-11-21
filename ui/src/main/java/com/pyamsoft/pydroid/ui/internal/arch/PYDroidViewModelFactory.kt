@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel

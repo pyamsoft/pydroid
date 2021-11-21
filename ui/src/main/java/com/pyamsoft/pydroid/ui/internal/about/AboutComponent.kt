@@ -40,7 +40,11 @@ internal interface AboutComponent {
 
     override fun inject(dialog: AboutDialog) {
       dialog.composeTheme = params.composeTheme
-      dialog.viewModel = AboutViewModel(params.interactor)
+      dialog.viewModel =
+          AboutViewModeler(
+              state = MutableAboutViewState(),
+              interactor = params.interactor,
+          )
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

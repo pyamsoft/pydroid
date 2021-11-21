@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,15 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 
-/** A ViewModel */
-public interface ViewModel<S : UiViewState> {
+public abstract class AbstractViewModeler<S : UiViewState>
+protected constructor(
+    private val state: S,
+) : ViewModeler<S> {
 
-  @Composable @CheckResult public fun state(): S
+  @Composable
+  final override fun Render(content: @Composable (state: S) -> Unit) {
+    content(state)
+  }
 }

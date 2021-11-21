@@ -194,7 +194,7 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleViewSourceCode(handler: UriHandler) {
-    viewModel.requireNotNull().handleReportBug { url ->
+    viewModel.requireNotNull().handleViewSourceCode { url ->
       openPage(
           handler = handler,
           url = url,

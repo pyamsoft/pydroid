@@ -20,19 +20,16 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
-import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.protection.Protection
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
-import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
@@ -42,14 +39,11 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
-import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
-import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
@@ -67,19 +61,11 @@ internal interface AppComponent {
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
-  @CheckResult fun plusAbout(): AboutComponent.Factory
-
-  @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
-
-  @CheckResult fun plusReset(): ResetComponent.Factory
-
   @CheckResult fun plusChangeLogDialog(): ChangeLogComponent.Factory
 
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
 
   @CheckResult fun plusSettings(): SettingsComponent.Factory
-
-  @CheckResult fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory
 
   interface Factory {
 
@@ -107,9 +93,7 @@ internal interface AppComponent {
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean,
         internal val changeLogModule: ChangeLogModule,
-        internal val aboutModule: AboutModule,
         internal val otherAppsModule: OtherAppsModule,
-        internal val settingsModule: SettingsModule,
         internal val dataPolicyModule: DataPolicyModule,
     )
   }
@@ -154,12 +138,36 @@ internal interface AppComponent {
             ),
         )
 
-    override fun plusAbout(): AboutComponent.Factory {
-      return AboutComponent.Impl.FactoryImpl(
-          AboutComponent.Factory.Parameters(
-              composeTheme = params.composeTheme, module = params.aboutModule),
-      )
-    }
+    private val billingParams =
+        BillingComponent.Factory.Parameters(
+            billingModule = billingModule,
+            changeLogModule = params.changeLogModule,
+            composeTheme = params.composeTheme,
+            imageLoader = params.imageLoader,
+        )
+
+    private val settingsParams =
+        SettingsComponent.Factory.Parameters(
+            ratingModule = ratingModule,
+            versionModule = versionModule,
+            bugReportUrl = params.bugReportUrl,
+            termsConditionsUrl = params.termsConditionsUrl,
+            privacyPolicyUrl = params.privacyPolicyUrl,
+            viewSourceUrl = params.viewSourceUrl,
+            changeLogModule = params.changeLogModule,
+            dataPolicyModule = params.dataPolicyModule,
+            otherAppsModule = params.otherAppsModule,
+            composeTheme = params.composeTheme,
+            theming = params.theming,
+        )
+
+    private val changeLogParams =
+        ChangeLogComponent.Factory.Parameters(
+            ratingModule = ratingModule,
+            changeLogModule = params.changeLogModule,
+            composeTheme = params.composeTheme,
+            imageLoader = params.imageLoader,
+        )
 
     override fun inject(activity: PYDroidActivity) {
       // Billing
@@ -229,32 +237,7 @@ internal interface AppComponent {
     }
 
     override fun plusBilling(): BillingComponent.Factory {
-      return BillingComponent.Impl.FactoryImpl(
-          BillingComponent.Factory.Parameters(
-              billingModule = billingModule,
-              changeLogModule = params.changeLogModule,
-              composeTheme = params.composeTheme,
-              imageLoader = params.imageLoader,
-          ))
-    }
-
-    override fun plusOtherApps(): OtherAppsComponent.Factory {
-      return OtherAppsComponent.Impl.FactoryImpl(
-          OtherAppsComponent.Factory.Parameters(
-              module = params.otherAppsModule,
-              composeTheme = params.composeTheme,
-              imageLoader = params.imageLoader,
-          ),
-      )
-    }
-
-    override fun plusReset(): ResetComponent.Factory {
-      return ResetComponent.Impl.FactoryImpl(
-          ResetComponent.Factory.Parameters(
-              module = params.settingsModule,
-              composeTheme = params.composeTheme,
-          ),
-      )
+      return BillingComponent.Impl.FactoryImpl(billingParams)
     }
 
     override fun plusVersionCheck(): VersionCheckComponent.Factory {
@@ -267,44 +250,11 @@ internal interface AppComponent {
     }
 
     override fun plusSettings(): SettingsComponent.Factory {
-      return SettingsComponent.Impl.FactoryImpl(
-          SettingsComponent.Factory.Parameters(
-              bugReportUrl = params.bugReportUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              viewSourceUrl = params.viewSourceUrl,
-              ratingModule = ratingModule,
-              changeLogModule = params.changeLogModule,
-              dataPolicyModule = params.dataPolicyModule,
-              otherAppsModule = params.otherAppsModule,
-              versionModule = versionModule,
-              composeTheme = params.composeTheme,
-              theming = params.theming,
-          ),
-      )
+      return SettingsComponent.Impl.FactoryImpl(settingsParams)
     }
 
     override fun plusChangeLogDialog(): ChangeLogComponent.Factory {
-      return ChangeLogComponent.Impl.FactoryImpl(
-          ChangeLogComponent.Factory.Parameters(
-              ratingModule = ratingModule,
-              changeLogModule = params.changeLogModule,
-              composeTheme = params.composeTheme,
-              imageLoader = params.imageLoader,
-          ),
-      )
-    }
-
-    override fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory {
-      return DataPolicyDialogComponent.Impl.FactoryImpl(
-          DataPolicyDialogComponent.Factory.Parameters(
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-              composeTheme = params.composeTheme,
-              imageLoader = params.imageLoader,
-              module = params.dataPolicyModule,
-          ),
-      )
+      return ChangeLogComponent.Impl.FactoryImpl(changeLogParams)
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

@@ -30,8 +30,12 @@ import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.protection.Protection
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
+import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
+import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
+import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +45,14 @@ import kotlinx.coroutines.launch
 internal interface PYDroidComponent {
 
   @CheckResult fun plusApp(): AppComponent.Factory
+
+  @CheckResult fun plusAbout(): AboutComponent.Factory
+
+  @CheckResult fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory
+
+  @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
+
+  @CheckResult fun plusReset(): ResetComponent.Factory
 
   interface Factory {
 
@@ -78,15 +90,6 @@ internal interface PYDroidComponent {
 
     private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
 
-    private val billingErrorBus by lazy(LazyThreadSafetyMode.NONE) { EventBus.create<Throwable>() }
-
-    private val protection by
-        lazy(LazyThreadSafetyMode.NONE) {
-          Protection.create(
-              licenseKey = params.googlePlayLicenseVerificationKey,
-          )
-        }
-
     private val imageLoader: coil.ImageLoader by
         lazy(LazyThreadSafetyMode.NONE) { params.imageLoader() }
 
@@ -110,29 +113,18 @@ internal interface PYDroidComponent {
           )
         }
 
-    private val settingsModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          SettingsModule(
-              SettingsModule.Parameters(context = context.applicationContext),
-          )
-        }
-
-    private val aboutModule by lazy(LazyThreadSafetyMode.NONE) { AboutModule() }
-
-    private val networkModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          NetworkModule(
-              NetworkModule.Parameters(addLoggingInterceptor = params.debug.enabled),
-          )
-        }
-
     private val otherAppsModule by
         lazy(LazyThreadSafetyMode.NONE) {
           OtherAppsModule(
               OtherAppsModule.Parameters(
                   context = context.applicationContext,
                   packageName = context.applicationContext.packageName,
-                  serviceCreator = networkModule.provideServiceCreator(),
+                  networkModule =
+                      NetworkModule(
+                          NetworkModule.Parameters(
+                              addLoggingInterceptor = params.debug.enabled,
+                          ),
+                      ),
               ),
           )
         }
@@ -152,23 +144,65 @@ internal interface PYDroidComponent {
           AppComponent.Factory.Parameters(
               context = context.applicationContext,
               theming = theming,
-              billingErrorBus = billingErrorBus,
+              billingErrorBus = EventBus.create(),
               changeLogModule = changeLogModule,
               composeTheme = composeTheme,
               imageLoader = imageLoader,
-              protection = protection,
               version = params.version,
               isFakeUpgradeChecker = params.debug.enabled,
               isFakeUpgradeAvailable = params.debug.upgradeAvailable,
               isFake = params.debug.enabled,
-              aboutModule = aboutModule,
               otherAppsModule = otherAppsModule,
-              settingsModule = settingsModule,
               dataPolicyModule = dataPolicyModule,
               bugReportUrl = params.bugReportUrl,
               termsConditionsUrl = params.termsConditionsUrl,
               privacyPolicyUrl = params.privacyPolicyUrl,
               viewSourceUrl = params.viewSourceUrl,
+              protection =
+                  Protection.create(
+                      licenseKey = params.googlePlayLicenseVerificationKey,
+                  ),
+          )
+        }
+
+    private val aboutParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          AboutComponent.Factory.Parameters(
+              composeTheme = composeTheme,
+              module = AboutModule(),
+          )
+        }
+
+    private val dataPolicyParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          DataPolicyDialogComponent.Factory.Parameters(
+              composeTheme = composeTheme,
+              imageLoader = imageLoader,
+              module = dataPolicyModule,
+              privacyPolicyUrl = params.privacyPolicyUrl,
+              termsConditionsUrl = params.termsConditionsUrl,
+          )
+        }
+
+    private val otherAppsParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          OtherAppsComponent.Factory.Parameters(
+              module = otherAppsModule,
+              composeTheme = composeTheme,
+              imageLoader = imageLoader,
+          )
+        }
+
+    private val resetParams by
+        lazy(LazyThreadSafetyMode.NONE) {
+          ResetComponent.Factory.Parameters(
+              module =
+                  SettingsModule(
+                      SettingsModule.Parameters(
+                          context = context.applicationContext,
+                      ),
+                  ),
+              composeTheme = composeTheme,
           )
         }
 
@@ -199,6 +233,22 @@ internal interface PYDroidComponent {
 
     override fun plusApp(): AppComponent.Factory {
       return AppComponent.Impl.FactoryImpl(appParams)
+    }
+
+    override fun plusAbout(): AboutComponent.Factory {
+      return AboutComponent.Impl.FactoryImpl(aboutParams)
+    }
+
+    override fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory {
+      return DataPolicyDialogComponent.Impl.FactoryImpl(dataPolicyParams)
+    }
+
+    override fun plusOtherApps(): OtherAppsComponent.Factory {
+      return OtherAppsComponent.Impl.FactoryImpl(otherAppsParams)
+    }
+
+    override fun plusReset(): ResetComponent.Factory {
+      return ResetComponent.Impl.FactoryImpl(resetParams)
     }
 
     override fun moduleProvider(): ModuleProvider {

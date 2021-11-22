@@ -31,10 +31,10 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
-import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.util.show
@@ -113,7 +113,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromActivity<AppComponent>(act)
+    Injector.obtainFromApplication<PYDroidComponent>(act)
         .plusDataPolicyDialog()
         .create(getAppProvider())
         .inject(this)
@@ -152,6 +152,11 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
         .bind(
             scope = viewLifecycleOwner.lifecycleScope,
         )
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
   }
 
   override fun onDestroyView() {

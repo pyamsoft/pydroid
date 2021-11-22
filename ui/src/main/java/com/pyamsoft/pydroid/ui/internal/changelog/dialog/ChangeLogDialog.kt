@@ -112,6 +112,12 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
         )
   }
 
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
+    ratingViewModel?.saveState(outState)
+  }
+
   override fun onDestroyView() {
     super.onDestroyView()
     (view as? ComposeView)?.disposeComposition()

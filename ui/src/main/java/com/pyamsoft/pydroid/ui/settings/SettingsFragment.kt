@@ -93,7 +93,7 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleChangeDarkMode(mode: Theming.Mode) {
-      val act = requireActivity()
+    val act = requireActivity()
     viewModel
         .requireNotNull()
         .handleChangeDarkMode(
@@ -101,62 +101,6 @@ public abstract class SettingsFragment : Fragment() {
             mode = mode,
             onDarkThemeChanged = { act.recreate() },
         )
-  }
-
-  final override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-
-    Injector.obtainFromActivity<AppComponent>(act).plusSettings().create().inject(this)
-
-    return ComposeView(act).apply {
-      id = R.id.fragment_settings
-
-      val observer = ViewWindowInsetObserver(this)
-      val windowInsets = observer.start()
-      windowInsetObserver = observer
-
-      val vm = viewModel.requireNotNull()
-      setContent {
-        val handler = LocalUriHandler.current
-
-        vm.Render { state ->
-          composeTheme(act) {
-            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-              SettingsScreen(
-                  state = state,
-                  hideClearAll = hideClearAll,
-                  hideUpgradeInformation = hideUpgradeInformation,
-                  hideDataPolicy = hideDataPolicy(),
-                  topItemMargin = customTopItemMargin(),
-                  bottomItemMargin = customBottomItemMargin(),
-                  customPreContent = customPrePreferences(),
-                  customPostContent = customPostPreferences(),
-                  onDarkModeChanged = { handleChangeDarkMode(it) },
-                  onLicensesClicked = { AboutDialog.show(act) },
-                  onCheckUpdateClicked = { handleCheckForUpdates() },
-                  onShowChangeLogClicked = { handleShowChangeLog() },
-                  onResetClicked = { ResetDialog.open(act) },
-                  onRateClicked = { handleViewMarketPage() },
-                  onDonateClicked = { BillingDialog.open(act) },
-                  onBugReportClicked = { handleReportBug(handler) },
-                  onViewSourceClicked = { handleViewSourceCode(handler) },
-                  onViewDataPolicyClicked = { handleShowDisclosure() },
-                  onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
-                  onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
-                  onViewMoreAppsClicked = { handleViewMoreApps() },
-                  onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
-                  onViewBlogClicked = { handleViewBlog(handler) },
-                  onNavigationErrorDismissed = { vm.handleClearNavigationError() },
-              )
-            }
-          }
-        }
-      }
-    }
   }
 
   private fun handleViewBlog(handler: UriHandler) {
@@ -292,33 +236,6 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  @CallSuper
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
-    val vm = viewModel.requireNotNull()
-    vm.bind(
-        scope = viewLifecycleOwner.lifecycleScope,
-    )
-    vm.handleLoadPreferences(
-        scope = viewLifecycleOwner.lifecycleScope,
-    )
-  }
-
-  @CallSuper
-  override fun onDestroyView() {
-    super.onDestroyView()
-    (view as? ComposeView)?.disposeComposition()
-    viewModel = null
-    changeLogViewModel = null
-    dataPolicyViewModel = null
-    ratingViewModel = null
-    versionViewModel = null
-
-    windowInsetObserver?.stop()
-    windowInsetObserver = null
-  }
-
   private fun handleOpenDeveloperPage() {
     val vm = viewModel.requireNotNull()
     MarketLinker.linkToDeveloperPage(requireContext())
@@ -344,6 +261,98 @@ public abstract class SettingsFragment : Fragment() {
 
   /** Override this method to add additional margin to the top settings item */
   @Composable @CheckResult protected abstract fun customBottomItemMargin(): Dp
+
+  final override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View {
+    val act = requireActivity()
+
+    Injector.obtainFromActivity<AppComponent>(act).plusSettings().create().inject(this)
+
+    return ComposeView(act).apply {
+      id = R.id.fragment_settings
+
+      val observer = ViewWindowInsetObserver(this)
+      val windowInsets = observer.start()
+      windowInsetObserver = observer
+
+      val vm = viewModel.requireNotNull()
+      setContent {
+        val handler = LocalUriHandler.current
+
+        vm.Render { state ->
+          composeTheme(act) {
+            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
+              SettingsScreen(
+                  state = state,
+                  hideClearAll = hideClearAll,
+                  hideUpgradeInformation = hideUpgradeInformation,
+                  hideDataPolicy = hideDataPolicy(),
+                  topItemMargin = customTopItemMargin(),
+                  bottomItemMargin = customBottomItemMargin(),
+                  customPreContent = customPrePreferences(),
+                  customPostContent = customPostPreferences(),
+                  onDarkModeChanged = { handleChangeDarkMode(it) },
+                  onLicensesClicked = { AboutDialog.show(act) },
+                  onCheckUpdateClicked = { handleCheckForUpdates() },
+                  onShowChangeLogClicked = { handleShowChangeLog() },
+                  onResetClicked = { ResetDialog.open(act) },
+                  onRateClicked = { handleViewMarketPage() },
+                  onDonateClicked = { BillingDialog.open(act) },
+                  onBugReportClicked = { handleReportBug(handler) },
+                  onViewSourceClicked = { handleViewSourceCode(handler) },
+                  onViewDataPolicyClicked = { handleShowDisclosure() },
+                  onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
+                  onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
+                  onViewMoreAppsClicked = { handleViewMoreApps() },
+                  onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
+                  onViewBlogClicked = { handleViewBlog(handler) },
+                  onNavigationErrorDismissed = { vm.handleClearNavigationError() },
+              )
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @CallSuper
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    val vm = viewModel.requireNotNull()
+    vm.bind(
+        scope = viewLifecycleOwner.lifecycleScope,
+    )
+    vm.handleLoadPreferences(
+        scope = viewLifecycleOwner.lifecycleScope,
+    )
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    viewModel?.saveState(outState)
+    ratingViewModel?.saveState(outState)
+    dataPolicyViewModel?.saveState(outState)
+    changeLogViewModel?.saveState(outState)
+    versionViewModel?.saveState(outState)
+  }
+
+  @CallSuper
+  override fun onDestroyView() {
+    super.onDestroyView()
+    (view as? ComposeView)?.disposeComposition()
+    viewModel = null
+    changeLogViewModel = null
+    dataPolicyViewModel = null
+    ratingViewModel = null
+    versionViewModel = null
+
+    windowInsetObserver?.stop()
+    windowInsetObserver = null
+  }
 
   public companion object {
 

@@ -290,7 +290,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** On activity create */
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
     injectorComponent =
         Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusApp()
@@ -300,6 +299,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                 disableChangeLog = disableChangeLog,
             )
             .also { component -> component.inject(this) }
+    super.onCreate(savedInstanceState)
 
     viewModel.requireNotNull().restoreState(savedInstanceState)
   }
@@ -331,6 +331,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   @CallSuper
   override fun getSystemService(name: String): Any? =
       when (name) {
+        // Must be defined before super.onCreate() is called or this will be null
         AppComponent::class.java.name -> injectorComponent.requireNotNull()
         else -> super.getSystemService(name)
       }

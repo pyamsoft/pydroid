@@ -16,9 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -36,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,6 +67,9 @@ internal fun DataPolicyDisclosureScreen(
   val name = state.name
   val navigationError = state.navigationError
 
+  val configuration = LocalConfiguration.current
+  val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+
   Column(
       modifier = modifier,
   ) {
@@ -79,15 +85,19 @@ internal fun DataPolicyDisclosureScreen(
         Disclosure(
             modifier = Modifier.fillMaxWidth().weight(1F),
             name = name,
+        )
+        Links(
+            modifier = Modifier.fillMaxWidth(),
+            isPortrait = isPortrait,
             onPrivacyPolicyClicked = onPrivacyPolicyClicked,
             onTermsOfServiceClicked = onTermsOfServiceClicked,
         )
         Actions(
             modifier = Modifier.fillMaxWidth(),
+            isPortrait = isPortrait,
             onAccept = onAccept,
             onReject = onReject,
         )
-
         NavigationError(
             snackbarHostState = snackbarHostState,
             error = navigationError,
@@ -99,11 +109,52 @@ internal fun DataPolicyDisclosureScreen(
 }
 
 @Composable
+private fun Links(
+    modifier: Modifier = Modifier,
+    isPortrait: Boolean,
+    onPrivacyPolicyClicked: () -> Unit,
+    onTermsOfServiceClicked: () -> Unit,
+) {
+  val content =
+      @Composable
+      {
+        Text(
+            modifier = Modifier.clickable { onTermsOfServiceClicked() }.padding(bottom = 8.dp),
+            text = "View our Terms and Conditions",
+            style =
+                MaterialTheme.typography.caption.copy(
+                    color = MaterialTheme.colors.primary,
+                ),
+        )
+        Text(
+            modifier = Modifier.clickable { onPrivacyPolicyClicked() },
+            text = "View our Privacy Policy",
+            style =
+                MaterialTheme.typography.caption.copy(
+                    color = MaterialTheme.colors.primary,
+                ),
+        )
+      }
+
+  if (isPortrait) {
+    Column(
+        modifier = modifier.padding(top = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) { content() }
+  } else {
+    Row(
+        modifier = modifier.padding(top = 8.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) { content() }
+  }
+}
+
+@Composable
 private fun Disclosure(
     modifier: Modifier = Modifier,
     name: String,
-    onPrivacyPolicyClicked: () -> Unit,
-    onTermsOfServiceClicked: () -> Unit,
 ) {
   val scrollState = rememberScrollState()
   Column(
@@ -137,59 +188,53 @@ private fun Disclosure(
                 .replace("\n", " "),
         style = MaterialTheme.typography.body2,
     )
-
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-      Text(
-          modifier = Modifier.clickable { onTermsOfServiceClicked() }.padding(bottom = 8.dp),
-          text = "View our Terms and Conditions",
-          style =
-              MaterialTheme.typography.caption.copy(
-                  color = MaterialTheme.colors.primary,
-              ),
-      )
-      Text(
-          modifier = Modifier.clickable { onPrivacyPolicyClicked() },
-          text = "View our Privacy Policy",
-          style =
-              MaterialTheme.typography.caption.copy(
-                  color = MaterialTheme.colors.primary,
-              ),
-      )
-    }
   }
 }
 
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
+    isPortrait: Boolean,
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
-  Column(
-      modifier = modifier.padding(16.dp),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-  ) {
-    Button(
-        onClick = onAccept,
-    ) {
-      Text(
-          text = stringResource(R.string.dpd_accept),
-      )
-    }
-    TextButton(
-        modifier = Modifier.padding(top = 8.dp),
-        onClick = onReject,
-    ) {
-      Text(
-          text = stringResource(R.string.dpd_reject),
-          fontSize = 12.sp,
-      )
-    }
+  val content =
+      @Composable
+      {
+        Button(
+            onClick = onAccept,
+        ) {
+          Text(
+              text = stringResource(R.string.dpd_accept),
+          )
+        }
+        TextButton(
+            modifier =
+                Modifier.padding(
+                    top = if (isPortrait) 8.dp else 0.dp,
+                    start = if (isPortrait) 0.dp else 8.dp,
+                ),
+            onClick = onReject,
+        ) {
+          Text(
+              text = stringResource(R.string.dpd_reject),
+              fontSize = 12.sp,
+          )
+        }
+      }
+
+  if (isPortrait) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) { content() }
+  } else {
+    Row(
+        modifier = modifier.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) { content() }
   }
 }
 

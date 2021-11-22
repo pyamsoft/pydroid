@@ -85,7 +85,7 @@ internal fun DataPolicyDisclosureScreen(
     Surface {
       Column {
         Disclosure(
-            modifier = Modifier.fillMaxWidth().weight(1F),
+            modifier = Modifier.fillMaxWidth(),
             name = name,
         )
         Links(

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +57,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -332,6 +334,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
+  @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
@@ -339,6 +342,12 @@ public abstract class SettingsFragment : Fragment() {
     dataPolicyViewModel?.saveState(outState)
     changeLogViewModel?.saveState(outState)
     versionViewModel?.saveState(outState)
+  }
+
+  @CallSuper
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    recompose()
   }
 
   @CallSuper

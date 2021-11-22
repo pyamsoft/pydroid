@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
@@ -101,6 +102,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     makeFullWidth()
+    recompose()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

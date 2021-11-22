@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 
 internal class AboutDialog : AppCompatDialogFragment() {
@@ -114,6 +115,7 @@ internal class AboutDialog : AppCompatDialogFragment() {
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     makeFullscreen()
+    recompose()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity

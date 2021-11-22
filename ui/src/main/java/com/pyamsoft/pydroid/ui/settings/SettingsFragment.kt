@@ -99,7 +99,6 @@ public abstract class SettingsFragment : Fragment() {
         .handleChangeDarkMode(
             scope = act.lifecycleScope,
             mode = mode,
-            onDarkThemeChanged = { act.recreate() },
         )
   }
 

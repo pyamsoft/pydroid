@@ -70,10 +70,9 @@ internal fun DataPolicyDisclosureScreen(
 
   val configuration = LocalConfiguration.current
   val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-  LocalConfiguration.current.screenHeightDp
 
   Column(
-      modifier = modifier.heightIn(max = configuration.screenHeightDp.dp),
+      modifier = modifier,
   ) {
     AppHeader(
         modifier = Modifier.fillMaxWidth(),
@@ -85,7 +84,9 @@ internal fun DataPolicyDisclosureScreen(
     Surface {
       Column {
         Disclosure(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(
+                max = if (isPortrait) 400.dp else 100.dp,
+            ),
             name = name,
         )
         Links(

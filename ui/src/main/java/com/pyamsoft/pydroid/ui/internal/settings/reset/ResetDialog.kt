@@ -86,6 +86,8 @@ internal class ResetDialog : AppCompatDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
+
+    viewModel.requireNotNull().restoreState(savedInstanceState)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

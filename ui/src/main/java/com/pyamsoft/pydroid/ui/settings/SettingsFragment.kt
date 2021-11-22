@@ -322,13 +322,15 @@ public abstract class SettingsFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val vm = viewModel.requireNotNull()
-    vm.bind(
-        scope = viewLifecycleOwner.lifecycleScope,
-    )
-    vm.handleLoadPreferences(
-        scope = viewLifecycleOwner.lifecycleScope,
-    )
+    ratingViewModel.requireNotNull().restoreState(savedInstanceState)
+    dataPolicyViewModel.requireNotNull().restoreState(savedInstanceState)
+    changeLogViewModel.requireNotNull().restoreState(savedInstanceState)
+    versionViewModel.requireNotNull().restoreState(savedInstanceState)
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
+      vm.handleLoadPreferences(scope = viewLifecycleOwner.lifecycleScope)
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

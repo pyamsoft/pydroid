@@ -300,6 +300,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                 disableChangeLog = disableChangeLog,
             )
             .also { component -> component.inject(this) }
+
+    viewModel.requireNotNull().restoreState(savedInstanceState)
   }
 
   /** On Resume show changelog if possible */

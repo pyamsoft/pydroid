@@ -105,11 +105,11 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
 
-    viewModel
-        .requireNotNull()
-        .bind(
-            scope = viewLifecycleOwner.lifecycleScope,
-        )
+    ratingViewModel.requireNotNull().restoreState(savedInstanceState)
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

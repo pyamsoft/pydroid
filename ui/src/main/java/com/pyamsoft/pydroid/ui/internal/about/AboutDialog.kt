@@ -104,11 +104,10 @@ internal class AboutDialog : AppCompatDialogFragment() {
     super.onViewCreated(view, savedInstanceState)
     makeFullscreen()
 
-    viewModel
-        .requireNotNull()
-        .handleLoadLicenses(
-            scope = viewLifecycleOwner.lifecycleScope,
-        )
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.handleLoadLicenses(scope = viewLifecycleOwner.lifecycleScope)
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

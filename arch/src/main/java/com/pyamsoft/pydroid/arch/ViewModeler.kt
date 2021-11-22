@@ -49,12 +49,16 @@ import androidx.compose.runtime.Composable
  * This ViewModeler class is a proper VM in the MVVM architecture as it owns and manages a state
  * object which is then passed to the view for drawing.
  */
-public interface ViewModeler<S : UiViewState> : StateSaver {
+public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
 
   /** Render this state with arbitrary content */
   @Composable public fun Render(content: @Composable (state: S) -> Unit)
 
   override fun saveState(outState: Bundle) {
     saveState(outState = outState.toWriter())
+  }
+
+  override fun restoreState(savedInstanceState: Bundle?) {
+    restoreState(savedInstanceState = savedInstanceState.toReader())
   }
 }

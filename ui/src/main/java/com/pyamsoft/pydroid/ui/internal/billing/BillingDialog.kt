@@ -102,11 +102,10 @@ internal class BillingDialog : AppCompatDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
-    viewModel
-        .requireNotNull()
-        .bind(
-            scope = viewLifecycleOwner.lifecycleScope,
-        )
+    viewModel.requireNotNull().also { vm ->
+      vm.restoreState(savedInstanceState)
+      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
+    }
   }
 
   override fun onResume() {

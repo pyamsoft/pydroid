@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -108,6 +109,11 @@ internal class AboutDialog : AppCompatDialogFragment() {
       vm.restoreState(savedInstanceState)
       vm.handleLoadLicenses(scope = viewLifecycleOwner.lifecycleScope)
     }
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    makeFullscreen()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

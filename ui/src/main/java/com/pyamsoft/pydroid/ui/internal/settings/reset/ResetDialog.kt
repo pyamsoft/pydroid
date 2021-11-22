@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -88,6 +89,11 @@ internal class ResetDialog : AppCompatDialogFragment() {
     makeFullWidth()
 
     viewModel.requireNotNull().restoreState(savedInstanceState)
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    makeFullWidth()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

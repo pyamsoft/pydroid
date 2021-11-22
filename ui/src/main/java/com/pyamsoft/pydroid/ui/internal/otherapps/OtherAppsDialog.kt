@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -111,6 +112,11 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
       vm.restoreState(savedInstanceState)
       vm.bind(scope = viewLifecycleOwner.lifecycleScope)
     }
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    makeFullWidth()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

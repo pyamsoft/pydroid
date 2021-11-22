@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -69,9 +70,10 @@ internal fun DataPolicyDisclosureScreen(
 
   val configuration = LocalConfiguration.current
   val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+  LocalConfiguration.current.screenHeightDp
 
   Column(
-      modifier = modifier,
+      modifier = modifier.heightIn(max = configuration.screenHeightDp.dp),
   ) {
     AppHeader(
         modifier = Modifier.fillMaxWidth(),
@@ -119,7 +121,7 @@ private fun Links(
       @Composable
       {
         Text(
-            modifier = Modifier.clickable { onTermsOfServiceClicked() }.padding(bottom = 8.dp),
+            modifier = Modifier.clickable { onTermsOfServiceClicked() },
             text = "View our Terms and Conditions",
             style =
                 MaterialTheme.typography.caption.copy(
@@ -127,7 +129,12 @@ private fun Links(
                 ),
         )
         Text(
-            modifier = Modifier.clickable { onPrivacyPolicyClicked() },
+            modifier =
+                Modifier.clickable { onPrivacyPolicyClicked() }
+                    .padding(
+                        top = if (isPortrait) 8.dp else 0.dp,
+                        start = if (isPortrait) 0.dp else 8.dp,
+                    ),
             text = "View our Privacy Policy",
             style =
                 MaterialTheme.typography.caption.copy(
@@ -138,13 +145,13 @@ private fun Links(
 
   if (isPortrait) {
     Column(
-        modifier = modifier.padding(top = 8.dp),
+        modifier = modifier.padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) { content() }
   } else {
     Row(
-        modifier = modifier.padding(top = 8.dp),
+        modifier = modifier.padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) { content() }

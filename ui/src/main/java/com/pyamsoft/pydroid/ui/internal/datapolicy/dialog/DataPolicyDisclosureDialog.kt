@@ -156,7 +156,13 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
+
+    // Force the view to update the composition
     makeFullWidth()
+    (view as? ComposeView)?.apply {
+      disposeComposition()
+      createComposition()
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

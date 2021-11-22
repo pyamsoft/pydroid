@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 
 /**
@@ -28,6 +29,12 @@ protected constructor(
 ) : ViewModeler<S> {
 
   @Composable
+  @CheckResult
+  final override fun state(): S {
+    return state
+  }
+
+  @Composable
   final override fun Render(content: @Composable (state: S) -> Unit) {
     content(state)
   }
@@ -37,4 +44,10 @@ protected constructor(
   }
 
   override fun saveState(outState: UiSavedStateWriter) {}
+
+  final override fun restoreState(savedInstanceState: Bundle?) {
+    super.restoreState(savedInstanceState)
+  }
+
+  override fun restoreState(savedInstanceState: UiSavedStateReader) {}
 }

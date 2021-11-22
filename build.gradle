@@ -72,7 +72,7 @@ buildscript {
     // Network
     moshi = "1.12.0"
     retrofit = '2.9.0'
-    okhttp = "4.9.2"
+    okhttp = "4.9.3"
 
     // In app updates and reviews
     playCore = "1.10.2"

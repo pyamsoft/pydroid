@@ -77,7 +77,7 @@ internal fun DataPolicyDisclosureScreen(
     Surface {
       Column {
         Disclosure(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().weight(1F),
             name = name,
             onPrivacyPolicyClicked = onPrivacyPolicyClicked,
             onTermsOfServiceClicked = onTermsOfServiceClicked,

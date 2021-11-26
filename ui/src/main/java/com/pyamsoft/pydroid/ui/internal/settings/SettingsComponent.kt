@@ -44,6 +44,10 @@ internal interface SettingsComponent {
 
     data class Parameters
     internal constructor(
+        internal val dataPolicyState: MutableDataPolicyViewState,
+        internal val ratingState: MutableRatingViewState,
+        internal val changeLogState: MutableChangeLogViewState,
+        internal val versionCheckState: MutableVersionCheckViewState,
         internal val bugReportUrl: String,
         internal val viewSourceUrl: String,
         internal val privacyPolicyUrl: String,
@@ -74,22 +78,22 @@ internal interface SettingsComponent {
           )
       fragment.dataPolicyViewModel =
           DataPolicyViewModeler(
-              state = MutableDataPolicyViewState(),
+              state = params.dataPolicyState,
               interactor = params.dataPolicyModule.provideInteractor(),
           )
       fragment.ratingViewModel =
           RatingViewModeler(
-              state = MutableRatingViewState(),
+              state = params.ratingState,
               interactor = params.ratingModule.provideInteractor(),
           )
       fragment.changeLogViewModel =
           ChangeLogViewModeler(
-              state = MutableChangeLogViewState(),
+              state = params.changeLogState,
               interactor = params.changeLogModule.provideInteractor(),
           )
       fragment.versionViewModel =
           VersionCheckViewModeler(
-              state = MutableVersionCheckViewState(),
+              state = params.versionCheckState,
               interactor = params.versionModule.provideInteractor(),
           )
     }

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +29,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
+import com.pyamsoft.pydroid.ui.internal.app.AppInternalPresenter
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -84,10 +83,10 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   protected open val disableDataPolicy: Boolean = false
 
   /** Injector component for Dialog and Fragment injection */
-  private var injectorComponent: AppComponent? = null
+  private var injector: AppComponent? = null
 
-  /** ViewModel */
-  internal var viewModel: AppInternalViewModeler? = null
+  /** Presenter */
+  internal var presenter: AppInternalPresenter? = null
 
   init {
     protectApplication()
@@ -291,7 +290,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** On activity create */
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
-    injectorComponent =
+    // Must inject before super.onCreate or else getSystemService will be called and NPE
+    injector =
         Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusApp()
             .create(
@@ -299,10 +299,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                 disableDataPolicy = disableDataPolicy,
                 disableChangeLog = disableChangeLog,
             )
-            .also { component -> component.inject(this) }
+            .also { c -> c.inject(this) }
     super.onCreate(savedInstanceState)
-
-    viewModel.requireNotNull().restoreState(savedInstanceState)
   }
 
   /** On Resume show changelog if possible */
@@ -311,7 +309,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // DialogFragments cannot be shown safely until at least onPostResume
-    viewModel
+    presenter
         .requireNotNull()
         .handleShowCorrectDialog(
             scope = lifecycleScope,
@@ -321,19 +319,12 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
         )
   }
 
-  /** Save instance state */
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
   /** Get system service */
   @CallSuper
   override fun getSystemService(name: String): Any? =
       when (name) {
         // Must be defined before super.onCreate() is called or this will be null
-        AppComponent::class.java.name -> injectorComponent.requireNotNull()
+        AppComponent::class.java.name -> injector.requireNotNull()
         else -> super.getSystemService(name)
       }
 
@@ -349,7 +340,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     changeLog = null
     dataPolicy = null
 
-    injectorComponent = null
-    viewModel = null
+    injector = null
+    presenter = null
   }
 }

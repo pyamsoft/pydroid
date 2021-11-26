@@ -16,21 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class AppInternalViewModeler
+internal class AppInternalPresenter
 internal constructor(
-    state: MutableAppInternalViewState,
     private val disableDataPolicy: Boolean,
     private val disableChangeLog: Boolean,
     private val dataPolicyInteractor: DataPolicyInteractor,
     private val changeLogInteractor: ChangeLogInteractor,
-) : AbstractViewModeler<AppInternalViewState>(state) {
+) {
 
   /**
    * Decides the correct dialog to show so we don't spam dialogs

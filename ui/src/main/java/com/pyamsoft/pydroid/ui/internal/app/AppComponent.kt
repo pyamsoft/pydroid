@@ -106,7 +106,13 @@ internal interface AppComponent {
       private val disableChangeLog: Boolean,
   ) : AppComponent {
 
-    // Make this module each time since if it falls out of scope, the in-app billing system
+      // Create these here to share between the Settings and PYDroidActivity screens
+      private val versionCheckState = MutableVersionCheckViewState()
+      private val ratingState = MutableRatingViewState()
+      private val changeLogState = MutableChangeLogViewState()
+      private val dataPolicyState = MutableDataPolicyViewState()
+
+      // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
     private val billingModule =
         BillingModule(
@@ -159,6 +165,10 @@ internal interface AppComponent {
             otherAppsModule = params.otherAppsModule,
             composeTheme = params.composeTheme,
             theming = params.theming,
+            versionCheckState = versionCheckState,
+            dataPolicyState = dataPolicyState,
+            ratingState = ratingState,
+            changeLogState = changeLogState,
         )
 
     private val changeLogParams =
@@ -181,7 +191,7 @@ internal interface AppComponent {
           RatingDelegate(
               pyDroidActivity,
               RatingViewModeler(
-                  state = MutableRatingViewState(),
+                  state = ratingState,
                   interactor = ratingModule.provideInteractor(),
               ),
           )
@@ -191,7 +201,7 @@ internal interface AppComponent {
           VersionCheckDelegate(
               pyDroidActivity,
               VersionCheckViewModeler(
-                  state = MutableVersionCheckViewState(),
+                  state = versionCheckState,
                   interactor = versionModule.provideInteractor(),
               ),
           )
@@ -201,7 +211,7 @@ internal interface AppComponent {
           ChangeLogDelegate(
               pyDroidActivity,
               ChangeLogViewModeler(
-                  state = MutableChangeLogViewState(),
+                  state = changeLogState,
                   interactor = params.changeLogModule.provideInteractor(),
               ),
           )
@@ -211,15 +221,14 @@ internal interface AppComponent {
           DataPolicyDelegate(
               pyDroidActivity,
               DataPolicyViewModeler(
-                  state = MutableDataPolicyViewState(),
+                  state = dataPolicyState,
                   interactor = params.dataPolicyModule.provideInteractor(),
               ),
           )
 
       // App Internal
-      activity.viewModel =
-          AppInternalViewModeler(
-              state = MutableAppInternalViewState(),
+      activity.presenter =
+          AppInternalPresenter(
               disableChangeLog = disableChangeLog,
               disableDataPolicy = disableDataPolicy,
               dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),

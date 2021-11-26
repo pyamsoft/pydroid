@@ -36,8 +36,9 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     // This may be cached in many cases
+    state.isLoading = true
+
     scope.launch(context = Dispatchers.Main) {
-      state.isLoading = true
       appsRunner
           .call(false)
           .onSuccess { state.apps = it }

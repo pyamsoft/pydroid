@@ -34,9 +34,9 @@ internal constructor(
       highlander<List<OssLibrary>, Boolean> { force -> interactor.loadLicenses(force) }
 
   internal fun handleLoadLicenses(scope: CoroutineScope) {
+    state.isLoading = true
     scope.launch(context = Dispatchers.Main) {
       state.apply {
-        isLoading = true
         licenses = licenseRunner.call(false)
         isLoading = false
       }

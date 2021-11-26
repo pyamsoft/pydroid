@@ -66,19 +66,19 @@ internal constructor(
       force: Boolean,
       onLaunchUpdate: (Boolean, AppUpdateLauncher) -> Unit,
   ) {
+    state.isLoading = true
     scope.launch(context = Dispatchers.Main) {
       Logger.d("Begin check for updates")
-      state.isLoading = true
 
       checkUpdateRunner
           .call(force)
+          // Do this first to dismiss the loading snackbar
+          .onFinally { state.isLoading = false }
           .onSuccess { onLaunchUpdate(it.isFallbackEnabled, it.launcher) }
           .onFailure { Logger.e(it, "Error checking for latest version") }
+          // Do this second to show the error snackbar
           .onFailure { state.versionCheckError = it }
-          .onFinally {
-            Logger.d("Done checking for updates")
-            state.isLoading = false
-          }
+          .onFinally { Logger.d("Done checking for updates") }
     }
   }
 

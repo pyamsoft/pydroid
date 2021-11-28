@@ -21,11 +21,22 @@ import androidx.fragment.app.Fragment
 
 /** Force a view to recompose by disposing and re-creating a Composition */
 public fun ComposeView.recompose() {
-  this.disposeComposition()
-  this.createComposition()
+  if (this.isAttachedToWindow) {
+    this.disposeComposition()
+    this.createComposition()
+  }
 }
 
 /** Force a view to recompose by disposing and re-creating a Composition */
 public fun Fragment.recompose() {
   (view as? ComposeView)?.recompose()
+}
+
+/** Force a view to recompose by disposing and re-creating a Composition */
+public fun Fragment.dispose() {
+  (view as? ComposeView)?.also { v ->
+    if (v.isAttachedToWindow) {
+      v.disposeComposition()
+    }
+  }
 }

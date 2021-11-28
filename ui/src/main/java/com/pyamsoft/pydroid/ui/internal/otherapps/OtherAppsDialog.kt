@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 
@@ -128,7 +129,7 @@ internal class OtherAppsDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    (view as? ComposeView)?.disposeComposition()
+    dispose()
 
     viewModel = null
     imageLoader = null

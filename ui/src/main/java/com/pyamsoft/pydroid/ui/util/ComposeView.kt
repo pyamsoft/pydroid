@@ -19,11 +19,21 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 
-/** Force a view to recompose by disposing and re-creating a Composition */
+/**
+ * Force a view to recompose by disposing and re-creating a Composition only if it is attached to a
+ * window
+ */
 public fun ComposeView.recompose() {
   if (this.isAttachedToWindow) {
     this.disposeComposition()
     this.createComposition()
+  }
+}
+
+/** Dispose a ComposeView only if it is attached to a window */
+public fun ComposeView.dispose() {
+  if (this.isAttachedToWindow) {
+    this.disposeComposition()
   }
 }
 
@@ -34,9 +44,5 @@ public fun Fragment.recompose() {
 
 /** Force a view to recompose by disposing and re-creating a Composition */
 public fun Fragment.dispose() {
-  (view as? ComposeView)?.also { v ->
-    if (v.isAttachedToWindow) {
-      v.disposeComposition()
-    }
-  }
+  (view as? ComposeView)?.dispose()
 }

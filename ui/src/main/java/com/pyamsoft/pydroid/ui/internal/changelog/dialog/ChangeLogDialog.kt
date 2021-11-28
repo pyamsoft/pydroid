@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
+import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
@@ -128,7 +129,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    (view as? ComposeView)?.disposeComposition()
+    dispose()
 
     viewModel = null
     ratingViewModel = null

@@ -57,6 +57,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
@@ -353,7 +354,8 @@ public abstract class SettingsFragment : Fragment() {
   @CallSuper
   override fun onDestroyView() {
     super.onDestroyView()
-    (view as? ComposeView)?.disposeComposition()
+    dispose()
+
     viewModel = null
     changeLogViewModel = null
     dataPolicyViewModel = null

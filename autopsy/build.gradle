@@ -38,5 +38,8 @@ dependencies {
   implementation "androidx.compose.material:material:$compose_version"
   implementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+  // Accompanist
+  implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist"
+
   implementation "androidx.startup:startup-runtime:$startup"
 }

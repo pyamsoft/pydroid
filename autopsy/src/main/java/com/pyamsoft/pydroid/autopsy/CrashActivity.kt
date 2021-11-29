@@ -16,19 +16,15 @@
 
 package com.pyamsoft.pydroid.autopsy
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
-import android.content.res.Resources.Theme
 import android.os.Bundle
-import android.util.Log
-import android.view.WindowManager
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
-import androidx.annotation.ColorRes
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.system.exitProcess
 
@@ -41,32 +37,26 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    // Hide ActionBar
     actionBar?.hide()
 
-    val backgroundColor = getColor(resources, R.color.crash_background_color, theme)
-
-    window?.apply {
-      addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-      statusBarColor = backgroundColor
-      navigationBarColor = backgroundColor
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-        navigationBarDividerColor = backgroundColor
-      }
-    }
-
-    val threadName = intent.getStringExtra(KEY_THREAD_NAME).requireNotNull()
-    val throwableName = intent.getStringExtra(KEY_THROWABLE).requireNotNull()
-    val stackTrace = intent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
+    val launchIntent = intent
+    val threadName = launchIntent.getStringExtra(KEY_THREAD_NAME).requireNotNull()
+    val throwableName = launchIntent.getStringExtra(KEY_THROWABLE).requireNotNull()
+    val stackTrace = launchIntent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
 
     setContent {
+      SystemBars()
       CrashScreen(
+          modifier = Modifier.fillMaxSize(),
           threadName = threadName,
           throwableName = throwableName,
           stackTrace = stackTrace,
       )
     }
 
-    Log.e(TAG, "APPLICATION CRASHED", stackTrace)
+    Logger.e(stackTrace, "APPLICATION CRASHED")
   }
 
   override fun onStop() {
@@ -80,23 +70,6 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
   }
 
   companion object {
-
-    private const val TAG = "CrashActivity"
-
-    @JvmStatic
-    @SuppressLint("SetTextI18n")
-    private fun setText(view: TextView, text: String) {
-      view.text = text
-    }
-
-    @JvmStatic
-    private fun getColor(resources: Resources, @ColorRes color: Int, theme: Theme): Int {
-      return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-        resources.getColor(color, theme)
-      } else {
-        @Suppress("DEPRECATION") resources.getColor(color)
-      }
-    }
 
     private const val KEY_THREAD_NAME = "key_thread_name"
     private const val KEY_THROWABLE = "key_throwable"

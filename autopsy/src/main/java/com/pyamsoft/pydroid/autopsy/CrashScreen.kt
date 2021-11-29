@@ -16,10 +16,8 @@
 
 package com.pyamsoft.pydroid.autopsy
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -43,10 +41,6 @@ internal fun CrashScreen(
     throwableName: String,
     stackTrace: Throwable,
 ) {
-  val scrollState = rememberScrollState()
-  val message = remember { stackTrace.message }
-  val stackTraceAsString = remember { stackTrace.stackTraceToString() }
-
   Surface(
       modifier = modifier,
       color = colorResource(R.color.crash_background_color),
@@ -55,35 +49,21 @@ internal fun CrashScreen(
     Column(
         modifier = Modifier.padding(16.dp),
     ) {
-      Box(
-          modifier = Modifier.padding(bottom = 8.dp),
-      ) {
-        ThreadName(
-            threadName = threadName,
-        )
-      }
+      ThreadName(
+          threadName = threadName,
+      )
 
-      Box(
-          modifier = Modifier.padding(bottom = 8.dp),
-      ) {
-        ThrowableName(
-            throwableName = throwableName,
-        )
-      }
+      ThrowableName(
+          throwableName = throwableName,
+      )
 
-      message?.also { m ->
-        Box(
-            modifier = Modifier.padding(bottom = 8.dp),
-        ) {
-          ThrowableMessage(
-              message = m,
-          )
-        }
-      }
+      ThrowableMessage(
+          stackTrace = stackTrace,
+      )
 
       StackTrace(
-          scrollState = scrollState,
-          stackTrace = stackTraceAsString,
+          modifier = Modifier.weight(1F),
+          stackTrace = stackTrace,
       )
     }
   }
@@ -91,57 +71,79 @@ internal fun CrashScreen(
 
 @Composable
 private fun ThreadName(
+    modifier: Modifier = Modifier,
     threadName: String,
 ) {
-  Text(
-      text = "Uncaught exception in $threadName thread",
-      style =
-          MaterialTheme.typography.body1.copy(
-              fontSize = 18.sp,
-              fontWeight = FontWeight.Bold,
-              fontFamily = FontFamily.Monospace,
-          ),
-  )
+  Box(
+      modifier = modifier.padding(bottom = 8.dp),
+  ) {
+    Text(
+        text = "Uncaught exception in $threadName thread",
+        style =
+            MaterialTheme.typography.body1.copy(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+            ),
+    )
+  }
 }
 
 @Composable
 private fun ThrowableName(
+    modifier: Modifier = Modifier,
     throwableName: String,
 ) {
-  Text(
-      text = throwableName,
-      style =
-          MaterialTheme.typography.body1.copy(
-              fontSize = 16.sp,
-              fontWeight = FontWeight.Bold,
-              fontFamily = FontFamily.Monospace,
-          ),
-  )
+  Box(
+      modifier = modifier.padding(bottom = 8.dp),
+  ) {
+    Text(
+        text = throwableName,
+        style =
+            MaterialTheme.typography.body1.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+            ),
+    )
+  }
 }
 
 @Composable
 private fun ThrowableMessage(
-    message: String,
+    modifier: Modifier = Modifier,
+    stackTrace: Throwable,
 ) {
-  Text(
-      text = message,
-      style =
-          MaterialTheme.typography.body1.copy(
-              fontSize = 14.sp,
-              fontWeight = FontWeight.Bold,
-              fontFamily = FontFamily.Monospace,
-          ),
-  )
+  val message = remember(stackTrace) { stackTrace.message }
+
+  if (message != null) {
+    Box(
+        modifier = modifier.padding(bottom = 8.dp),
+    ) {
+      Text(
+          text = message,
+          style =
+              MaterialTheme.typography.body1.copy(
+                  fontSize = 14.sp,
+                  fontWeight = FontWeight.Bold,
+                  fontFamily = FontFamily.Monospace,
+              ),
+      )
+    }
+  }
 }
 
 @Composable
-private fun ColumnScope.StackTrace(
-    scrollState: ScrollState,
-    stackTrace: String,
+private fun StackTrace(
+    modifier: Modifier = Modifier,
+    stackTrace: Throwable,
 ) {
+  val scrollState = rememberScrollState()
+  val stackTraceAsString = remember(stackTrace) { stackTrace.stackTraceToString() }
+
   Text(
-      modifier = Modifier.verticalScroll(scrollState).weight(1F),
-      text = stackTrace,
+      modifier = modifier.verticalScroll(scrollState),
+      text = stackTraceAsString,
       style =
           MaterialTheme.typography.body1.copy(
               fontSize = 12.sp,

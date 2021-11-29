@@ -72,12 +72,12 @@ internal constructor(
   }
 
   internal fun handleLoadPreferences(scope: CoroutineScope) {
-      state.isLoading = true
+    state.isLoading = true
     scope.launch(context = Dispatchers.Main) {
-        state.apply {
-            darkMode = theming.getMode()
-            isLoading = false
-        }
+      state.apply {
+        darkMode = theming.getMode()
+        isLoading = false
+      }
     }
   }
 

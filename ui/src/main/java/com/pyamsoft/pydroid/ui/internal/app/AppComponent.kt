@@ -106,13 +106,13 @@ internal interface AppComponent {
       private val disableChangeLog: Boolean,
   ) : AppComponent {
 
-      // Create these here to share between the Settings and PYDroidActivity screens
-      private val versionCheckState = MutableVersionCheckViewState()
-      private val ratingState = MutableRatingViewState()
-      private val changeLogState = MutableChangeLogViewState()
-      private val dataPolicyState = MutableDataPolicyViewState()
+    // Create these here to share between the Settings and PYDroidActivity screens
+    private val versionCheckState = MutableVersionCheckViewState()
+    private val ratingState = MutableRatingViewState()
+    private val changeLogState = MutableChangeLogViewState()
+    private val dataPolicyState = MutableDataPolicyViewState()
 
-      // Make this module each time since if it falls out of scope, the in-app billing system
+    // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
     private val billingModule =
         BillingModule(

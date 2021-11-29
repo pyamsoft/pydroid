@@ -28,11 +28,11 @@ internal fun SystemBars() {
 
   val controller = rememberSystemUiController()
   val color = colorResource(R.color.crash_background_color)
-    SideEffect {
-        controller.setSystemBarsColor(
-            color = color,
-            darkIcons = isLighStatusBar,
-            isNavigationBarContrastEnforced = false,
-        )
-    }
+  SideEffect {
+    controller.setSystemBarsColor(
+        color = color,
+        darkIcons = isLighStatusBar,
+        isNavigationBarContrastEnforced = false,
+    )
+  }
 }

@@ -84,9 +84,11 @@ internal fun DataPolicyDisclosureScreen(
     Surface {
       Column {
         Disclosure(
-            modifier = Modifier.fillMaxWidth().heightIn(
-                max = if (isPortrait) 400.dp else 100.dp,
-            ),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .heightIn(
+                        max = if (isPortrait) 400.dp else 100.dp,
+                    ),
             name = name,
         )
         Links(

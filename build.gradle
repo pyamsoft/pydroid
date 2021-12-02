@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 Peter Kenji Yamanaka
  *
@@ -15,6 +16,8 @@
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+import com.android.build.gradle.api.AndroidBasePlugin
 
 buildscript {
   ext {
@@ -66,8 +69,8 @@ buildscript {
     materialDesign = "1.4.0"
 
     // Us
-    cachify = "0.0.23"
-    highlander = "0.0.18"
+    cachify = "0.0.24"
+    highlander = "0.0.19"
 
     // Network
     moshi = "1.12.0"
@@ -105,6 +108,12 @@ buildscript {
   }
 }
 
+plugins {
+  // Fix Android build cache
+  // https://github.com/gradle/android-cache-fix-gradle-plugin
+  id "org.gradle.android.cache-fix" version "2.4.5" apply false
+}
+
 subprojects {
   apply plugin: 'com.android.library'
   apply plugin: 'kotlin-android'
@@ -114,6 +123,10 @@ subprojects {
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
   final POM_VERSION = "24.3.0"
+
+  plugins.withType(AndroidBasePlugin) {
+    project.apply plugin: "org.gradle.android.cache-fix"
+  }
 
   // Kapt flags
   kapt {

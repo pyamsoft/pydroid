@@ -17,8 +17,6 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-import com.android.build.gradle.api.AndroidBasePlugin
-
 buildscript {
   ext {
     kotlin_version = '1.5.31'
@@ -120,13 +118,11 @@ subprojects {
   apply plugin: 'kotlin-kapt'
   apply plugin: 'org.jetbrains.dokka'
   apply plugin: 'maven-publish'
+  apply plugin: "org.gradle.android.cache-fix"
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
   final POM_VERSION = "24.3.0"
 
-  plugins.withType(AndroidBasePlugin) {
-    project.apply plugin: "org.gradle.android.cache-fix"
-  }
 
   // Kapt flags
   kapt {

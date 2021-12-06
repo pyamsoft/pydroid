@@ -22,9 +22,8 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.asPx
 
 /** Remove the title from a dialog */
@@ -75,12 +74,10 @@ private fun DialogFragment.setSizes(
     useMatchParent: Boolean
 ) {
   val self = this
-  val owner = self.viewLifecycleOwner
-  owner.lifecycle.addObserver(
-      object : LifecycleObserver {
+  self.viewLifecycleOwner.lifecycle.addObserver(
+      object : DefaultLifecycleObserver {
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-        fun onResume() {
+        override fun onResume(owner: LifecycleOwner) {
           self.dialog?.window?.apply {
             val width: Int
             val height: Int
@@ -106,9 +103,9 @@ private fun DialogFragment.setSizes(
           }
         }
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-        fun onDestroy() {
+        override fun onDestroy(owner: LifecycleOwner) {
           owner.lifecycle.removeObserver(this)
         }
-      })
+      },
+  )
 }

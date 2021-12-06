@@ -16,6 +16,7 @@
 
 dependencies {
   implementation "androidx.core:core:$core"
+  implementation "androidx.lifecycle:lifecycle-common:$lifecycle"
   api project(':core')
 }
 

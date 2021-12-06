@@ -18,9 +18,7 @@ such is not meant for use outside of pyamsoft projects.
 [bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 [core](https://github.com/pyamsoft/pydroid/tree/main/core)
 [inject](https://github.com/pyamsoft/pydroid/tree/main/inject)
-[loader](https://github.com/pyamsoft/pydroid/tree/main/loader)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
-[protection](https://github.com/pyamsoft/pydroid/tree/main/protection)
 [ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
 [util](https://github.com/pyamsoft/pydroid/tree/main/util)
 

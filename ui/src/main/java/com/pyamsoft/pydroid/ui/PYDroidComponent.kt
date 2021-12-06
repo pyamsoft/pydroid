@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
-import com.pyamsoft.pydroid.protection.Protection
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
@@ -65,7 +64,6 @@ internal interface PYDroidComponent {
 
     data class Parameters
     internal constructor(
-        override val googlePlayLicenseVerificationKey: String,
         override val imageLoader: () -> coil.ImageLoader,
         override val privacyPolicyUrl: String,
         override val bugReportUrl: String,
@@ -158,10 +156,6 @@ internal interface PYDroidComponent {
               termsConditionsUrl = params.termsConditionsUrl,
               privacyPolicyUrl = params.privacyPolicyUrl,
               viewSourceUrl = params.viewSourceUrl,
-              protection =
-                  Protection.create(
-                      licenseKey = params.googlePlayLicenseVerificationKey,
-                  ),
           )
         }
 

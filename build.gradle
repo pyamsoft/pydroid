@@ -37,7 +37,6 @@ buildscript {
       url 'https://jitpack.io'
       content {
         includeGroup("com.github.pyamsoft")
-        includeGroup("com.github.javiersantos")
       }
     }
   }
@@ -271,7 +270,6 @@ allprojects {
       url 'https://jitpack.io'
       content {
         includeGroup("com.github.pyamsoft")
-        includeGroup("com.github.javiersantos")
       }
     }
   }

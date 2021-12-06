@@ -51,7 +51,6 @@ internal constructor(
                       theme = params.theme ?: NoopThemeProvider,
                       logger = params.logger,
                       imageLoader = params.imageLoader,
-                      googlePlayLicenseVerificationKey = params.googlePlayLicenseVerificationKey,
                       debug =
                           PYDroidComponent.Component.DebugParameters(
                               enabled = isDebug,

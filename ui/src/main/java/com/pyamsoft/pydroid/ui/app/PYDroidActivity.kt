@@ -34,7 +34,6 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
-import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -52,9 +51,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Billing Delegate */
   internal var billing: BillingDelegate? = null
 
-  /** Billing Delegate */
-  internal var protection: ProtectionDelegate? = null
-
   /** Rating Delegate */
   internal var rating: RatingDelegate? = null
 
@@ -66,9 +62,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
-
-  /** Disable the protection component */
-  protected open val disableProtection: Boolean = false
 
   /** Disable the rating component */
   protected open val disableRating: Boolean = false
@@ -89,8 +82,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   internal var presenter: AppInternalPresenter? = null
 
   init {
-    protectApplication()
-
     connectBilling()
     connectRating()
     connectVersionCheck()
@@ -180,19 +171,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     this.doOnCreate {
       Logger.d("Attempt Connect Version Check")
       versionCheck.requireNotNull().bindEvents()
-    }
-  }
-
-  /** Attempts to connect to in-app billing */
-  private fun protectApplication() {
-    if (disableProtection) {
-      Logger.w("Application has disabled the protection component")
-      return
-    }
-
-    this.doOnCreate {
-      Logger.d("Attempt Protect Application")
-      protection.requireNotNull().connect()
     }
   }
 
@@ -334,7 +312,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     super.onDestroy()
 
     billing = null
-    protection = null
     rating = null
     versionCheck = null
     changeLog = null

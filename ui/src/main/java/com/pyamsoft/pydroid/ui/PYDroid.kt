@@ -18,10 +18,10 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
@@ -89,8 +89,7 @@ public object PYDroid {
   public data class Parameters
   @JvmOverloads
   public constructor(
-      override val googlePlayLicenseVerificationKey: String,
-      override val imageLoader: () -> coil.ImageLoader,
+      override val imageLoader: () -> ImageLoader,
       override val viewSourceUrl: String,
       override val bugReportUrl: String,
       override val privacyPolicyUrl: String,
@@ -110,8 +109,7 @@ public object PYDroid {
 
   /** Base parameters for PYDroid */
   internal interface BaseParameters {
-    val googlePlayLicenseVerificationKey: String
-    val imageLoader: () -> coil.ImageLoader
+    val imageLoader: () -> ImageLoader
     val viewSourceUrl: String
     val bugReportUrl: String
     val privacyPolicyUrl: String

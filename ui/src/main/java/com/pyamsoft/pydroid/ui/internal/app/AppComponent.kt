@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.protection.Protection
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
@@ -39,7 +38,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
-import com.pyamsoft.pydroid.ui.internal.protection.ProtectionDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
@@ -88,7 +86,6 @@ internal interface AppComponent {
         internal val billingErrorBus: EventBus<Throwable>,
         internal val imageLoader: ImageLoader,
         internal val isFake: Boolean,
-        internal val protection: Protection,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean,
@@ -182,9 +179,6 @@ internal interface AppComponent {
     override fun inject(activity: PYDroidActivity) {
       // Billing
       activity.billing = BillingDelegate(pyDroidActivity, billingModule.provideConnector())
-
-      // Protection
-      activity.protection = ProtectionDelegate(pyDroidActivity, params.protection)
 
       // Rating
       activity.rating =

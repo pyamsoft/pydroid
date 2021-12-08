@@ -110,13 +110,13 @@ internal fun BillingScreen(
             )
           }
         }
-      }
 
-      BillingError(
-          snackbarHostState = snackbarHostState,
-          error = error,
-          onSnackbarDismissed = onBillingErrorDismissed,
-      )
+        BillingError(
+            snackbarHostState = snackbarHostState,
+            error = error,
+            onSnackbarDismissed = onBillingErrorDismissed,
+        )
+      }
     }
   }
 }

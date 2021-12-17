@@ -1,0 +1,102 @@
+public final class com/pyamsoft/pydroid/util/ActivityKt {
+	public static final fun valueFromCurrentTheme (Landroid/app/Activity;I)I
+	public static final fun valuesFromCurrentTheme (Landroid/app/Activity;[I)[I
+}
+
+public final class com/pyamsoft/pydroid/util/CollectionKt {
+	public static final fun contains (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Z
+}
+
+public final class com/pyamsoft/pydroid/util/ColorKt {
+	public static final fun darker (IF)I
+	public static final fun lighter (IF)I
+}
+
+public final class com/pyamsoft/pydroid/util/ContextKt {
+	public static final fun getApplicationDisplayName (Landroid/content/Context;)Ljava/lang/String;
+	public static final fun isDebugMode (Landroid/content/Context;)Z
+}
+
+public final class com/pyamsoft/pydroid/util/DrawableKt {
+	public static final fun tintWith (Landroid/graphics/drawable/Drawable;I)Landroid/graphics/drawable/Drawable;
+	public static final fun tintWith (Landroid/graphics/drawable/Drawable;Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;
+}
+
+public final class com/pyamsoft/pydroid/util/HyperlinkIntent {
+	public final fun copy (Landroid/content/Context;Landroid/content/Intent;)Lcom/pyamsoft/pydroid/util/HyperlinkIntent;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/util/HyperlinkIntent;Landroid/content/Context;Landroid/content/Intent;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/util/HyperlinkIntent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun navigate ()Lcom/pyamsoft/pydroid/core/ResultWrapper;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/util/InitialPadding {
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun copy (IIII)Lcom/pyamsoft/pydroid/util/InitialPadding;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/util/InitialPadding;IIIIILjava/lang/Object;)Lcom/pyamsoft/pydroid/util/InitialPadding;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBottom ()I
+	public final fun getEnd ()I
+	public final fun getStart ()I
+	public final fun getTop ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/util/InsetListener {
+	public abstract fun cancel ()V
+}
+
+public final class com/pyamsoft/pydroid/util/LifecycleKt {
+	public static final fun doOnCreate (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnCreate (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnDestroy (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnDestroy (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnPause (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnPause (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnResume (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnResume (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnStart (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnStart (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnStop (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function0;)V
+	public static final fun doOnStop (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class com/pyamsoft/pydroid/util/MarketLinker {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/util/MarketLinker;
+	public static final fun linkToDeveloperPage (Landroid/content/Context;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+	public static final fun linkToMarketPage (Landroid/content/Context;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+	public static final fun linkToMarketPage (Landroid/content/Context;Ljava/lang/String;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+	public static synthetic fun linkToMarketPage$default (Landroid/content/Context;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+}
+
+public final class com/pyamsoft/pydroid/util/NumberKt {
+	public static final fun asDp (Ljava/lang/Number;Landroid/app/Activity;)I
+	public static final fun asDp (Ljava/lang/Number;Landroid/content/Context;)I
+	public static final fun asPx (Ljava/lang/Number;Landroid/app/Activity;)I
+	public static final fun asPx (Ljava/lang/Number;Landroid/content/Context;)I
+}
+
+public abstract interface class com/pyamsoft/pydroid/util/PreferenceListener {
+	public abstract fun cancel ()V
+}
+
+public final class com/pyamsoft/pydroid/util/SharedPreferencesKt {
+	public static final fun onChange (Landroid/content/SharedPreferences;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PreferenceListener;
+}
+
+public final class com/pyamsoft/pydroid/util/StringKt {
+	public static final fun hyperlink (Ljava/lang/String;Landroid/content/Context;)Lcom/pyamsoft/pydroid/util/HyperlinkIntent;
+}
+
+public final class com/pyamsoft/pydroid/util/WindowInsetsKt {
+	public static final fun doOnApplyWindowInsets (Landroid/view/View;Lkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/util/InsetListener;
+	public static final fun recordInitialPaddingForView (Landroid/view/View;)Lcom/pyamsoft/pydroid/util/InitialPadding;
+	public static final fun requestApplyInsetsWhenAttached (Landroid/view/View;)V
+	public static final fun stableLayoutHideNavigation (Landroid/app/Activity;)V
+}
+

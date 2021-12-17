@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.ResultWrapper
 import java.util.concurrent.TimeUnit.HOURS
+import kotlinx.coroutines.Dispatchers
 
 /** Module for other pyamsoft applications */
 public class OtherAppsModule(params: Parameters) {
@@ -55,7 +56,9 @@ public class OtherAppsModule(params: Parameters) {
     @CheckResult
     private fun createCache(network: OtherAppsInteractor): Cached<ResultWrapper<List<OtherApp>>> {
       return cachify<ResultWrapper<List<OtherApp>>>(
-          storage = { listOf(MemoryCacheStorage.create(24, HOURS)) }) { network.getApps(true) }
+          context = Dispatchers.IO,
+          storage = { listOf(MemoryCacheStorage.create(24, HOURS)) },
+      ) { network.getApps(true) }
     }
   }
 

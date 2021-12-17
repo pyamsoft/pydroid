@@ -1,0 +1,297 @@
+public abstract interface class com/pyamsoft/pydroid/bootstrap/about/AboutInteractor {
+	public abstract fun loadLicenses (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/about/AboutModule {
+	public fun <init> ()V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/about/AboutInteractor;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
+	public abstract fun getDisplayName (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogInteractor : com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
+	public abstract fun canShowChangeLog (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun markChangeLogShown (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters {
+	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;)V
+	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;)Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters;Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences {
+	public abstract fun markChangeLogShown (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun showChangelog (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyInteractor : com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
+	public abstract fun acceptPolicy (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun isPolicyAccepted (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun rejectPolicy (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Parameters {
+	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyPreferences;)V
+	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyPreferences;)Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Parameters;Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyPreferences;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyPreferences {
+	public abstract fun isPolicyAccepted (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun respondToPolicy (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense {
+	public abstract fun getLicense ()Ljava/lang/String;
+	public abstract fun getLocation ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibraries {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibraries;
+	public static final fun add (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public static final fun add (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;)V
+	public static synthetic fun add$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;ILjava/lang/Object;)V
+	public final fun getUsingArch ()Z
+	public final fun getUsingAutopsy ()Z
+	public final fun getUsingLoader ()Z
+	public final fun getUsingNotify ()Z
+	public final fun getUsingUi ()Z
+	public static final fun libraries ()Ljava/util/Set;
+	public final fun setUsingArch (Z)V
+	public final fun setUsingAutopsy (Z)V
+	public final fun setUsingLoader (Z)V
+	public final fun setUsingNotify (Z)V
+	public final fun setUsingUi (Z)V
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibrary {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLibraryUrl ()Ljava/lang/String;
+	public final fun getLicenseName ()Ljava/lang/String;
+	public final fun getLicenseUrl ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLicenses : java/lang/Enum, com/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense {
+	public static final field APACHE2 Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+	public static final field BSD2 Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+	public static final field BSD3 Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses$Companion;
+	public static final field MIT Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+	public static final fun custom (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;
+	public fun getLicense ()Ljava/lang/String;
+	public fun getLocation ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+	public static fun values ()[Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLicenses$Companion {
+	public final fun custom (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;
+}
+
+public class com/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactory : javax/net/SocketFactory {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactory$Companion;
+	protected fun <init> (Ljavax/net/SocketFactory;)V
+	protected fun configureSocket (Ljava/net/Socket;)Ljava/net/Socket;
+	public static final fun create ()Ljavax/net/SocketFactory;
+	public static final fun create (Ljavax/net/SocketFactory;)Ljavax/net/SocketFactory;
+	public final fun createSocket ()Ljava/net/Socket;
+	public final fun createSocket (Ljava/lang/String;I)Ljava/net/Socket;
+	public final fun createSocket (Ljava/lang/String;ILjava/net/InetAddress;I)Ljava/net/Socket;
+	public final fun createSocket (Ljava/net/InetAddress;I)Ljava/net/Socket;
+	public final fun createSocket (Ljava/net/InetAddress;ILjava/net/InetAddress;I)Ljava/net/Socket;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactory$Companion {
+	public final fun create ()Ljavax/net/SocketFactory;
+	public final fun create (Ljavax/net/SocketFactory;)Ljavax/net/SocketFactory;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactory$Companion;Ljavax/net/SocketFactory;ILjava/lang/Object;)Ljavax/net/SocketFactory;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/network/NetworkModule {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule$Companion;
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule$Parameters;)V
+	public final fun provideServiceCreator ()Lcom/pyamsoft/pydroid/bootstrap/network/ServiceCreator;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/network/NetworkModule$Companion {
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/network/NetworkModule$Parameters {
+	public fun <init> (Z)V
+	public final fun copy (Z)Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule$Parameters;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/network/ServiceCreator {
+	public abstract fun createService (Ljava/lang/Class;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsInteractor : com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
+	public abstract fun getApps (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Companion;
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Companion {
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Parameters {
+	public fun <init> (Landroid/content/Context;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule;)V
+	public final fun copy (Landroid/content/Context;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule;)Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Parameters;Landroid/content/Context;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/network/NetworkModule;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/otherapps/OtherAppsModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/otherapps/api/OtherApp {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/otherapps/api/OtherApp;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/otherapps/api/OtherApp;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/otherapps/api/OtherApp;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getIcon ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPackageName ()Ljava/lang/String;
+	public final fun getSourceUrl ()Ljava/lang/String;
+	public final fun getStoreUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher$Companion;
+	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher;
+	public abstract fun rate (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher$Companion {
+	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RateMyApp {
+	public abstract fun startRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RatingInteractor {
+	public abstract fun askForRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun loadMarketLauncher (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/rating/RatingModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/rating/RatingInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters {
+	public fun <init> (Landroid/content/Context;Z)V
+	public final fun copy (Landroid/content/Context;Z)Lcom/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters;Landroid/content/Context;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/settings/SettingsInteractor {
+	public abstract fun wipeData (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/settings/SettingsModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/settings/SettingsInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parameters {
+	public fun <init> (Landroid/content/Context;)V
+	public final fun copy (Landroid/content/Context;)Lcom/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parameters;Landroid/content/Context;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher$Companion;
+	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher;
+	public abstract fun update (Landroid/app/Activity;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher$Companion {
+	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/AppUpdater {
+	public abstract fun checkForUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun complete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchForDownloadComplete (Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor {
+	public abstract fun checkVersion (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun completeUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchForDownloadComplete (Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion;
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;)V
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/version/VersionInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion {
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters {
+	public fun <init> (Landroid/content/Context;IZZ)V
+	public final fun copy (Landroid/content/Context;IZZ)Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;Landroid/content/Context;IZZILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

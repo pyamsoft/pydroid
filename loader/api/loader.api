@@ -1,0 +1,63 @@
+public abstract class com/pyamsoft/pydroid/loader/GenericLoader : com/pyamsoft/pydroid/loader/Loader {
+	protected fun <init> ()V
+	protected final fun executeMutator (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun mutate (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/loader/Loader;
+	protected abstract fun mutateImage (Ljava/lang/Object;)Ljava/lang/Object;
+	protected final fun notifyError ()V
+	protected final fun notifyLoading ()V
+	protected final fun notifySuccess (Ljava/lang/Object;)V
+	public final fun onError (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public final fun onLoaded (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public final fun onRequest (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/loader/Loader;
+	protected abstract fun setImage (Landroid/widget/ImageView;Ljava/lang/Object;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/loader/ImageLoader {
+	public abstract fun asBitmap ()Lcom/pyamsoft/pydroid/loader/ImageLoaderApi;
+	public abstract fun asDrawable ()Lcom/pyamsoft/pydroid/loader/ImageLoaderApi;
+}
+
+public abstract interface class com/pyamsoft/pydroid/loader/ImageLoaderApi {
+	public abstract fun load (I)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun load (Landroid/net/Uri;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun load (Ljava/lang/String;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun load ([B)Lcom/pyamsoft/pydroid/loader/Loader;
+}
+
+public abstract interface class com/pyamsoft/pydroid/loader/ImageTarget {
+	public abstract fun clear ()V
+	public abstract fun setImage (Ljava/lang/Object;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/loader/Loaded {
+	public abstract fun dispose ()V
+}
+
+public final class com/pyamsoft/pydroid/loader/LoadedKt {
+	public static final fun disposeOnDestroy (Lcom/pyamsoft/pydroid/loader/Loaded;Landroidx/lifecycle/Lifecycle;)V
+	public static final fun disposeOnDestroy (Lcom/pyamsoft/pydroid/loader/Loaded;Landroidx/lifecycle/LifecycleOwner;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/loader/Loader {
+	public abstract fun into (Landroid/widget/ImageView;)Lcom/pyamsoft/pydroid/loader/Loaded;
+	public abstract fun into (Lcom/pyamsoft/pydroid/loader/ImageTarget;)Lcom/pyamsoft/pydroid/loader/Loaded;
+	public abstract fun mutate (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun onError (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun onLoaded (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/loader/Loader;
+	public abstract fun onRequest (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/loader/Loader;
+}
+
+public final class com/pyamsoft/pydroid/loader/LoaderModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/loader/LoaderModule$Parameters;)V
+	public final fun provideLoader ()Lcom/pyamsoft/pydroid/loader/ImageLoader;
+}
+
+public final class com/pyamsoft/pydroid/loader/LoaderModule$Parameters {
+	public fun <init> (Landroid/content/Context;)V
+	public final fun copy (Landroid/content/Context;)Lcom/pyamsoft/pydroid/loader/LoaderModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/loader/LoaderModule$Parameters;Landroid/content/Context;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/loader/LoaderModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

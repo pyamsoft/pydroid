@@ -1,0 +1,47 @@
+public abstract interface class com/pyamsoft/pydroid/billing/BillingConnector {
+	public abstract fun start (Landroidx/appcompat/app/AppCompatActivity;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/billing/BillingInteractor {
+	public abstract fun refresh (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchErrors (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchSkuList (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/billing/BillingLauncher {
+	public abstract fun purchase (Landroid/app/Activity;Lcom/pyamsoft/pydroid/billing/BillingSku;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/billing/BillingModule {
+	public fun <init> (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;)V
+	public final fun provideConnector ()Lcom/pyamsoft/pydroid/billing/BillingConnector;
+	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/billing/BillingInteractor;
+	public final fun provideLauncher ()Lcom/pyamsoft/pydroid/billing/BillingLauncher;
+}
+
+public final class com/pyamsoft/pydroid/billing/BillingModule$Parameters {
+	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)V
+	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/billing/BillingSku {
+	public abstract fun getDescription ()Ljava/lang/String;
+	public abstract fun getDisplayPrice ()Ljava/lang/String;
+	public abstract fun getIconUrl ()Ljava/lang/String;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getPrice ()J
+	public abstract fun getTitle ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/billing/BillingState : java/lang/Enum {
+	public static final field CONNECTED Lcom/pyamsoft/pydroid/billing/BillingState;
+	public static final field DISCONNECTED Lcom/pyamsoft/pydroid/billing/BillingState;
+	public static final field LOADING Lcom/pyamsoft/pydroid/billing/BillingState;
+	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/billing/BillingState;
+	public static fun values ()[Lcom/pyamsoft/pydroid/billing/BillingState;
+}
+

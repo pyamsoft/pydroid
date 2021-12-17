@@ -1,0 +1,72 @@
+public final class com/pyamsoft/pydroid/notify/MissingDispatcherException : java/lang/IllegalArgumentException {
+}
+
+public abstract interface class com/pyamsoft/pydroid/notify/Notifier {
+	public static final field Companion Lcom/pyamsoft/pydroid/notify/Notifier$Companion;
+	public abstract fun cancel (Lcom/pyamsoft/pydroid/notify/NotifyId;)V
+	public abstract fun cancel (Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyTag;)V
+	public abstract fun show (Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun show (Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun show (Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyTag;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun show (Lcom/pyamsoft/pydroid/notify/NotifyTag;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun startForeground (Landroid/app/Service;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun startForeground (Landroid/app/Service;Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public abstract fun stopForeground (Landroid/app/Service;Lcom/pyamsoft/pydroid/notify/NotifyId;)V
+	public abstract fun stopForeground (Landroid/app/Service;Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyTag;)V
+}
+
+public final class com/pyamsoft/pydroid/notify/Notifier$Companion {
+	public final fun createDefault (Landroid/content/Context;Ljava/util/Set;)Lcom/pyamsoft/pydroid/notify/Notifier;
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyChannelInfo {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/notify/NotifyData {
+}
+
+public abstract interface class com/pyamsoft/pydroid/notify/NotifyDispatcher {
+	public abstract fun build (Lcom/pyamsoft/pydroid/notify/NotifyId;Lcom/pyamsoft/pydroid/notify/NotifyChannelInfo;Lcom/pyamsoft/pydroid/notify/NotifyData;)Landroid/app/Notification;
+	public abstract fun canShow (Lcom/pyamsoft/pydroid/notify/NotifyData;)Z
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyId {
+	public final fun component1 ()I
+	public final fun copy (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/notify/NotifyId;IILjava/lang/Object;)Lcom/pyamsoft/pydroid/notify/NotifyId;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyIdKt {
+	public static final fun toNotifyId (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyTag {
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/pyamsoft/pydroid/notify/NotifyTag;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/notify/NotifyTag;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/notify/NotifyTag;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTag ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyTagKt {
+	public static final fun toNotifyTag (Ljava/lang/String;)Lcom/pyamsoft/pydroid/notify/NotifyTag;
+}
+

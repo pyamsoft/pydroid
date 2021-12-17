@@ -1,0 +1,19 @@
+public abstract interface class com/pyamsoft/pydroid/bus/EventBus : com/pyamsoft/pydroid/bus/EventConsumer {
+	public static final field Companion Lcom/pyamsoft/pydroid/bus/EventBus$Companion;
+	public static fun create ()Lcom/pyamsoft/pydroid/bus/EventBus;
+	public static fun create (I)Lcom/pyamsoft/pydroid/bus/EventBus;
+	public static fun create (ILkotlin/coroutines/CoroutineContext;)Lcom/pyamsoft/pydroid/bus/EventBus;
+	public abstract fun send (Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bus/EventBus$Companion {
+	public final fun create ()Lcom/pyamsoft/pydroid/bus/EventBus;
+	public final fun create (I)Lcom/pyamsoft/pydroid/bus/EventBus;
+	public final fun create (ILkotlin/coroutines/CoroutineContext;)Lcom/pyamsoft/pydroid/bus/EventBus;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/bus/EventBus$Companion;ILkotlin/coroutines/CoroutineContext;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bus/EventBus;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bus/EventConsumer {
+	public abstract fun onEvent (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

@@ -1,0 +1,254 @@
+public abstract class com/pyamsoft/pydroid/arch/AbstractViewModeler : com/pyamsoft/pydroid/arch/ViewModeler {
+	public static final field $stable I
+	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
+	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public final fun restoreState (Landroid/os/Bundle;)V
+	public fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	public final fun saveState (Landroid/os/Bundle;)V
+	public fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
+	public final fun state (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/arch/UiViewState;
+}
+
+public abstract class com/pyamsoft/pydroid/arch/BaseUiView : com/pyamsoft/pydroid/arch/UiView {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/arch/BaseUiView$Companion;
+	protected fun <init> (Landroid/view/ViewGroup;)V
+	protected fun adoptionParent ()Landroid/view/ViewGroup;
+	protected final fun boundView (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/BaseUiView$Bound;
+	protected final fun getBinding ()Landroidx/viewbinding/ViewBinding;
+	protected abstract fun getLayoutRoot ()Landroid/view/View;
+	protected abstract fun getViewBinding ()Lkotlin/jvm/functions/Function2;
+	public final fun id ()I
+	public final fun nest ([Lcom/pyamsoft/pydroid/arch/UiView;)V
+	public final fun nestedViews ()Ljava/util/List;
+	protected final fun onFinalTeardown ()V
+	protected final fun onInit (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	protected fun onRender (Lcom/pyamsoft/pydroid/arch/UiRender;)V
+	public final fun render (Lcom/pyamsoft/pydroid/arch/UiRender;)V
+}
+
+protected final class com/pyamsoft/pydroid/arch/BaseUiView$Bound : kotlin/properties/ReadOnlyProperty {
+	public final fun copy (Landroid/view/ViewGroup;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/BaseUiView$Bound;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/arch/BaseUiView$Bound;Landroid/view/ViewGroup;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/arch/BaseUiView$Bound;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Landroid/view/View;
+	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/arch/BaseUiView$Companion {
+}
+
+public final class com/pyamsoft/pydroid/arch/Component {
+	public static final fun createComponent (Landroid/os/Bundle;Landroidx/lifecycle/LifecycleOwner;Lcom/pyamsoft/pydroid/arch/UiViewModel;Lcom/pyamsoft/pydroid/arch/UiController;[Lcom/pyamsoft/pydroid/arch/UiView;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/StateSaver;
+	public static final fun createViewBinder ([Lcom/pyamsoft/pydroid/arch/UiView;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/ViewBinder;
+}
+
+public final class com/pyamsoft/pydroid/arch/Internals {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/arch/Internals;
+	public static final fun bindViewEvents (Ljava/util/List;Lkotlin/jvm/functions/Function1;)V
+	public static final fun performCreateComponent (Landroid/os/Bundle;Landroidx/lifecycle/LifecycleOwner;Lcom/pyamsoft/pydroid/arch/UiController;[Lcom/pyamsoft/pydroid/arch/UiView;Lkotlin/jvm/functions/Function4;)Lcom/pyamsoft/pydroid/arch/StateSaver;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/Renderable {
+	public abstract fun render (Lcom/pyamsoft/pydroid/arch/UiRender;)V
+}
+
+public abstract class com/pyamsoft/pydroid/arch/SavedStateViewModelFactory : androidx/lifecycle/AbstractSavedStateViewModelFactory {
+	public static final field $stable I
+	protected fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;)V
+	protected fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;)V
+	public synthetic fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	protected final fun create (Ljava/lang/String;Ljava/lang/Class;Landroidx/lifecycle/SavedStateHandle;)Landroidx/lifecycle/ViewModel;
+	protected abstract fun createViewModel (Ljava/lang/Class;Lcom/pyamsoft/pydroid/arch/UiSavedState;)Landroidx/lifecycle/ViewModel;
+	protected final fun fail (Ljava/lang/Class;)Ljava/lang/Void;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/StateRestorer {
+	public abstract fun restoreState (Landroid/os/Bundle;)V
+	public abstract fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/StateSaver {
+	public abstract fun saveState (Landroid/os/Bundle;)V
+	public abstract fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
+}
+
+public final class com/pyamsoft/pydroid/arch/StateUiRenderKt {
+	public static final fun asUiRender (Lcom/pyamsoft/pydroid/arch/UiViewState;)Lcom/pyamsoft/pydroid/arch/UiRender;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiController {
+	public abstract fun onControllerEvent (Lcom/pyamsoft/pydroid/arch/UiControllerEvent;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiControllerEvent {
+}
+
+public final class com/pyamsoft/pydroid/arch/UiControllerKt {
+	public static final fun emptyController ()Lcom/pyamsoft/pydroid/arch/UiController;
+	public static final fun newUiController (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/UiController;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiRender {
+	public abstract fun mapChanged (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/arch/UiRender;
+	public abstract fun render (Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function1;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiSavedState : com/pyamsoft/pydroid/arch/UiSavedStateReader, com/pyamsoft/pydroid/arch/UiSavedStateWriter {
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiSavedStateReader {
+	public abstract fun all ()Ljava/util/Map;
+	public abstract fun get (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/arch/UiSavedStateReaderKt {
+	public static final fun toReader (Landroid/os/Bundle;)Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;
+}
+
+public abstract class com/pyamsoft/pydroid/arch/UiSavedStateViewModel : com/pyamsoft/pydroid/arch/UiViewModel {
+	public static final field $stable I
+	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiSavedState;Lcom/pyamsoft/pydroid/arch/UiStateModel;)V
+	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiSavedState;Lcom/pyamsoft/pydroid/arch/UiViewState;)V
+	protected final fun putSavedState (Ljava/lang/String;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun removeSavedState (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun restoreSavedState (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiSavedStateViewModelProvider {
+	public abstract fun create (Lcom/pyamsoft/pydroid/arch/UiSavedState;)Landroidx/lifecycle/ViewModel;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiSavedStateWriter {
+	public abstract fun put (Ljava/lang/String;Ljava/lang/Object;)V
+	public abstract fun remove (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/arch/UiSavedStateWriterKt {
+	public static final fun toWriter (Landroid/os/Bundle;)Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;
+}
+
+public class com/pyamsoft/pydroid/arch/UiStateModel {
+	public static final field $stable I
+	public fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
+	public final fun bindState (Lkotlinx/coroutines/CoroutineScope;[Lcom/pyamsoft/pydroid/arch/Renderable;)Lkotlinx/coroutines/Job;
+	public fun clear ()V
+	public final fun compose (Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+	public final fun getInitialState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
+	public final fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
+	public final fun setState (Lkotlin/jvm/functions/Function1;)V
+	public final fun setState (Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)V
+}
+
+public abstract class com/pyamsoft/pydroid/arch/UiStateViewModel : androidx/lifecycle/ViewModel {
+	public static final field $stable I
+	protected final fun bindState (Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/Job;
+	protected final fun bindState (Lkotlinx/coroutines/CoroutineScope;[Lcom/pyamsoft/pydroid/arch/Renderable;)Lkotlinx/coroutines/Job;
+	public final fun compose (Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+	protected final fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
+	protected fun onCleared ()V
+	protected final fun setState (Lkotlin/jvm/functions/Function1;)V
+	protected final fun setState (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)V
+	protected final fun setState (Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)V
+}
+
+public abstract class com/pyamsoft/pydroid/arch/UiView : com/pyamsoft/pydroid/arch/Renderable {
+	public static final field $stable I
+	protected fun <init> ()V
+	protected final fun doOnInflate (Lkotlin/jvm/functions/Function1;)V
+	protected final fun doOnSaveState (Lkotlin/jvm/functions/Function1;)V
+	protected final fun doOnTeardown (Lkotlin/jvm/functions/Function0;)V
+	protected final fun getViewScope ()Lkotlinx/coroutines/CoroutineScope;
+	public final fun inflate (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	public final fun init (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	protected fun onFinalTeardown ()V
+	protected fun onInit (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	public final fun onViewEvent (Lkotlin/jvm/functions/Function2;)V
+	protected final fun publish (Lcom/pyamsoft/pydroid/arch/UiViewEvent;)V
+	public final fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
+	public final fun teardown ()V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiViewEvent {
+}
+
+public abstract class com/pyamsoft/pydroid/arch/UiViewModel : com/pyamsoft/pydroid/arch/UiStateViewModel {
+	public static final field $stable I
+	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiStateModel;)V
+	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
+	public final fun bindController (Landroidx/lifecycle/LifecycleOwner;Lcom/pyamsoft/pydroid/arch/UiController;)V
+	public final fun bindController (Lkotlinx/coroutines/CoroutineScope;Lcom/pyamsoft/pydroid/arch/UiController;)V
+	public final fun bindViews (Lkotlinx/coroutines/CoroutineScope;Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;[Lcom/pyamsoft/pydroid/arch/UiView;Lkotlin/jvm/functions/Function1;)V
+	protected final fun doOnCleared (Lkotlin/jvm/functions/Function0;)V
+	protected final fun onCleared ()V
+	protected final fun publish (Lcom/pyamsoft/pydroid/arch/UiControllerEvent;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiViewSaveableState {
+	public abstract fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/UiViewState {
+}
+
+public final class com/pyamsoft/pydroid/arch/UnitControllerEvent : com/pyamsoft/pydroid/arch/UiControllerEvent {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/arch/UnitControllerEvent;
+}
+
+public final class com/pyamsoft/pydroid/arch/UnitViewEvent : com/pyamsoft/pydroid/arch/UiViewEvent {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/arch/UnitViewEvent;
+}
+
+public final class com/pyamsoft/pydroid/arch/UnitViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/arch/UnitViewState;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/ViewBinder {
+	public abstract fun bindState (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
+	public abstract fun teardown ()V
+}
+
+public abstract class com/pyamsoft/pydroid/arch/ViewModelFactory : androidx/lifecycle/ViewModelProvider$Factory {
+	public static final field $stable I
+	protected fun <init> ()V
+	public final fun create (Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+	protected abstract fun createViewModel (Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+	protected final fun fail (Ljava/lang/Class;)Ljava/lang/Void;
+}
+
+public final class com/pyamsoft/pydroid/arch/ViewModelFactoryKt {
+	public static final synthetic fun asFactory (Lcom/pyamsoft/pydroid/arch/UiSavedStateViewModelProvider;Landroidx/savedstate/SavedStateRegistryOwner;)Landroidx/lifecycle/ViewModelProvider$Factory;
+}
+
+public abstract interface class com/pyamsoft/pydroid/arch/ViewModeler : com/pyamsoft/pydroid/arch/StateRestorer, com/pyamsoft/pydroid/arch/StateSaver {
+	public abstract fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public abstract fun restoreState (Landroid/os/Bundle;)V
+	public abstract fun saveState (Landroid/os/Bundle;)V
+	public abstract fun state (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/arch/UiViewState;
+}
+
+public final class com/pyamsoft/pydroid/arch/ViewModeler$DefaultImpls {
+	public static fun restoreState (Lcom/pyamsoft/pydroid/arch/ViewModeler;Landroid/os/Bundle;)V
+	public static fun saveState (Lcom/pyamsoft/pydroid/arch/ViewModeler;Landroid/os/Bundle;)V
+}
+
+public final class com/pyamsoft/pydroid/arch/internal/BundleUiSavedStateReader : com/pyamsoft/pydroid/arch/UiSavedStateReader {
+	public static final field Companion Lcom/pyamsoft/pydroid/arch/internal/BundleUiSavedStateReader$Companion;
+	public fun <init> (Landroid/os/Bundle;)V
+	public fun all ()Ljava/util/Map;
+	public fun get (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/arch/internal/BundleUiSavedStateReader$Companion {
+}
+
+public final class com/pyamsoft/pydroid/arch/internal/BundleUiSavedStateWriter : com/pyamsoft/pydroid/arch/UiSavedStateWriter {
+	public fun <init> (Landroid/os/Bundle;)V
+	public fun put (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun remove (Ljava/lang/String;)Ljava/lang/Object;
+}
+

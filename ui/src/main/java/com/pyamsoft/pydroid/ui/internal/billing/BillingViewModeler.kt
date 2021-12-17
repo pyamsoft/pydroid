@@ -34,7 +34,10 @@ internal constructor(
     private val provider: AppProvider,
 ) : AbstractViewModeler<BillingViewState>(state) {
 
-  private val refreshRunner = highlander<Unit> { interactor.refresh() }
+  private val refreshRunner =
+      highlander<Unit>(
+          context = Dispatchers.IO,
+      ) { interactor.refresh() }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {

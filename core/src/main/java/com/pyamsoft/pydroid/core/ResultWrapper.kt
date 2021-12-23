@@ -61,6 +61,9 @@ internal constructor(
     return exceptionOrNull() ?: throw IllegalStateException("ResultWrapper is not Error type")
   }
 
+  /**
+   * Wrap an operation in a try-catch, and if it throws an exception, return an error ResultWrapper
+   */
   @CheckResult
   @PublishedApi
   internal inline fun internallyWrap(block: () -> ResultWrapper<T>): ResultWrapper<T> {

@@ -61,37 +61,56 @@ internal constructor(
     return exceptionOrNull() ?: throw IllegalStateException("ResultWrapper is not Error type")
   }
 
+  @CheckResult
+  @PublishedApi
+  internal inline fun internallyWrap(block: () -> ResultWrapper<T>): ResultWrapper<T> {
+    return try {
+      block()
+    } catch (e: Throwable) {
+      ResultWrapper(data = null, error = e)
+    }
+  }
+
   /**
    * Run an action regardless of result success or failure
    *
    * No @CheckResult since this can be the end of the call.
+   *
+   * If the transform function throws an error, it will be caught and morph the ResultWrapper into
+   * an error ResultWrapper
    */
   public inline fun onFinally(action: () -> Unit): ResultWrapper<T> {
     validateWrapper()
 
-    return this.apply { action() }
+    return internallyWrap { this.apply { action() } }
   }
 
   /**
    * Run an action only when successful result
    *
    * No @CheckResult since this can be the end of the call.
+   *
+   * If the transform function throws an error, it will be caught and morph the ResultWrapper into
+   * an error ResultWrapper
    */
   public inline fun onSuccess(action: (T) -> Unit): ResultWrapper<T> {
     validateWrapper()
 
-    return this.apply { data?.also(action) }
+    return internallyWrap { this.apply { data?.also(action) } }
   }
 
   /**
    * Run an action only when failed result
    *
    * No @CheckResult since this can be the end of the call.
+   *
+   * If the transform function throws an error, it will be caught and morph the ResultWrapper into
+   * an error ResultWrapper
    */
   public inline fun onFailure(action: (Throwable) -> Unit): ResultWrapper<T> {
     validateWrapper()
 
-    return this.apply { error?.also(action) }
+    return internallyWrap { this.apply { error?.also(action) } }
   }
 
   /**

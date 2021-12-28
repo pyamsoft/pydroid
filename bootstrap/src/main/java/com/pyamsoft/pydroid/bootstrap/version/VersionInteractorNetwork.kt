@@ -17,7 +17,9 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -37,7 +39,10 @@ internal class VersionInteractorNetwork internal constructor(private val updater
         return@withContext try {
           ResultWrapper.success(updater.checkForUpdate())
         } catch (e: Throwable) {
-          ResultWrapper.failure(e)
+          e.ifNotCancellation {
+            Logger.e(e, "Failed to check for updates")
+            ResultWrapper.failure(e)
+          }
         }
       }
 }

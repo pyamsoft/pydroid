@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -46,8 +47,10 @@ internal constructor(context: Context, private val service: OtherAppsService) :
                     entry.source())
               })
         } catch (throwable: Throwable) {
-          Logger.e(throwable, "Unable to fetch other apps payload")
-          ResultWrapper.failure(throwable)
+          throwable.ifNotCancellation {
+            Logger.e(throwable, "Unable to fetch other apps payload")
+            ResultWrapper.failure(throwable)
+          }
         }
       }
 }

@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.MarketLinker
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -36,7 +37,10 @@ internal constructor(
         return@withContext try {
           ResultWrapper.success(rateMyApp.startRating())
         } catch (e: Throwable) {
-          ResultWrapper.failure(e)
+          e.ifNotCancellation {
+            Logger.e(e, "Failed to ask for rating")
+            ResultWrapper.failure(e)
+          }
         }
       }
 
@@ -56,7 +60,10 @@ internal constructor(
                 }
               })
         } catch (e: Throwable) {
-          ResultWrapper.failure(e)
+          e.ifNotCancellation {
+            Logger.e(e, "Failed to open market page")
+            ResultWrapper.failure(e)
+          }
         }
       }
 }

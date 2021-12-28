@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -57,8 +58,10 @@ internal constructor(
 
           ResultWrapper.success(Unit)
         } catch (e: Throwable) {
-          Logger.e(e, "Failed to launch In-App update flow")
-          ResultWrapper.failure(e)
+          e.ifNotCancellation {
+            Logger.e(e, "Failed to launch In-App update flow")
+            ResultWrapper.failure(e)
+          }
         }
       }
 }

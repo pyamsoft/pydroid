@@ -17,6 +17,10 @@ public final class com/pyamsoft/pydroid/util/ContextKt {
 	public static final fun isDebugMode (Landroid/content/Context;)Z
 }
 
+public final class com/pyamsoft/pydroid/util/CoroutinesKt {
+	public static final fun ifNotCancellation (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+}
+
 public final class com/pyamsoft/pydroid/util/DrawableKt {
 	public static final fun tintWith (Landroid/graphics/drawable/Drawable;I)Landroid/graphics/drawable/Drawable;
 	public static final fun tintWith (Landroid/graphics/drawable/Drawable;Landroid/content/Context;I)Landroid/graphics/drawable/Drawable;

@@ -27,7 +27,6 @@ internal interface SettingsViewState : UiViewState {
   val applicationName: CharSequence
   val darkMode: Theming.Mode
   val otherApps: List<OtherApp>
-  val navigationError: Throwable?
   val isLoading: Boolean
 }
 
@@ -35,6 +34,5 @@ internal class MutableSettingsViewState : SettingsViewState {
   override var applicationName by mutableStateOf("")
   override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
   override var otherApps by mutableStateOf(emptyList<OtherApp>())
-  override var navigationError by mutableStateOf<Throwable?>(null)
   override var isLoading by mutableStateOf(false)
 }

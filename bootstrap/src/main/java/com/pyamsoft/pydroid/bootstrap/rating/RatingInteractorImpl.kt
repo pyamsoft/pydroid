@@ -16,11 +16,9 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import android.app.Activity
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
-import com.pyamsoft.pydroid.util.MarketLinker
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -39,29 +37,6 @@ internal constructor(
         } catch (e: Throwable) {
           e.ifNotCancellation {
             Logger.e(e, "Failed to ask for rating")
-            ResultWrapper.failure(e)
-          }
-        }
-      }
-
-  override suspend fun loadMarketLauncher(): ResultWrapper<AppRatingLauncher> =
-      withContext(context = Dispatchers.Default) {
-        Enforcer.assertOffMainThread()
-        return@withContext try {
-          ResultWrapper.success(
-              object : AppRatingLauncher {
-
-                override suspend fun rate(activity: Activity): ResultWrapper<Unit> {
-                  return MarketLinker.linkToMarketPage(activity)
-                      .onSuccess { Logger.d("Opened market page for ${activity.packageName}") }
-                      .onFailure {
-                        Logger.e(it, "Failed to open market page for ${activity.packageName}")
-                      }
-                }
-              })
-        } catch (e: Throwable) {
-          e.ifNotCancellation {
-            Logger.e(e, "Failed to open market page")
             ResultWrapper.failure(e)
           }
         }

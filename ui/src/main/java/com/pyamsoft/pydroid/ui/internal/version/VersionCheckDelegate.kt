@@ -20,6 +20,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.UriHandler
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
@@ -108,10 +109,15 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
           state = state,
           addSnackbarHost = addSnackbarHost,
           snackbarHostState = snackbarHostState,
-          onNavigationErrorDismissed = { vm.handleHideNavigation() },
+          onHideFallback = { vm.handleHideFallback() },
+          onLaunchFallbackNavigation = { handleLaunchUpdateFallbackNavigation(it) },
           onVersionCheckErrorDismissed = { vm.handleClearError() },
       )
     }
+  }
+
+  private fun handleLaunchUpdateFallbackNavigation(handler: UriHandler) {
+    activity?.also { handler.openUri(MarketLinker.getStorePageLink(it)) }
   }
 
   private fun showVersionUpgrade(
@@ -125,9 +131,7 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
         Logger.e(err, "Unable to launch in-app update flow")
         if (isFallbackEnabled) {
           val vm = viewModel.requireNotNull()
-          MarketLinker.linkToMarketPage(activity)
-              .onSuccess { vm.handleHideNavigation() }
-              .onFailure { vm.handleNavigationFailed(it) }
+          vm.handleShowFallback()
         }
       }
     }

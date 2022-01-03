@@ -20,6 +20,8 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.icons.BugReport
@@ -37,21 +39,23 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 internal fun createSupportPreferencesGroup(
     hideDataPolicy: Boolean,
     applicationName: CharSequence,
-    onRateClicked: () -> Unit,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
     onViewDataPolicyClicked: () -> Unit,
     onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
+    onOpenMarketPage: (UriHandler) -> Unit,
 ): Preferences.Group {
+  val uriHandler = LocalUriHandler.current
+
   return preferenceGroup(
       name = "Support pyamsoft",
       preferences =
           listOf(
               ratePreference(
                   applicationName = applicationName,
-                  onRateClicked = onRateClicked,
+                  onRateClicked = { onOpenMarketPage(uriHandler) },
               ),
               donatePreference(
                   onDonateClicked = onDonateClicked,

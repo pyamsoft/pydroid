@@ -24,11 +24,11 @@ import com.pyamsoft.pydroid.arch.UiViewState
 internal interface VersionCheckViewState : UiViewState {
   val isLoading: Boolean
   val versionCheckError: Throwable?
-  val navigationError: Throwable?
+  val launchFallbackNavigation: Boolean
 }
 
 internal class MutableVersionCheckViewState : VersionCheckViewState {
   override var isLoading by mutableStateOf(false)
   override var versionCheckError by mutableStateOf<Throwable?>(null)
-  override var navigationError by mutableStateOf<Throwable?>(null)
+  override var launchFallbackNavigation by mutableStateOf(false)
 }

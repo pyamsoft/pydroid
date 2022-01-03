@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.icons.LibraryAdd
@@ -29,14 +31,16 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 @Composable
 @CheckResult
 internal fun createMoreAppsPreferencesGroup(
-    onViewMoreAppsClicked: () -> Unit,
+    onViewMoreApps: (UriHandler) -> Unit,
 ): Preferences.Group {
+  val uriHandler = LocalUriHandler.current
+
   return preferenceGroup(
       name = stringResource(R.string.more_apps_from_pyamsoft),
       preferences =
           listOf(
               moreAppsPreference(
-                  onViewMoreAppsClicked = onViewMoreAppsClicked,
+                  onViewMoreAppsClicked = { onViewMoreApps(uriHandler) },
               ),
           ),
   )

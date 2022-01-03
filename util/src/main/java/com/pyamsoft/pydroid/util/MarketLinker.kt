@@ -30,10 +30,29 @@ public object MarketLinker {
   @JvmStatic
   @CheckResult
   @JvmOverloads
+  @Deprecated("Migrate to Jetpack Compose")
   public fun linkToMarketPage(
       context: Context,
       packageName: String = context.packageName,
   ): ResultWrapper<Unit> {
+    return getStorePageLink(context, packageName).hyperlink(context).navigate()
+  }
+
+  /** Links to the pyamsoft developer page */
+  @JvmStatic
+  @CheckResult
+  @Deprecated("Migrate to Jetpack Compose")
+  public fun linkToDeveloperPage(context: Context): ResultWrapper<Unit> {
+    return getDeveloperPageLink().hyperlink(context).navigate()
+  }
+
+  @JvmStatic
+  @CheckResult
+  @JvmOverloads
+  public fun getStorePageLink(
+      context: Context,
+      packageName: String = context.packageName,
+  ): String {
     val targetName =
         if (packageName.endsWith(".dev")) {
           packageName.substringBefore(".dev")
@@ -41,13 +60,12 @@ public object MarketLinker {
           packageName
         }
 
-    return "$MARKET_URL$targetName".hyperlink(context).navigate()
+    return "$MARKET_URL$targetName"
   }
 
-  /** Links to the pyamsoft developer page */
   @JvmStatic
   @CheckResult
-  public fun linkToDeveloperPage(context: Context): ResultWrapper<Unit> {
-    return DEV_PAGE_URL.hyperlink(context).navigate()
+  public fun getDeveloperPageLink(): String {
+    return DEV_PAGE_URL
   }
 }

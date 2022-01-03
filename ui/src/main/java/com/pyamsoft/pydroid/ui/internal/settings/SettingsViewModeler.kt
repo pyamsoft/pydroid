@@ -91,14 +91,6 @@ internal constructor(
     }
   }
 
-  internal fun handleClearNavigationError() {
-    state.navigationError = null
-  }
-
-  internal fun handleNavigationFailed(error: Throwable) {
-    state.navigationError = error
-  }
-
   internal fun handleViewSocialMedia(
       onOpenUrl: (String) -> Unit,
   ) {

@@ -24,10 +24,11 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
@@ -40,8 +41,7 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.pyamsoft.pydroid.util.MarketLinker
 
 internal class ChangeLogDialog : AppCompatDialogFragment() {
 
@@ -61,15 +61,8 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     return requireActivity() as ChangeLogProvider
   }
 
-  private fun handleLaunchMarket() {
-    ratingViewModel.requireNotNull().handleViewMarketPage(
-            viewLifecycleOwner.lifecycleScope,
-        ) { launcher ->
-      val act = requireActivity()
-      act.lifecycleScope.launch(context = Dispatchers.Main) {
-        launcher.rate(act).onFailure { Logger.e(it, "Unable to show Market page from changelog") }
-      }
-    }
+  private fun handleLaunchMarket(uriHandler: UriHandler) {
+    uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
   override fun onCreateView(
@@ -90,12 +83,14 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
       val vm = viewModel.requireNotNull()
       val imageLoader = imageLoader.requireNotNull()
       setContent {
+        val uriHandler = LocalUriHandler.current
+
         vm.Render { state ->
           composeTheme(act) {
             ChangeLogScreen(
                 state = state,
                 imageLoader = imageLoader,
-                onRateApp = { handleLaunchMarket() },
+                onRateApp = { handleLaunchMarket(uriHandler) },
                 onClose = { dismiss() },
             )
           }

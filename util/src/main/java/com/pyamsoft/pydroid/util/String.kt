@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** Turn a string into a hyperlink intent */
 @CheckResult
+@Deprecated("Migrate to Jetpack Compose")
 public fun String.hyperlink(c: Context): HyperlinkIntent {
   val intent = Intent(Intent.ACTION_VIEW).also { it.data = Uri.parse(this) }
 

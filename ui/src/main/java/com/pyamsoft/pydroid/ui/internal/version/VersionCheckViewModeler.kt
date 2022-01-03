@@ -53,14 +53,6 @@ internal constructor(
     state.versionCheckError = null
   }
 
-  internal fun handleHideNavigation() {
-    state.navigationError = null
-  }
-
-  internal fun handleNavigationFailed(error: Throwable) {
-    state.navigationError = error
-  }
-
   internal fun handleCheckForUpdates(
       scope: CoroutineScope,
       force: Boolean,
@@ -80,6 +72,14 @@ internal constructor(
           .onFailure { state.versionCheckError = it }
           .onFinally { Logger.d("Done checking for updates") }
     }
+  }
+
+  fun handleShowFallback() {
+    state.launchFallbackNavigation = true
+  }
+
+  fun handleHideFallback() {
+    state.launchFallbackNavigation = false
   }
 
   private data class UpdateResult(

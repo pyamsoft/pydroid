@@ -24,14 +24,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -54,25 +52,23 @@ internal fun SettingsScreen(
     customPostContent: List<Preferences> = emptyList(),
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
-    onCheckUpdateClicked: () -> Unit,
+    onCheckUpdateClicked: (UriHandler) -> Unit,
     onShowChangeLogClicked: () -> Unit,
     onResetClicked: () -> Unit,
-    onRateClicked: () -> Unit,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
     onViewDataPolicyClicked: () -> Unit,
     onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
-    onViewMoreAppsClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
-    onNavigationErrorDismissed: () -> Unit,
+    onOpenMarketPage: (UriHandler) -> Unit,
+    onViewMoreAppsClicked: (UriHandler) -> Unit,
 ) {
   val isLoading = state.isLoading
   val applicationName = state.applicationName
   val darkMode = state.darkMode
-  val navigationError = state.navigationError
 
   val scaffoldState = rememberScaffoldState()
   Scaffold(
@@ -100,25 +96,19 @@ internal fun SettingsScreen(
             onCheckUpdateClicked = onCheckUpdateClicked,
             onShowChangeLogClicked = onShowChangeLogClicked,
             onResetClicked = onResetClicked,
-            onRateClicked = onRateClicked,
             onDonateClicked = onDonateClicked,
             onBugReportClicked = onBugReportClicked,
             onViewSourceClicked = onViewSourceClicked,
             onViewDataPolicyClicked = onViewDataPolicyClicked,
             onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
             onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-            onViewMoreAppsClicked = onViewMoreAppsClicked,
             onViewSocialMediaClicked = onViewSocialMediaClicked,
             onViewBlogClicked = onViewBlogClicked,
+            onOpenMarketPage = onOpenMarketPage,
+            onViewMoreAppsClicked = onViewMoreAppsClicked,
         )
       }
     }
-
-    NavigationError(
-        snackbarHost = scaffoldState.snackbarHostState,
-        error = navigationError,
-        onSnackbarDismissed = onNavigationErrorDismissed,
-    )
   }
 }
 
@@ -143,19 +133,19 @@ private fun SettingsList(
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
-    onCheckUpdateClicked: () -> Unit,
+    onCheckUpdateClicked: (UriHandler) -> Unit,
     onShowChangeLogClicked: () -> Unit,
     onResetClicked: () -> Unit,
-    onRateClicked: () -> Unit,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
     onViewDataPolicyClicked: () -> Unit,
     onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
-    onViewMoreAppsClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
+    onOpenMarketPage: (UriHandler) -> Unit,
+    onViewMoreAppsClicked: (UriHandler) -> Unit,
 ) {
   val preferences =
       mutableListOf<Preferences>().apply {
@@ -180,18 +170,18 @@ private fun SettingsList(
             createSupportPreferencesGroup(
                 hideDataPolicy = hideDataPolicy,
                 applicationName = applicationName,
-                onRateClicked = onRateClicked,
                 onDonateClicked = onDonateClicked,
                 onBugReportClicked = onBugReportClicked,
                 onViewSourceClicked = onViewSourceClicked,
                 onViewDataPolicyClicked = onViewDataPolicyClicked,
                 onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
                 onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+                onOpenMarketPage = onOpenMarketPage,
             ),
         )
         add(
             createMoreAppsPreferencesGroup(
-                onViewMoreAppsClicked = onViewMoreAppsClicked,
+                onViewMoreApps = onViewMoreAppsClicked,
             ),
         )
         add(
@@ -214,23 +204,6 @@ private fun SettingsList(
 }
 
 @Composable
-private fun NavigationError(
-    snackbarHost: SnackbarHostState,
-    error: Throwable?,
-    onSnackbarDismissed: () -> Unit,
-) {
-  if (error != null) {
-    LaunchedEffect(error) {
-      snackbarHost.showSnackbar(
-          message = error.message ?: "An unexpected error occurred",
-          duration = SnackbarDuration.Long,
-      )
-      onSnackbarDismissed()
-    }
-  }
-}
-
-@Composable
 private fun PreviewSettingsScreen(isLoading: Boolean) {
   SettingsScreen(
       state =
@@ -239,7 +212,6 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
             applicationName = "TEST"
             darkMode = Theming.Mode.LIGHT
             otherApps = emptyList()
-            navigationError = null
           },
       hideClearAll = false,
       hideUpgradeInformation = false,
@@ -253,17 +225,16 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       onCheckUpdateClicked = {},
       onShowChangeLogClicked = {},
       onResetClicked = {},
-      onRateClicked = {},
+      onViewMoreAppsClicked = {},
+      onOpenMarketPage = {},
       onDonateClicked = {},
       onBugReportClicked = {},
       onViewSourceClicked = {},
       onViewDataPolicyClicked = {},
       onViewPrivacyPolicyClicked = {},
       onViewTermsOfServiceClicked = {},
-      onViewMoreAppsClicked = {},
       onViewSocialMediaClicked = {},
       onViewBlogClicked = {},
-      onNavigationErrorDismissed = {},
   )
 }
 

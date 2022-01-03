@@ -85,14 +85,7 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun openPage(handler: UriHandler, url: String) {
-    val vm = viewModel.requireNotNull()
-
-    try {
-      vm.handleClearNavigationError()
-      handler.openUri(url)
-    } catch (e: Throwable) {
-      vm.handleNavigationFailed(e)
-    }
+    handler.openUri(url)
   }
 
   private fun handleChangeDarkMode(mode: Theming.Mode) {
@@ -159,11 +152,11 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleViewMoreApps() {
+  private fun handleViewMoreApps(uriHandler: UriHandler) {
     viewModel
         .requireNotNull()
         .handleViewMoreApps(
-            onOpenDeveloperPage = { handleOpenDeveloperPage() },
+            onOpenDeveloperPage = { handleOpenDeveloperPage(uriHandler) },
             onOpenOtherApps = { OtherAppsDialog.show(requireActivity()) },
         )
   }
@@ -178,22 +171,6 @@ public abstract class SettingsFragment : Fragment() {
         )
   }
 
-  private fun handleViewMarketPage() {
-    ratingViewModel
-        .requireNotNull()
-        .handleViewMarketPage(
-            scope = viewLifecycleOwner.lifecycleScope,
-            onLauchMarketPage = { launcher ->
-              val act = requireActivity()
-              act.lifecycleScope.launch(context = Dispatchers.Main) {
-                launcher.rate(act).onFailure {
-                  Logger.e(it, "Unable to show Market page from settings")
-                }
-              }
-            },
-        )
-  }
-
   private fun handleShowChangeLog() {
     changeLogViewModel
         .requireNotNull()
@@ -204,7 +181,7 @@ public abstract class SettingsFragment : Fragment() {
         )
   }
 
-  private fun handleCheckForUpdates() {
+  private fun handleCheckForUpdates(uriHandler: UriHandler) {
     versionViewModel
         .requireNotNull()
         .handleCheckForUpdates(
@@ -215,35 +192,35 @@ public abstract class SettingsFragment : Fragment() {
                   activity = requireActivity(),
                   isFallbackEnabled = isFallback,
                   launcher = launcher,
+                  uriHandler = uriHandler,
               )
-            })
+            },
+        )
   }
 
   private fun showVersionUpgrade(
       activity: FragmentActivity,
       isFallbackEnabled: Boolean,
-      launcher: AppUpdateLauncher
+      launcher: AppUpdateLauncher,
+      uriHandler: UriHandler,
   ) {
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
       launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
         Logger.e(err, "Unable to launch in-app update flow")
         if (isFallbackEnabled) {
-          val vm = viewModel.requireNotNull()
-          MarketLinker.linkToMarketPage(activity)
-              .onSuccess { vm.handleClearNavigationError() }
-              .onFailure { vm.handleNavigationFailed(it) }
+          uriHandler.openUri(MarketLinker.getStorePageLink(activity))
         }
       }
     }
   }
 
-  private fun handleOpenDeveloperPage() {
-    val vm = viewModel.requireNotNull()
-    MarketLinker.linkToDeveloperPage(requireContext())
-        .onSuccess { vm.handleClearNavigationError() }
-        .onFailure { Logger.e(it, "Failed to navigate to market page") }
-        .onFailure { vm.handleNavigationFailed(it) }
+  private fun handleOpenDeveloperPage(uriHandler: UriHandler) {
+    uriHandler.openUri(MarketLinker.getDeveloperPageLink())
+  }
+
+  private fun handleOpenMarketPage(uriHandler: UriHandler) {
+    uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
   /** Hide upgrade */
@@ -298,20 +275,19 @@ public abstract class SettingsFragment : Fragment() {
                   customPostContent = customPostPreferences(),
                   onDarkModeChanged = { handleChangeDarkMode(it) },
                   onLicensesClicked = { AboutDialog.show(act) },
-                  onCheckUpdateClicked = { handleCheckForUpdates() },
+                  onCheckUpdateClicked = { handleCheckForUpdates(it) },
                   onShowChangeLogClicked = { handleShowChangeLog() },
                   onResetClicked = { ResetDialog.open(act) },
-                  onRateClicked = { handleViewMarketPage() },
                   onDonateClicked = { BillingDialog.open(act) },
                   onBugReportClicked = { handleReportBug(handler) },
                   onViewSourceClicked = { handleViewSourceCode(handler) },
                   onViewDataPolicyClicked = { handleShowDisclosure() },
                   onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
                   onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
-                  onViewMoreAppsClicked = { handleViewMoreApps() },
                   onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
                   onViewBlogClicked = { handleViewBlog(handler) },
-                  onNavigationErrorDismissed = { vm.handleClearNavigationError() },
+                  onOpenMarketPage = { handleOpenMarketPage(it) },
+                  onViewMoreAppsClicked = { handleViewMoreApps(it) },
               )
             }
           }

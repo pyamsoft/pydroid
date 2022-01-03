@@ -23,6 +23,8 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -32,12 +34,21 @@ internal fun VersionCheckScreen(
     state: VersionCheckViewState,
     addSnackbarHost: Boolean,
     snackbarHostState: SnackbarHostState,
-    onNavigationErrorDismissed: () -> Unit,
+    onLaunchFallbackNavigation: (UriHandler) -> Unit,
+    onHideFallback: () -> Unit,
     onVersionCheckErrorDismissed: () -> Unit,
 ) {
   val isLoading = state.isLoading
   val versionCheckError = state.versionCheckError
-  val navigationError = state.navigationError
+  val launchFallbackNavigation = state.launchFallbackNavigation
+  val uriHandler = LocalUriHandler.current
+
+  if (launchFallbackNavigation) {
+    LaunchedEffect(launchFallbackNavigation) {
+      onLaunchFallbackNavigation(uriHandler)
+      onHideFallback()
+    }
+  }
 
   if (addSnackbarHost) {
     SnackbarHost(
@@ -55,12 +66,6 @@ internal fun VersionCheckScreen(
       snackbarHost = snackbarHostState,
       error = versionCheckError,
       onSnackbarDismissed = onVersionCheckErrorDismissed,
-  )
-
-  NavigationError(
-      snackbarHost = snackbarHostState,
-      error = navigationError,
-      onSnackbarDismissed = onNavigationErrorDismissed,
   )
 }
 
@@ -85,32 +90,6 @@ private fun VersionCheckError(
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
-  SnackbarError(
-      snackbarHost = snackbarHost,
-      error = error,
-      onSnackbarDismissed = onSnackbarDismissed,
-  )
-}
-
-@Composable
-private fun NavigationError(
-    snackbarHost: SnackbarHostState,
-    error: Throwable?,
-    onSnackbarDismissed: () -> Unit,
-) {
-  SnackbarError(
-      snackbarHost = snackbarHost,
-      error = error,
-      onSnackbarDismissed = onSnackbarDismissed,
-  )
-}
-
-@Composable
-private fun SnackbarError(
-    snackbarHost: SnackbarHostState,
-    error: Throwable?,
-    onSnackbarDismissed: () -> Unit,
-) {
   if (error != null) {
     LaunchedEffect(error) {
       snackbarHost.showSnackbar(
@@ -126,7 +105,7 @@ private fun SnackbarError(
 private fun PreviewVersionCheckScreen(
     isLoading: Boolean,
     versionCheckError: Throwable?,
-    navigationError: Throwable?,
+    launchFallbackNavigation: Boolean,
 ) {
   Surface {
     VersionCheckScreen(
@@ -134,12 +113,13 @@ private fun PreviewVersionCheckScreen(
             MutableVersionCheckViewState().apply {
               this.isLoading = isLoading
               this.versionCheckError = versionCheckError
-              this.navigationError = navigationError
+              this.launchFallbackNavigation = launchFallbackNavigation
             },
         addSnackbarHost = true,
         snackbarHostState = SnackbarHostState(),
         onVersionCheckErrorDismissed = {},
-        onNavigationErrorDismissed = {},
+        onLaunchFallbackNavigation = {},
+        onHideFallback = {},
     )
   }
 }
@@ -150,7 +130,7 @@ private fun PreviewVersionCheckScreenNotLoadingNoErrors() {
   PreviewVersionCheckScreen(
       isLoading = false,
       versionCheckError = null,
-      navigationError = null,
+      launchFallbackNavigation = false,
   )
 }
 
@@ -160,7 +140,7 @@ private fun PreviewVersionCheckScreenNotLoadingVersionCheckError() {
   PreviewVersionCheckScreen(
       isLoading = false,
       versionCheckError = RuntimeException("TEST ERROR"),
-      navigationError = null,
+      launchFallbackNavigation = false,
   )
 }
 
@@ -170,7 +150,7 @@ private fun PreviewVersionCheckScreenNotLoadingNavigationError() {
   PreviewVersionCheckScreen(
       isLoading = false,
       versionCheckError = null,
-      navigationError = RuntimeException("TEST ERROR"),
+      launchFallbackNavigation = true,
   )
 }
 
@@ -180,7 +160,7 @@ private fun PreviewVersionCheckScreenNotLoadingAllErrors() {
   PreviewVersionCheckScreen(
       isLoading = false,
       versionCheckError = RuntimeException("TEST ERROR"),
-      navigationError = RuntimeException("TEST ERROR"),
+      launchFallbackNavigation = true,
   )
 }
 
@@ -190,7 +170,7 @@ private fun PreviewVersionCheckScreenLoadingNoErrors() {
   PreviewVersionCheckScreen(
       isLoading = true,
       versionCheckError = null,
-      navigationError = null,
+      launchFallbackNavigation = false,
   )
 }
 
@@ -200,7 +180,7 @@ private fun PreviewVersionCheckScreenLoadingVersionCheckError() {
   PreviewVersionCheckScreen(
       isLoading = true,
       versionCheckError = RuntimeException("TEST ERROR"),
-      navigationError = null,
+      launchFallbackNavigation = false,
   )
 }
 
@@ -210,7 +190,7 @@ private fun PreviewVersionCheckScreenLoadingNavigationError() {
   PreviewVersionCheckScreen(
       isLoading = true,
       versionCheckError = null,
-      navigationError = RuntimeException("TEST ERROR"),
+      launchFallbackNavigation = true,
   )
 }
 
@@ -220,6 +200,6 @@ private fun PreviewVersionCheckScreenLoadingAllErrors() {
   PreviewVersionCheckScreen(
       isLoading = true,
       versionCheckError = RuntimeException("TEST ERROR"),
-      navigationError = RuntimeException("TEST ERROR"),
+      launchFallbackNavigation = true,
   )
 }

@@ -35,27 +35,6 @@ internal constructor(
   private val loadRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
 
-  private val marketRunner =
-      highlander<ResultWrapper<AppRatingLauncher>> { interactor.loadMarketLauncher() }
-
-  internal fun handleViewMarketPage(
-      scope: CoroutineScope,
-      onLauchMarketPage: (AppRatingLauncher) -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      marketRunner
-          .call()
-          .onSuccess { launcher ->
-            Logger.d("Launching market page: $launcher")
-            onLauchMarketPage(launcher)
-          }
-          .onFailure { e ->
-            Logger.e(e, "Unable to launch market page")
-            state.navigationError = e
-          }
-    }
-  }
-
   internal fun loadInAppRating(
       scope: CoroutineScope,
       onLaunchInAppRating: (AppRatingLauncher) -> Unit

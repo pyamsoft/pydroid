@@ -220,7 +220,6 @@ public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RateMyApp 
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RatingInteractor {
 	public abstract fun askForRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun loadMarketLauncher (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/rating/RatingModule {

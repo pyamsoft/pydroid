@@ -72,6 +72,10 @@ public final class com/pyamsoft/pydroid/util/LifecycleKt {
 
 public final class com/pyamsoft/pydroid/util/MarketLinker {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/util/MarketLinker;
+	public static final fun getDeveloperPageLink ()Ljava/lang/String;
+	public static final fun getStorePageLink (Landroid/content/Context;)Ljava/lang/String;
+	public static final fun getStorePageLink (Landroid/content/Context;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun getStorePageLink$default (Landroid/content/Context;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun linkToDeveloperPage (Landroid/content/Context;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
 	public static final fun linkToMarketPage (Landroid/content/Context;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
 	public static final fun linkToMarketPage (Landroid/content/Context;Ljava/lang/String;)Lcom/pyamsoft/pydroid/core/ResultWrapper;

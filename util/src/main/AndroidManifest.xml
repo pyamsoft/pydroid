@@ -14,9 +14,4 @@
   ~ limitations under the License.
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pyamsoft.pydroid.util">
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-</manifest>
+<manifest package="com.pyamsoft.pydroid.util" />

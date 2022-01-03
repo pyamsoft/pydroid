@@ -191,8 +191,9 @@ private fun BillingError(
 
   if (error != null) {
     LaunchedEffect(error) {
+      val message = error.message
       snackbarHostState.showSnackbar(
-          message = error.message ?: "An unexpected error occurred",
+          message = if (message.isNullOrBlank()) "An unexpected error occurred" else message,
           duration = SnackbarDuration.Short,
       )
       onSnackbarDismissed()

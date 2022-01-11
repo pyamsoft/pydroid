@@ -75,7 +75,7 @@ buildscript {
     okhttp = "4.9.3"
 
     // In app updates and reviews
-    playCore = "1.10.2"
+    playCore = "1.10.3"
     playCoreKtx = "1.8.1"
 
     // In app billing

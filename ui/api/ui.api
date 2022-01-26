@@ -51,20 +51,6 @@ public final class com/pyamsoft/pydroid/ui/PYDroid$Parameters : com/pyamsoft/pyd
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/pyamsoft/pydroid/ui/app/ActivitiesKt {
-	public static final fun getAppBarActivity (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/app/AppBarActivity;
-	public static final fun requireAppBarActivity (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/app/AppBarActivity;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/app/AppBarActivity : com/pyamsoft/pydroid/ui/app/ToolbarActivity {
-	public abstract fun requireAppBar (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public abstract fun withAppBar (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/app/AppBarActivityProvider : com/pyamsoft/pydroid/ui/app/ToolbarActivityProvider {
-	public abstract fun setAppBar (Lcom/google/android/material/appbar/AppBarLayout;)V
-}
-
 public abstract interface class com/pyamsoft/pydroid/ui/app/ComposeThemeProvider {
 	public abstract fun invoke (Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
@@ -82,54 +68,22 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static final fun noTitle (Landroid/app/Dialog;)Landroid/app/Dialog;
 }
 
-public final class com/pyamsoft/pydroid/ui/app/FragmentsKt {
-	public static final fun getToolbarActivity (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/app/ToolbarActivity;
-	public static final fun requireToolbarActivity (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/app/ToolbarActivity;
-}
-
 public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/internal/changelog/ChangeLogProvider {
 	public static final field $stable I
 	public fun <init> ()V
-	protected final fun RatingScreen (Landroidx/compose/material/ScaffoldState;Landroidx/compose/runtime/Composer;I)V
-	protected final fun RatingScreen (Landroidx/compose/ui/Modifier;Landroidx/compose/material/SnackbarHostState;Landroidx/compose/runtime/Composer;II)V
-	protected final fun VersionCheckScreen (Landroidx/compose/material/ScaffoldState;Landroidx/compose/runtime/Composer;I)V
-	protected final fun VersionCheckScreen (Landroidx/compose/ui/Modifier;Landroidx/compose/material/SnackbarHostState;Landroidx/compose/runtime/Composer;II)V
-	protected final fun checkUpdates ()V
+	public final fun RenderVersionCheck (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public final fun checkUpdates ()V
+	public final fun confirmUpgrade ()V
 	protected fun getDisableBilling ()Z
-	protected fun getDisableChangeLog ()Z
 	protected fun getDisableDataPolicy ()Z
 	protected fun getDisableRating ()Z
 	protected fun getDisableVersionCheck ()Z
 	public fun getSystemService (Ljava/lang/String;)Ljava/lang/Object;
-	protected final fun loadInAppRating ()V
+	public final fun loadInAppRating ()V
 	protected fun onCreate (Landroid/os/Bundle;)V
 	protected fun onDestroy ()V
 	protected fun onPostResume ()V
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/app/ToolbarActivity {
-	public abstract fun requireToolbar (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-	public abstract fun withToolbar (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/app/ToolbarActivityProvider {
-	public abstract fun setToolbar (Landroidx/appcompat/widget/Toolbar;)V
-}
-
-public abstract class com/pyamsoft/pydroid/ui/arch/PrefUiView : com/pyamsoft/pydroid/arch/UiView {
-	public static final field $stable I
-	protected fun <init> (Landroidx/preference/PreferenceScreen;)V
-	protected final fun boundPref (I)Lcom/pyamsoft/pydroid/ui/arch/PrefUiView$BoundPref;
-	protected final fun boundPref (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/arch/PrefUiView$BoundPref;
-	protected final fun onFinalTeardown ()V
-	protected final fun onInit (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
-	protected fun onRender (Lcom/pyamsoft/pydroid/arch/UiRender;)V
-	public final fun render (Lcom/pyamsoft/pydroid/arch/UiRender;)V
-}
-
-protected final class com/pyamsoft/pydroid/ui/arch/PrefUiView$BoundPref : kotlin/properties/ReadOnlyProperty {
-	public fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Landroidx/preference/Preference;
-	public synthetic fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+	protected fun onStart ()V
 }
 
 public final class com/pyamsoft/pydroid/ui/changelog/ChangeLogBuilder {
@@ -463,14 +417,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/navigator/Selector {
 	public abstract fun select (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;)Z
 }
 
-public class com/pyamsoft/pydroid/ui/preference/CheckBoxPreferenceCompat : androidx/preference/CheckBoxPreference {
-	public static final field $stable I
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;II)V
-}
-
 public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
@@ -482,22 +428,6 @@ public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$Prefe
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
-}
-
-public class com/pyamsoft/pydroid/ui/preference/ListPreferenceCompat : androidx/preference/ListPreference {
-	public static final field $stable I
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;II)V
-}
-
-public class com/pyamsoft/pydroid/ui/preference/PreferenceCompat : androidx/preference/Preference {
-	public static final field $stable I
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
@@ -562,14 +492,6 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
 	public static synthetic fun switchPreference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 }
 
-public class com/pyamsoft/pydroid/ui/preference/SwitchPreferenceCompat : androidx/preference/SwitchPreferenceCompat {
-	public static final field $stable I
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;II)V
-}
-
 public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androidx/fragment/app/Fragment {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/settings/SettingsFragment$Companion;
@@ -626,37 +548,8 @@ public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
 	public static final fun recompose (Landroidx/fragment/app/Fragment;)V
 }
 
-public final class com/pyamsoft/pydroid/ui/util/ConstraitLayoutKt {
-	public static final fun layout (Landroidx/constraintlayout/widget/ConstraintLayout;Lkotlin/jvm/functions/Function1;)V
-}
-
-public abstract class com/pyamsoft/pydroid/ui/util/DebouncedOnClickListener : android/view/View$OnClickListener {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/util/DebouncedOnClickListener$Companion;
-	protected fun <init> ()V
-	public static final fun create (Lkotlin/jvm/functions/Function1;)Landroid/view/View$OnClickListener;
-	protected abstract fun doClick (Landroid/view/View;)V
-	public final fun onClick (Landroid/view/View;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/DebouncedOnClickListener$Companion {
-	public final fun create (Lkotlin/jvm/functions/Function1;)Landroid/view/View$OnClickListener;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/DebouncedOnClickListenerKt {
-	public static final fun debounce (Landroid/view/View$OnClickListener;)Landroid/view/View$OnClickListener;
-}
-
 public final class com/pyamsoft/pydroid/ui/util/DialogFragmentKt {
 	public static final fun show (Landroidx/fragment/app/DialogFragment;Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/FloatingActionButtonKt {
-	public static final fun hide (Lcom/google/android/material/floatingactionbutton/FloatingActionButton;Lkotlin/jvm/functions/Function1;)V
-	public static final fun show (Lcom/google/android/material/floatingactionbutton/FloatingActionButton;Lkotlin/jvm/functions/Function1;)V
-	public static final fun withBehavior (Lcom/google/android/material/floatingactionbutton/FloatingActionButton;)Lcom/google/android/material/floatingactionbutton/FloatingActionButton;
-	public static final fun withBehavior (Lcom/google/android/material/floatingactionbutton/FloatingActionButton;Lcom/google/android/material/floatingactionbutton/FloatingActionButton$Behavior;)Lcom/google/android/material/floatingactionbutton/FloatingActionButton;
-	public static synthetic fun withBehavior$default (Lcom/google/android/material/floatingactionbutton/FloatingActionButton;Lcom/google/android/material/floatingactionbutton/FloatingActionButton$Behavior;ILjava/lang/Object;)Lcom/google/android/material/floatingactionbutton/FloatingActionButton;
 }
 
 public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
@@ -670,189 +563,11 @@ public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
 	public static final fun commitNow (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
 }
 
-public final class com/pyamsoft/pydroid/ui/util/InputMethodKt {
-	public static final fun focusAndShowKeyboard (Landroid/view/View;)V
-	public static final fun focusAndShowKeyboard (Landroid/view/View;Landroid/view/inputmethod/InputMethodManager;)V
-	public static synthetic fun focusAndShowKeyboard$default (Landroid/view/View;Landroid/view/inputmethod/InputMethodManager;ILjava/lang/Object;)V
-	public static final fun showKeyboard (Landroid/view/View;)V
-	public static final fun showKeyboard (Landroid/view/View;Landroid/view/inputmethod/InputMethodManager;)V
-	public static synthetic fun showKeyboard$default (Landroid/view/View;Landroid/view/inputmethod/InputMethodManager;ILjava/lang/Object;)V
-}
-
 public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 	public static final fun getDefaultSharedPreferencesName (Landroid/content/Context;)Ljava/lang/String;
 }
 
-public final class com/pyamsoft/pydroid/ui/util/RecyclerViewKt {
-	public static final fun removeAllItemDecorations (Landroidx/recyclerview/widget/RecyclerView;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Snackbreak {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/util/Snackbreak;
-	public final fun bindTo (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
-	public final fun bindTo (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
-	public final synthetic fun create (Lkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Breaker;
-	public final fun materialDesign (Lcom/google/android/material/snackbar/BaseTransientBottomBar;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Snackbreak$Breaker {
-	public static final field $stable I
-	public fun <init> (Lkotlin/jvm/functions/Function3;)V
-	public final fun bindTo (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
-	public final fun bindTo (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
-	public final fun realBindTo (Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Snackbreak$Instance {
-	public static final field $stable I
-	public final fun dismiss ()V
-	public final fun long (Landroid/view/View;I)V
-	public final fun long (Landroid/view/View;IZ)V
-	public final fun long (Landroid/view/View;IZLkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun long (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/view/View;Ljava/lang/CharSequence;)V
-	public final fun long (Landroid/view/View;Ljava/lang/CharSequence;Z)V
-	public final fun long (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun long (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun long$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun long$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public final fun make (Landroid/view/View;I)V
-	public final fun make (Landroid/view/View;IZ)V
-	public final fun make (Landroid/view/View;IZLkotlin/jvm/functions/Function1;)V
-	public final fun make (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun make (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public final fun make (Landroid/view/View;Ljava/lang/CharSequence;)V
-	public final fun make (Landroid/view/View;Ljava/lang/CharSequence;Z)V
-	public final fun make (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;)V
-	public final fun make (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun make (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun make$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun make$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public final fun short (Landroid/view/View;I)V
-	public final fun short (Landroid/view/View;IZ)V
-	public final fun short (Landroid/view/View;IZLkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun short (Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/view/View;Ljava/lang/CharSequence;)V
-	public final fun short (Landroid/view/View;Ljava/lang/CharSequence;Z)V
-	public final fun short (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public final fun short (Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun short$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;IZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun short$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Instance;Landroid/view/View;Ljava/lang/CharSequence;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Snackbreak$Options {
-	public static final field $stable I
-	public fun <init> (Z)V
-	public final fun component1 ()Z
-	public final fun copy (Z)Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Options;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Options;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Snackbreak$Options;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getApplyMaterialDesign ()Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Toaster {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/util/Toaster;
-	public final fun bindTo (Landroidx/lifecycle/Lifecycle;)Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;
-	public final fun bindTo (Landroidx/lifecycle/LifecycleOwner;)Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Toaster$Instance {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance$Companion;
-	public final fun dismiss ()V
-	public final fun long (Landroid/content/Context;I)V
-	public final fun long (Landroid/content/Context;ILkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/content/Context;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/content/Context;Ljava/lang/CharSequence;)V
-	public final fun long (Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;)V
-	public final fun long (Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun long$default (Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;Landroid/content/Context;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun long$default (Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public final fun short (Landroid/content/Context;I)V
-	public final fun short (Landroid/content/Context;ILkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/content/Context;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/content/Context;Ljava/lang/CharSequence;)V
-	public final fun short (Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;)V
-	public final fun short (Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun short$default (Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;Landroid/content/Context;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun short$default (Lcom/pyamsoft/pydroid/ui/util/Toaster$Instance;Landroid/content/Context;Ljava/lang/CharSequence;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/Toaster$Instance$Companion {
-}
-
-public final class com/pyamsoft/pydroid/ui/util/ToolbarKt {
-	public static final fun setUpEnabled (Landroidx/appcompat/widget/Toolbar;Z)V
-	public static final fun setUpEnabled (Landroidx/appcompat/widget/Toolbar;ZLandroid/graphics/drawable/Drawable;)V
-	public static synthetic fun setUpEnabled$default (Landroidx/appcompat/widget/Toolbar;ZLandroid/graphics/drawable/Drawable;ILjava/lang/Object;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/ViewKt {
-	public static final fun applyAppBarOffset (Landroid/view/View;Lcom/pyamsoft/pydroid/ui/app/AppBarActivity;)Lcom/pyamsoft/pydroid/ui/util/ViewListener;
-	public static final fun applyToolbarOffset (Landroid/view/View;)Lcom/pyamsoft/pydroid/util/InsetListener;
-	public static final fun doOnLayoutChanged (Landroid/view/View;Lkotlin/jvm/functions/Function9;)Lcom/pyamsoft/pydroid/ui/util/ViewListener;
-	public static final fun fadeAway (Landroid/view/View;)Landroidx/core/view/ViewPropertyAnimatorCompat;
-	public static final fun fadeIn (Landroid/view/View;)Landroidx/core/view/ViewPropertyAnimatorCompat;
-	public static final fun flipVertical (Landroid/view/View;)Landroidx/core/view/ViewPropertyAnimatorCompat;
-	public static final fun setOnDebouncedClickListener (Landroid/view/View;Lcom/pyamsoft/pydroid/ui/util/DebouncedOnClickListener;)V
-	public static final fun setOnDebouncedClickListener (Landroid/view/View;Lkotlin/jvm/functions/Function1;)V
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/util/ViewListener {
-	public abstract fun cancel ()V
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/scroll/HideOnScrollListener : androidx/recyclerview/widget/RecyclerView$OnScrollListener {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/widget/scroll/HideOnScrollListener$Companion;
-	public synthetic fun <init> (ZILkotlin/jvm/functions/Function1;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun create (ZILkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public static final fun create (ZLkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public fun onScrolled (Landroidx/recyclerview/widget/RecyclerView;II)V
-	public static final fun withView (Landroid/view/View;ILkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public static final fun withView (Landroid/view/View;Lkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/scroll/HideOnScrollListener$Companion {
-	public final fun create (ZILkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public final fun create (ZLkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/widget/scroll/HideOnScrollListener$Companion;ZILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public final fun withView (Landroid/view/View;ILkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public final fun withView (Landroid/view/View;Lkotlin/jvm/functions/Function1;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-	public static synthetic fun withView$default (Lcom/pyamsoft/pydroid/ui/widget/scroll/HideOnScrollListener$Companion;Landroid/view/View;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Landroidx/recyclerview/widget/RecyclerView$OnScrollListener;
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/shadow/DropshadowView : com/pyamsoft/pydroid/arch/BaseUiView {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/widget/shadow/DropshadowView$Companion;
-	public synthetic fun <init> (Landroid/view/ViewGroup;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun create (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-	public static final fun createTyped (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/shadow/DropshadowView$Companion {
-	public final fun create (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-	public final fun createTyped (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/shadow/TopshadowView : com/pyamsoft/pydroid/arch/BaseUiView {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/widget/shadow/TopshadowView$Companion;
-	public synthetic fun <init> (Landroid/view/ViewGroup;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public static final fun create (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-	public static final fun createTyped (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/shadow/TopshadowView$Companion {
-	public final fun create (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
-	public final fun createTyped (Landroid/view/ViewGroup;)Lcom/pyamsoft/pydroid/arch/BaseUiView;
+public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun isUpdateReadyToInstall ()Z
 }
 

@@ -158,7 +158,7 @@ public object OssLibraries {
     add(
         "PYDroid Arch",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern",
+        "PYDroid standard architecture for an MVVM UI design pattern",
     )
     add(
         "Highlander",
@@ -174,16 +174,6 @@ public object OssLibraries {
         "AndroidX Lifecycle",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
         "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
-    )
-    add(
-        "AndroidX Lifecycle ViewModel KTX",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "Kotlin extensions for the Android Jetpack ViewModel",
-    )
-    add(
-        "AndroidX Lifecycle ViewModel",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack ViewModel library. Model the state of your application easily.",
     )
     addComposeArchLibraries()
   }

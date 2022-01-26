@@ -1,5 +1,5 @@
 # pydroid-arch
-Architecture framework for a UiComponent based, ViewModel driven, reactive MVI UI design pattern
+PYDroid standard architecture for an MVVM UI design pattern
 
 
 ## What is this

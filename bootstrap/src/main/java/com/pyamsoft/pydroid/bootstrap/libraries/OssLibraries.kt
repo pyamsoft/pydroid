@@ -115,7 +115,8 @@ public object OssLibraries {
             OssLicenses.custom(
                 license = "Custom Google License",
                 location = "https://developer.android.com/distribute/play-services",
-            ))
+            ),
+    )
   }
 
   private fun addUiLibraries() {
@@ -144,24 +145,13 @@ public object OssLibraries {
         "https://github.com/coil-kt/Coil",
         "An image loading library for Android backed by Kotlin Coroutines.",
     )
-    addComposeUiLibraries()
 
-    // To remove
-    add(
-        "AndroidX RecyclerView",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
-        "The AndroidX Jetpack RecyclerView library. Create efficient list views.",
-    )
     add(
         "AndroidX Preference",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
         "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
     )
-    add(
-        "AndroidX Constraint Layout",
-        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
-    )
+    addComposeUiLibraries()
   }
 
   private fun addArchLibraries() {

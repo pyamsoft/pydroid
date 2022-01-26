@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +25,8 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogViewModeler
 internal constructor(
-    state: MutableChangeLogViewState,
-    private val interactor: ChangeLogInteractor
-) : AbstractViewModeler<ChangeLogViewState>(state) {
+    private val interactor: ChangeLogInteractor,
+) : AbstractViewModeler<UnitViewState>(UnitViewState) {
 
   internal fun handleShow(
       scope: CoroutineScope,

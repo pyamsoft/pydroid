@@ -31,9 +31,6 @@ import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
-import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
@@ -70,7 +67,6 @@ internal interface AppComponent {
     fun create(
         activity: PYDroidActivity,
         disableDataPolicy: Boolean,
-        disableChangeLog: Boolean,
     ): AppComponent
 
     data class Parameters
@@ -99,12 +95,10 @@ internal interface AppComponent {
       private val params: Factory.Parameters,
       private val pyDroidActivity: PYDroidActivity,
       private val disableDataPolicy: Boolean,
-      private val disableChangeLog: Boolean,
   ) : AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
-    private val changeLogState = MutableChangeLogViewState()
     private val dataPolicyState = MutableDataPolicyViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
@@ -161,7 +155,6 @@ internal interface AppComponent {
             theming = params.theming,
             versionCheckState = versionCheckState,
             dataPolicyState = dataPolicyState,
-            changeLogState = changeLogState,
         )
 
     private val changeLogParams =
@@ -194,16 +187,6 @@ internal interface AppComponent {
               ),
           )
 
-      // Change Log
-      activity.changeLog =
-          ChangeLogDelegate(
-              pyDroidActivity,
-              ChangeLogViewModeler(
-                  state = changeLogState,
-                  interactor = params.changeLogModule.provideInteractor(),
-              ),
-          )
-
       // Data Policy
       activity.dataPolicy =
           DataPolicyDelegate(
@@ -217,10 +200,8 @@ internal interface AppComponent {
       // App Internal
       activity.presenter =
           AppInternalPresenter(
-              disableChangeLog = disableChangeLog,
               disableDataPolicy = disableDataPolicy,
               dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),
-              changeLogInteractor = params.changeLogModule.provideInteractor(),
           )
     }
 
@@ -259,14 +240,12 @@ internal interface AppComponent {
       override fun create(
           activity: PYDroidActivity,
           disableDataPolicy: Boolean,
-          disableChangeLog: Boolean,
       ): AppComponent {
         OssLibraries.usingUi = true
         return Impl(
             params,
             activity,
             disableDataPolicy,
-            disableChangeLog,
         )
       }
     }

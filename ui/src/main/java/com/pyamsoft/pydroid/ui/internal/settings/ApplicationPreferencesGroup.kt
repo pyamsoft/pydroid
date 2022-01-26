@@ -20,8 +20,6 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
@@ -46,12 +44,10 @@ internal fun createApplicationPreferencesGroup(
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
-    onCheckUpdateClicked: (UriHandler) -> Unit,
+    onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
     onResetClicked: () -> Unit,
 ): Preferences.Group {
-  val uriHandler = LocalUriHandler.current
-
   val preferences =
       listOf(
           darkThemePreference(
@@ -62,7 +58,7 @@ internal fun createApplicationPreferencesGroup(
               onLicensesClicked = onLicensesClicked,
           ),
           updatePreference(
-              onCheckUpdateClicked = { onCheckUpdateClicked(uriHandler) },
+              onCheckUpdateClicked = { onCheckUpdateClicked() },
           ),
       )
 

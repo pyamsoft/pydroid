@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
-import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
@@ -42,7 +41,6 @@ internal interface SettingsComponent {
     data class Parameters
     internal constructor(
         internal val dataPolicyState: MutableDataPolicyViewState,
-        internal val changeLogState: MutableChangeLogViewState,
         internal val versionCheckState: MutableVersionCheckViewState,
         internal val bugReportUrl: String,
         internal val viewSourceUrl: String,
@@ -78,7 +76,6 @@ internal interface SettingsComponent {
           )
       fragment.changeLogViewModel =
           ChangeLogViewModeler(
-              state = params.changeLogState,
               interactor = params.changeLogModule.provideInteractor(),
           )
       fragment.versionViewModel =

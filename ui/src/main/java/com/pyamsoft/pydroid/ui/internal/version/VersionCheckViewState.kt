@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.arch.UiViewState
-
-internal interface VersionCheckViewState : UiViewState {
-  val isLoading: Boolean
-  val versionCheckError: Throwable?
-  val launchFallbackNavigation: Boolean
-}
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 internal class MutableVersionCheckViewState : VersionCheckViewState {
-  override var isLoading by mutableStateOf(false)
-  override var versionCheckError by mutableStateOf<Throwable?>(null)
-  override var launchFallbackNavigation by mutableStateOf(false)
+  override var isUpdateReadyToInstall by mutableStateOf(false)
 }

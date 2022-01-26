@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,9 +34,7 @@ internal constructor(
 ) : AbstractViewModeler<VersionCheckViewState>(state) {
 
   private val checkUpdateRunner =
-      highlander<ResultWrapper<UpdateResult>, Boolean> { force ->
-        interactor.checkVersion(force).map { UpdateResult(force, it) }
-      }
+      highlander<ResultWrapper<AppUpdateLauncher>, Boolean> { interactor.checkVersion(it) }
 
   internal fun bind(
       scope: CoroutineScope,
@@ -44,46 +43,42 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       interactor.watchForDownloadComplete {
         Logger.d("App update download ready!")
+        state.isUpdateReadyToInstall = true
         onUpgradeReady()
       }
     }
   }
 
-  internal fun handleClearError() {
-    state.versionCheckError = null
-  }
-
   internal fun handleCheckForUpdates(
       scope: CoroutineScope,
       force: Boolean,
-      onLaunchUpdate: (Boolean, AppUpdateLauncher) -> Unit,
+      onLaunchUpdate: (AppUpdateLauncher) -> Unit,
   ) {
-    state.isLoading = true
-    scope.launch(context = Dispatchers.Main) {
-      Logger.d("Begin check for updates")
+    if (state.isUpdateReadyToInstall) {
+      Logger.d("Update is already ready to install, do not check for update again")
+      return
+    }
 
+    Logger.d("Begin check for updates")
+    scope.launch(context = Dispatchers.Main) {
       checkUpdateRunner
           .call(force)
-          // Do this first to dismiss the loading snackbar
-          .onFinally { state.isLoading = false }
-          .onSuccess { onLaunchUpdate(it.isFallbackEnabled, it.launcher) }
+          .onSuccess { Logger.d("Update data found as: $it") }
+          .onSuccess { onLaunchUpdate(it) }
           .onFailure { Logger.e(it, "Error checking for latest version") }
-          // Do this second to show the error snackbar
-          .onFailure { state.versionCheckError = it }
           .onFinally { Logger.d("Done checking for updates") }
     }
   }
 
-  fun handleShowFallback() {
-    state.launchFallbackNavigation = true
-  }
+  internal fun handleConfirmUpgrade(
+      scope: CoroutineScope,
+      onConfirmed: () -> Unit,
+  ) {
+    if (!state.isUpdateReadyToInstall) {
+      Logger.w("Update is not ready to install, cannot confirm upgrade!")
+      return
+    }
 
-  fun handleHideFallback() {
-    state.launchFallbackNavigation = false
+    scope.launch(context = Dispatchers.Main) { onConfirmed() }
   }
-
-  private data class UpdateResult(
-      val isFallbackEnabled: Boolean,
-      val launcher: AppUpdateLauncher,
-  )
 }

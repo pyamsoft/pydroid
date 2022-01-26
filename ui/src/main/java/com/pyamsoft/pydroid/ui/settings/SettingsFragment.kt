@@ -179,18 +179,16 @@ public abstract class SettingsFragment : Fragment() {
         )
   }
 
-  private fun handleCheckForUpdates(uriHandler: UriHandler) {
+  private fun handleCheckForUpdates() {
     versionViewModel
         .requireNotNull()
         .handleCheckForUpdates(
             scope = viewLifecycleOwner.lifecycleScope,
             force = true,
-            onLaunchUpdate = { isFallback, launcher ->
+            onLaunchUpdate = {
               showVersionUpgrade(
                   activity = requireActivity(),
-                  isFallbackEnabled = isFallback,
-                  launcher = launcher,
-                  uriHandler = uriHandler,
+                  launcher = it,
               )
             },
         )
@@ -198,18 +196,14 @@ public abstract class SettingsFragment : Fragment() {
 
   private fun showVersionUpgrade(
       activity: FragmentActivity,
-      isFallbackEnabled: Boolean,
       launcher: AppUpdateLauncher,
-      uriHandler: UriHandler,
   ) {
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher.update(activity, RC_APP_UPDATE).onFailure { err ->
-        Logger.e(err, "Unable to launch in-app update flow")
-        if (isFallbackEnabled) {
-          uriHandler.openUri(MarketLinker.getStorePageLink(activity))
-        }
-      }
+      launcher
+          .update(activity, RC_APP_UPDATE)
+          .onSuccess { Logger.d("Launched an in-app update flow") }
+          .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
     }
   }
 
@@ -273,7 +267,7 @@ public abstract class SettingsFragment : Fragment() {
                   customPostContent = customPostPreferences(),
                   onDarkModeChanged = { handleChangeDarkMode(it) },
                   onLicensesClicked = { AboutDialog.show(act) },
-                  onCheckUpdateClicked = { handleCheckForUpdates(it) },
+                  onCheckUpdateClicked = { handleCheckForUpdates() },
                   onShowChangeLogClicked = { handleShowChangeLog() },
                   onResetClicked = { ResetDialog.open(act) },
                   onDonateClicked = { BillingDialog.open(act) },

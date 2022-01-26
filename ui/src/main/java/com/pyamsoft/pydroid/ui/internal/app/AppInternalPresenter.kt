@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
+import com.pyamsoft.pydroid.core.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,9 +25,7 @@ import kotlinx.coroutines.launch
 internal class AppInternalPresenter
 internal constructor(
     private val disableDataPolicy: Boolean,
-    private val disableChangeLog: Boolean,
     private val dataPolicyInteractor: DataPolicyInteractor,
-    private val changeLogInteractor: ChangeLogInteractor,
 ) {
 
   /**
@@ -39,36 +37,16 @@ internal constructor(
   internal fun handleShowCorrectDialog(
       scope: CoroutineScope,
       onShowDataPolicy: () -> Unit,
-      onShowChangeLog: () -> Unit,
-      onShowVersionCheck: () -> Unit,
   ) {
+    if (disableDataPolicy) {
+      Logger.w("Data policy is disabled, do not need to show any dialogs")
+      return
+    }
+
     scope.launch(context = Dispatchers.Main) {
-      if (disableDataPolicy && disableChangeLog) {
-        // If data policy and changelog are disabled, show Version
-        onShowVersionCheck()
-      } else {
-        // If data policy is disabled show changelog
-        if (disableDataPolicy) {
-          onShowChangeLog()
-        } else {
-          // If data policy is enabled, show it if you can
-          if (!dataPolicyInteractor.isPolicyAccepted()) {
-            onShowDataPolicy()
-          } else {
-            // If changelog is disabled, show version check
-            if (disableChangeLog) {
-              onShowVersionCheck()
-            } else {
-              // If changelog is enabled, show it if you can
-              if (changeLogInteractor.canShowChangeLog()) {
-                onShowChangeLog()
-              } else {
-                // Else fallback to update check
-                onShowVersionCheck()
-              }
-            }
-          }
-        }
+      // If data policy is enabled, show it if you can
+      if (!dataPolicyInteractor.isPolicyAccepted()) {
+        onShowDataPolicy()
       }
     }
   }

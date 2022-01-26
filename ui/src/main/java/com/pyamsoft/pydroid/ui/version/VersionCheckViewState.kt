@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2022 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.arch.UiViewState
 
-internal interface ChangeLogViewState : UiViewState
-
-internal class MutableChangeLogViewState : ChangeLogViewState
+/**
+ * Version Checking UI state
+ */
+public interface VersionCheckViewState : UiViewState {
+  /**
+   * Is there an update available for this application?
+   */
+  public val isUpdateReadyToInstall: Boolean
+}

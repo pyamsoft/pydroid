@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-dependencies {
-  implementation "androidx.core:core:$core"
-  implementation "androidx.lifecycle:lifecycle-common:$lifecycle"
-  api project(':core')
-}
-
 android {
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'
   }
+}
+
+dependencies {
+  implementation "androidx.core:core:$core"
+  implementation "androidx.lifecycle:lifecycle-common:$lifecycle"
+  api project(':core')
 }

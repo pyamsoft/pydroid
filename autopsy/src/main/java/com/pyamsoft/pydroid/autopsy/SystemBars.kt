@@ -24,14 +24,14 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 internal fun SystemBars() {
-  val isLighStatusBar = !isSystemInDarkTheme()
+  val isLightStatusBar = !isSystemInDarkTheme()
 
   val controller = rememberSystemUiController()
   val color = colorResource(R.color.crash_background_color)
   SideEffect {
     controller.setSystemBarsColor(
         color = color,
-        darkIcons = isLighStatusBar,
+        darkIcons = isLightStatusBar,
         isNavigationBarContrastEnforced = false,
     )
   }

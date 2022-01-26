@@ -177,8 +177,6 @@ private fun PreviewOtherAppsScreen(
     navigationError: Throwable?,
     appsError: Throwable?,
 ) {
-  val context = LocalContext.current
-
   OtherAppsScreen(
       state =
           MutableOtherAppsViewState().apply {
@@ -207,7 +205,7 @@ private fun PreviewOtherAppsScreen(
             this.navigationError = navigationError
             this.appsError = appsError
           },
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onNavigationErrorDismissed = {},
       onViewSourceCode = {},
       onViewStorePage = {},

@@ -176,8 +176,6 @@ private fun OpenStore(onClick: () -> Unit) {
 @Preview
 @Composable
 private fun PreviewOtherAppsListItem() {
-  val context = LocalContext.current
-
   OtherAppsListItem(
       app =
           OtherApp(
@@ -189,7 +187,7 @@ private fun PreviewOtherAppsListItem() {
               storeUrl = "some_url",
               sourceUrl = "some_url",
           ),
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onOpenStore = {},
       onViewSource = {},
   )

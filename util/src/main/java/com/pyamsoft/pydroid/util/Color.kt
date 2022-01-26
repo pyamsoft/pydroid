@@ -24,6 +24,7 @@ import androidx.core.graphics.ColorUtils
 /** Lighten a color by a ratio */
 @ColorInt
 @CheckResult
+@Deprecated("Use Compose-UI Color")
 public fun @receiver:ColorInt
 Int.lighter(ratio: Float): Int {
   return ColorUtils.blendARGB(this, Color.WHITE, ratio)
@@ -32,6 +33,7 @@ Int.lighter(ratio: Float): Int {
 /** Darken a color by a ratio */
 @ColorInt
 @CheckResult
+@Deprecated("Use Compose-UI Color")
 public fun @receiver:ColorInt
 Int.darker(ratio: Float): Int {
   return ColorUtils.blendARGB(this, Color.BLACK, ratio)

@@ -22,6 +22,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.bitmap.BitmapPool
@@ -100,6 +101,7 @@ private class TestImageLoader(context: Context) : ImageLoader {
 /** Only use for tests/previews */
 @Composable
 @CheckResult
-internal fun createNewTestImageLoader(context: Context): ImageLoader {
+internal fun createNewTestImageLoader(): ImageLoader {
+  val context = LocalContext.current
   return TestImageLoader(context)
 }

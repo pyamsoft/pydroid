@@ -67,6 +67,5 @@ dependencies {
   api project(':billing')
   api project(':bootstrap')
   api project(':inject')
-  api project(':loader')
   api project(':util')
 }

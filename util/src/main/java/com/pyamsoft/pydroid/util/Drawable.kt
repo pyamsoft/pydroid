@@ -27,12 +27,14 @@ import androidx.core.content.ContextCompat
 
 /** Tint a Drawable with a Color */
 @CheckResult
+@Deprecated("Use Compose-UI to handle drawables, or a loader like Coil")
 public fun Drawable.tintWith(@ColorInt c: Int): Drawable {
   return mutate().apply { colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN) }
 }
 
 /** Tint a Drawable with a Color resource */
 @CheckResult
+@Deprecated("Use Compose-UI to handle drawables, or a loader like Coil")
 public fun Drawable.tintWith(c: Context, @ColorRes cl: Int): Drawable {
   return tintWith(ContextCompat.getColor(c, cl))
 }

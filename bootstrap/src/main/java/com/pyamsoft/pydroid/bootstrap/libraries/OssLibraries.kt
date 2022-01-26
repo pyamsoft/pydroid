@@ -31,9 +31,6 @@ public object OssLibraries {
   /** Using pydroid-autopsy library */
   public var usingAutopsy: Boolean = false
 
-  /** Using pydroid-loader library */
-  @Deprecated("Migrate to Jetpack Compose") public var usingLoader: Boolean = false
-
   /** Using pydroid-notify library */
   public var usingNotify: Boolean = false
 
@@ -164,20 +161,6 @@ public object OssLibraries {
         "AndroidX Constraint Layout",
         "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
         "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way.",
-    )
-  }
-
-  @Deprecated("Migrate to Jetpack Compose")
-  private fun addLoaderLibraries() {
-    add(
-        "PYDroid Loader",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid image loader abstraction library",
-    )
-    add(
-        "Glide",
-        "https://github.com/bumptech/glide",
-        "An image loading and caching library for Android focused on smooth scrolling.",
     )
   }
 
@@ -315,14 +298,10 @@ public object OssLibraries {
     if (usingUi) {
       addUiLibraries()
       addArchLibraries()
-      addLoaderLibraries()
     } else {
       // If we aren't using UI, look at individual flags
       if (usingArch) {
         addArchLibraries()
-      }
-      if (usingLoader) {
-        addLoaderLibraries()
       }
     }
 

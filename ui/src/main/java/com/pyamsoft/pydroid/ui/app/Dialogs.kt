@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import android.app.Activity
 import android.app.Dialog
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.Window
 import android.view.WindowManager
@@ -24,10 +26,10 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.util.asPx
 
 /** Remove the title from a dialog */
 @CheckResult
+@Deprecated("Should be no longer needed when using AppCompatDialogFragmen")
 public fun Dialog.noTitle(): Dialog {
   requestWindowFeature(Window.FEATURE_NO_TITLE)
   return this
@@ -67,6 +69,17 @@ public fun DialogFragment.makeFullHeight(useMatchParent: Boolean = false) {
 
 private const val MATCH = WindowManager.LayoutParams.MATCH_PARENT
 private const val WRAP = WindowManager.LayoutParams.WRAP_CONTENT
+
+@CheckResult
+private fun Int.asPx(activity: Activity): Int {
+  return if (this <= 0) 0
+  else {
+    val metrics = activity.resources.displayMetrics
+    val thisFloat = this.toFloat()
+    val floatValue = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, thisFloat, metrics)
+    floatValue.toInt()
+  }
+}
 
 private fun DialogFragment.setSizes(
     fullWidth: Boolean,

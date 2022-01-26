@@ -24,6 +24,7 @@ import androidx.annotation.CheckResult
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
 @SuppressLint("ResourceType")
+@Deprecated("Use Compose-UI MaterialTheme")
 public fun Activity.valueFromCurrentTheme(@AttrRes attr: Int): Int {
   return this.valuesFromCurrentTheme(attr)[0]
 }
@@ -31,6 +32,7 @@ public fun Activity.valueFromCurrentTheme(@AttrRes attr: Int): Int {
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
 @SuppressLint("ResourceType")
+@Deprecated("Use Compose-UI MaterialTheme")
 public fun Activity.valuesFromCurrentTheme(@AttrRes vararg attrs: Int): IntArray {
   val attributes = this.obtainStyledAttributes(attrs)
   val styled = IntArray(attrs.size)

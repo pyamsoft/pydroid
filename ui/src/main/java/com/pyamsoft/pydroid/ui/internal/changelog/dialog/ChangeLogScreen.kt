@@ -133,8 +133,6 @@ private fun Actions(
 
 @Composable
 private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
-  val context = LocalContext.current
-
   ChangeLogScreen(
       state =
           MutableChangeLogViewState().apply {
@@ -142,7 +140,7 @@ private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
             name = "TEST"
             this.changeLog = changeLog
           },
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onRateApp = {},
       onClose = {},
   )

@@ -212,8 +212,6 @@ private fun PreviewBillingScreen(
     skuList: List<BillingSku>,
     error: Throwable?,
 ) {
-  val context = LocalContext.current
-
   BillingScreen(
       state =
           MutableBillingViewState().apply {
@@ -222,7 +220,7 @@ private fun PreviewBillingScreen(
             this.skuList = skuList
             this.error = error
           },
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onPurchase = {},
       onBillingErrorDismissed = {},
       onClose = {},

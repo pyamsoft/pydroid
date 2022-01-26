@@ -107,10 +107,9 @@ internal fun AppHeader(
 @Preview
 @Composable
 private fun PreviewAppHeader() {
-  val context = LocalContext.current
   AppHeader(
       icon = 0,
       name = "TEST",
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
   )
 }

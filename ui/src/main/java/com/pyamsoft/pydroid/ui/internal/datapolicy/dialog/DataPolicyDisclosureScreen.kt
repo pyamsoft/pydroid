@@ -270,8 +270,6 @@ private fun NavigationError(
 @Preview
 @Composable
 private fun PreviewDataPolicyDisclosureScreen() {
-  val context = LocalContext.current
-
   DataPolicyDisclosureScreen(
       state =
           MutableDataPolicyDialogViewState().apply {
@@ -279,7 +277,7 @@ private fun PreviewDataPolicyDisclosureScreen() {
             name = "TEST"
             navigationError = null
           },
-      imageLoader = createNewTestImageLoader(context),
+      imageLoader = createNewTestImageLoader(),
       onPrivacyPolicyClicked = {},
       onTermsOfServiceClicked = {},
       onNavigationErrorDismissed = {},

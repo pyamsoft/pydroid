@@ -123,7 +123,7 @@ subprojects {
   apply plugin: "org.gradle.android.cache-fix"
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "24.3.5"
+  final POM_VERSION = "25.0.0-SNAPSHOT"
 
 
   // Kapt flags

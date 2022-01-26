@@ -65,7 +65,6 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static final fun makeFullscreen (Landroidx/fragment/app/DialogFragment;)V
 	public static final fun makeFullscreen (Landroidx/fragment/app/DialogFragment;Z)V
 	public static synthetic fun makeFullscreen$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
-	public static final fun noTitle (Landroid/app/Dialog;)Landroid/app/Dialog;
 }
 
 public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/internal/changelog/ChangeLogProvider {

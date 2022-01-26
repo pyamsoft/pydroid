@@ -17,23 +17,13 @@
 package com.pyamsoft.pydroid.ui.app
 
 import android.app.Activity
-import android.app.Dialog
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-
-/** Remove the title from a dialog */
-@CheckResult
-@Deprecated("Should be no longer needed when using AppCompatDialogFragmen")
-public fun Dialog.noTitle(): Dialog {
-  requestWindowFeature(Window.FEATURE_NO_TITLE)
-  return this
-}
 
 /**
  * Call this from at least onCreate() but before onResume()

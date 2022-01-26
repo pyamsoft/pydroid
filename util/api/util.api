@@ -2,11 +2,6 @@ public final class com/pyamsoft/pydroid/util/CollectionKt {
 	public static final fun contains (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Z
 }
 
-public final class com/pyamsoft/pydroid/util/ColorKt {
-	public static final fun darker (IF)I
-	public static final fun lighter (IF)I
-}
-
 public final class com/pyamsoft/pydroid/util/ContextKt {
 	public static final fun getApplicationDisplayName (Landroid/content/Context;)Ljava/lang/String;
 	public static final fun isDebugMode (Landroid/content/Context;)Z

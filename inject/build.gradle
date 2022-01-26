@@ -16,8 +16,6 @@
 
 dependencies {
   api project(':core')
-
-  implementation "androidx.annotation:annotation:$annotation"
 }
 
 android {

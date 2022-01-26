@@ -31,6 +31,10 @@ android {
 }
 
 dependencies {
+  // These need to be API since they are used as base classes for Activity and Fragment
+  api "androidx.fragment:fragment-ktx:$fragment"
+  api "androidx.preference:preference:$preference"
+
   // Compose
   implementation "androidx.activity:activity-compose:$composeActivity"
   implementation "androidx.compose.compiler:compiler:$compose_version"
@@ -44,10 +48,6 @@ dependencies {
 
   // Accompanist
   implementation "com.google.accompanist:accompanist-insets:$accompanist"
-
-  // These need to be API since they are used as base classes for Activity and Fragment
-  api "androidx.fragment:fragment-ktx:$fragment"
-  api "androidx.preference:preference:$preference"
 
   implementation "androidx.core:core-ktx:$core"
 

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.rating
 
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.Logger
@@ -28,9 +29,8 @@ import kotlinx.coroutines.launch
 
 internal class RatingViewModeler
 internal constructor(
-    private val state: MutableRatingViewState,
     interactor: RatingInteractor,
-) : AbstractViewModeler<RatingViewState>(state) {
+) : AbstractViewModeler<UnitViewState>(UnitViewState) {
 
   private val loadRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
@@ -42,18 +42,9 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       loadRunner
           .call()
-          .onSuccess { launcher ->
-            Logger.d("Launch in-app rating: $launcher")
-            onLaunchInAppRating(launcher)
-          }
-          .onFailure { e ->
-            Logger.e(e, "Unable to launch rating flow")
-            state.navigationError = e
-          }
+          .onSuccess { Logger.d("Launch in-app rating: $it") }
+          .onSuccess { onLaunchInAppRating(it) }
+          .onFailure { Logger.e(it, "Unable to launch in-app rating") }
     }
-  }
-
-  internal fun handleClearNavigationError() {
-    state.navigationError = null
   }
 }

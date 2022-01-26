@@ -20,15 +20,12 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
-import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
@@ -45,7 +42,6 @@ internal interface SettingsComponent {
     data class Parameters
     internal constructor(
         internal val dataPolicyState: MutableDataPolicyViewState,
-        internal val ratingState: MutableRatingViewState,
         internal val changeLogState: MutableChangeLogViewState,
         internal val versionCheckState: MutableVersionCheckViewState,
         internal val bugReportUrl: String,
@@ -55,7 +51,6 @@ internal interface SettingsComponent {
         internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val otherAppsModule: OtherAppsModule,
-        internal val ratingModule: RatingModule,
         internal val versionModule: VersionModule,
         internal val dataPolicyModule: DataPolicyModule,
         internal val changeLogModule: ChangeLogModule,
@@ -80,11 +75,6 @@ internal interface SettingsComponent {
           DataPolicyViewModeler(
               state = params.dataPolicyState,
               interactor = params.dataPolicyModule.provideInteractor(),
-          )
-      fragment.ratingViewModel =
-          RatingViewModeler(
-              state = params.ratingState,
-              interactor = params.ratingModule.provideInteractor(),
           )
       fragment.changeLogViewModel =
           ChangeLogViewModeler(

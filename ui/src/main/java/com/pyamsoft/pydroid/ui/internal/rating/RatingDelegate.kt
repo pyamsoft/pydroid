@@ -16,10 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
@@ -37,7 +33,9 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
   private fun showRating(activity: PYDroidActivity, launcher: AppRatingLauncher) {
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher.rate(activity).onFailure { err -> Logger.e(err, "Unable to launch in-app rating") }
+      launcher.rate(activity)
+          .onSuccess { Logger.d("Call was made for in-app rating request") }
+          .onFailure { err -> Logger.e(err, "Unable to launch in-app rating") }
     }
   }
 
@@ -61,56 +59,5 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
             scope = act.lifecycleScope,
             onLaunchInAppRating = { showRating(act, it) },
         )
-  }
-
-  /**
-   * Rating screen
-   *
-   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
-   */
-  @Composable
-  fun Ratings(
-      scaffoldState: ScaffoldState,
-  ) {
-    Ratings(
-        snackbarHostState = scaffoldState.snackbarHostState,
-        addSnackbarHost = false,
-    )
-  }
-
-  /**
-   * Rating screen
-   *
-   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
-   */
-  @Composable
-  @JvmOverloads
-  fun Ratings(
-      modifier: Modifier = Modifier,
-      snackbarHostState: SnackbarHostState,
-  ) {
-    Ratings(
-        modifier = modifier,
-        snackbarHostState = snackbarHostState,
-        addSnackbarHost = true,
-    )
-  }
-
-  @Composable
-  private fun Ratings(
-      modifier: Modifier = Modifier,
-      snackbarHostState: SnackbarHostState,
-      addSnackbarHost: Boolean,
-  ) {
-    val vm = viewModel.requireNotNull()
-    vm.Render { state ->
-      RatingScreen(
-          modifier = modifier,
-          state = state,
-          addSnackbarHost = addSnackbarHost,
-          snackbarHostState = snackbarHostState,
-          onNavigationErrorDismissed = { vm.handleClearNavigationError() },
-      )
-    }
   }
 }

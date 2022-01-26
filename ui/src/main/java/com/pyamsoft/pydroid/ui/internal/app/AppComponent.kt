@@ -38,7 +38,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
-import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
@@ -105,7 +104,6 @@ internal interface AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
-    private val ratingState = MutableRatingViewState()
     private val changeLogState = MutableChangeLogViewState()
     private val dataPolicyState = MutableDataPolicyViewState()
 
@@ -151,7 +149,6 @@ internal interface AppComponent {
 
     private val settingsParams =
         SettingsComponent.Factory.Parameters(
-            ratingModule = ratingModule,
             versionModule = versionModule,
             bugReportUrl = params.bugReportUrl,
             termsConditionsUrl = params.termsConditionsUrl,
@@ -164,13 +161,11 @@ internal interface AppComponent {
             theming = params.theming,
             versionCheckState = versionCheckState,
             dataPolicyState = dataPolicyState,
-            ratingState = ratingState,
             changeLogState = changeLogState,
         )
 
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
-            ratingModule = ratingModule,
             changeLogModule = params.changeLogModule,
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
@@ -185,7 +180,6 @@ internal interface AppComponent {
           RatingDelegate(
               pyDroidActivity,
               RatingViewModeler(
-                  state = ratingState,
                   interactor = ratingModule.provideInteractor(),
               ),
           )

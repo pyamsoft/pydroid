@@ -19,11 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 
 internal interface ChangeLogComponent {
 
@@ -36,7 +33,6 @@ internal interface ChangeLogComponent {
     data class Parameters
     internal constructor(
         internal val changeLogModule: ChangeLogModule,
-        internal val ratingModule: RatingModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
     )
@@ -51,11 +47,6 @@ internal interface ChangeLogComponent {
     override fun inject(dialog: ChangeLogDialog) {
       dialog.composeTheme = params.composeTheme
       dialog.imageLoader = params.imageLoader
-      dialog.ratingViewModel =
-          RatingViewModeler(
-              state = MutableRatingViewState(),
-              interactor = params.ratingModule.provideInteractor(),
-          )
       dialog.viewModel =
           ChangeLogDialogViewModeler(
               state = MutableChangeLogViewState(),

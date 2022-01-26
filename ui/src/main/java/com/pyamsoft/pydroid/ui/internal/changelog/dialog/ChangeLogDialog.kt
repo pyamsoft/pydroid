@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -49,10 +48,6 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
   internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var viewModel: ChangeLogDialogViewModeler? = null
-
-  // Don't need to create a component or bind this to the controller, since RatingActivity should
-  // be bound for us.
-  internal var ratingViewModel: RatingViewModeler? = null
 
   internal var imageLoader: ImageLoader? = null
 
@@ -103,7 +98,6 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     super.onViewCreated(view, savedInstanceState)
     makeFullWidth()
 
-    ratingViewModel.requireNotNull().restoreState(savedInstanceState)
     viewModel.requireNotNull().also { vm ->
       vm.restoreState(savedInstanceState)
       vm.bind(scope = viewLifecycleOwner.lifecycleScope)
@@ -119,7 +113,6 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
-    ratingViewModel?.saveState(outState)
   }
 
   override fun onDestroyView() {
@@ -127,7 +120,6 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     dispose()
 
     viewModel = null
-    ratingViewModel = null
     imageLoader = null
   }
 

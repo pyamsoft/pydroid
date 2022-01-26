@@ -50,7 +50,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
@@ -70,7 +69,6 @@ public abstract class SettingsFragment : Fragment() {
   internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var viewModel: SettingsViewModeler? = null
-  internal var ratingViewModel: RatingViewModeler? = null
   internal var versionViewModel: VersionCheckViewModeler? = null
   internal var changeLogViewModel: ChangeLogViewModeler? = null
   internal var dataPolicyViewModel: DataPolicyViewModeler? = null
@@ -300,7 +298,6 @@ public abstract class SettingsFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    ratingViewModel.requireNotNull().restoreState(savedInstanceState)
     dataPolicyViewModel.requireNotNull().restoreState(savedInstanceState)
     changeLogViewModel.requireNotNull().restoreState(savedInstanceState)
     versionViewModel.requireNotNull().restoreState(savedInstanceState)
@@ -315,7 +312,6 @@ public abstract class SettingsFragment : Fragment() {
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
-    ratingViewModel?.saveState(outState)
     dataPolicyViewModel?.saveState(outState)
     changeLogViewModel?.saveState(outState)
     versionViewModel?.saveState(outState)
@@ -335,7 +331,6 @@ public abstract class SettingsFragment : Fragment() {
     viewModel = null
     changeLogViewModel = null
     dataPolicyViewModel = null
-    ratingViewModel = null
     versionViewModel = null
 
     windowInsetObserver?.stop()

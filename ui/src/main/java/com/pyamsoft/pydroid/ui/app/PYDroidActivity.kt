@@ -187,40 +187,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     rating.requireNotNull().loadInAppRating()
   }
 
-  /**
-   * Rating
-   *
-   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
-   */
-  @Composable
-  protected fun RatingScreen(
-      scaffoldState: ScaffoldState,
-  ) {
-    rating
-        .requireNotNull()
-        .Ratings(
-            scaffoldState = scaffoldState,
-        )
-  }
-
-  /**
-   * Rating
-   *
-   * Handles showing an in-app rating dialog and any UI around navigation errors related to ratings
-   */
-  @Composable
-  protected fun RatingScreen(
-      modifier: Modifier = Modifier,
-      snackbarHostState: SnackbarHostState,
-  ) {
-    rating
-        .requireNotNull()
-        .Ratings(
-            modifier = modifier,
-            snackbarHostState = snackbarHostState,
-        )
-  }
-
   /** Check for in-app updates */
   protected fun checkUpdates() {
     if (disableVersionCheck) {

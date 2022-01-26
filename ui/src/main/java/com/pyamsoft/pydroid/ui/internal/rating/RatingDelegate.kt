@@ -33,7 +33,8 @@ internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewMo
   private fun showRating(activity: PYDroidActivity, launcher: AppRatingLauncher) {
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher.rate(activity)
+      launcher
+          .rate(activity)
           .onSuccess { Logger.d("Call was made for in-app rating request") }
           .onFailure { err -> Logger.e(err, "Unable to launch in-app rating") }
     }

@@ -1,3 +1,8 @@
+public final class com/pyamsoft/pydroid/util/ActivityKt {
+	public static final fun valueFromCurrentTheme (Landroid/app/Activity;I)I
+	public static final fun valuesFromCurrentTheme (Landroid/app/Activity;[I)[I
+}
+
 public final class com/pyamsoft/pydroid/util/CollectionKt {
 	public static final fun contains (Ljava/util/Collection;Lkotlin/jvm/functions/Function1;)Z
 }

@@ -81,11 +81,10 @@ buildscript {
     // In app billing
     playBilling = "4.0.0"
 
-    // To remove in 25
-    glide = '4.12.0'
-    constraintLayout = "2.1.3"
+    // Needed just for androidx.preference.PreferenceManager
+    // Eventually, big G may push for DataStore being a requirement, which will be pain
+    // This pulls in all the UI bits too, which is a little lame.
     preference = "1.1.1"
-    recyclerView = "1.2.1"
   }
 
   dependencies {

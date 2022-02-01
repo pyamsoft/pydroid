@@ -31,7 +31,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -62,56 +61,51 @@ internal fun DataPolicyDisclosureScreen(
     onReject: () -> Unit,
 ) {
 
-  val snackbarHostState = remember { SnackbarHostState() }
-
   val icon = state.icon
   val name = state.name
   val navigationError = state.navigationError
 
   val configuration = LocalConfiguration.current
-  val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-
-  Column(
-      modifier = modifier,
-  ) {
-    AppHeader(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = DialogDefaults.DialogElevation,
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-    )
-
-    Surface(
-        elevation = DialogDefaults.DialogElevation,
-    ) {
-      Column {
-        Disclosure(
-            modifier =
-                Modifier.fillMaxWidth()
-                    .heightIn(
-                        max = if (isPortrait) 400.dp else 100.dp,
-                    ),
-            name = name,
-        )
-        Links(
-            modifier = Modifier.fillMaxWidth(),
-            isPortrait = isPortrait,
-            onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-            onTermsOfServiceClicked = onTermsOfServiceClicked,
-        )
-        Actions(
-            modifier = Modifier.fillMaxWidth(),
-            isPortrait = isPortrait,
-            onAccept = onAccept,
-            onReject = onReject,
-        )
-        NavigationError(
-            snackbarHostState = snackbarHostState,
-            error = navigationError,
-            onSnackbarDismissed = onNavigationErrorDismissed,
-        )
+  val isPortrait =
+      remember(configuration.orientation) {
+        configuration.orientation == Configuration.ORIENTATION_PORTRAIT
       }
+
+  val snackbarHostState = remember { SnackbarHostState() }
+
+  AppHeader(
+      modifier = modifier,
+      elevation = DialogDefaults.DialogElevation,
+      icon = icon,
+      name = name,
+      imageLoader = imageLoader,
+  ) {
+    Column {
+      Disclosure(
+          modifier =
+              Modifier.fillMaxWidth()
+                  .heightIn(
+                      max = if (isPortrait) 400.dp else 100.dp,
+                  ),
+          name = name,
+      )
+      Links(
+          modifier = Modifier.fillMaxWidth(),
+          isPortrait = isPortrait,
+          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+          onTermsOfServiceClicked = onTermsOfServiceClicked,
+      )
+      Actions(
+          modifier = Modifier.fillMaxWidth(),
+          isPortrait = isPortrait,
+          onAccept = onAccept,
+          onReject = onReject,
+      )
+      NavigationError(
+          snackbarHostState = snackbarHostState,
+          error = navigationError,
+          onSnackbarDismissed = onNavigationErrorDismissed,
+      )
     }
   }
 }

@@ -16,16 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -49,56 +47,70 @@ private const val ICON_SIZE = 56
 internal fun AppHeader(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
-    icon: Int,
+    @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
+    content: @Composable () -> Unit,
 ) {
-  var textHeight by remember { mutableStateOf(0) }
-  val spaceHeight = textHeight / 2
+  var titleHeight by remember { mutableStateOf(0) }
+  val spaceHeight = remember(titleHeight) { titleHeight / 2 }
 
   Box(
       modifier = modifier,
+      contentAlignment = Alignment.TopCenter,
   ) {
-    Column(
-        modifier = Modifier.matchParentSize(),
-    ) {
-      Spacer(
-          modifier = Modifier.height(spaceHeight.dp).fillMaxWidth(),
-      )
+    // Behind the content
+    Column {
+      // Space half the height and draw the header behind it
       Surface(
-          modifier = Modifier.height((ICON_SIZE + spaceHeight).dp).fillMaxWidth(),
-          color = MaterialTheme.colors.surface,
+          modifier = Modifier.padding(top = spaceHeight.dp),
           elevation = elevation,
-          shape =
-              MaterialTheme.shapes.medium.copy(
-                  bottomEnd = ZeroCornerSize,
-                  bottomStart = ZeroCornerSize,
-              ),
-          content = {},
-      )
+          shape = MaterialTheme.shapes.medium,
+      ) {
+        Box(
+            modifier = Modifier.padding(top = spaceHeight.dp),
+        ) { content() }
+      }
     }
 
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp).padding(top = 16.dp).fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-      Image(
-          painter =
-              rememberImagePainter(
-                  data = icon,
-                  imageLoader = imageLoader,
-                  builder = { crossfade(true) },
-              ),
-          contentDescription = "$name Icon",
-          modifier = Modifier.size(ICON_SIZE.dp),
-      )
-      Text(
-          text = name,
-          style = MaterialTheme.typography.h5,
-          onTextLayout = { textHeight = it.size.height },
-      )
-    }
+    TitleAndIcon(
+        modifier = Modifier.fillMaxWidth(),
+        icon = icon,
+        name = name,
+        imageLoader = imageLoader,
+        onMeasured = { titleHeight = it },
+    )
+  }
+}
+
+@Composable
+private fun TitleAndIcon(
+    modifier: Modifier = Modifier,
+    icon: Int,
+    name: String,
+    imageLoader: ImageLoader,
+    onMeasured: (Int) -> Unit,
+) {
+  Column(
+      modifier = modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+  ) {
+    Image(
+        painter =
+            rememberImagePainter(
+                data = icon,
+                imageLoader = imageLoader,
+                builder = { crossfade(true) },
+            ),
+        contentDescription = "$name Icon",
+        modifier = Modifier.size(ICON_SIZE.dp),
+    )
+    Text(
+        text = name,
+        style = MaterialTheme.typography.h5,
+        onTextLayout = { onMeasured(it.size.height / 2 + ICON_SIZE) },
+    )
   }
 }
 
@@ -109,5 +121,15 @@ private fun PreviewAppHeader() {
       icon = 0,
       name = "TEST",
       imageLoader = createNewTestImageLoader(),
+      content = {
+        Surface(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+        ) {
+          Text(
+              text = "Test",
+              style = MaterialTheme.typography.body1,
+          )
+        }
+      },
   )
 }

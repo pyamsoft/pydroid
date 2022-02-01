@@ -32,7 +32,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -68,58 +67,50 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Column(
+  AppHeader(
       modifier = modifier,
+      elevation = DialogDefaults.DialogElevation,
+      icon = icon,
+      name = name,
+      imageLoader = imageLoader,
   ) {
-    AppHeader(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = DialogDefaults.DialogElevation,
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-    )
+    Column {
+      Crossfade(targetState = connection) { connected ->
+        // Remember computed value
+        val isLoading = remember { connected == BillingState.LOADING }
+        val isConnected = remember { connected == BillingState.CONNECTED }
 
-    Surface(
-        elevation = DialogDefaults.DialogElevation,
-    ) {
-      Column {
-        Crossfade(targetState = connection) { connected ->
-          // Remember computed value
-          val isLoading = remember { connected == BillingState.LOADING }
-          val isConnected = remember { connected == BillingState.CONNECTED }
-
-          if (isLoading) {
-            Loading()
-          } else {
-            SkuList(
-                isConnected = isConnected,
-                list = skuList,
-                onPurchase = onPurchase,
-            )
-          }
-        }
-
-        Row(
-            modifier = Modifier.padding(16.dp),
-        ) {
-          Spacer(
-              modifier = Modifier.weight(1F),
+        if (isLoading) {
+          Loading()
+        } else {
+          SkuList(
+              isConnected = isConnected,
+              list = skuList,
+              onPurchase = onPurchase,
           )
-          TextButton(
-              onClick = onClose,
-          ) {
-            Text(
-                text = stringResource(R.string.close),
-            )
-          }
         }
-
-        BillingError(
-            snackbarHostState = snackbarHostState,
-            error = error,
-            onSnackbarDismissed = onBillingErrorDismissed,
-        )
       }
+
+      Row(
+          modifier = Modifier.padding(16.dp),
+      ) {
+        Spacer(
+            modifier = Modifier.weight(1F),
+        )
+        TextButton(
+            onClick = onClose,
+        ) {
+          Text(
+              text = stringResource(R.string.close),
+          )
+        }
+      }
+
+      BillingError(
+          snackbarHostState = snackbarHostState,
+          error = error,
+          onSnackbarDismissed = onBillingErrorDismissed,
+      )
     }
   }
 }

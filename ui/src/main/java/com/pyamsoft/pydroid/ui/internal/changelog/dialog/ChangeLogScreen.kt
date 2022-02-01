@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -54,32 +53,24 @@ internal fun ChangeLogScreen(
   val name = state.name
   val changeLog = state.changeLog
 
-  Column(
+  AppHeader(
       modifier = modifier,
+      elevation = DialogDefaults.DialogElevation,
+      icon = icon,
+      name = name,
+      imageLoader = imageLoader,
   ) {
-    AppHeader(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = DialogDefaults.DialogElevation,
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-    )
+    Column {
+      ChangeLog(
+          modifier = Modifier.fillMaxWidth(),
+          changeLog = changeLog,
+      )
 
-    Surface(
-        elevation = DialogDefaults.DialogElevation,
-    ) {
-      Column {
-        ChangeLog(
-            modifier = Modifier.fillMaxWidth(),
-            changeLog = changeLog,
-        )
-
-        Actions(
-            modifier = Modifier.fillMaxWidth(),
-            onRateApp = onRateApp,
-            onClose = onClose,
-        )
-      }
+      Actions(
+          modifier = Modifier.fillMaxWidth(),
+          onRateApp = onRateApp,
+          onClose = onClose,
+      )
     }
   }
 }

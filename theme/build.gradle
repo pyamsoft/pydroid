@@ -15,8 +15,10 @@
  */
 
 android {
+
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'
+    freeCompilerArgs += '-Xopt-in=kotlin.RequiresOptIn'
   }
 
   buildFeatures {
@@ -29,18 +31,13 @@ android {
 }
 
 dependencies {
-  api project(':core')
-  api project(':theme')
-
   // Compose
   implementation "androidx.activity:activity-compose:$composeActivity"
   implementation "androidx.compose.compiler:compiler:$compose_version"
   implementation "androidx.compose.ui:ui:$compose_version"
   implementation "androidx.compose.material:material:$compose_version"
+  implementation "androidx.compose.animation:animation:$compose_version"
   implementation "androidx.compose.ui:ui-tooling:$compose_version"
 
-  // Accompanist
-  implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist"
-
-  implementation "androidx.startup:startup-runtime:$startup"
+  api project(':core')
 }

@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':bus'
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':notify'
-include ':ui'
-include ':util'
-include ':inject'
-include ':theme'
+
+package com.pyamsoft.pydroid.theme
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+/** Default values for keylines */
+public object KeylineDefaults {
+
+  /** Keyline unit for keylines */
+  public val Baseline: Dp = 8.dp
+
+  /** Keyline unit for content */
+  public val Content: Dp = 16.dp
+
+  /** Keyline unit for typography */
+  public val Typography: Dp = 4.dp
+}

@@ -35,7 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 
 @Composable
 internal fun AboutListItem(
@@ -47,10 +49,10 @@ internal fun AboutListItem(
   Card(
       modifier = modifier,
       shape = MaterialTheme.shapes.medium,
-      elevation = 2.dp,
+      elevation = CardDefaults.Elevation,
   ) {
     Column(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(MaterialTheme.keylines.baseline),
     ) {
       Name(
           library = library,

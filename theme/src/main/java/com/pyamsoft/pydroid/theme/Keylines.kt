@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':bus'
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':notify'
-include ':ui'
-include ':util'
-include ':inject'
-include ':theme'
+
+package com.pyamsoft.pydroid.theme
+
+import androidx.compose.ui.unit.Dp
+
+/** A data class which holds theme enforced keyline values */
+public data class Keylines
+internal constructor(
+    public val baseline: Dp,
+    public val content: Dp,
+    public val typography: Dp,
+)

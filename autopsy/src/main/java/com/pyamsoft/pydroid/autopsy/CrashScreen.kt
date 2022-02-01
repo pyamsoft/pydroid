@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pyamsoft.pydroid.theme.keylines
 
 @Composable
 internal fun CrashScreen(
@@ -47,7 +48,7 @@ internal fun CrashScreen(
       contentColor = colorResource(R.color.crash_foreground_color),
   ) {
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(MaterialTheme.keylines.typography),
     ) {
       ThreadName(
           threadName = threadName,

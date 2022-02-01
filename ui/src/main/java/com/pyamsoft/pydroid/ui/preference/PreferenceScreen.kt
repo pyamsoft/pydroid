@@ -27,16 +27,17 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
+import com.pyamsoft.pydroid.ui.theme.ZeroElevation
+import com.pyamsoft.pydroid.ui.theme.ZeroSpacing
 
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
-    topItemMargin: Dp = 0.dp,
-    bottomItemMargin: Dp = 0.dp,
+    elevation: Dp = ZeroElevation,
+    topItemMargin: Dp = ZeroSpacing,
+    bottomItemMargin: Dp = ZeroSpacing,
     preferences: List<Preferences>,
 ) {
   Surface(

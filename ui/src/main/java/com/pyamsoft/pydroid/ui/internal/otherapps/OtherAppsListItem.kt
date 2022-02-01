@@ -41,6 +41,7 @@ import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
@@ -55,7 +56,7 @@ internal fun OtherAppsListItem(
   Card(
       modifier = modifier,
       shape = MaterialTheme.shapes.medium,
-      elevation = 2.dp,
+      elevation = CardDefaults.Elevation,
   ) {
     Row(
         modifier = Modifier.padding(8.dp).fillMaxWidth(),

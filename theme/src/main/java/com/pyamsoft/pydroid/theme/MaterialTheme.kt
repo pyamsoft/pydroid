@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.theme
+package com.pyamsoft.pydroid.theme
 
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -22,6 +22,11 @@ import androidx.compose.material.Shapes
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
+
+/** A Spacing extension on the Material theme */
+public val MaterialTheme.keylines: Keylines
+  @Composable @ReadOnlyComposable get() = LocalKeylines.current
 
 /** A Material Theme that also knows about Spacing support */
 @Composable
@@ -29,7 +34,7 @@ public fun MaterialTheme(
     colors: Colors = MaterialTheme.colors,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
-    spacing: Spacing = MaterialTheme.spacing,
+    keylines: Keylines = MaterialTheme.keylines,
     content: @Composable () -> Unit
 ) {
   MaterialTheme(
@@ -37,9 +42,8 @@ public fun MaterialTheme(
       typography = typography,
       shapes = shapes,
   ) {
-    // Provide the spacing as the LocalSpacing value
     CompositionLocalProvider(
-        LocalSpacing provides spacing,
+        LocalKeylines provides keylines,
         content = content,
     )
   }

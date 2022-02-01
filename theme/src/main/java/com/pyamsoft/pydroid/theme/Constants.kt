@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':bus'
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':notify'
-include ':ui'
-include ':util'
-include ':inject'
-include ':theme'
+
+package com.pyamsoft.pydroid.theme
+
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+/** Zero space */
+public val ZeroSize: Dp = 0.dp
+
+/** Thinnest possible spacing */
+public val HairlineSize: Dp = 1.dp

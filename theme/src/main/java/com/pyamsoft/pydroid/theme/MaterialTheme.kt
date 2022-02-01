@@ -31,7 +31,7 @@ public val MaterialTheme.keylines: Keylines
 
 /** A Material Theme that also knows about Spacing support */
 @Composable
-public fun MaterialTheme(
+public fun PYDroidTheme(
     colors: Colors = MaterialTheme.colors,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,

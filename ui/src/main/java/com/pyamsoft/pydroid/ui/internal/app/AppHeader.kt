@@ -110,7 +110,7 @@ private fun TitleAndIcon(
                 builder = { crossfade(true) },
             ),
         contentDescription = "$name Icon",
-        modifier = Modifier.size(ImageDefaults.IconSize),
+        modifier = Modifier.size(ImageDefaults.LargeSize),
     )
     Text(
         text = name,

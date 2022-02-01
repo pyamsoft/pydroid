@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
@@ -58,12 +59,15 @@ internal fun ChangeLogScreen(
   ) {
     AppHeader(
         modifier = Modifier.fillMaxWidth(),
+        elevation = DialogDefaults.DialogElevation,
         icon = icon,
         name = name,
         imageLoader = imageLoader,
     )
 
-    Surface {
+    Surface(
+        elevation = DialogDefaults.DialogElevation,
+    ) {
       Column {
         ChangeLog(
             modifier = Modifier.fillMaxWidth(),

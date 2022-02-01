@@ -23,8 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -42,6 +41,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     hideDataPolicy: Boolean,
@@ -70,10 +70,9 @@ internal fun SettingsScreen(
   val applicationName = state.applicationName
   val darkMode = state.darkMode
 
-  val scaffoldState = rememberScaffoldState()
-  Scaffold(
+  Surface(
       modifier = modifier,
-      scaffoldState = scaffoldState,
+      elevation = elevation,
   ) {
     Crossfade(
         targetState = isLoading,

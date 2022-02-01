@@ -21,26 +21,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
@@ -59,12 +61,11 @@ internal fun OtherAppsScreen(
   val appsError = state.appsError
   val navigationError = state.navigationError
 
-  val scaffoldState = rememberScaffoldState()
+  val snackbarHostState = remember { SnackbarHostState() }
 
-  Scaffold(
-      backgroundColor = MaterialTheme.colors.background,
+  Surface(
       modifier = modifier,
-      scaffoldState = scaffoldState,
+      elevation = DialogDefaults.DialogElevation,
   ) {
     Column {
       DialogToolbar(
@@ -72,36 +73,40 @@ internal fun OtherAppsScreen(
           title = "More pyamsoft apps",
           onClose = onClose,
       )
-      Crossfade(
-          targetState = isLoading,
-      ) { loading ->
-        if (loading) {
-          Loading()
-        } else {
-          Crossfade(
-              targetState = appsError,
-          ) { error ->
-            if (error != null) {
-              ErrorText(
-                  error = error,
-              )
-            } else {
-              OtherAppsList(
-                  apps = apps,
-                  imageLoader = imageLoader,
-                  onViewStorePage = onViewStorePage,
-                  onViewSourceCode = onViewSourceCode,
-              )
+      Box(
+          contentAlignment = Alignment.BottomCenter,
+      ) {
+        Crossfade(
+            targetState = isLoading,
+        ) { loading ->
+          if (loading) {
+            Loading()
+          } else {
+            Crossfade(
+                targetState = appsError,
+            ) { error ->
+              if (error != null) {
+                ErrorText(
+                    error = error,
+                )
+              } else {
+                OtherAppsList(
+                    apps = apps,
+                    imageLoader = imageLoader,
+                    onViewStorePage = onViewStorePage,
+                    onViewSourceCode = onViewSourceCode,
+                )
+              }
             }
           }
         }
-      }
 
-      NavigationError(
-          snackbarHost = scaffoldState.snackbarHostState,
-          error = navigationError,
-          onSnackbarDismissed = onNavigationErrorDismissed,
-      )
+        NavigationError(
+            snackbarHost = snackbarHostState,
+            error = navigationError,
+            onSnackbarDismissed = onNavigationErrorDismissed,
+        )
+      }
     }
   }
 }
@@ -109,7 +114,7 @@ internal fun OtherAppsScreen(
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
+      modifier = Modifier.fillMaxSize().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }
@@ -122,7 +127,7 @@ private fun OtherAppsList(
     onViewSourceCode: (OtherApp) -> Unit,
 ) {
   LazyColumn(
-      modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+      modifier = Modifier.fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(8.dp),
       contentPadding = PaddingValues(8.dp),
   ) {
@@ -144,7 +149,7 @@ private fun OtherAppsList(
 @Composable
 private fun ErrorText(error: Throwable) {
   Box(
-      modifier = Modifier.fillMaxWidth().padding(16.dp),
+      modifier = Modifier.fillMaxSize().padding(16.dp),
       contentAlignment = Alignment.Center,
   ) {
     Text(
@@ -155,6 +160,7 @@ private fun ErrorText(error: Throwable) {
 
 @Composable
 private fun NavigationError(
+    modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
@@ -168,6 +174,11 @@ private fun NavigationError(
       onSnackbarDismissed()
     }
   }
+
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHost,
+  )
 }
 
 @Composable

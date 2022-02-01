@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -233,6 +234,13 @@ public abstract class SettingsFragment : Fragment() {
   /** Override this method to add additional margin to the top settings item */
   @Composable @CheckResult protected abstract fun customBottomItemMargin(): Dp
 
+  /** Override this method to add additional margin to the top settings item */
+  @Composable
+  @CheckResult
+  protected open fun customElevation(): Dp {
+    return NO_ELEVATION
+  }
+
   final override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
@@ -257,6 +265,7 @@ public abstract class SettingsFragment : Fragment() {
           composeTheme(act) {
             CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
               SettingsScreen(
+                  elevation = customElevation(),
                   state = state,
                   hideClearAll = hideClearAll,
                   hideUpgradeInformation = hideUpgradeInformation,
@@ -335,5 +344,7 @@ public abstract class SettingsFragment : Fragment() {
 
     // Only bottom 16 bits.
     private const val RC_APP_UPDATE = 146
+
+    private val NO_ELEVATION = 0.dp
   }
 }

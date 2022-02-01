@@ -34,12 +34,14 @@ import com.google.accompanist.insets.statusBarsHeight
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
     topItemMargin: Dp = 0.dp,
     bottomItemMargin: Dp = 0.dp,
     preferences: List<Preferences>,
 ) {
   Surface(
       modifier = modifier,
+      elevation = elevation,
   ) {
     LazyColumn {
       val maxIndex = preferences.lastIndex

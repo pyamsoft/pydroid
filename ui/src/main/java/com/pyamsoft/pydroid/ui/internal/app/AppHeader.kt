@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
@@ -45,9 +46,9 @@ import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 private const val ICON_SIZE = 56
 
 @Composable
-@JvmOverloads
 internal fun AppHeader(
     modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
     icon: Int,
     name: String,
     imageLoader: ImageLoader,
@@ -64,18 +65,16 @@ internal fun AppHeader(
       Spacer(
           modifier = Modifier.height(spaceHeight.dp).fillMaxWidth(),
       )
-      Spacer(
-          modifier =
-              Modifier.height((ICON_SIZE + spaceHeight).dp)
-                  .background(
-                      color = MaterialTheme.colors.surface,
-                      shape =
-                          MaterialTheme.shapes.medium.copy(
-                              bottomEnd = ZeroCornerSize,
-                              bottomStart = ZeroCornerSize,
-                          ),
-                  )
-                  .fillMaxWidth(),
+      Surface(
+          modifier = Modifier.height((ICON_SIZE + spaceHeight).dp).fillMaxWidth(),
+          color = MaterialTheme.colors.surface,
+          elevation = elevation,
+          shape =
+              MaterialTheme.shapes.medium.copy(
+                  bottomEnd = ZeroCornerSize,
+                  bottomStart = ZeroCornerSize,
+              ),
+          content = {},
       )
     }
 

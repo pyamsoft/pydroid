@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 
 @Composable
 internal fun ResetScreen(
@@ -44,6 +45,7 @@ internal fun ResetScreen(
 
   Surface(
       modifier = modifier,
+      elevation = DialogDefaults.DialogElevation,
   ) {
     Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
       Box(

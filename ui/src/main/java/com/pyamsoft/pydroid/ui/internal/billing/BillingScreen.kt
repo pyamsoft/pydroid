@@ -47,6 +47,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
@@ -72,12 +73,15 @@ internal fun BillingScreen(
   ) {
     AppHeader(
         modifier = Modifier.fillMaxWidth(),
+        elevation = DialogDefaults.DialogElevation,
         icon = icon,
         name = name,
         imageLoader = imageLoader,
     )
 
-    Surface {
+    Surface(
+        elevation = DialogDefaults.DialogElevation,
+    ) {
       Column {
         Crossfade(targetState = connection) { connected ->
           // Remember computed value

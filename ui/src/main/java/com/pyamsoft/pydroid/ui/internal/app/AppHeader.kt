@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private const val ICON_SIZE = 56
@@ -92,7 +93,10 @@ private fun TitleAndIcon(
     onMeasured: (Int) -> Unit,
 ) {
   Column(
-      modifier = modifier.padding(horizontal = 16.dp).padding(top = 16.dp),
+      modifier =
+          modifier
+              .padding(horizontal = MaterialTheme.keylines.content)
+              .padding(top = MaterialTheme.keylines.content),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
@@ -123,7 +127,7 @@ private fun PreviewAppHeader() {
       imageLoader = createNewTestImageLoader(),
       content = {
         Surface(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
         ) {
           Text(
               text = "Test",

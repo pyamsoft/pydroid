@@ -93,7 +93,7 @@ internal fun BillingScreen(
       }
 
       Row(
-          modifier = Modifier.padding(16.dp),
+          modifier = Modifier.padding(MaterialTheme.keylines.content),
       ) {
         Spacer(
             modifier = Modifier.weight(1F),
@@ -140,7 +140,7 @@ private fun SkuList(
           modifier = Modifier.fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
           contentPadding =
-              PaddingValues(horizontal = 16.dp, vertical = MaterialTheme.keylines.baseline),
+              PaddingValues(horizontal = MaterialTheme.keylines.content, vertical = MaterialTheme.keylines.baseline),
       ) {
         items(
             items = list,
@@ -160,7 +160,7 @@ private fun SkuList(
 @Composable
 private fun ErrorText() {
   Box(
-      modifier = Modifier.fillMaxWidth().padding(16.dp),
+      modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) {
     Text(
@@ -172,7 +172,7 @@ private fun ErrorText() {
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxWidth().padding(16.dp),
+      modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }

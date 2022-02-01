@@ -48,7 +48,7 @@ internal fun VersionUpgradeScreen(
       elevation = DialogDefaults.DialogElevation,
   ) {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = Modifier.padding(all = MaterialTheme.keylines.content).fillMaxWidth(),
     ) {
       Box(
           modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),

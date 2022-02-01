@@ -101,7 +101,7 @@ internal fun AboutScreen(
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxSize().padding(16.dp),
+      modifier = Modifier.fillMaxSize().padding(all = MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }
@@ -115,7 +115,7 @@ private fun AboutList(
   Box {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
         contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
     ) {
       items(

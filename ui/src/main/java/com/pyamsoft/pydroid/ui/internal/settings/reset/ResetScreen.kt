@@ -48,7 +48,7 @@ internal fun ResetScreen(
       modifier = modifier,
       elevation = DialogDefaults.DialogElevation,
   ) {
-    Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+    Column(modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth()) {
       Box(
           modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
       ) { Title() }

@@ -69,7 +69,7 @@ internal fun OtherAppsListItem(
       )
 
       Column(
-          modifier = Modifier.padding(start = 16.dp).weight(1F),
+          modifier = Modifier.padding(start = MaterialTheme.keylines.content).weight(1F),
       ) {
         Name(
             app = app,

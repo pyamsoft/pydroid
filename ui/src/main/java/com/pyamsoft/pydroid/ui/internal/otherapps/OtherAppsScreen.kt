@@ -115,7 +115,7 @@ internal fun OtherAppsScreen(
 @Composable
 private fun Loading() {
   Box(
-      modifier = Modifier.fillMaxSize().padding(16.dp),
+      modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }
@@ -150,7 +150,7 @@ private fun OtherAppsList(
 @Composable
 private fun ErrorText(error: Throwable) {
   Box(
-      modifier = Modifier.fillMaxSize().padding(16.dp),
+      modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) {
     Text(

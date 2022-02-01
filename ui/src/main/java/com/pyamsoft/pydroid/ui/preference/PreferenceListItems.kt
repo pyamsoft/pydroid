@@ -228,7 +228,7 @@ internal fun ListPreferenceItem(
         },
         buttons = {
           Column(
-              modifier = Modifier.padding(16.dp),
+              modifier = Modifier.padding(MaterialTheme.keylines.content),
           ) {
             entries.forEach { current ->
               val name = current.key
@@ -250,11 +250,11 @@ internal fun ListPreferenceItem(
                                 }
                               },
                           )
-                          .padding(16.dp),
+                          .padding(MaterialTheme.keylines.content),
                   verticalAlignment = Alignment.CenterVertically,
               ) {
                 RadioButton(
-                    modifier = Modifier.padding(end = 16.dp),
+                    modifier = Modifier.padding(end = MaterialTheme.keylines.content),
                     selected = isSelected,
                     onClick = {
                       if (!isSelected) {

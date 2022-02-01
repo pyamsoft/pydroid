@@ -166,7 +166,7 @@ private fun Disclosure(
 ) {
   val scrollState = rememberScrollState()
   Column(
-      modifier = modifier.verticalScroll(scrollState).padding(16.dp),
+      modifier = modifier.verticalScroll(scrollState).padding(MaterialTheme.keylines.content),
   ) {
     Text(
         text = "$name is free and open source software.",
@@ -233,13 +233,13 @@ private fun Actions(
 
   if (isPortrait) {
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(MaterialTheme.keylines.content),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) { content() }
   } else {
     Row(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(MaterialTheme.keylines.content),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) { content() }

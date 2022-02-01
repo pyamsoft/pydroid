@@ -86,7 +86,7 @@ private fun ChangeLog(
       modifier = modifier,
       verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
       contentPadding =
-          PaddingValues(horizontal = 16.dp, vertical = MaterialTheme.keylines.baseline),
+          PaddingValues(horizontal = MaterialTheme.keylines.content, vertical = MaterialTheme.keylines.baseline),
   ) {
     items(
         items = changeLog,
@@ -106,7 +106,7 @@ private fun Actions(
     onClose: () -> Unit,
 ) {
   Row(
-      modifier = modifier.padding(16.dp),
+      modifier = modifier.padding(MaterialTheme.keylines.content),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {

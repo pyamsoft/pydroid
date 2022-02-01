@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -47,7 +46,7 @@ internal fun AboutListItem(
 ) {
   Card(
       modifier = modifier,
-      shape = RoundedCornerShape(size = 4.dp),
+      shape = MaterialTheme.shapes.medium,
       elevation = 2.dp,
   ) {
     Column(

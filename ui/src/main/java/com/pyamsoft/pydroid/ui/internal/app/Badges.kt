@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.SpacingDefaults
 
 @Composable
 internal fun AdBadge(
@@ -54,6 +55,8 @@ internal fun InAppBadge(
   )
 }
 
+private val BADGE_SHAPE = RoundedCornerShape(SpacingDefaults.Adjustment)
+
 @Composable
 private fun Badge(
     modifier: Modifier = Modifier,
@@ -64,7 +67,7 @@ private fun Badge(
           modifier
               .background(
                   brush = SolidColor(colorResource(R.color.green500)),
-                  shape = RoundedCornerShape(4.dp),
+                  shape = BADGE_SHAPE,
               )
               .padding(horizontal = 4.dp, vertical = 1.dp),
       contentAlignment = Alignment.Center,

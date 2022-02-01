@@ -36,13 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
+import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
@@ -103,7 +103,9 @@ private fun Name(app: OtherApp) {
         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
         text = app.name,
     )
-    Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) { AdBadge() }
+    Box(
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+    ) { AdBadge() }
     Spacer(modifier = Modifier.weight(1F))
   }
 }
@@ -126,7 +128,7 @@ private fun Icon(app: OtherApp, imageLoader: ImageLoader) {
                   builder = { crossfade(true) },
               ),
           contentDescription = name,
-          modifier = Modifier.size(64.dp),
+          modifier = Modifier.size(ImageDefaults.DefaultSize),
       )
     }
   }
@@ -162,7 +164,9 @@ private fun ViewSource(onClick: () -> Unit) {
 
 @Composable
 private fun OpenStore(onClick: () -> Unit) {
-  Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) {
+  Box(
+      modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+  ) {
     TextButton(
         onClick = onClick,
     ) {

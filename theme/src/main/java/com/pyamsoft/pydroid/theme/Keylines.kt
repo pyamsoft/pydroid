@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.theme
 import androidx.compose.ui.unit.Dp
 
 /** A data class which holds theme enforced keyline values */
-public data class Keylines
-internal constructor(
+public data class Keylines(
+    /** Baseline keyline size */
     public val baseline: Dp,
+    /** Content keyline size */
     public val content: Dp,
+    /** Typography keyline size */
     public val typography: Dp,
 )

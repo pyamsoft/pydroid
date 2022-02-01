@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
@@ -109,7 +110,7 @@ private fun TitleAndIcon(
                 builder = { crossfade(true) },
             ),
         contentDescription = "$name Icon",
-        modifier = Modifier.size(ICON_SIZE.dp),
+        modifier = Modifier.size(ImageDefaults.IconSize),
     )
     Text(
         text = name,

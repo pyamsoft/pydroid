@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
@@ -64,7 +63,9 @@ internal fun AboutListItem(
           library = library,
       )
 
-      Row(modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),) {
+      Row(
+          modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+      ) {
         ViewLicense(
             onClick = onViewLicense,
         )
@@ -122,7 +123,9 @@ private fun ViewLicense(onClick: () -> Unit) {
 
 @Composable
 private fun VisitHomepage(onClick: () -> Unit) {
-  Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) {
+  Box(
+      modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+  ) {
     TextButton(
         onClick = onClick,
     ) {

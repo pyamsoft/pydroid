@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /** Default values for Icons */
-public object IconDefaults {
+public object ImageDefaults {
 
   /** Default size unit */
   public val LargeSize: Dp = 80.dp

@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
+private val TYPE_WIDTH = 80.dp
+
 @Composable
 internal fun ChangeLogListItem(
     modifier: Modifier = Modifier,
@@ -43,7 +45,7 @@ internal fun ChangeLogListItem(
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(
-        modifier = Modifier.width(80.dp),
+        modifier = Modifier.width(TYPE_WIDTH),
         verticalArrangement = Arrangement.Center,
     ) {
       Type(

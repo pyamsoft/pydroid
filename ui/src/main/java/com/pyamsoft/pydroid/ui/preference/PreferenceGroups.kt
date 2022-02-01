@@ -24,8 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 
 @Composable
 @JvmOverloads
@@ -35,7 +35,10 @@ internal fun PreferenceGroupHeader(
 ) {
   Box(
       contentAlignment = Alignment.CenterStart,
-      modifier = modifier.padding(MaterialTheme.keylines.content).padding(start = 48.dp),
+      modifier =
+          modifier
+              .padding(MaterialTheme.keylines.content)
+              .padding(start = ListItemDefaults.LeadingSize),
   ) {
     Text(
         text = name,

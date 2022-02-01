@@ -41,8 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.Dp.Companion
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -52,6 +50,9 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+
+private val MAX_HEIGHT_PORTRAIT = 400.dp
+private val MAX_HEIGHT_LANDSCAPE = 100.dp
 
 @Composable
 internal fun DataPolicyDisclosureScreen(
@@ -89,7 +90,7 @@ internal fun DataPolicyDisclosureScreen(
           modifier =
               Modifier.fillMaxWidth()
                   .heightIn(
-                      max = if (isPortrait) 400.dp else 100.dp,
+                      max = if (isPortrait) MAX_HEIGHT_PORTRAIT else MAX_HEIGHT_LANDSCAPE,
                   ),
           name = name,
       )

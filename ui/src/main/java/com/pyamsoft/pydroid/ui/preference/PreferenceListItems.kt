@@ -42,9 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 
@@ -338,7 +338,7 @@ private fun DefaultPreferenceItem(
       horizontalArrangement = Arrangement.Start,
   ) {
     Box(
-        modifier = Modifier.size(48.dp),
+        modifier = Modifier.size(ListItemDefaults.LeadingSize),
         contentAlignment = Alignment.Center,
     ) {
       if (icon != null) {
@@ -363,7 +363,11 @@ private fun DefaultPreferenceItem(
             text = text,
             style = MaterialTheme.typography.body1,
         )
-        badge?.let { compose -> Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) { compose() } }
+        badge?.let { compose ->
+          Box(
+              modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+          ) { compose() }
+        }
         Spacer(modifier = Modifier.weight(1F))
       }
 
@@ -384,7 +388,9 @@ private fun DefaultPreferenceItem(
 
     trailing?.also { compose ->
       Box(
-          modifier = Modifier.padding(start = MaterialTheme.keylines.baseline).size(48.dp),
+          modifier =
+              Modifier.padding(start = MaterialTheme.keylines.baseline)
+                  .size(ListItemDefaults.LeadingSize),
           contentAlignment = Alignment.Center,
       ) { compose(enabled) }
     }

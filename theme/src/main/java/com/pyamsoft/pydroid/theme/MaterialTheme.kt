@@ -25,6 +25,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 
 /** A Spacing extension on the Material theme */
+@Suppress("unused")
 public val MaterialTheme.keylines: Keylines
   @Composable @ReadOnlyComposable get() = LocalKeylines.current
 

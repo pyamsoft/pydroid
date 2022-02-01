@@ -39,12 +39,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
+import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
-
-private const val ICON_SIZE = 56
 
 @Composable
 internal fun AppHeader(
@@ -55,7 +54,7 @@ internal fun AppHeader(
     imageLoader: ImageLoader,
     content: @Composable () -> Unit,
 ) {
-  var titleHeight by remember { mutableStateOf(0) }
+  var titleHeight by remember { mutableStateOf(ZeroSize) }
   val spaceHeight = remember(titleHeight) { titleHeight / 2 }
 
   Box(
@@ -66,12 +65,12 @@ internal fun AppHeader(
     Column {
       // Space half the height and draw the header behind it
       Surface(
-          modifier = Modifier.padding(top = spaceHeight.dp),
+          modifier = Modifier.padding(top = spaceHeight),
           elevation = elevation,
           shape = MaterialTheme.shapes.medium,
       ) {
         Box(
-            modifier = Modifier.padding(top = spaceHeight.dp),
+            modifier = Modifier.padding(top = spaceHeight),
         ) { content() }
       }
     }
@@ -92,7 +91,7 @@ private fun TitleAndIcon(
     icon: Int,
     name: String,
     imageLoader: ImageLoader,
-    onMeasured: (Int) -> Unit,
+    onMeasured: (Dp) -> Unit,
 ) {
   Column(
       modifier =
@@ -115,7 +114,7 @@ private fun TitleAndIcon(
     Text(
         text = name,
         style = MaterialTheme.typography.h5,
-        onTextLayout = { onMeasured(it.size.height / 2 + ICON_SIZE) },
+        onTextLayout = { onMeasured((it.size.height / 2).dp + ImageDefaults.LargeSize) },
     )
   }
 }

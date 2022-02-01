@@ -7,5 +7,5 @@ import androidx.compose.ui.unit.dp
 public object DialogDefaults {
 
   /** Elevation for a Dialog */
-  public val DialogElevation: Dp = 24.dp
+  public val DialogElevation: Dp = 16.dp
 }

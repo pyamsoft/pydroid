@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 
 @Composable
@@ -49,11 +50,11 @@ internal fun ResetScreen(
   ) {
     Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
       Box(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
       ) { Title() }
 
       Box(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
       ) { Message() }
 
       Actions(
@@ -82,7 +83,7 @@ private fun Message() {
     )
 
     Box(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
           text = "The app will act as if you are launching it for the first time.",
@@ -91,7 +92,7 @@ private fun Message() {
     }
 
     Box(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
           text = "This cannot be undone.",
@@ -120,7 +121,7 @@ private fun Actions(
       )
     }
     Box(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
     ) {
       TextButton(
           onClick = onReset,

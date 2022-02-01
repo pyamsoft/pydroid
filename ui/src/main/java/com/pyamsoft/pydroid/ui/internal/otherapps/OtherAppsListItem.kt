@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
@@ -59,7 +60,7 @@ internal fun OtherAppsListItem(
       elevation = CardDefaults.Elevation,
   ) {
     Row(
-        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+        modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
       Icon(
@@ -81,7 +82,7 @@ internal fun OtherAppsListItem(
               onClick = { onViewSource(app) },
           )
           Box(
-              modifier = Modifier.padding(start = 8.dp),
+              modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
           ) {
             OpenStore(
                 onClick = { onOpenStore(app) },
@@ -102,7 +103,7 @@ private fun Name(app: OtherApp) {
         style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
         text = app.name,
     )
-    Box(modifier = Modifier.padding(start = 8.dp)) { AdBadge() }
+    Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) { AdBadge() }
     Spacer(modifier = Modifier.weight(1F))
   }
 }
@@ -114,7 +115,7 @@ private fun Icon(app: OtherApp, imageLoader: ImageLoader) {
 
   if (icon.isNotBlank()) {
     Box(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
         contentAlignment = Alignment.Center,
     ) {
       Image(
@@ -138,7 +139,7 @@ private fun Description(app: OtherApp) {
 
   AnimatedVisibility(visible = description.isNotBlank()) {
     Box(
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier.padding(vertical = MaterialTheme.keylines.baseline),
     ) {
       Text(
           style = MaterialTheme.typography.caption,
@@ -161,7 +162,7 @@ private fun ViewSource(onClick: () -> Unit) {
 
 @Composable
 private fun OpenStore(onClick: () -> Unit) {
-  Box(modifier = Modifier.padding(start = 8.dp)) {
+  Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) {
     TextButton(
         onClick = onClick,
     ) {

@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
@@ -137,8 +138,9 @@ private fun SkuList(
     } else {
       LazyColumn(
           modifier = Modifier.fillMaxWidth(),
-          verticalArrangement = Arrangement.spacedBy(8.dp),
-          contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+          verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
+          contentPadding =
+              PaddingValues(horizontal = 16.dp, vertical = MaterialTheme.keylines.baseline),
       ) {
         items(
             items = list,

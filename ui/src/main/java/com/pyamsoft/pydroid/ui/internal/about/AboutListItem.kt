@@ -64,7 +64,7 @@ internal fun AboutListItem(
           library = library,
       )
 
-      Row(modifier = Modifier.padding(top = 8.dp)) {
+      Row(modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),) {
         ViewLicense(
             onClick = onViewLicense,
         )
@@ -99,7 +99,7 @@ private fun Description(library: OssLibrary) {
 
   AnimatedVisibility(visible = description.isNotBlank()) {
     Box(
-        modifier = Modifier.padding(vertical = 8.dp),
+        modifier = Modifier.padding(vertical = MaterialTheme.keylines.baseline),
     ) {
       Text(
           style = MaterialTheme.typography.body2,
@@ -122,7 +122,7 @@ private fun ViewLicense(onClick: () -> Unit) {
 
 @Composable
 private fun VisitHomepage(onClick: () -> Unit) {
-  Box(modifier = Modifier.padding(start = 8.dp)) {
+  Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) {
     TextButton(
         onClick = onClick,
     ) {

@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
@@ -128,8 +129,8 @@ private fun OtherAppsList(
 ) {
   LazyColumn(
       modifier = Modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.spacedBy(8.dp),
-      contentPadding = PaddingValues(8.dp),
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
+      contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
   ) {
     items(
         items = apps,

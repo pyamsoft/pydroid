@@ -28,8 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.theme.keylines
 
 @Composable
 internal fun BillingListItem(
@@ -39,7 +39,10 @@ internal fun BillingListItem(
 ) {
 
   Row(
-      modifier = modifier.padding(vertical = 8.dp).clickable { onPurchase(sku) },
+      modifier =
+          modifier.padding(vertical = MaterialTheme.keylines.baseline).clickable {
+            onPurchase(sku)
+          },
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1F)) {
@@ -52,7 +55,7 @@ internal fun BillingListItem(
     }
 
     Box(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
         contentAlignment = Alignment.Center,
     ) {
       Price(

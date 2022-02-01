@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
@@ -132,8 +133,8 @@ private fun Links(
             modifier =
                 Modifier.clickable { onPrivacyPolicyClicked() }
                     .padding(
-                        top = if (isPortrait) 8.dp else 0.dp,
-                        start = if (isPortrait) 0.dp else 8.dp,
+                        top = if (isPortrait) MaterialTheme.keylines.baseline else 0.dp,
+                        start = if (isPortrait) 0.dp else MaterialTheme.keylines.baseline,
                     ),
             text = "View our Privacy Policy",
             style =
@@ -145,13 +146,13 @@ private fun Links(
 
   if (isPortrait) {
     Column(
-        modifier = modifier.padding(vertical = 8.dp),
+        modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) { content() }
   } else {
     Row(
-        modifier = modifier.padding(vertical = 8.dp),
+        modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) { content() }
@@ -173,7 +174,7 @@ private fun Disclosure(
     )
 
     Text(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
         text =
             """
         Because it is distributed on the Google Play Store, the developer is provided
@@ -185,7 +186,7 @@ private fun Disclosure(
     )
 
     Text(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
         text =
             """
               Aside from these Google Play Store Vitals, your application data is never knowingly
@@ -218,8 +219,8 @@ private fun Actions(
         TextButton(
             modifier =
                 Modifier.padding(
-                    top = if (isPortrait) 8.dp else 0.dp,
-                    start = if (isPortrait) 0.dp else 8.dp,
+                    top = if (isPortrait) MaterialTheme.keylines.baseline else 0.dp,
+                    start = if (isPortrait) 0.dp else MaterialTheme.keylines.baseline,
                 ),
             onClick = onReject,
         ) {

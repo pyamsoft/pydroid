@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 
 @Composable
@@ -50,11 +51,11 @@ internal fun VersionUpgradeScreen(
         modifier = Modifier.padding(16.dp).fillMaxWidth(),
     ) {
       Box(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
       ) { Title() }
 
       Box(
-          modifier = Modifier.padding(bottom = 8.dp),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
       ) { Message() }
 
       Actions(
@@ -83,7 +84,7 @@ private fun Message() {
     )
 
     Box(
-        modifier = Modifier.padding(top = 8.dp),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
           text = "Click to restart the app and upgrade to the latest version!",
@@ -112,7 +113,7 @@ private fun Actions(
       )
     }
     Box(
-        modifier = Modifier.padding(start = 8.dp),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
     ) {
       TextButton(
           onClick = onUpgrade,

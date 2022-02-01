@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
@@ -269,7 +270,7 @@ internal fun ListPreferenceItem(
             }
 
             Row(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
+                modifier = Modifier.padding(top = MaterialTheme.keylines.baseline).fillMaxWidth(),
             ) {
               Spacer(
                   modifier = Modifier.weight(1F),
@@ -332,7 +333,7 @@ private fun DefaultPreferenceItem(
     badge: (@Composable () -> Unit)? = null,
 ) {
   Row(
-      modifier = modifier(enabled).padding(8.dp),
+      modifier = modifier(enabled).padding(all = MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {
@@ -351,7 +352,7 @@ private fun DefaultPreferenceItem(
     }
 
     Column(
-        modifier = Modifier.padding(start = 8.dp).weight(1F),
+        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline).weight(1F),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
     ) {
@@ -362,7 +363,7 @@ private fun DefaultPreferenceItem(
             text = text,
             style = MaterialTheme.typography.body1,
         )
-        badge?.let { compose -> Box(modifier = Modifier.padding(start = 8.dp)) { compose() } }
+        badge?.let { compose -> Box(modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),) { compose() } }
         Spacer(modifier = Modifier.weight(1F))
       }
 
@@ -370,7 +371,7 @@ private fun DefaultPreferenceItem(
         Box(
             modifier =
                 Modifier.padding(
-                    top = 8.dp,
+                    top = MaterialTheme.keylines.baseline,
                 ),
         ) {
           Text(
@@ -383,7 +384,7 @@ private fun DefaultPreferenceItem(
 
     trailing?.also { compose ->
       Box(
-          modifier = Modifier.padding(start = 8.dp).size(48.dp),
+          modifier = Modifier.padding(start = MaterialTheme.keylines.baseline).size(48.dp),
           contentAlignment = Alignment.Center,
       ) { compose(enabled) }
     }

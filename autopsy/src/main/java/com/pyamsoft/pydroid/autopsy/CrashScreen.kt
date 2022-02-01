@@ -76,7 +76,7 @@ private fun ThreadName(
     threadName: String,
 ) {
   Box(
-      modifier = modifier.padding(bottom = 8.dp),
+      modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
   ) {
     Text(
         text = "Uncaught exception in $threadName thread",
@@ -96,7 +96,7 @@ private fun ThrowableName(
     throwableName: String,
 ) {
   Box(
-      modifier = modifier.padding(bottom = 8.dp),
+      modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
   ) {
     Text(
         text = throwableName,
@@ -119,7 +119,7 @@ private fun ThrowableMessage(
 
   if (message != null) {
     Box(
-        modifier = modifier.padding(bottom = 8.dp),
+        modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
     ) {
       Text(
           text = message,

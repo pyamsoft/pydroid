@@ -41,9 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Dp.Companion
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
+import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
@@ -133,8 +136,8 @@ private fun Links(
             modifier =
                 Modifier.clickable { onPrivacyPolicyClicked() }
                     .padding(
-                        top = if (isPortrait) MaterialTheme.keylines.baseline else 0.dp,
-                        start = if (isPortrait) 0.dp else MaterialTheme.keylines.baseline,
+                        top = if (isPortrait) MaterialTheme.keylines.baseline else ZeroSize,
+                        start = if (isPortrait) ZeroSize else MaterialTheme.keylines.baseline,
                     ),
             text = "View our Privacy Policy",
             style =
@@ -219,8 +222,8 @@ private fun Actions(
         TextButton(
             modifier =
                 Modifier.padding(
-                    top = if (isPortrait) MaterialTheme.keylines.baseline else 0.dp,
-                    start = if (isPortrait) 0.dp else MaterialTheme.keylines.baseline,
+                    top = if (isPortrait) MaterialTheme.keylines.baseline else ZeroSize,
+                    start = if (isPortrait) ZeroSize else MaterialTheme.keylines.baseline,
                 ),
             onClick = onReject,
         ) {

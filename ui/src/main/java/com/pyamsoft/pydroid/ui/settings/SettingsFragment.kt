@@ -57,6 +57,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -238,7 +239,7 @@ public abstract class SettingsFragment : Fragment() {
   @Composable
   @CheckResult
   protected open fun customElevation(): Dp {
-    return NO_ELEVATION
+    return ZeroElevation
   }
 
   final override fun onCreateView(
@@ -344,7 +345,5 @@ public abstract class SettingsFragment : Fragment() {
 
     // Only bottom 16 bits.
     private const val RC_APP_UPDATE = 146
-
-    private val NO_ELEVATION = 0.dp
   }
 }

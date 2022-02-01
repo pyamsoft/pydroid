@@ -41,13 +41,14 @@ import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 private const val ICON_SIZE = 56
 
 @Composable
 internal fun AppHeader(
     modifier: Modifier = Modifier,
-    elevation: Dp = 0.dp,
+    elevation: Dp = ZeroElevation,
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,

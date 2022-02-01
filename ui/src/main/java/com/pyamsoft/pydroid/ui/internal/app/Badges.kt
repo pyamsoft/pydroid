@@ -30,9 +30,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pyamsoft.pydroid.theme.HairlineSize
 import com.pyamsoft.pydroid.theme.KeylineDefaults
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 
 @Composable
@@ -69,7 +70,10 @@ private fun Badge(
                   brush = SolidColor(colorResource(R.color.green500)),
                   shape = BADGE_SHAPE,
               )
-              .padding(horizontal = 4.dp, vertical = 1.dp),
+              .padding(
+                  horizontal = MaterialTheme.keylines.typography,
+                  vertical = HairlineSize,
+              ),
       contentAlignment = Alignment.Center,
   ) {
     Text(

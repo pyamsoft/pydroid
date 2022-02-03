@@ -31,7 +31,10 @@ internal constructor(
   companion object {
 
     @JvmStatic
-    internal fun create(application: Application, params: PYDroid.Parameters): PYDroidInitializer {
+    internal fun create(
+        application: Application,
+        params: PYDroid.Parameters,
+    ): PYDroidInitializer {
       val isDebug = params.debug?.enabled ?: application.isDebugMode()
 
       if (isDebug) {

@@ -41,6 +41,7 @@ public fun interface ComposeThemeProvider {
   @Composable
   @SuppressLint("ComposableNaming")
   public operator fun invoke(
+      activity: Activity,
       themeProvider: ThemeProvider,
       content: @Composable () -> Unit,
   )
@@ -57,6 +58,10 @@ internal class ComposeThemeFactory(
   @SuppressLint("ComposableNaming")
   override operator fun invoke(activity: Activity, content: @Composable () -> Unit) {
     val provider = ThemeProvider { theming.isDarkTheme(activity) }
-    themeProvider(themeProvider = provider, content = content)
+    themeProvider(
+        activity = activity,
+        themeProvider = provider,
+        content = content,
+    )
   }
 }

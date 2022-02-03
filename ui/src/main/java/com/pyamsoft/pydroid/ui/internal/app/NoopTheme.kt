@@ -64,6 +64,7 @@ internal val NoopThemeProvider: ComposeThemeProvider =
       @Composable
       @SuppressLint("ComposableNaming")
       override operator fun invoke(
+          activity: Activity,
           themeProvider: ThemeProvider,
           content: @Composable () -> Unit,
       ) {

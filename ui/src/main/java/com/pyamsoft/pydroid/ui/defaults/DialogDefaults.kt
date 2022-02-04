@@ -18,5 +18,5 @@ public object DialogDefaults {
    * This has the unfortunate side effect of making the shadow on the surface only slightly elevated
    * as well though.
    */
-  public val DialogElevation: Dp = 4.dp
+  public val Elevation: Dp = 4.dp
 }

@@ -69,7 +69,7 @@ internal fun BillingScreen(
 
   AppHeader(
       modifier = modifier,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
       icon = icon,
       name = name,
       imageLoader = imageLoader,

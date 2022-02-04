@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util
+package com.pyamsoft.pydroid.theme
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -23,20 +23,20 @@ import androidx.annotation.CheckResult
 
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
-@SuppressLint("ResourceType")
-public fun Activity.valueFromCurrentTheme(@AttrRes attr: Int): Int {
-  return this.valuesFromCurrentTheme(attr)[0]
+public fun Activity.attributeFromCurrentTheme(@AttrRes attr: Int): Int {
+  val attrs = this.attributesFromCurrentTheme(attr)
+  return attrs.getOrElse(0) { 0 }
 }
 
 /** Pulls an attribute from the current Activity theme */
 @CheckResult
 @SuppressLint("ResourceType")
-public fun Activity.valuesFromCurrentTheme(@AttrRes vararg attrs: Int): IntArray {
-  val attributes = this.obtainStyledAttributes(attrs)
-  val styled = IntArray(attrs.size)
-  for (index in attrs.indices) {
-    styled[index] = attributes.getResourceId(index, 0)
+public fun Activity.attributesFromCurrentTheme(@AttrRes vararg attrs: Int): IntArray {
+  return IntArray(attrs.size).also { styled ->
+    this.obtainStyledAttributes(attrs).use { arr ->
+      for (index in attrs.indices) {
+        styled[index] = arr.getResourceId(index, 0)
+      }
+    }
   }
-  attributes.recycle()
-  return styled
 }

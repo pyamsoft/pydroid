@@ -16,11 +16,7 @@
 
 package com.pyamsoft.pydroid.util
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.res.Configuration
-import android.os.Build
-import android.view.Window
 import androidx.core.view.WindowCompat
 import com.pyamsoft.pydroid.core.Logger
 
@@ -31,36 +27,12 @@ import com.pyamsoft.pydroid.core.Logger
  * You must handle insets on your own.
  */
 public fun Activity.stableLayoutHideNavigation() {
-  val isLandscape = this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-  val w = this.window
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-    w.newStableLayoutHideNavigation(isLandscape)
-  } else {
-    w.oldStableLayoutHideNavigation(isLandscape)
+  this.window.also { w ->
+    if (w != null) {
+      Logger.d("Set Activity to fitsSystemWindows=false")
+      WindowCompat.setDecorFitsSystemWindows(w, false)
+    } else {
+      Logger.w("Activity is missing Window?")
+    }
   }
-}
-
-@SuppressLint("NewApi")
-private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
-  WindowCompat.setDecorFitsSystemWindows(this, false)
-
-  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
-  //  if (isLandscape) {
-  //    this.insetsController?.systemBarsBehavior =
-  //        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-  //  }
-}
-
-@Suppress("DEPRECATION")
-private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
-  WindowCompat.setDecorFitsSystemWindows(this, false)
-
-  Logger.d("This is where we would hide the navbar in landscape, but it crashes? $isLandscape")
-  //  if (isLandscape) {
-  //    // In landscape mode, navbar is marked immersive sticky
-  //    this.decorView.systemUiVisibility =
-  //        this.decorView.systemUiVisibility or
-  //            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-  //            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-  //  }
 }

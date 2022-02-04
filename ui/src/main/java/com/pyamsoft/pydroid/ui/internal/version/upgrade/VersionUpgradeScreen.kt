@@ -44,7 +44,7 @@ internal fun VersionUpgradeScreen(
 
   Surface(
       modifier = modifier,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
   ) {
     Column(
         modifier = Modifier.padding(all = MaterialTheme.keylines.content).fillMaxWidth(),

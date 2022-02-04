@@ -65,7 +65,7 @@ internal fun OtherAppsScreen(
 
   Surface(
       modifier = modifier,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
   ) {
     Column {
       DialogToolbar(

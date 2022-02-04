@@ -62,7 +62,7 @@ internal fun AboutScreen(
 
   Surface(
       modifier = modifier,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
   ) {
     Column {
       DialogToolbar(

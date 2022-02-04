@@ -45,7 +45,7 @@ internal fun ResetScreen(
 
   Surface(
       modifier = modifier,
-      elevation = DialogDefaults.DialogElevation,
+      elevation = DialogDefaults.Elevation,
   ) {
     Column(modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth()) {
       Box(

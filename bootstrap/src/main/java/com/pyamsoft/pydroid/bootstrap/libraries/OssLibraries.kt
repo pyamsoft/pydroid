@@ -37,7 +37,42 @@ public object OssLibraries {
   /** Using pydroid-ui library */
   public var usingUi: Boolean = false
 
+  /** Using pydroid-theme library */
+  public var usingTheme: Boolean = false
+
+  /** Using pydroid-bus library */
+  public var usingBus: Boolean = false
+
+  /** Using pydroid-biling library */
+  public var usingBilling: Boolean = false
+
+  /** Using pydroid-util library */
+  public var usingUtil: Boolean = false
+
+  /** Using pydroid-inject library */
+  public var usingInject: Boolean = false
+
+  private var addedBus: Boolean = false
+  private var addedBilling: Boolean = false
+  private var addedBuild: Boolean = false
+  private var addedCore: Boolean = false
+  private var addedBootstrap: Boolean = false
+  private var addedArch: Boolean = false
+  private var addedArchCompose: Boolean = false
+  private var addedUiCompose: Boolean = false
+  private var addedAutopsy: Boolean = false
+  private var addedNotify: Boolean = false
+  private var addedUi: Boolean = false
+  private var addedTheme: Boolean = false
+  private var addedUtil: Boolean = false
+  private var addedInject: Boolean = false
+
   private fun addBuildLibraries() {
+    if (addedBuild) {
+      return
+    }
+    addedBuild = true
+
     add(
         "Gradle Versions Plugin",
         "https://github.com/ben-manes/gradle-versions-plugin",
@@ -51,6 +86,11 @@ public object OssLibraries {
   }
 
   private fun addCoreLibraries() {
+    if (addedCore) {
+      return
+    }
+    addedCore = true
+
     add(
         "PYDroid Core",
         "https://github.com/pyamsoft/pydroid",
@@ -66,9 +106,16 @@ public object OssLibraries {
         "https://github.com/JetBrains/kotlin",
         "The Kotlin Programming Language.",
     )
+
+    addBuildLibraries()
   }
 
   private fun addUtilLibraries() {
+    if (addedUtil) {
+      return
+    }
+    addedUtil = true
+
     add(
         "PYDroid Util",
         "https://github.com/pyamsoft/pydroid",
@@ -79,9 +126,16 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
         "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android.",
     )
+
+    addCoreLibraries()
   }
 
   private fun addBootstrapLibraries() {
+    if (addedBootstrap) {
+      return
+    }
+    addedBootstrap = true
+
     add(
         "PYDroid Bootstrap",
         "https://github.com/pyamsoft/pydroid",
@@ -117,9 +171,16 @@ public object OssLibraries {
                 location = "https://developer.android.com/distribute/play-services",
             ),
     )
+
+    addUtilLibraries()
   }
 
   private fun addUiLibraries() {
+    if (addedUi) {
+      return
+    }
+    addedUi = true
+
     add(
         "PYDroid UI",
         "https://github.com/pyamsoft/pydroid",
@@ -152,9 +213,35 @@ public object OssLibraries {
         "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
     )
     addComposeUiLibraries()
+    addArchLibraries()
+    addBillingLibraries()
+    addBootstrapLibraries()
+    addInjectLibraries()
+    addUtilLibraries()
+    addThemeLibraries()
+  }
+
+  private fun addThemeLibraries() {
+    if (addedTheme) {
+      return
+    }
+    addedTheme = true
+
+    add(
+        "PYDroid Theme",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid extensions for MaterialTheme",
+    )
+
+    addCoreLibraries()
   }
 
   private fun addArchLibraries() {
+    if (addedArch) {
+      return
+    }
+    addedArch = true
+
     add(
         "PYDroid Arch",
         "https://github.com/pyamsoft/pydroid",
@@ -176,9 +263,16 @@ public object OssLibraries {
         "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
     )
     addComposeArchLibraries()
+    addBusLibraries()
+    addUtilLibraries()
   }
 
   private fun addComposeArchLibraries() {
+    if (addedArchCompose) {
+      return
+    }
+    addedArchCompose = true
+
     add(
         "Jetpack Compose Compiler",
         "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
@@ -192,7 +286,11 @@ public object OssLibraries {
   }
 
   private fun addComposeUiLibraries() {
-    addComposeArchLibraries()
+    if (addedUiCompose) {
+      return
+    }
+    addedUiCompose = true
+
     add(
         "Jetpack Compose UI",
         "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
@@ -213,17 +311,88 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
         "Jetpack Compose is Android’s modern toolkit for building native UI",
     )
+
+    addComposeArchLibraries()
+  }
+
+  private fun addBusLibraries() {
+    if (addedBus) {
+      return
+    }
+    addedBus = true
+
+    add(
+        "PYDroid Bus",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid event bus",
+    )
+
+    addCoreLibraries()
+  }
+
+  private fun addBillingLibraries() {
+    if (addedBilling) {
+      return
+    }
+    addedBilling = true
+
+    add(
+        "PYDroid Billing",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid In-App Billing library",
+    )
+
+    add(
+        "Google Play In-App Billing Library",
+        "https://developers.google.com/android/",
+        "In-App Billing management for Android Applications",
+        license =
+            OssLicenses.custom(
+                license = "Custom Google License",
+                location = "https://developer.android.com/distribute/play-services",
+            ),
+    )
+
+    addBusLibraries()
+    addUtilLibraries()
+  }
+
+  private fun addInjectLibraries() {
+    if (addedInject) {
+      return
+    }
+    addedInject = true
+
+    add(
+        "PYDroid Inject",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid dependency injection library",
+    )
+
+    addCoreLibraries()
   }
 
   private fun addNotifyLibraries() {
+    if (addedNotify) {
+      return
+    }
+    addedNotify = true
+
     add(
         "PYDroid Notify",
         "https://github.com/pyamsoft/pydroid",
         "PYDroid notification management abstraction library",
     )
+
+    addCoreLibraries()
   }
 
   private fun addAutopsyLibraries() {
+    if (addedAutopsy) {
+      return
+    }
+    addedAutopsy = true
+
     add(
         "AndroidX Startup",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/",
@@ -234,7 +403,10 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid development crash reporting screen",
     )
+
     addComposeUiLibraries()
+    addCoreLibraries()
+    addThemeLibraries()
   }
 
   /** Add a new library to the list of libraries used by the application */
@@ -264,35 +436,42 @@ public object OssLibraries {
   @JvmStatic
   @CheckResult
   public fun libraries(): Set<OssLibrary> {
-    // Core and Build is always added if you're using any PYDroid
-    addCoreLibraries()
-    addBuildLibraries()
-
-    // Bootstrap always added because we are bootstrap
     addBootstrapLibraries()
 
-    // Util always added because it is a dependency of bootstrap
-    addUtilLibraries()
-
-    // Ui adds all of these libraries
-    if (usingUi) {
-      addUiLibraries()
-      addArchLibraries()
-    } else {
-      // If we aren't using UI, look at individual flags
-      if (usingArch) {
-        addArchLibraries()
-      }
+    if (usingUtil) {
+      addUtilLibraries()
     }
 
-    // Nothing directly uses this
+    if (usingArch) {
+      addArchLibraries()
+    }
+
+    if (usingAutopsy) {
+      addAutopsyLibraries()
+    }
+
+    if (usingBilling) {
+      addBillingLibraries()
+    }
+
+    if (usingBus) {
+      addBusLibraries()
+    }
+
+    if (usingInject) {
+      addInjectLibraries()
+    }
+
     if (usingNotify) {
       addNotifyLibraries()
     }
 
-    // Nothing directly uses this
-    if (usingAutopsy) {
-      addAutopsyLibraries()
+    if (usingTheme) {
+      addThemeLibraries()
+    }
+
+    if (usingUi) {
+      addUiLibraries()
     }
 
     return libraries

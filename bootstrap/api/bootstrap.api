@@ -72,13 +72,23 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibraries {
 	public static synthetic fun add$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;ILjava/lang/Object;)V
 	public final fun getUsingArch ()Z
 	public final fun getUsingAutopsy ()Z
+	public final fun getUsingBilling ()Z
+	public final fun getUsingBus ()Z
+	public final fun getUsingInject ()Z
 	public final fun getUsingNotify ()Z
+	public final fun getUsingTheme ()Z
 	public final fun getUsingUi ()Z
+	public final fun getUsingUtil ()Z
 	public static final fun libraries ()Ljava/util/Set;
 	public final fun setUsingArch (Z)V
 	public final fun setUsingAutopsy (Z)V
+	public final fun setUsingBilling (Z)V
+	public final fun setUsingBus (Z)V
+	public final fun setUsingInject (Z)V
 	public final fun setUsingNotify (Z)V
+	public final fun setUsingTheme (Z)V
 	public final fun setUsingUi (Z)V
+	public final fun setUsingUtil (Z)V
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibrary {

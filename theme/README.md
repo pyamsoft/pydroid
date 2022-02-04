@@ -27,4 +27,4 @@ dependencies {
 
 ## How to Use
 
-See `MaterialTheme.keylines` and `LocalKeylines` for theme based spacing. See `SpacingDefaults` for default values.
+See `MaterialTheme.keylines` and `LocalKeylines` for theme based spacing. See `KeylineDefaults` for default values.

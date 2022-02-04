@@ -52,7 +52,7 @@ public final class com/pyamsoft/pydroid/ui/PYDroid$Parameters : com/pyamsoft/pyd
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/app/ComposeThemeProvider {
-	public abstract fun invoke (Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public abstract fun invoke (Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
@@ -95,6 +95,34 @@ public final class com/pyamsoft/pydroid/ui/changelog/ChangeLogBuilder {
 
 public final class com/pyamsoft/pydroid/ui/changelog/ChangeLogBuilderKt {
 	public static final fun buildChangeLog (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogBuilder;
+}
+
+public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/CardDefaults;
+	public final fun getElevation-D9Ej5fM ()F
+}
+
+public final class com/pyamsoft/pydroid/ui/defaults/DialogDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/DialogDefaults;
+	public final fun getElevation-D9Ej5fM ()F
+}
+
+public final class com/pyamsoft/pydroid/ui/defaults/ImageDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/ImageDefaults;
+	public final fun getDefaultSize-D9Ej5fM ()F
+	public final fun getIconSize-D9Ej5fM ()F
+	public final fun getItemSize-D9Ej5fM ()F
+	public final fun getLargeSize-D9Ej5fM ()F
+}
+
+public final class com/pyamsoft/pydroid/ui/defaults/ListItemDefaults {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/ListItemDefaults;
+	public final fun getDefaultSize-D9Ej5fM ()F
+	public final fun getLeadingSize-D9Ej5fM ()F
 }
 
 public final class com/pyamsoft/pydroid/ui/icons/BugReportKt {
@@ -146,6 +174,15 @@ public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$A
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function2;
+	public static field lambda-2 Lkotlin/jvm/functions/Function2;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
@@ -288,7 +325,7 @@ public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$Prefe
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
-	public static final fun PreferenceScreen-djqs-MU (Landroidx/compose/ui/Modifier;FFLjava/util/List;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PreferenceScreen-z_eaty8 (Landroidx/compose/ui/Modifier;FFFLjava/util/List;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
@@ -354,6 +391,7 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/settings/SettingsFragment$Companion;
 	public fun <init> ()V
 	protected abstract fun customBottomItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
+	protected fun customElevation-chRvn1I (Landroidx/compose/runtime/Composer;I)F
 	protected abstract fun customPostPreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	protected abstract fun customPrePreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	protected abstract fun customTopItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
@@ -367,6 +405,10 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 }
 
 public final class com/pyamsoft/pydroid/ui/settings/SettingsFragment$Companion {
+}
+
+public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {
+	public static final fun getZeroElevation ()F
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/ThemeProvider {

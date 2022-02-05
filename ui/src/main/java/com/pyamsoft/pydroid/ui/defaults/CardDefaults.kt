@@ -7,5 +7,5 @@ import androidx.compose.ui.unit.dp
 public object CardDefaults {
 
   /** Elevation for a Card */
-  public val Elevation: Dp = 4.dp
+  public val Elevation: Dp = 2.dp
 }

@@ -33,10 +33,13 @@ public fun Activity.attributeFromCurrentTheme(@AttrRes attr: Int): Int {
 @SuppressLint("ResourceType")
 public fun Activity.attributesFromCurrentTheme(@AttrRes vararg attrs: Int): IntArray {
   return IntArray(attrs.size).also { styled ->
-    this.obtainStyledAttributes(attrs).use { arr ->
+    val arr = this.obtainStyledAttributes(attrs)
+    try {
       for (index in attrs.indices) {
         styled[index] = arr.getResourceId(index, 0)
       }
+    } finally {
+      arr.recycle()
     }
   }
 }

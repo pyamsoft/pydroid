@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.theme.PYDroidTheme
 import kotlin.system.exitProcess
 
 /**
@@ -47,13 +48,15 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
     val stackTrace = launchIntent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
 
     setContent {
-      SystemBars()
-      CrashScreen(
+      PYDroidTheme {
+        SystemBars()
+        CrashScreen(
           modifier = Modifier.fillMaxSize(),
           threadName = threadName,
           throwableName = throwableName,
           stackTrace = stackTrace,
-      )
+        )
+      }
     }
 
     Logger.e(stackTrace, "APPLICATION CRASHED")

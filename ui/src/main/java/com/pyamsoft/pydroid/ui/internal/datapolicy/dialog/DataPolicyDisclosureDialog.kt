@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -103,6 +104,11 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
     }
   }
 
+  private fun handleConfigurationChanged() {
+    makeFullWidth()
+    recompose()
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -123,6 +129,8 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
 
     return ComposeView(act).apply {
       id = R.id.dialog_dpd
+
+      addUtilityView { handleConfigurationChanged() }
 
       val vm = viewModel.requireNotNull()
       val imageLoader = imageLoader.requireNotNull()
@@ -158,10 +166,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-
-    // Force the view to update the composition
-    makeFullWidth()
-    recompose()
+    handleConfigurationChanged()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

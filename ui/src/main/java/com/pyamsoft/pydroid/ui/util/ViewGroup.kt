@@ -20,16 +20,13 @@ import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
 
-/**
- * A view captures more configuration change events than an activity does.
- * Just Android Things
- */
-public inline fun ViewGroup.addUtilityView(onConfigurationChanged: (Configuration) -> Unit) {
+/** A view captures more configuration change events than an activity does. Just Android Things */
+public inline fun ViewGroup.addUtilityView(crossinline onChange: (Configuration) -> Unit) {
   val utility =
       object : View(this.context) {
 
-        override fun onConfigurationChanged(newConfig: Configuration?) {
-          onConfigurationChanged(newConfig)
+        override fun onConfigurationChanged(newConfig: Configuration) {
+          onChange(newConfig)
         }
       }
 

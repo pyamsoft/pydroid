@@ -51,10 +51,10 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
       PYDroidTheme {
         SystemBars()
         CrashScreen(
-          modifier = Modifier.fillMaxSize(),
-          threadName = threadName,
-          throwableName = throwableName,
-          stackTrace = stackTrace,
+            modifier = Modifier.fillMaxSize(),
+            threadName = threadName,
+            throwableName = throwableName,
+            stackTrace = stackTrace,
         )
       }
     }

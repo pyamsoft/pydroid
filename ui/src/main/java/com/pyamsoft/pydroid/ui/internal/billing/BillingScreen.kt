@@ -138,10 +138,7 @@ private fun SkuList(
       LazyColumn(
           modifier = Modifier.fillMaxWidth(),
           verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
-          contentPadding =
-              PaddingValues(
-                  horizontal = MaterialTheme.keylines.content,
-                  vertical = MaterialTheme.keylines.baseline),
+          contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
       ) {
         items(
             items = list,

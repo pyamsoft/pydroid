@@ -42,7 +42,7 @@ internal fun BillingListItem(
       modifier =
           modifier
               .clickable { onPurchase(sku) }
-              .padding(vertical = MaterialTheme.keylines.baseline),
+              .padding(MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Column(modifier = Modifier.weight(1F)) {

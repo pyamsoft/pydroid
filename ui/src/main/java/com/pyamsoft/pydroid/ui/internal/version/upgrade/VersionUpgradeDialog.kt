@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -61,6 +62,11 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
         )
   }
 
+  private fun handleConfigurationChanged() {
+    makeFullWidth()
+    recompose()
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     isCancelable = false
@@ -76,6 +82,8 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
     return ComposeView(act).apply {
       id = R.id.dialog_upgrade
+
+      addUtilityView { handleConfigurationChanged() }
 
       val vm = viewModel.requireNotNull()
       setContent {
@@ -102,8 +110,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    makeFullWidth()
-    recompose()
+    handleConfigurationChanged()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

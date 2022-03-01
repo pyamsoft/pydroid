@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -61,6 +62,11 @@ internal class AboutDialog : AppCompatDialogFragment() {
     )
   }
 
+  private fun handleConfigurationChanged() {
+    makeFullscreen()
+    recompose()
+  }
+
   private fun openPage(handler: UriHandler, url: String) {
     val vm = viewModel.requireNotNull()
 
@@ -84,6 +90,8 @@ internal class AboutDialog : AppCompatDialogFragment() {
 
     return ComposeView(act).apply {
       id = R.id.dialog_about
+
+      addUtilityView { handleConfigurationChanged() }
 
       setContent {
         val handler = LocalUriHandler.current
@@ -115,8 +123,7 @@ internal class AboutDialog : AppCompatDialogFragment() {
 
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    makeFullscreen()
-    recompose()
+    handleConfigurationChanged()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

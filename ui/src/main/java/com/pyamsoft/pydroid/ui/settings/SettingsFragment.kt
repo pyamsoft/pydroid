@@ -57,6 +57,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
+import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -216,6 +217,10 @@ public abstract class SettingsFragment : Fragment() {
     uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
+  private fun handleConfigurationChanged() {
+    recompose()
+  }
+
   /** Hide upgrade */
   protected abstract val hideUpgradeInformation: Boolean
 
@@ -252,6 +257,8 @@ public abstract class SettingsFragment : Fragment() {
 
     return ComposeView(act).apply {
       id = R.id.fragment_settings
+
+      addUtilityView { handleConfigurationChanged() }
 
       val observer = ViewWindowInsetObserver(this)
       val windowInsets = observer.start()
@@ -323,7 +330,7 @@ public abstract class SettingsFragment : Fragment() {
   @CallSuper
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    recompose()
+    handleConfigurationChanged()
   }
 
   @CallSuper

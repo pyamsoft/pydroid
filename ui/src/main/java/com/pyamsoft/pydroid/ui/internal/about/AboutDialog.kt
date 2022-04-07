@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -90,8 +89,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
 
     return ComposeView(act).apply {
       id = R.id.dialog_about
-
-      addUtilityView { handleConfigurationChanged() }
 
       setContent {
         val handler = LocalUriHandler.current

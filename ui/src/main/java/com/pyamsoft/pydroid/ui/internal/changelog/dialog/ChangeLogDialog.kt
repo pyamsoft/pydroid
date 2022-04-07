@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.util.addUtilityView
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -80,8 +79,6 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
 
     return ComposeView(act).apply {
       id = R.id.dialog_changelog
-
-      addUtilityView { handleConfigurationChanged() }
 
       val vm = viewModel.requireNotNull()
       val imageLoader = imageLoader.requireNotNull()

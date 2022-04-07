@@ -23,10 +23,19 @@ import androidx.compose.runtime.mutableStateOf
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
-  /** A representation of a blank screen */
-  protected abstract val blankScreen: S
+  private val screen by lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(initialScreen) }
 
-  private val screen by lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(blankScreen) }
+  /** The initial screen for this navigator */
+  protected abstract val initialScreen: S
+
+  /**
+   * Updates the backing field which tracks the current screen
+   *
+   * This operation should be called once during your [select] function
+   */
+  protected fun updateCurrentScreen(newScreen: S) {
+    screen.value = newScreen
+  }
 
   final override fun currentScreen(): S {
     return screen.value
@@ -37,19 +46,7 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
     return screen
   }
 
-  final override fun select(screen: Navigator.Screen<S>): Boolean {
-    return select(
-        screen = screen,
-        force = false,
-    )
-  }
-
-  /**
-   * Updates the backing field which tracks the current screen
-   *
-   * This operation should be called once during your [select] function
-   */
-  protected fun updateCurrentScreen(newScreen: S) {
-    screen.value = newScreen
+  final override fun navigateTo(screen: Navigator.Screen<S>) {
+    navigateTo(screen, force = false)
   }
 }

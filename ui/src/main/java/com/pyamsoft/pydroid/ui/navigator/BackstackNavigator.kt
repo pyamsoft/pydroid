@@ -22,7 +22,7 @@ import androidx.annotation.CheckResult
 public interface BackstackNavigator<S : Any> : Navigator<S> {
 
   /** Go back a page */
-  public fun handleBack()
+  public fun goBack()
 
   /** Get the size of the back stack */
   @CheckResult public fun backStackSize(): Int

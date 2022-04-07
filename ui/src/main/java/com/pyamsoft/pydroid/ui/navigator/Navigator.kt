@@ -30,7 +30,7 @@ import androidx.compose.runtime.State
  *
  * Applications that will need a backstack will want to extend from [BackstackNavigator]
  */
-public interface Navigator<S : Any> : Selector<S> {
+public interface Navigator<S : Any> {
 
   /** Get the current screen */
   @CheckResult public fun currentScreen(): S
@@ -39,14 +39,23 @@ public interface Navigator<S : Any> : Selector<S> {
   @Composable @CheckResult public fun currentScreenState(): State<S>
 
   /** Restores the state after process recreation */
-  public fun restore(onLoadDefaultScreen: (selector: Selector<S>) -> Unit)
+  public fun restore(onLoadDefaultScreen: () -> Screen<S>)
 
-  /** Select a new screen (optionally force commit the selection) */
-  @CheckResult
-  public fun select(
-      screen: Screen<S>,
-      force: Boolean,
-  ): Boolean
+  /**
+   * Navigate to a new screen
+   *
+   * This may not actually navigate if conditions prevent it, such as, we are already on the screen.
+   * but if the [force] parameter is true, this will always navigate. This may cause an existing
+   * screen to be replaced with the same screen again
+   */
+  public fun navigateTo(screen: Screen<S>, force: Boolean)
+
+  /**
+   * Navigate to a new screen
+   *
+   * This may not actually navigate if conditions prevent it, such as, we are already on the screen.
+   */
+  public fun navigateTo(screen: Screen<S>)
 
   /** A screen object */
   public interface Screen<S : Any> {
@@ -56,15 +65,4 @@ public interface Navigator<S : Any> : Selector<S> {
     /** Any arguments to construct the screen */
     public val arguments: Bundle?
   }
-}
-
-/** A basic screen selection interface */
-public interface Selector<S : Any> {
-
-  /**
-   * Select a new screen.
-   *
-   * If the screen cannot be committed, this action will not perform a navigation
-   */
-  @CheckResult public fun select(screen: Navigator.Screen<S>): Boolean
 }

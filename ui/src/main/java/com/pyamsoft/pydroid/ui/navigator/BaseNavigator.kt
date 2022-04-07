@@ -23,10 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
-  private val screen by lazy(LazyThreadSafetyMode.NONE) { mutableStateOf(initialScreen) }
-
-  /** The initial screen for this navigator */
-  protected abstract val initialScreen: S
+  private val screen = mutableStateOf<S?>(null)
 
   /**
    * Updates the backing field which tracks the current screen
@@ -37,12 +34,12 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
     screen.value = newScreen
   }
 
-  final override fun currentScreen(): S {
+  final override fun currentScreen(): S? {
     return screen.value
   }
 
   @Composable
-  final override fun currentScreenState(): State<S> {
+  final override fun currentScreenState(): State<S?> {
     return screen
   }
 

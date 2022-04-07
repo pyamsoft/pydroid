@@ -33,10 +33,10 @@ import androidx.compose.runtime.State
 public interface Navigator<S : Any> {
 
   /** Get the current screen */
-  @CheckResult public fun currentScreen(): S
+  @CheckResult public fun currentScreen(): S?
 
   /** Get the current screen as a composable state */
-  @Composable @CheckResult public fun currentScreenState(): State<S>
+  @Composable @CheckResult public fun currentScreenState(): State<S?>
 
   /** Restores the state after process recreation */
   public fun restore(onLoadDefaultScreen: () -> Screen<S>)

@@ -25,9 +25,7 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
   private val screen = mutableStateOf<S?>(null)
 
-  /**
-   * Updates the backing field which tracks the current screen
-   */
+  /** Updates the backing field which tracks the current screen */
   protected fun updateCurrentScreen(newScreen: S) {
     screen.value = newScreen
   }

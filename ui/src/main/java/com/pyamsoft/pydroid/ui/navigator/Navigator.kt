@@ -39,7 +39,10 @@ public interface Navigator<S : Any> {
   @Composable @CheckResult public fun currentScreenState(): State<S?>
 
   /** Restores the state after process recreation */
-  public fun restore(onLoadDefaultScreen: () -> Screen<S>)
+  public fun restore(savedInstanceState: Bundle?, onLoadDefaultScreen: () -> Screen<S>)
+
+  /** Saves the state during process recreation */
+  public fun saveState(outState: Bundle)
 
   /**
    * Navigate to a new screen

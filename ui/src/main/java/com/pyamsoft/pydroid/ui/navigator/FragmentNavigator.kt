@@ -83,33 +83,22 @@ protected constructor(
     fragmentManager.popBackStackImmediate()
   }
 
-  /** Provides a map of Screen types to FragmentTypes */
-  @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>
+  final override fun restore(
+      savedInstanceState: Bundle?,
+      onLoadDefaultScreen: () -> Navigator.Screen<S>
+  ) {
+    onRestore(savedInstanceState)
 
-  /** Performs a fragment transaction */
-  protected abstract fun performFragmentTransaction(
-      container: Int,
-      data: FragmentTag,
-      newScreen: Navigator.Screen<S>,
-      previousScreen: S?
-  )
-
-  final override fun restore(onLoadDefaultScreen: () -> Navigator.Screen<S>) {
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
       val screen = onLoadDefaultScreen()
       navigateTo(screen)
-    } else {
-      // Look up the previous screen in the map
-      val currentScreen =
-          fragmentTagMap.entries.find { it.value.tag == existing.tag }?.key.requireNotNull {
-            "Failed to restore current screen from fragment tag map."
-          }
-
-      Logger.d("Restore current screen from fragment tag map")
-      updateCurrentScreen(currentScreen)
     }
+  }
+
+  final override fun saveState(outState: Bundle) {
+    onSaveState(outState)
   }
 
   final override fun goBack() {
@@ -162,6 +151,21 @@ protected constructor(
       )
     }
   }
+
+  /** Provides a map of Screen types to FragmentTypes */
+  @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>
+
+  /** Performs a fragment transaction */
+  protected abstract fun performFragmentTransaction(
+      container: Int,
+      data: FragmentTag,
+      newScreen: Navigator.Screen<S>,
+      previousScreen: S?
+  )
+
+  protected abstract fun onRestore(savedInstanceState: Bundle?)
+
+  protected abstract fun onSaveState(outState: Bundle)
 
   /** A mapping of string Tags to Fragment providers */
   public interface FragmentTag {

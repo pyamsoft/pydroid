@@ -27,8 +27,6 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
   /**
    * Updates the backing field which tracks the current screen
-   *
-   * This operation should be called once during your [select] function
    */
   protected fun updateCurrentScreen(newScreen: S) {
     screen.value = newScreen

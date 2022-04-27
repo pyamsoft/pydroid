@@ -16,11 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.navigator
 
-import android.os.Parcelable
 import androidx.annotation.CheckResult
 
 /** A navigator which understands backstacks */
-public interface BackstackNavigator<S : Parcelable> : Navigator<S> {
+public interface BackstackNavigator<S : Any> : Navigator<S> {
 
   /** Go back a page */
   public fun goBack()

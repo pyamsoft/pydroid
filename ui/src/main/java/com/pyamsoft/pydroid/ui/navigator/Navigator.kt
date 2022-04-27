@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -31,7 +30,7 @@ import androidx.compose.runtime.State
  *
  * Applications that will need a backstack will want to extend from [BackstackNavigator]
  */
-public interface Navigator<S : Parcelable> {
+public interface Navigator<S : Any> {
 
   /** Get the current screen */
   @CheckResult public fun currentScreen(): S?

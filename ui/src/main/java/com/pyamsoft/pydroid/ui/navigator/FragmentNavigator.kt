@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
-import android.os.Parcelable
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -33,7 +32,7 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.commitNow
 
 /** A navigator backed by AndroidX Fragment transactions */
-public abstract class FragmentNavigator<S : Parcelable>
+public abstract class FragmentNavigator<S : Any>
 protected constructor(
     lifecycleOwner: () -> LifecycleOwner,
     fragmentManager: () -> FragmentManager,

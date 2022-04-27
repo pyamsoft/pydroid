@@ -48,14 +48,8 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
     navigateTo(screen, force = false)
   }
 
-  final override fun restore(
-      savedInstanceState: Bundle?,
-      onLoadDefaultScreen: () -> Navigator.Screen<S>
-  ) {
-    restore(
-        savedInstanceState = savedInstanceState.toReader(),
-        onLoadDefaultScreen = onLoadDefaultScreen,
-    )
+  final override fun restoreState(savedInstanceState: Bundle?) {
+    restoreState(savedInstanceState = savedInstanceState.toReader())
   }
 
   final override fun saveState(outState: Bundle) {
@@ -63,10 +57,7 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
   }
 
   /** Called to restore screen state */
-  protected abstract fun restore(
-      savedInstanceState: UiSavedStateReader,
-      onLoadDefaultScreen: () -> Navigator.Screen<S>,
-  )
+  protected abstract fun restoreState(savedInstanceState: UiSavedStateReader)
 
   /** Called to save screen state */
   protected abstract fun saveState(outState: UiSavedStateWriter)

@@ -24,8 +24,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiSavedStateReader
-import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.commit
@@ -85,27 +83,13 @@ protected constructor(
     fragmentManager.popBackStackImmediate()
   }
 
-  final override fun restore(
-      savedInstanceState: UiSavedStateReader,
-      onLoadDefaultScreen: () -> Navigator.Screen<S>,
-  ) {
-    // Restore screen state first
-    onRestore(savedInstanceState, onLoadDefaultScreen)
-
-    // Then restore visual screen specifics
+  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Navigator.Screen<S>) {
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
       val screen = onLoadDefaultScreen()
       navigateTo(screen)
     }
-  }
-
-  override fun saveState(outState: UiSavedStateWriter) {
-    // Save screen state first
-    onSaveState(outState)
-
-    // Then any visual screen specifics (none)
   }
 
   final override fun goBack() {
@@ -158,15 +142,6 @@ protected constructor(
       )
     }
   }
-
-  /** Called after screen state has been restored */
-  protected abstract fun onRestore(
-      savedInstanceState: UiSavedStateReader,
-      onLoadDefaultScreen: () -> Navigator.Screen<S>,
-  )
-
-  /** Called after screen state has been saved */
-  protected abstract fun onSaveState(outState: UiSavedStateWriter)
 
   /** Provides a map of Screen types to FragmentTypes */
   @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>

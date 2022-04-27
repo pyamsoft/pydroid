@@ -39,10 +39,18 @@ public interface Navigator<S : Any> {
   @Composable @CheckResult public fun currentScreenState(): State<S?>
 
   /** Restores the state after process recreation */
-  public fun restore(savedInstanceState: Bundle?, onLoadDefaultScreen: () -> Screen<S>)
+  public fun restoreState(savedInstanceState: Bundle?)
 
   /** Saves the state during process recreation */
   public fun saveState(outState: Bundle)
+
+  /**
+   * Restores a default screen if needed from an otherwise empty state
+   *
+   * If your default screen state is "blank", then do not call this function or represent a blank
+   * screen [S]
+   */
+  public fun loadIfEmpty(onLoadDefaultScreen: () -> Screen<S>)
 
   /**
    * Navigate to a new screen

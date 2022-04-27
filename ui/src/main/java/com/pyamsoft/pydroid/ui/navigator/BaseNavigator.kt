@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.navigator
 
+import android.os.Bundle
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -41,5 +43,50 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
   final override fun navigateTo(screen: Navigator.Screen<S>) {
     navigateTo(screen, force = false)
+  }
+
+  final override fun restore(
+      savedInstanceState: Bundle?,
+      onLoadDefaultScreen: () -> Navigator.Screen<S>
+  ) {
+    if (savedInstanceState != null) {
+      val key = savedInstanceState.getString(KEY_SCREEN_ID, null)
+      if (key != null) {
+        val screen = toScreenFromKey(key)
+        updateCurrentScreen(screen)
+      }
+    }
+
+    onRestore(savedInstanceState, onLoadDefaultScreen)
+  }
+
+  final override fun saveState(outState: Bundle) {
+    val c = currentScreen()
+    if (c != null) {
+      outState.putString(KEY_SCREEN_ID, fromScreenToKey(c))
+    }
+
+    onSaveState(outState)
+  }
+
+  /** Restore Screen data from a string key */
+  @CheckResult protected abstract fun toScreenFromKey(key: String): S
+
+  /** Parse Screen data into a string key */
+  @CheckResult protected abstract fun fromScreenToKey(screen: S): String
+
+  /** Called after screen state has been restored */
+  protected abstract fun onRestore(
+      savedInstanceState: Bundle?,
+      onLoadDefaultScreen: () -> Navigator.Screen<S>,
+  )
+
+  /** Called after screen state has been saved */
+  protected abstract fun onSaveState(outState: Bundle)
+
+  public companion object {
+
+    /** Key for Screen saving */
+    private const val KEY_SCREEN_ID = "key_navigator_screen_id"
   }
 }

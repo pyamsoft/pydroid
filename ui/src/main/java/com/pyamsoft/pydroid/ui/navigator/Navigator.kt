@@ -62,6 +62,7 @@ public interface Navigator<S : Any> {
 
   /** A screen object */
   public interface Screen<S : Any> {
+
     /** The screen */
     public val screen: S
 

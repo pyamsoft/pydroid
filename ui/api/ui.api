@@ -265,11 +265,21 @@ public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavig
 
 public abstract class com/pyamsoft/pydroid/ui/navigator/BaseNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
 	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/navigator/BaseNavigator$Companion;
 	public fun <init> ()V
 	public final fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
+	protected abstract fun fromScreenToKey (Ljava/lang/Object;)Ljava/lang/String;
 	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;)V
+	protected abstract fun onRestore (Landroid/os/Bundle;Lkotlin/jvm/functions/Function0;)V
+	protected abstract fun onSaveState (Landroid/os/Bundle;)V
+	public final fun restore (Landroid/os/Bundle;Lkotlin/jvm/functions/Function0;)V
+	public final fun saveState (Landroid/os/Bundle;)V
+	protected abstract fun toScreenFromKey (Ljava/lang/String;)Ljava/lang/Object;
 	protected final fun updateCurrentScreen (Ljava/lang/Object;)V
+}
+
+public final class com/pyamsoft/pydroid/ui/navigator/BaseNavigator$Companion {
 }
 
 public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/pyamsoft/pydroid/ui/navigator/BaseNavigator, com/pyamsoft/pydroid/ui/navigator/BackstackNavigator {
@@ -284,12 +294,10 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	public final fun goBack ()V
 	protected final fun handleBackNow ()V
 	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Z)V
-	protected abstract fun onRestore (Landroid/os/Bundle;)V
-	protected abstract fun onSaveState (Landroid/os/Bundle;)V
+	protected final fun onRestore (Landroid/os/Bundle;Lkotlin/jvm/functions/Function0;)V
+	protected final fun onSaveState (Landroid/os/Bundle;)V
 	protected abstract fun performFragmentTransaction (ILcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$FragmentTag;Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Ljava/lang/Object;)V
 	protected abstract fun provideFragmentTagMap ()Ljava/util/Map;
-	public final fun restore (Landroid/os/Bundle;Lkotlin/jvm/functions/Function0;)V
-	public final fun saveState (Landroid/os/Bundle;)V
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$FragmentTag {

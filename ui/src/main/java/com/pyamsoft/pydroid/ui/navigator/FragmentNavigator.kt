@@ -83,12 +83,10 @@ protected constructor(
     fragmentManager.popBackStackImmediate()
   }
 
-  final override fun restore(
+  final override fun onRestore(
       savedInstanceState: Bundle?,
-      onLoadDefaultScreen: () -> Navigator.Screen<S>
+      onLoadDefaultScreen: () -> Navigator.Screen<S>,
   ) {
-    onRestore(savedInstanceState)
-
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
@@ -97,9 +95,7 @@ protected constructor(
     }
   }
 
-  final override fun saveState(outState: Bundle) {
-    onSaveState(outState)
-  }
+  final override fun onSaveState(outState: Bundle) {}
 
   final override fun goBack() {
     fragmentManager.popBackStack()
@@ -162,10 +158,6 @@ protected constructor(
       newScreen: Navigator.Screen<S>,
       previousScreen: S?
   )
-
-  protected abstract fun onRestore(savedInstanceState: Bundle?)
-
-  protected abstract fun onSaveState(outState: Bundle)
 
   /** A mapping of string Tags to Fragment providers */
   public interface FragmentTag {

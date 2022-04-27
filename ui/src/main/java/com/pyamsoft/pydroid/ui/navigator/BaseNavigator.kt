@@ -17,13 +17,17 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
-import androidx.annotation.CheckResult
+import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import com.pyamsoft.pydroid.arch.UiSavedStateReader
+import com.pyamsoft.pydroid.arch.UiSavedStateWriter
+import com.pyamsoft.pydroid.arch.toReader
+import com.pyamsoft.pydroid.arch.toWriter
 
 /** A base class navigator, not backed by any specific system */
-public abstract class BaseNavigator<S : Any> : Navigator<S> {
+public abstract class BaseNavigator<S : Parcelable> : Navigator<S> {
 
   private val screen = mutableStateOf<S?>(null)
 
@@ -49,44 +53,22 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
       savedInstanceState: Bundle?,
       onLoadDefaultScreen: () -> Navigator.Screen<S>
   ) {
-    if (savedInstanceState != null) {
-      val key = savedInstanceState.getString(KEY_SCREEN_ID, null)
-      if (key != null) {
-        val screen = toScreenFromKey(key)
-        updateCurrentScreen(screen)
-      }
-    }
-
-    onRestore(savedInstanceState, onLoadDefaultScreen)
+    restore(
+        savedInstanceState = savedInstanceState.toReader(),
+        onLoadDefaultScreen = onLoadDefaultScreen,
+    )
   }
 
   final override fun saveState(outState: Bundle) {
-    val c = currentScreen()
-    if (c != null) {
-      outState.putString(KEY_SCREEN_ID, fromScreenToKey(c))
-    }
-
-    onSaveState(outState)
+    saveState(outState = outState.toWriter())
   }
 
-  /** Restore Screen data from a string key */
-  @CheckResult protected abstract fun toScreenFromKey(key: String): S
-
-  /** Parse Screen data into a string key */
-  @CheckResult protected abstract fun fromScreenToKey(screen: S): String
-
-  /** Called after screen state has been restored */
-  protected abstract fun onRestore(
-      savedInstanceState: Bundle?,
+  /** Called to restore screen state */
+  protected abstract fun restore(
+      savedInstanceState: UiSavedStateReader,
       onLoadDefaultScreen: () -> Navigator.Screen<S>,
   )
 
-  /** Called after screen state has been saved */
-  protected abstract fun onSaveState(outState: Bundle)
-
-  public companion object {
-
-    /** Key for Screen saving */
-    private const val KEY_SCREEN_ID = "key_navigator_screen_id"
-  }
+  /** Called to save screen state */
+  protected abstract fun saveState(outState: UiSavedStateWriter)
 }

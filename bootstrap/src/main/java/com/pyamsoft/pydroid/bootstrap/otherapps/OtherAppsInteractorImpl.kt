@@ -43,7 +43,8 @@ internal constructor(
 
         // Ignore the app we have open right now in the list
         return@withContext otherAppsCache.call().map { apps ->
-          apps.asSequence()
+          apps
+              .asSequence()
               .filterNot { it.packageName == packageName }
               .sortedBy { it.name }
               .toList()

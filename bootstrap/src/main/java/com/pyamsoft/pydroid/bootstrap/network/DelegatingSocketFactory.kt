@@ -28,12 +28,12 @@ protected constructor(private val delegate: SocketFactory) : SocketFactory() {
 
   /** See [SocketFactory.createSocket] */
   final override fun createSocket(): Socket {
-    return delegate.createSocket().also { configureSocket(it) }
+    return configureSocket(delegate.createSocket())
   }
 
   /** See [SocketFactory.createSocket] */
   final override fun createSocket(host: String?, port: Int): Socket {
-    return delegate.createSocket(host, port).also { configureSocket(it) }
+    return configureSocket(delegate.createSocket(host, port))
   }
 
   /** See [SocketFactory.createSocket] */
@@ -43,12 +43,12 @@ protected constructor(private val delegate: SocketFactory) : SocketFactory() {
       localAddress: InetAddress?,
       localPort: Int
   ): Socket {
-    return delegate.createSocket(host, port, localAddress, localPort).also { configureSocket(it) }
+    return configureSocket(delegate.createSocket(host, port, localAddress, localPort))
   }
 
   /** See [SocketFactory.createSocket] */
   final override fun createSocket(host: InetAddress?, port: Int): Socket {
-    return delegate.createSocket(host, port).also { configureSocket(it) }
+    return configureSocket(delegate.createSocket(host, port))
   }
 
   /** See [SocketFactory.createSocket] */
@@ -58,7 +58,7 @@ protected constructor(private val delegate: SocketFactory) : SocketFactory() {
       localAddress: InetAddress?,
       localPort: Int
   ): Socket {
-    return delegate.createSocket(host, port, localAddress, localPort).also { configureSocket(it) }
+    return configureSocket(delegate.createSocket(host, port, localAddress, localPort))
   }
 
   /** Tag each socket with traffic stats for StrictMode compliance on Android O */

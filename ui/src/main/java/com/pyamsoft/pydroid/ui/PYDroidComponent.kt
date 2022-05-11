@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
@@ -65,7 +66,7 @@ internal interface PYDroidComponent {
 
     data class Parameters
     internal constructor(
-        override val imageLoader: ImageLoader,
+        override val lazyImageLoader: Lazy<ImageLoader>,
         override val privacyPolicyUrl: String,
         override val bugReportUrl: String,
         override val viewSourceUrl: String,
@@ -85,7 +86,9 @@ internal interface PYDroidComponent {
 
   class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
-    private val context = params.application
+    private val context: Context = params.application
+
+    private val imageLoader: ImageLoader by params.lazyImageLoader
 
     private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
 
@@ -143,7 +146,7 @@ internal interface PYDroidComponent {
               billingErrorBus = EventBus.create(),
               changeLogModule = changeLogModule,
               composeTheme = composeTheme,
-              imageLoader = params.imageLoader,
+              imageLoader = imageLoader,
               version = params.version,
               isFakeUpgradeChecker = params.debug.enabled,
               isFakeUpgradeAvailable = params.debug.upgradeAvailable,
@@ -169,7 +172,7 @@ internal interface PYDroidComponent {
         lazy(LazyThreadSafetyMode.NONE) {
           DataPolicyDialogComponent.Factory.Parameters(
               composeTheme = composeTheme,
-              imageLoader = params.imageLoader,
+              imageLoader = imageLoader,
               module = dataPolicyModule,
               privacyPolicyUrl = params.privacyPolicyUrl,
               termsConditionsUrl = params.termsConditionsUrl,
@@ -181,7 +184,7 @@ internal interface PYDroidComponent {
           OtherAppsComponent.Factory.Parameters(
               module = otherAppsModule,
               composeTheme = composeTheme,
-              imageLoader = params.imageLoader,
+              imageLoader = imageLoader,
           )
         }
 

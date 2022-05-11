@@ -53,7 +53,7 @@ internal constructor(
                       version = params.version,
                       theme = params.theme ?: NoopThemeProvider,
                       logger = params.logger,
-                      imageLoader = params.imageLoader,
+                      lazyImageLoader = params.lazyImageLoader,
                       debug =
                           PYDroidComponent.Component.DebugParameters(
                               enabled = isDebug,

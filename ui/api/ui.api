@@ -244,18 +244,26 @@ public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSin
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public static field lambda-2 Lkotlin/jvm/functions/Function3;
+	public static field lambda-3 Lkotlin/jvm/functions/Function3;
+	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSingletons$VersionUpgradeScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSingletons$VersionUpgradeScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public static field lambda-2 Lkotlin/jvm/functions/Function3;
+	public static field lambda-3 Lkotlin/jvm/functions/Function3;
+	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {

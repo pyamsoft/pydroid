@@ -17,16 +17,13 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
@@ -142,20 +139,21 @@ private fun SkuList(
     if (ready.isEmpty || !isConnected) {
       ErrorText()
     } else {
-      LazyColumn(
+      Column(
           modifier = Modifier.fillMaxWidth(),
-          verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
-          contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
       ) {
-        items(
-            items = list,
-            key = { it.id },
-        ) { item ->
-          BillingListItem(
-              modifier = Modifier.fillMaxWidth(),
-              sku = item,
-              onPurchase = onPurchase,
-          )
+        list.forEach { item ->
+          Box(
+              modifier =
+                  Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                      .padding(vertical = MaterialTheme.keylines.baseline),
+          ) {
+            BillingListItem(
+                modifier = Modifier.fillMaxWidth(),
+                sku = item,
+                onPurchase = onPurchase,
+            )
+          }
         }
       }
     }

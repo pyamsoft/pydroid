@@ -17,14 +17,13 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -54,24 +53,29 @@ internal fun ChangeLogScreen(
   val name = state.name
   val changeLog = state.changeLog
 
-  AppHeader(
+  LazyColumn(
       modifier = modifier,
-      elevation = DialogDefaults.Elevation,
-      icon = icon,
-      name = name,
-      imageLoader = imageLoader,
   ) {
-    Column {
-      ChangeLog(
-          modifier = Modifier.fillMaxWidth(),
-          changeLog = changeLog,
-      )
+    item {
+      AppHeader(
+          elevation = DialogDefaults.Elevation,
+          icon = icon,
+          name = name,
+          imageLoader = imageLoader,
+      ) {
+        Column {
+          ChangeLog(
+              modifier = Modifier.fillMaxWidth(),
+              changeLog = changeLog,
+          )
 
-      Actions(
-          modifier = Modifier.fillMaxWidth(),
-          onRateApp = onRateApp,
-          onClose = onClose,
-      )
+          Actions(
+              modifier = Modifier.fillMaxWidth(),
+              onRateApp = onRateApp,
+              onClose = onClose,
+          )
+        }
+      }
     }
   }
 }
@@ -81,21 +85,20 @@ private fun ChangeLog(
     modifier: Modifier = Modifier,
     changeLog: List<ChangeLogLine>,
 ) {
-  LazyColumn(
+  Column(
       modifier = modifier,
-      verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.baseline),
-      contentPadding =
-          PaddingValues(
-              horizontal = MaterialTheme.keylines.content,
-              vertical = MaterialTheme.keylines.baseline),
   ) {
-    items(
-        items = changeLog,
-    ) { line ->
-      ChangeLogListItem(
-          modifier = Modifier.fillMaxWidth(),
-          line = line,
-      )
+    changeLog.forEach { line ->
+      Box(
+          modifier =
+              Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                  .padding(vertical = MaterialTheme.keylines.baseline),
+      ) {
+        ChangeLogListItem(
+            modifier = Modifier.fillMaxWidth(),
+            line = line,
+        )
+      }
     }
   }
 }

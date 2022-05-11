@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
@@ -64,7 +65,7 @@ internal interface PYDroidComponent {
 
     data class Parameters
     internal constructor(
-        override val imageLoader: () -> coil.ImageLoader,
+        override val imageLoader: ImageLoader,
         override val privacyPolicyUrl: String,
         override val bugReportUrl: String,
         override val viewSourceUrl: String,
@@ -87,9 +88,6 @@ internal interface PYDroidComponent {
     private val context = params.application
 
     private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
-
-    private val imageLoader: coil.ImageLoader by
-        lazy(LazyThreadSafetyMode.NONE) { params.imageLoader() }
 
     private val preferences by
         lazy(LazyThreadSafetyMode.NONE) {
@@ -145,7 +143,7 @@ internal interface PYDroidComponent {
               billingErrorBus = EventBus.create(),
               changeLogModule = changeLogModule,
               composeTheme = composeTheme,
-              imageLoader = imageLoader,
+              imageLoader = params.imageLoader,
               version = params.version,
               isFakeUpgradeChecker = params.debug.enabled,
               isFakeUpgradeAvailable = params.debug.upgradeAvailable,
@@ -171,7 +169,7 @@ internal interface PYDroidComponent {
         lazy(LazyThreadSafetyMode.NONE) {
           DataPolicyDialogComponent.Factory.Parameters(
               composeTheme = composeTheme,
-              imageLoader = imageLoader,
+              imageLoader = params.imageLoader,
               module = dataPolicyModule,
               privacyPolicyUrl = params.privacyPolicyUrl,
               termsConditionsUrl = params.termsConditionsUrl,
@@ -183,7 +181,7 @@ internal interface PYDroidComponent {
           OtherAppsComponent.Factory.Parameters(
               module = otherAppsModule,
               composeTheme = composeTheme,
-              imageLoader = imageLoader,
+              imageLoader = params.imageLoader,
           )
         }
 

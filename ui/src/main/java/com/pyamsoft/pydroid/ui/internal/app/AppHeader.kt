@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
@@ -101,13 +100,9 @@ private fun TitleAndIcon(
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
-    Image(
-        painter =
-            rememberImagePainter(
-                data = icon,
-                imageLoader = imageLoader,
-                builder = { crossfade(true) },
-            ),
+    AsyncImage(
+        model = icon,
+        imageLoader = imageLoader,
         contentDescription = "$name Icon",
         modifier = Modifier.size(ImageDefaults.LargeSize),
     )

@@ -17,22 +17,25 @@
 package com.pyamsoft.pydroid.ui.internal.test
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import coil.ComponentRegistry
 import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.bitmap.BitmapPool
-import coil.decode.DataSource
+import coil.decode.DataSource.MEMORY
+import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.DefaultRequestOptions
 import coil.request.Disposable
+import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.request.SuccessResult
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
 
 /** Only use for tests/previews */
 private class TestImageLoader(context: Context) : ImageLoader {
@@ -43,32 +46,27 @@ private class TestImageLoader(context: Context) : ImageLoader {
 
   private val disposable =
       object : Disposable {
-        override val isDisposed: Boolean = true
 
-        @ExperimentalCoilApi override suspend fun await() {}
+        override val isDisposed: Boolean = true
+        override val job: Deferred<ImageResult> =
+            MainScope().async<ImageResult> {
+              ErrorResult(
+                  drawable = null,
+                  request = ImageRequest.Builder(context).build(),
+                  throwable = RuntimeException("Test"),
+              )
+            }
 
         override fun dispose() {}
       }
 
-  override val bitmapPool: BitmapPool = BitmapPool(0)
+  override val components: ComponentRegistry = ComponentRegistry()
+
   override val defaults: DefaultRequestOptions = DefaultRequestOptions()
-  override val memoryCache: MemoryCache =
-      object : MemoryCache {
-        override val maxSize: Int = 1
-        override val size: Int = 0
 
-        override fun clear() {}
+  override val diskCache: DiskCache? = null
 
-        override fun get(key: MemoryCache.Key): Bitmap? {
-          return null
-        }
-
-        override fun remove(key: MemoryCache.Key): Boolean {
-          return false
-        }
-
-        override fun set(key: MemoryCache.Key, bitmap: Bitmap) {}
-      }
+  override val memoryCache: MemoryCache? = null
 
   override fun enqueue(request: ImageRequest): Disposable {
     request.apply {
@@ -82,13 +80,8 @@ private class TestImageLoader(context: Context) : ImageLoader {
     return SuccessResult(
         drawable = successDrawable,
         request = request,
-        metadata =
-            ImageResult.Metadata(
-                memoryCacheKey = MemoryCache.Key(""),
-                isSampled = false,
-                dataSource = DataSource.MEMORY_CACHE,
-                isPlaceholderMemoryCacheKeyPresent = false,
-            ))
+        dataSource = MEMORY,
+    )
   }
 
   override fun newBuilder(): ImageLoader.Builder {

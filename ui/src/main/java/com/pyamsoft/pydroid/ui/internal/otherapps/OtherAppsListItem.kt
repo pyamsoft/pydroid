@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
@@ -95,8 +94,12 @@ internal fun OtherAppsListItem(
 }
 
 @Composable
-private fun Name(app: OtherApp) {
+private fun Name(
+    modifier: Modifier = Modifier,
+    app: OtherApp,
+) {
   Row(
+      modifier = modifier,
       verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
@@ -111,22 +114,22 @@ private fun Name(app: OtherApp) {
 }
 
 @Composable
-private fun Icon(app: OtherApp, imageLoader: ImageLoader) {
+private fun Icon(
+    modifier: Modifier = Modifier,
+    app: OtherApp,
+    imageLoader: ImageLoader,
+) {
   val name = app.name
   val icon = app.icon
 
   if (icon.isNotBlank()) {
     Box(
-        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+        modifier = modifier.padding(start = MaterialTheme.keylines.baseline),
         contentAlignment = Alignment.Center,
     ) {
-      Image(
-          painter =
-              rememberImagePainter(
-                  data = app.icon,
-                  imageLoader = imageLoader,
-                  builder = { crossfade(true) },
-              ),
+      AsyncImage(
+          model = app.icon,
+          imageLoader = imageLoader,
           contentDescription = name,
           modifier = Modifier.size(ImageDefaults.DefaultSize),
       )
@@ -136,10 +139,16 @@ private fun Icon(app: OtherApp, imageLoader: ImageLoader) {
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
-private fun Description(app: OtherApp) {
+private fun Description(
+    modifier: Modifier = Modifier,
+    app: OtherApp,
+) {
   val description = app.description
 
-  AnimatedVisibility(visible = description.isNotBlank()) {
+  AnimatedVisibility(
+      modifier = modifier,
+      visible = description.isNotBlank(),
+  ) {
     Box(
         modifier = Modifier.padding(vertical = MaterialTheme.keylines.baseline),
     ) {
@@ -152,8 +161,9 @@ private fun Description(app: OtherApp) {
 }
 
 @Composable
-private fun ViewSource(onClick: () -> Unit) {
+private fun ViewSource(modifier: Modifier = Modifier, onClick: () -> Unit) {
   TextButton(
+      modifier = modifier,
       onClick = onClick,
   ) {
     Text(
@@ -163,9 +173,9 @@ private fun ViewSource(onClick: () -> Unit) {
 }
 
 @Composable
-private fun OpenStore(onClick: () -> Unit) {
+private fun OpenStore(modifier: Modifier = Modifier, onClick: () -> Unit) {
   Box(
-      modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+      modifier = modifier.padding(start = MaterialTheme.keylines.baseline),
   ) {
     TextButton(
         onClick = onClick,

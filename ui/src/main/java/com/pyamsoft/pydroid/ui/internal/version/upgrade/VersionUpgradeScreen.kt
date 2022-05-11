@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -46,22 +47,28 @@ internal fun VersionUpgradeScreen(
       modifier = modifier,
       elevation = DialogDefaults.Elevation,
   ) {
-    Column(
+    LazyColumn(
         modifier = Modifier.padding(all = MaterialTheme.keylines.content).fillMaxWidth(),
     ) {
-      Box(
-          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-      ) { Title() }
+      item {
+        Box(
+            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
+        ) { Title() }
+      }
 
-      Box(
-          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-      ) { Message() }
+      item {
+        Box(
+            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
+        ) { Message() }
+      }
 
-      Actions(
-          isUpgraded = isUpgraded,
-          onUpgrade = onUpgrade,
-          onClose = onClose,
-      )
+      item {
+        Actions(
+            isUpgraded = isUpgraded,
+            onUpgrade = onUpgrade,
+            onClose = onClose,
+        )
+      }
     }
   }
 }

@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Checkbox
@@ -35,8 +37,11 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -197,7 +202,7 @@ internal fun ListPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.ListPreference,
 ) {
-  val (isDialogShown, showDialog) = remember { mutableStateOf(false) }
+  var showDialog by remember { mutableStateOf(false) }
 
   val isEnabled = preference.isEnabled
   val title = preference.name
@@ -212,14 +217,14 @@ internal fun ListPreferenceItem(
       text = title,
       summary = summary,
       icon = icon,
-      modifier = { enabled ->
-        modifier.clickable(enabled = enabled) { showDialog(!isDialogShown) }
-      },
+      modifier = { enabled -> modifier.clickable(enabled = enabled) { showDialog = !showDialog } },
   )
 
-  if (isDialogShown) {
+  if (showDialog) {
+    val onDismiss by rememberUpdatedState { showDialog = false }
+
     AlertDialog(
-        onDismissRequest = { showDialog(false) },
+        onDismissRequest = onDismiss,
         title = {
           Text(
               text = title,
@@ -227,16 +232,22 @@ internal fun ListPreferenceItem(
           )
         },
         buttons = {
-          Column(
+          val items = remember(entries) { entries.toList() }
+          LazyColumn(
               modifier = Modifier.padding(MaterialTheme.keylines.content),
           ) {
-            entries.forEach { current ->
-              val name = current.key
-              val value = current.value
-              val isSelected = value == currentValue
-              val onEntrySelected = {
+            items(
+                items = items,
+                key = { it.first },
+            ) { current ->
+              val name = current.first
+              val value = current.second
+
+              val isSelected = remember(value, currentValue) { value == currentValue }
+
+              val onEntrySelected by rememberUpdatedState {
                 onPreferenceSelected(name, value)
-                showDialog(false)
+                onDismiss()
               }
 
               Row(
@@ -250,7 +261,7 @@ internal fun ListPreferenceItem(
                                 }
                               },
                           )
-                          .padding(MaterialTheme.keylines.content),
+                          .padding(MaterialTheme.keylines.baseline),
                   verticalAlignment = Alignment.CenterVertically,
               ) {
                 RadioButton(
@@ -269,19 +280,21 @@ internal fun ListPreferenceItem(
               }
             }
 
-            Row(
-                modifier = Modifier.padding(top = MaterialTheme.keylines.baseline).fillMaxWidth(),
-            ) {
-              Spacer(
-                  modifier = Modifier.weight(1F),
-              )
-
-              TextButton(
-                  onClick = { showDialog(false) },
+            item {
+              Row(
+                  modifier = Modifier.padding(top = MaterialTheme.keylines.baseline).fillMaxWidth(),
               ) {
-                Text(
-                    text = stringResource(R.string.close),
+                Spacer(
+                    modifier = Modifier.weight(1F),
                 )
+
+                TextButton(
+                    onClick = onDismiss,
+                ) {
+                  Text(
+                      text = stringResource(R.string.close),
+                  )
+                }
               }
             }
           }

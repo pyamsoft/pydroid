@@ -67,50 +67,57 @@ internal fun BillingScreen(
 
   val snackbarHostState = remember { SnackbarHostState() }
 
-  AppHeader(
+  // Scroll on small
+  LazyColumn(
       modifier = modifier,
-      elevation = DialogDefaults.Elevation,
-      icon = icon,
-      name = name,
-      imageLoader = imageLoader,
   ) {
-    Column {
-      Crossfade(targetState = connection) { connected ->
-        // Remember computed value
-        val isLoading = remember { connected == BillingState.LOADING }
-        val isConnected = remember { connected == BillingState.CONNECTED }
-
-        if (isLoading) {
-          Loading()
-        } else {
-          SkuList(
-              isConnected = isConnected,
-              list = skuList,
-              onPurchase = onPurchase,
-          )
-        }
-      }
-
-      Row(
-          modifier = Modifier.padding(MaterialTheme.keylines.content),
+    item {
+      AppHeader(
+          modifier = modifier,
+          elevation = DialogDefaults.Elevation,
+          icon = icon,
+          name = name,
+          imageLoader = imageLoader,
       ) {
-        Spacer(
-            modifier = Modifier.weight(1F),
-        )
-        TextButton(
-            onClick = onClose,
-        ) {
-          Text(
-              text = stringResource(R.string.close),
+        Column {
+          Crossfade(targetState = connection) { connected ->
+            // Remember computed value
+            val isLoading = remember { connected == BillingState.LOADING }
+            val isConnected = remember { connected == BillingState.CONNECTED }
+
+            if (isLoading) {
+              Loading()
+            } else {
+              SkuList(
+                  isConnected = isConnected,
+                  list = skuList,
+                  onPurchase = onPurchase,
+              )
+            }
+          }
+
+          Row(
+              modifier = Modifier.padding(MaterialTheme.keylines.content),
+          ) {
+            Spacer(
+                modifier = Modifier.weight(1F),
+            )
+            TextButton(
+                onClick = onClose,
+            ) {
+              Text(
+                  text = stringResource(R.string.close),
+              )
+            }
+          }
+
+          BillingError(
+              snackbarHostState = snackbarHostState,
+              error = error,
+              onSnackbarDismissed = onBillingErrorDismissed,
           )
         }
       }
-
-      BillingError(
-          snackbarHostState = snackbarHostState,
-          error = error,
-          onSnackbarDismissed = onBillingErrorDismissed,
-      )
     }
   }
 }

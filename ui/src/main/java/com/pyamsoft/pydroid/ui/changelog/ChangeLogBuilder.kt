@@ -28,19 +28,16 @@ public class ChangeLogBuilder {
   private val builder = mutableListOf<ChangeLogLine>()
 
   /** Adds a line about a bug fix */
-  @CheckResult
   public fun bugfix(line: String): ChangeLogBuilder {
     return this.also { builder.add(line.asBugfix()) }
   }
 
   /** Adds a line about a behavior change */
-  @CheckResult
   public fun change(line: String): ChangeLogBuilder {
     return this.also { builder.add(line.asChange()) }
   }
 
   /** Adds a line about a new feature */
-  @CheckResult
   public fun feature(line: String): ChangeLogBuilder {
     return this.also { builder.add(line.asFeature()) }
   }

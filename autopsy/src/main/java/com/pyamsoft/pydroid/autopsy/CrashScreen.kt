@@ -17,10 +17,8 @@
 package com.pyamsoft.pydroid.autopsy
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -46,25 +44,32 @@ internal fun CrashScreen(
       color = colorResource(R.color.crash_background_color),
       contentColor = colorResource(R.color.crash_foreground_color),
   ) {
-    Column(
+    LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.typography),
     ) {
-      ThreadName(
-          threadName = threadName,
-      )
+      item {
+        ThreadName(
+            threadName = threadName,
+        )
+      }
 
-      ThrowableName(
-          throwableName = throwableName,
-      )
+      item {
+        ThrowableName(
+            throwableName = throwableName,
+        )
+      }
 
-      ThrowableMessage(
-          stackTrace = stackTrace,
-      )
+      item {
+        ThrowableMessage(
+            stackTrace = stackTrace,
+        )
+      }
 
-      StackTrace(
-          modifier = Modifier.weight(1F),
-          stackTrace = stackTrace,
-      )
+      item {
+        StackTrace(
+            stackTrace = stackTrace,
+        )
+      }
     }
   }
 }
@@ -138,11 +143,10 @@ private fun StackTrace(
     modifier: Modifier = Modifier,
     stackTrace: Throwable,
 ) {
-  val scrollState = rememberScrollState()
   val stackTraceAsString = remember(stackTrace) { stackTrace.stackTraceToString() }
 
   Text(
-      modifier = modifier.verticalScroll(scrollState),
+      modifier = modifier,
       text = stackTraceAsString,
       style =
           MaterialTheme.typography.body1.copy(

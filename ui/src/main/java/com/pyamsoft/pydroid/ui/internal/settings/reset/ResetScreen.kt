@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -47,20 +48,28 @@ internal fun ResetScreen(
       modifier = modifier,
       elevation = DialogDefaults.Elevation,
   ) {
-    Column(modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth()) {
-      Box(
-          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-      ) { Title() }
+    LazyColumn(
+        modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth(),
+    ) {
+      item {
+        Box(
+            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
+        ) { Title() }
+      }
 
-      Box(
-          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-      ) { Message() }
+      item {
+        Box(
+            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
+        ) { Message() }
+      }
 
-      Actions(
-          isReset = reset,
-          onReset = onReset,
-          onClose = onClose,
-      )
+      item {
+        Actions(
+            isReset = reset,
+            onReset = onReset,
+            onClose = onClose,
+        )
+      }
     }
   }
 }

@@ -16,16 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
@@ -38,13 +35,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
-import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
@@ -52,7 +47,6 @@ import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private val MAX_HEIGHT_PORTRAIT = 400.dp
-private val MAX_HEIGHT_LANDSCAPE = 100.dp
 
 @Composable
 internal fun DataPolicyDisclosureScreen(
@@ -70,47 +64,40 @@ internal fun DataPolicyDisclosureScreen(
   val name = state.name
   val navigationError = state.navigationError
 
-  val configuration = LocalConfiguration.current
-  val isPortrait =
-      remember(configuration.orientation) {
-        configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-      }
-
   val snackbarHostState = remember { SnackbarHostState() }
 
-  AppHeader(
+  LazyColumn(
       modifier = modifier,
-      elevation = DialogDefaults.Elevation,
-      icon = icon,
-      name = name,
-      imageLoader = imageLoader,
   ) {
-    Column {
-      Disclosure(
-          modifier =
-              Modifier.fillMaxWidth()
-                  .heightIn(
-                      max = if (isPortrait) MAX_HEIGHT_PORTRAIT else MAX_HEIGHT_LANDSCAPE,
-                  ),
+    item {
+      AppHeader(
+          elevation = DialogDefaults.Elevation,
+          icon = icon,
           name = name,
-      )
-      Links(
-          modifier = Modifier.fillMaxWidth(),
-          isPortrait = isPortrait,
-          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-          onTermsOfServiceClicked = onTermsOfServiceClicked,
-      )
-      Actions(
-          modifier = Modifier.fillMaxWidth(),
-          isPortrait = isPortrait,
-          onAccept = onAccept,
-          onReject = onReject,
-      )
-      NavigationError(
-          snackbarHostState = snackbarHostState,
-          error = navigationError,
-          onSnackbarDismissed = onNavigationErrorDismissed,
-      )
+          imageLoader = imageLoader,
+      ) {
+        Column {
+          Disclosure(
+              modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
+              name = name,
+          )
+          Links(
+              modifier = Modifier.fillMaxWidth(),
+              onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+              onTermsOfServiceClicked = onTermsOfServiceClicked,
+          )
+          Actions(
+              modifier = Modifier.fillMaxWidth(),
+              onAccept = onAccept,
+              onReject = onReject,
+          )
+          NavigationError(
+              snackbarHostState = snackbarHostState,
+              error = navigationError,
+              onSnackbarDismissed = onNavigationErrorDismissed,
+          )
+        }
+      }
     }
   }
 }
@@ -118,48 +105,33 @@ internal fun DataPolicyDisclosureScreen(
 @Composable
 private fun Links(
     modifier: Modifier = Modifier,
-    isPortrait: Boolean,
     onPrivacyPolicyClicked: () -> Unit,
     onTermsOfServiceClicked: () -> Unit,
 ) {
-  val content =
-      @Composable
-      {
-        Text(
-            modifier = Modifier.clickable { onTermsOfServiceClicked() },
-            text = "View our Terms and Conditions",
-            style =
-                MaterialTheme.typography.caption.copy(
-                    color = MaterialTheme.colors.primary,
-                ),
-        )
-        Text(
-            modifier =
-                Modifier.clickable { onPrivacyPolicyClicked() }
-                    .padding(
-                        top = if (isPortrait) MaterialTheme.keylines.baseline else ZeroSize,
-                        start = if (isPortrait) ZeroSize else MaterialTheme.keylines.baseline,
-                    ),
-            text = "View our Privacy Policy",
-            style =
-                MaterialTheme.typography.caption.copy(
-                    color = MaterialTheme.colors.primary,
-                ),
-        )
-      }
 
-  if (isPortrait) {
-    Column(
-        modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) { content() }
-  } else {
-    Row(
-        modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) { content() }
+  Column(
+      modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+  ) {
+    Text(
+        modifier = Modifier.clickable { onTermsOfServiceClicked() },
+        text = "View our Terms and Conditions",
+        style =
+            MaterialTheme.typography.caption.copy(
+                color = MaterialTheme.colors.primary,
+            ),
+    )
+    Text(
+        modifier =
+            Modifier.clickable { onPrivacyPolicyClicked() }
+                .padding(top = MaterialTheme.keylines.baseline),
+        text = "View our Privacy Policy",
+        style =
+            MaterialTheme.typography.caption.copy(
+                color = MaterialTheme.colors.primary,
+            ),
+    )
   }
 }
 
@@ -168,9 +140,8 @@ private fun Disclosure(
     modifier: Modifier = Modifier,
     name: String,
 ) {
-  val scrollState = rememberScrollState()
   Column(
-      modifier = modifier.verticalScroll(scrollState).padding(MaterialTheme.keylines.content),
+      modifier = modifier.padding(MaterialTheme.keylines.content),
   ) {
     Text(
         text = "$name is free and open source software.",
@@ -206,47 +177,30 @@ private fun Disclosure(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
-    isPortrait: Boolean,
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
-  val content =
-      @Composable
-      {
-        Button(
-            onClick = onAccept,
-        ) {
-          Text(
-              text = stringResource(R.string.dpd_accept),
-          )
-        }
-        TextButton(
-            modifier =
-                Modifier.padding(
-                    top = if (isPortrait) MaterialTheme.keylines.baseline else ZeroSize,
-                    start = if (isPortrait) ZeroSize else MaterialTheme.keylines.baseline,
-                ),
-            onClick = onReject,
-        ) {
-          Text(
-              text = stringResource(R.string.dpd_reject),
-              fontSize = 12.sp,
-          )
-        }
-      }
-
-  if (isPortrait) {
-    Column(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) { content() }
-  } else {
-    Row(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) { content() }
+  Column(
+      modifier = modifier.padding(MaterialTheme.keylines.content),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+  ) {
+    Button(
+        onClick = onAccept,
+    ) {
+      Text(
+          text = stringResource(R.string.dpd_accept),
+      )
+    }
+    TextButton(
+        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+        onClick = onReject,
+    ) {
+      Text(
+          text = stringResource(R.string.dpd_reject),
+          fontSize = 12.sp,
+      )
+    }
   }
 }
 

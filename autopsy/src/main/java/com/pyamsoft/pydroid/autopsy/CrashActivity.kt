@@ -24,7 +24,6 @@ import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.PYDroidTheme
 import kotlin.system.exitProcess
@@ -45,7 +44,8 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
     val launchIntent = intent
     val threadName = launchIntent.getStringExtra(KEY_THREAD_NAME).requireNotNull()
     val throwableName = launchIntent.getStringExtra(KEY_THROWABLE).requireNotNull()
-    val stackTrace = launchIntent.getSerializableExtra(KEY_TRACE).requireNotNull() as Throwable
+    val throwableMessage = launchIntent.getStringExtra(KEY_MESSAGE).requireNotNull()
+    val stackTrace = launchIntent.getStringExtra(KEY_TRACE).requireNotNull()
 
     setContent {
       PYDroidTheme {
@@ -54,12 +54,11 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
             modifier = Modifier.fillMaxSize(),
             threadName = threadName,
             throwableName = throwableName,
+            throwableMessage = throwableMessage,
             stackTrace = stackTrace,
         )
       }
     }
-
-    Logger.e(stackTrace, "APPLICATION CRASHED")
   }
 
   override fun onStop() {
@@ -76,6 +75,7 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
 
     private const val KEY_THREAD_NAME = "key_thread_name"
     private const val KEY_THROWABLE = "key_throwable"
+    private const val KEY_MESSAGE = "key_message"
     private const val KEY_TRACE = "key_trace"
 
     @CheckResult
@@ -84,7 +84,8 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
       return Intent(context.applicationContext, CrashActivity::class.java).apply {
         putExtra(KEY_THREAD_NAME, threadName)
         putExtra(KEY_THROWABLE, throwable::class.java.simpleName)
-        putExtra(KEY_TRACE, throwable)
+        putExtra(KEY_MESSAGE, throwable.message.orEmpty())
+        putExtra(KEY_TRACE, throwable.stackTraceToString())
         flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or
                 Intent.FLAG_ACTIVITY_CLEAR_TASK or

@@ -37,7 +37,8 @@ internal fun CrashScreen(
     modifier: Modifier = Modifier,
     threadName: String,
     throwableName: String,
-    stackTrace: Throwable,
+    throwableMessage: String,
+    stackTrace: String,
 ) {
   Surface(
       modifier = modifier,
@@ -61,7 +62,7 @@ internal fun CrashScreen(
 
       item {
         ThrowableMessage(
-            stackTrace = stackTrace,
+            throwableMessage = throwableMessage,
         )
       }
 
@@ -117,16 +118,16 @@ private fun ThrowableName(
 @Composable
 private fun ThrowableMessage(
     modifier: Modifier = Modifier,
-    stackTrace: Throwable,
+    throwableMessage: String,
 ) {
-  val message = remember(stackTrace) { stackTrace.message }
+  val canShow = remember(throwableMessage) { throwableMessage.isNotBlank() }
 
-  if (message != null) {
+  if (canShow) {
     Box(
         modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
     ) {
       Text(
-          text = message,
+          text = throwableMessage,
           style =
               MaterialTheme.typography.body1.copy(
                   fontSize = 14.sp,
@@ -141,13 +142,11 @@ private fun ThrowableMessage(
 @Composable
 private fun StackTrace(
     modifier: Modifier = Modifier,
-    stackTrace: Throwable,
+    stackTrace: String,
 ) {
-  val stackTraceAsString = remember(stackTrace) { stackTrace.stackTraceToString() }
-
   Text(
       modifier = modifier,
-      text = stackTraceAsString,
+      text = stackTrace,
       style =
           MaterialTheme.typography.body1.copy(
               fontSize = 12.sp,
@@ -162,6 +161,7 @@ private fun PreviewCrashScreen() {
   CrashScreen(
       threadName = "TEST Thread",
       throwableName = "TEST ERROR",
-      stackTrace = RuntimeException("TEST ERROR"),
+      throwableMessage = "TEST ERROR",
+      stackTrace = RuntimeException("TEST STACK TRACE").stackTraceToString(),
   )
 }

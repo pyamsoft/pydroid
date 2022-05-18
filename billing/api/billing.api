@@ -31,7 +31,6 @@ public final class com/pyamsoft/pydroid/billing/BillingModule$Parameters {
 public abstract interface class com/pyamsoft/pydroid/billing/BillingSku {
 	public abstract fun getDescription ()Ljava/lang/String;
 	public abstract fun getDisplayPrice ()Ljava/lang/String;
-	public abstract fun getIconUrl ()Ljava/lang/String;
 	public abstract fun getId ()Ljava/lang/String;
 	public abstract fun getPrice ()J
 	public abstract fun getTitle ()Ljava/lang/String;

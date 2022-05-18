@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.billing.store
 
 import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.SkuDetails
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 

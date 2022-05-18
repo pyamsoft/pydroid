@@ -259,7 +259,6 @@ private fun PreviewBillingScreenConnectedWithListError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = RuntimeException("TEST"),
   )
@@ -278,7 +277,6 @@ private fun PreviewBillingScreenConnectedWithListNoError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = null,
   )
@@ -297,7 +295,6 @@ private fun PreviewBillingScreenDisconnectedWithListError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = RuntimeException("TEST"),
   )
@@ -316,7 +313,6 @@ private fun PreviewBillingScreenDisconnectedWithListNoError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = null,
   )
@@ -355,7 +351,6 @@ private fun PreviewBillingScreenLoadingWithListError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = RuntimeException("TEST"),
   )
@@ -374,7 +369,6 @@ private fun PreviewBillingScreenLoadingWithListNoError() {
                 override val price: Long = 1000
                 override val title: String = "TEST"
                 override val description: String = "JUST A TEST"
-                override val iconUrl: String = ""
               }),
       error = null,
   )

@@ -20,7 +20,8 @@ import com.android.billingclient.api.ProductDetails
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 
-internal data class PlayBillingSku internal constructor(internal val sku: ProductDetails) : BillingSku {
+internal data class PlayBillingSku internal constructor(internal val sku: ProductDetails) :
+    BillingSku {
 
   private val product = sku.oneTimePurchaseOfferDetails.requireNotNull()
 

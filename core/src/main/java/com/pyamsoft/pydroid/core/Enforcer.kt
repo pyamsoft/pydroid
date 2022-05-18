@@ -18,21 +18,9 @@ package com.pyamsoft.pydroid.core
 
 import android.os.Looper
 import androidx.annotation.CheckResult
-import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 
-/** Interface for the enforcer */
-public interface Associate {
-
-  /** Throws an exception if the current thread is the Main or UI thread */
-  public fun assertOffMainThread()
-
-  /** Throws an exception if the current thread is not the Main or UI thread */
-  public fun assertOnMainThread()
-}
-
-/** Reggie is the normal enforcer, he expects correctly threaded contexts of execution */
-internal class Reggie : Associate {
+/** Enforce expected threading contexts */
+public object Enforcer {
 
   private val mainLooper by lazy { Looper.getMainLooper().requireNotNull() }
 
@@ -42,37 +30,16 @@ internal class Reggie : Associate {
   }
 
   /** Throws an exception if the current thread is the Main or UI thread */
-  override fun assertOffMainThread() {
+  public fun assertOffMainThread() {
     if (isMainThread()) {
       throw AssertionError("This operation must be OFF the Main/UI thread!")
     }
   }
 
   /** Throws an exception if the current thread is not the Main or UI thread */
-  override fun assertOnMainThread() {
+  public fun assertOnMainThread() {
     if (!isMainThread()) {
       throw AssertionError("This operation must be ON the Main/UI thread!")
     }
-  }
-}
-
-/** Enforce expected threading contexts */
-public object Enforcer : Associate {
-
-  private var associate: Associate = Reggie()
-
-  override fun assertOffMainThread() {
-    return associate.assertOffMainThread()
-  }
-
-  override fun assertOnMainThread() {
-    return associate.assertOnMainThread()
-  }
-
-  /** Assign a different associate for tests */
-  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-  public fun setAssociate(associate: Associate) {
-    this.associate = associate
   }
 }

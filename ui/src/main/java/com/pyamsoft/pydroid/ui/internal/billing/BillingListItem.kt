@@ -98,7 +98,6 @@ private fun PreviewBillingListItem() {
               override val price: Long = 100
               override val title: String = "TEST"
               override val description: String = "Just a Test"
-              override val iconUrl: String = ""
             },
         onPurchase = {},
     )

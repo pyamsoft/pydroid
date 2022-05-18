@@ -33,7 +33,4 @@ public interface BillingSku {
 
   /** SKU description */
   public val description: String
-
-  /** SKU icon */
-  public val iconUrl: String
 }

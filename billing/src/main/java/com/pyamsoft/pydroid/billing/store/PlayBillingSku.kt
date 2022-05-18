@@ -16,20 +16,22 @@
 
 package com.pyamsoft.pydroid.billing.store
 
+import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.SkuDetails
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.core.requireNotNull
 
-internal data class PlayBillingSku internal constructor(internal val sku: SkuDetails) : BillingSku {
+internal data class PlayBillingSku internal constructor(internal val sku: ProductDetails) : BillingSku {
 
-  override val id: String = sku.sku
+  private val product = sku.oneTimePurchaseOfferDetails.requireNotNull()
 
-  override val displayPrice: String = sku.price
+  override val id: String = sku.productId
 
-  override val price: Long = sku.priceAmountMicros
+  override val displayPrice: String = product.formattedPrice
+
+  override val price: Long = product.priceAmountMicros
 
   override val title: String = sku.title
 
   override val description: String = sku.description
-
-  override val iconUrl: String = sku.iconUrl
 }

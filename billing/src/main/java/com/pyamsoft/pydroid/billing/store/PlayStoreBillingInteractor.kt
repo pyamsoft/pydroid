@@ -26,11 +26,11 @@ import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ConsumeResponseListener
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
-import com.android.billingclient.api.SkuDetailsResponseListener
+import com.android.billingclient.api.QueryProductDetailsParams
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -54,9 +54,9 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
     BillingConnector,
     BillingLauncher,
     BillingClientStateListener,
-    SkuDetailsResponseListener,
+    PurchasesUpdatedListener,
     ConsumeResponseListener,
-    PurchasesUpdatedListener {
+    ProductDetailsResponseListener {
 
   private val client by lazy {
     BillingClient.newBuilder(context.applicationContext)
@@ -81,6 +81,7 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
         if (rawPackageName.endsWith(DEV_SUFFIX))
             rawPackageName.substring(0 until rawPackageName.length - DEV_SUFFIX.length)
         else rawPackageName
+
     appSkuList =
         listOf(
             "$packageName.iap_one",
@@ -88,18 +89,6 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
             "$packageName.iap_five",
             "$packageName.iap_ten",
         )
-  }
-
-  override fun start(activity: AppCompatActivity) {
-    activity.lifecycle.doOnCreate {
-      Logger.d("Attempt to connect Billing on Activity create")
-      connect()
-    }
-
-    activity.lifecycle.doOnDestroy {
-      Logger.d("Attempt disconnect Billing on Activity destroy")
-      disconnect()
-    }
   }
 
   private fun connect() {
@@ -116,6 +105,65 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
     billingScope.cancel()
   }
 
+  private fun querySkus() {
+    Logger.d("Querying for SKUs $appSkuList")
+
+    // Map this here every time since we do not know if the QPDP builder carries state that cannot
+    // be re-used.
+    val skus =
+        appSkuList.map { sku ->
+          QueryProductDetailsParams.Product.newBuilder()
+              .setProductType(BillingClient.ProductType.INAPP)
+              .setProductId(sku)
+              .build()
+        }
+
+    val params = QueryProductDetailsParams.newBuilder().setProductList(skus).build()
+
+    client.queryProductDetailsAsync(params, this)
+  }
+
+  private fun handlePurchases(purchases: List<Purchase>) {
+    for (purchase in purchases) {
+      Logger.d("Consume purchase: $purchase")
+      val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+      client.consumeAsync(params, this)
+    }
+  }
+
+  override fun onProductDetailsResponse(result: BillingResult, skuDetails: List<ProductDetails>) {
+    if (result.isOk()) {
+      Logger.d("Sku response: $skuDetails")
+      billingScope.launch(context = Dispatchers.IO) {
+        val skuList = skuDetails.map { PlayBillingSku(it) }
+        skuFlow.value = State(BillingState.CONNECTED, skuList)
+      }
+    } else {
+      Logger.w("SKU response not OK: ${result.debugMessage}")
+      skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
+    }
+  }
+
+  override fun start(activity: AppCompatActivity) {
+    activity.lifecycle.doOnCreate {
+      Logger.d("Attempt to connect Billing on Activity create")
+      connect()
+    }
+
+    activity.lifecycle.doOnDestroy {
+      Logger.d("Attempt disconnect Billing on Activity destroy")
+      disconnect()
+    }
+  }
+
+  override fun onConsumeResponse(result: BillingResult, token: String) {
+    if (result.isOk()) {
+      Logger.d("Purchase consumed $token")
+    } else {
+      Logger.w("Consume response not OK: ${result.debugMessage}")
+    }
+  }
+
   override fun onBillingSetupFinished(result: BillingResult) {
     if (result.isOk()) {
       Logger.d("Billing client is ready, query products!")
@@ -129,46 +177,6 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
       skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
     }
   }
-
-  private fun querySkus() {
-    Logger.d("Querying for SKUs $appSkuList")
-
-    val params =
-        SkuDetailsParams.newBuilder()
-            .setType(BillingClient.SkuType.INAPP)
-            .setSkusList(appSkuList)
-            .build()
-
-    client.querySkuDetailsAsync(params, this)
-  }
-
-  override suspend fun refresh() =
-      withContext(context = Dispatchers.Main) {
-        if (!client.isReady) {
-          Logger.w("Client is not ready yet, so we are not refreshing sku and purchases")
-          return@withContext
-        }
-
-        querySkus()
-      }
-
-  override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
-    if (result.isOk()) {
-      Logger.d("Sku response: $skuDetails")
-      billingScope.launch(context = Dispatchers.IO) {
-        val skuList = skuDetails?.map { PlayBillingSku(it) } ?: emptyList()
-        skuFlow.value = State(BillingState.CONNECTED, skuList)
-      }
-    } else {
-      Logger.w("SKU response not OK: ${result.debugMessage}")
-      skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
-    }
-  }
-
-  override suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit) =
-      withContext(context = Dispatchers.IO) {
-        skuFlow.collect { event -> onSkuListReceived(event.state, event.list) }
-      }
 
   override fun onBillingServiceDisconnected() {
     Logger.w("Billing client was disconnected!")
@@ -185,7 +193,45 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
     }
   }
 
-  override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+  override suspend fun refresh() =
+      withContext(context = Dispatchers.Main) {
+        if (!client.isReady) {
+          Logger.w("Client is not ready yet, so we are not refreshing sku and purchases")
+          return@withContext
+        }
+
+        querySkus()
+      }
+
+  override suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit) =
+      withContext(context = Dispatchers.IO) {
+        skuFlow.collect { event -> onSkuListReceived(event.state, event.list) }
+      }
+
+  override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
+      withContext(context = Dispatchers.Default) {
+        val billingSku = sku as PlayBillingSku
+
+        val products =
+            listOf(
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(billingSku.sku)
+                    // Do not need to set offerToken since we are not a subscription
+                    .build(),
+            )
+
+        val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
+
+        withContext(context = Dispatchers.Main) {
+          Logger.d("Launch purchase flow ${sku.id}")
+          client.launchBillingFlow(activity, params)
+        }
+      }
+
+  override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
+      withContext(context = Dispatchers.IO) { errorBus.onEvent { onErrorReceived(it) } }
+
+  override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
     if (result.isOk()) {
       if (purchases != null) {
         Logger.d("Purchase succeeded! $purchases")
@@ -202,36 +248,6 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
           errorBus.send(RuntimeException(result.debugMessage))
         }
       }
-    }
-  }
-
-  override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
-      withContext(context = Dispatchers.Default) {
-        val billingSku = sku as PlayBillingSku
-        val params = BillingFlowParams.newBuilder().setSkuDetails(billingSku.sku).build()
-
-        withContext(context = Dispatchers.Main) {
-          Logger.d("Launch purchase flow ${sku.id}")
-          client.launchBillingFlow(activity, params)
-        }
-      }
-
-  override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
-      withContext(context = Dispatchers.IO) { errorBus.onEvent { onErrorReceived(it) } }
-
-  private fun handlePurchases(purchases: List<Purchase>) {
-    for (purchase in purchases) {
-      Logger.d("Consume purchase: $purchase")
-      val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-      client.consumeAsync(params, this)
-    }
-  }
-
-  override fun onConsumeResponse(result: BillingResult, token: String) {
-    if (result.isOk()) {
-      Logger.d("Purchase consumed $token")
-    } else {
-      Logger.w("Consume response not OK: ${result.debugMessage}")
     }
   }
 

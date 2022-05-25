@@ -49,7 +49,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
@@ -149,15 +148,6 @@ public abstract class SettingsFragment : Fragment() {
           url = url,
       )
     }
-  }
-
-  private fun handleViewMoreApps(uriHandler: UriHandler) {
-    viewModel
-        .requireNotNull()
-        .handleViewMoreApps(
-            onOpenDeveloperPage = { handleOpenDeveloperPage(uriHandler) },
-            onOpenOtherApps = { OtherAppsDialog.show(requireActivity()) },
-        )
   }
 
   private fun handleShowDisclosure() {
@@ -292,7 +282,6 @@ public abstract class SettingsFragment : Fragment() {
                   onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
                   onViewBlogClicked = { handleViewBlog(handler) },
                   onOpenMarketPage = { handleOpenMarketPage(it) },
-                  onViewMoreAppsClicked = { handleViewMoreApps(it) },
               )
             }
           }

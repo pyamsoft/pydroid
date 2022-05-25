@@ -23,8 +23,6 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
-import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
-import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
@@ -34,7 +32,6 @@ import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -50,8 +47,6 @@ internal interface PYDroidComponent {
   @CheckResult fun plusAbout(): AboutComponent.Factory
 
   @CheckResult fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory
-
-  @CheckResult fun plusOtherApps(): OtherAppsComponent.Factory
 
   @CheckResult fun plusReset(): ResetComponent.Factory
 
@@ -112,22 +107,6 @@ internal interface PYDroidComponent {
           )
         }
 
-    private val otherAppsModule by
-        lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsModule(
-              OtherAppsModule.Parameters(
-                  context = context.applicationContext,
-                  packageName = context.applicationContext.packageName,
-                  networkModule =
-                      NetworkModule(
-                          NetworkModule.Parameters(
-                              addLoggingInterceptor = params.debug.enabled,
-                          ),
-                      ),
-              ),
-          )
-        }
-
     private val changeLogModule by
         lazy(LazyThreadSafetyMode.NONE) {
           ChangeLogModule(
@@ -151,7 +130,6 @@ internal interface PYDroidComponent {
               isFakeUpgradeChecker = params.debug.enabled,
               isFakeUpgradeAvailable = params.debug.upgradeAvailable,
               isFake = params.debug.enabled,
-              otherAppsModule = otherAppsModule,
               dataPolicyModule = dataPolicyModule,
               bugReportUrl = params.bugReportUrl,
               termsConditionsUrl = params.termsConditionsUrl,
@@ -176,15 +154,6 @@ internal interface PYDroidComponent {
               module = dataPolicyModule,
               privacyPolicyUrl = params.privacyPolicyUrl,
               termsConditionsUrl = params.termsConditionsUrl,
-          )
-        }
-
-    private val otherAppsParams by
-        lazy(LazyThreadSafetyMode.NONE) {
-          OtherAppsComponent.Factory.Parameters(
-              module = otherAppsModule,
-              composeTheme = composeTheme,
-              imageLoader = imageLoader,
           )
         }
 
@@ -236,10 +205,6 @@ internal interface PYDroidComponent {
 
     override fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory {
       return DataPolicyDialogComponent.Impl.FactoryImpl(dataPolicyParams)
-    }
-
-    override fun plusOtherApps(): OtherAppsComponent.Factory {
-      return OtherAppsComponent.Impl.FactoryImpl(otherAppsParams)
     }
 
     override fun plusReset(): ResetComponent.Factory {

@@ -69,11 +69,6 @@ buildscript {
     cachify = "0.0.27"
     highlander = "0.0.23"
 
-    // Network
-    moshi = "1.13.0"
-    retrofit = '2.9.0'
-    okhttp = "4.9.3"
-
     // In app updates and reviews
     playCore = "1.10.3"
     playCoreKtx = "1.8.1"

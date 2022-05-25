@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
-import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
@@ -48,7 +47,6 @@ internal interface SettingsComponent {
         internal val termsConditionsUrl: String,
         internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
-        internal val otherAppsModule: OtherAppsModule,
         internal val versionModule: VersionModule,
         internal val dataPolicyModule: DataPolicyModule,
         internal val changeLogModule: ChangeLogModule,
@@ -67,7 +65,7 @@ internal interface SettingsComponent {
               termsConditionsUrl = params.termsConditionsUrl,
               viewSourceUrl = params.viewSourceUrl,
               theming = params.theming,
-              interactor = params.otherAppsModule.provideInteractor(),
+              changeLogInteractor = params.changeLogModule.provideInteractor(),
           )
       fragment.dataPolicyViewModel =
           DataPolicyViewModeler(

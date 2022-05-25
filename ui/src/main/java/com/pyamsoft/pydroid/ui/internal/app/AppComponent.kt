@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
@@ -85,7 +84,6 @@ internal interface AppComponent {
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean,
         internal val changeLogModule: ChangeLogModule,
-        internal val otherAppsModule: OtherAppsModule,
         internal val dataPolicyModule: DataPolicyModule,
     )
   }
@@ -150,7 +148,6 @@ internal interface AppComponent {
             viewSourceUrl = params.viewSourceUrl,
             changeLogModule = params.changeLogModule,
             dataPolicyModule = params.dataPolicyModule,
-            otherAppsModule = params.otherAppsModule,
             composeTheme = params.composeTheme,
             theming = params.theming,
             versionCheckState = versionCheckState,

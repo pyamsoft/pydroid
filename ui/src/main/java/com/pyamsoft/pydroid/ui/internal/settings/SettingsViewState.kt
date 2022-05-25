@@ -20,19 +20,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface SettingsViewState : UiViewState {
   val applicationName: CharSequence
   val darkMode: Theming.Mode
-  val otherApps: List<OtherApp>
   val isLoading: Boolean
 }
 
 internal class MutableSettingsViewState : SettingsViewState {
   override var applicationName by mutableStateOf("")
   override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
-  override var otherApps by mutableStateOf(emptyList<OtherApp>())
   override var isLoading by mutableStateOf(false)
 }

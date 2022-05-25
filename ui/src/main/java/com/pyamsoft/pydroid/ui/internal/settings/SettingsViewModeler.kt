@@ -16,12 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
-import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
-import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,39 +31,13 @@ internal constructor(
     private val privacyPolicyUrl: String,
     private val termsConditionsUrl: String,
     private val theming: Theming,
-    private val interactor: OtherAppsInteractor,
+    private val changeLogInteractor: ChangeLogInteractor,
 ) : AbstractViewModeler<SettingsViewState>(state) {
-
-  private val otherAppsRunner =
-      highlander<ResultWrapper<List<OtherApp>>, Boolean> { force -> interactor.getApps(force) }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
-      otherAppsRunner
-          .call(false)
-          .onSuccess { state.otherApps = it }
-          .onFailure { Logger.e(it, "Failed to fetch other apps from network") }
-          .onFailure { state.otherApps = emptyList() }
-    }
-
-    scope.launch(context = Dispatchers.Main) {
-      val name = interactor.getDisplayName()
+      val name = changeLogInteractor.getDisplayName()
       state.applicationName = name
-    }
-  }
-
-  internal fun handleViewMoreApps(
-      onOpenDeveloperPage: () -> Unit,
-      onOpenOtherApps: (List<OtherApp>) -> Unit,
-  ) {
-    state.otherApps.let { others ->
-      if (others.isEmpty()) {
-        Logger.w("Other apps list is empty, fallback to developer store page")
-        onOpenDeveloperPage()
-      } else {
-        Logger.w("We have a list of Other apps, show them")
-        onOpenOtherApps(others)
-      }
     }
   }
 

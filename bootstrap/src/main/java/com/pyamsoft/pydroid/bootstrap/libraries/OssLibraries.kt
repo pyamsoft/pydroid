@@ -142,21 +142,6 @@ public object OssLibraries {
         "PYDroid bootstrap extensions for quickly spinning up new applications",
     )
     add(
-        "Retrofit",
-        "https://square.github.io/retrofit/",
-        "Type-safe HTTP client for Android and Java by Square, Inc.",
-    )
-    add(
-        "Moshi",
-        "https://github.com/square/moshi",
-        "A modern JSON library for Android and Java.",
-    )
-    add(
-        "OkHTTP",
-        "https://github.com/square/okhttp",
-        "An HTTP+HTTP/2 client for Android and Java applications.",
-    )
-    add(
         "Cachify",
         "https://github.com/pyamsoft/cachify",
         "Simple in-memory caching of all the things",
@@ -170,6 +155,11 @@ public object OssLibraries {
                 license = "Custom Google License",
                 location = "https://developer.android.com/distribute/play-services",
             ),
+    )
+    add(
+        "AndroidX Core KTX",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
+        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
     )
 
     addUtilLibraries()

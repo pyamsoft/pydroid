@@ -67,7 +67,6 @@ internal fun SettingsScreen(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: (UriHandler) -> Unit,
-    onViewMoreAppsClicked: (UriHandler) -> Unit,
 ) {
   val isLoading = state.isLoading
   val applicationName = state.applicationName
@@ -107,7 +106,6 @@ internal fun SettingsScreen(
             onViewSocialMediaClicked = onViewSocialMediaClicked,
             onViewBlogClicked = onViewBlogClicked,
             onOpenMarketPage = onOpenMarketPage,
-            onViewMoreAppsClicked = onViewMoreAppsClicked,
         )
       }
     }
@@ -153,7 +151,6 @@ private fun SettingsList(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: (UriHandler) -> Unit,
-    onViewMoreAppsClicked: (UriHandler) -> Unit,
 ) {
   val preferences =
       mutableListOf<Preferences>().apply {
@@ -188,11 +185,6 @@ private fun SettingsList(
             ),
         )
         add(
-            createMoreAppsPreferencesGroup(
-                onViewMoreApps = onViewMoreAppsClicked,
-            ),
-        )
-        add(
             createSocialMediaPreferencesGroup(
                 onViewSocialMediaClicked = onViewSocialMediaClicked,
                 onViewBlogClicked = onViewBlogClicked,
@@ -219,7 +211,6 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
             this.isLoading = isLoading
             applicationName = "TEST"
             darkMode = Theming.Mode.LIGHT
-            otherApps = emptyList()
           },
       hideClearAll = false,
       hideUpgradeInformation = false,
@@ -233,7 +224,6 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
       onCheckUpdateClicked = {},
       onShowChangeLogClicked = {},
       onResetClicked = {},
-      onViewMoreAppsClicked = {},
       onOpenMarketPage = {},
       onDonateClicked = {},
       onBugReportClicked = {},

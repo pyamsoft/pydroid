@@ -64,16 +64,6 @@ public sealed class Preferences {
       internal val content: @Composable (isEnabled: Boolean) -> Unit,
   ) : Item()
 
-  /** Represents a Ad Preference item */
-  internal data class AdPreference
-  internal constructor(
-      override val name: String,
-      override val isEnabled: Boolean,
-      override val summary: String,
-      override val icon: ImageVector?,
-      internal val onClick: (() -> Unit)?,
-  ) : Item()
-
   /** Represents a In-App Purchase Preference item */
   internal data class InAppPreference
   internal constructor(
@@ -163,25 +153,6 @@ public fun preference(
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.SimplePreference(
-      name = name,
-      isEnabled = isEnabled,
-      summary = summary,
-      icon = icon,
-      onClick = onClick,
-  )
-}
-
-/** Create a new Preference.AdPreference */
-@CheckResult
-@JvmOverloads
-public fun adPreference(
-    name: String,
-    isEnabled: Boolean = true,
-    summary: String = "",
-    icon: ImageVector? = null,
-    onClick: (() -> Unit)? = null,
-): Preferences.Item {
-  return Preferences.AdPreference(
       name = name,
       isEnabled = isEnabled,
       summary = summary,

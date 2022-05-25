@@ -50,7 +50,6 @@ import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
-import com.pyamsoft.pydroid.ui.internal.app.AdBadge
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 
 @Composable
@@ -89,30 +88,8 @@ internal fun CustomPreferenceItem(
       text = name,
       summary = summary,
       icon = icon,
-      badge = { AdBadge() },
       modifier = { modifier },
       customContent = content,
-  )
-}
-
-@Composable
-internal fun AdPreferenceItem(
-    modifier: Modifier = Modifier,
-    preference: Preferences.AdPreference,
-) {
-  val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val onClick = preference.onClick
-
-  PreferenceItem(
-      isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
-      badge = { AdBadge() },
-      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 

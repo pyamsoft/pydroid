@@ -36,16 +36,6 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 
 @Composable
-internal fun AdBadge(
-    modifier: Modifier = Modifier,
-) {
-  Badge(
-      modifier = modifier,
-      text = stringResource(R.string.ad_badge),
-  )
-}
-
-@Composable
 internal fun InAppBadge(
     modifier: Modifier = Modifier,
 ) {
@@ -88,6 +78,6 @@ private fun Badge(
 
 @Preview
 @Composable
-private fun PreviewAdBadge() {
-  AdBadge()
+private fun PreviewInAppBadge() {
+  InAppBadge()
 }

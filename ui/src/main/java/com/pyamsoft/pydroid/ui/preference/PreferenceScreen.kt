@@ -232,11 +232,6 @@ private fun RenderItem(
             modifier = modifier,
             preference = preference,
         )
-    is Preferences.AdPreference ->
-        AdPreferenceItem(
-            modifier = modifier,
-            preference = preference,
-        )
     is Preferences.CustomPreference ->
         CustomPreferenceItem(
             modifier = modifier,
@@ -264,9 +259,6 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
                           preference(
                               name = "TEST ITEM 2",
                               summary = "TESTING 123",
-                          ),
-                          adPreference(
-                              name = "TEST AD",
                           ),
                           inAppPreference(
                               name = "TEST IN-APP",

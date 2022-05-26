@@ -39,10 +39,16 @@ internal fun BillingListItem(
 ) {
 
   Row(
-      modifier = modifier.clickable { onPurchase(sku) }.padding(MaterialTheme.keylines.baseline),
+      modifier =
+          modifier
+              .clickable { onPurchase(sku) }
+              .padding(vertical = MaterialTheme.keylines.baseline)
+              .padding(horizontal = MaterialTheme.keylines.content),
       verticalAlignment = Alignment.CenterVertically,
   ) {
-    Column(modifier = Modifier.weight(1F)) {
+    Column(
+        modifier = Modifier.weight(1F),
+    ) {
       Name(
           sku = sku,
       )
@@ -63,24 +69,36 @@ internal fun BillingListItem(
 }
 
 @Composable
-private fun Name(sku: BillingSku) {
+private fun Name(
+    modifier: Modifier = Modifier,
+    sku: BillingSku,
+) {
   Text(
+      modifier = modifier,
       text = sku.title,
       style = MaterialTheme.typography.body1,
   )
 }
 
 @Composable
-private fun Description(sku: BillingSku) {
+private fun Description(
+    modifier: Modifier = Modifier,
+    sku: BillingSku,
+) {
   Text(
+      modifier = modifier,
       text = sku.description,
       style = MaterialTheme.typography.caption,
   )
 }
 
 @Composable
-private fun Price(sku: BillingSku) {
+private fun Price(
+    modifier: Modifier = Modifier,
+    sku: BillingSku,
+) {
   Text(
+      modifier = modifier,
       text = sku.displayPrice,
       style = MaterialTheme.typography.body1,
   )

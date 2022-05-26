@@ -70,20 +70,23 @@ internal fun BillingScreen(
   ) {
     item {
       AppHeader(
-          modifier = modifier,
           elevation = DialogDefaults.Elevation,
           icon = icon,
           name = name,
           imageLoader = imageLoader,
       ) {
         Column {
-          Crossfade(targetState = connection) { connected ->
+          Crossfade(
+              targetState = connection,
+          ) { connected ->
             // Remember computed value
             val isLoading = remember { connected == BillingState.LOADING }
             val isConnected = remember { connected == BillingState.CONNECTED }
 
             if (isLoading) {
-              Loading()
+              Loading(
+                  modifier = Modifier.fillMaxWidth(),
+              )
             } else {
               SkuList(
                   isConnected = isConnected,
@@ -121,6 +124,7 @@ internal fun BillingScreen(
 
 @Composable
 private fun SkuList(
+    modifier: Modifier = Modifier,
     isConnected: Boolean,
     list: List<BillingSku>,
     onPurchase: (BillingSku) -> Unit,
@@ -134,26 +138,23 @@ private fun SkuList(
   }
 
   Crossfade(
+      modifier = modifier,
       targetState = readyState,
   ) { ready ->
     if (ready.isEmpty || !isConnected) {
-      ErrorText()
+      ErrorText(
+          modifier = Modifier.fillMaxWidth(),
+      )
     } else {
       Column(
           modifier = Modifier.fillMaxWidth(),
       ) {
         list.forEach { item ->
-          Box(
-              modifier =
-                  Modifier.padding(horizontal = MaterialTheme.keylines.content)
-                      .padding(vertical = MaterialTheme.keylines.baseline),
-          ) {
-            BillingListItem(
-                modifier = Modifier.fillMaxWidth(),
-                sku = item,
-                onPurchase = onPurchase,
-            )
-          }
+          BillingListItem(
+              modifier = Modifier.fillMaxWidth(),
+              sku = item,
+              onPurchase = onPurchase,
+          )
         }
       }
     }
@@ -161,9 +162,11 @@ private fun SkuList(
 }
 
 @Composable
-private fun ErrorText() {
+private fun ErrorText(
+    modifier: Modifier = Modifier,
+) {
   Box(
-      modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+      modifier = modifier.padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) {
     Text(
@@ -173,20 +176,26 @@ private fun ErrorText() {
 }
 
 @Composable
-private fun Loading() {
+private fun Loading(
+    modifier: Modifier = Modifier,
+) {
   Box(
-      modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+      modifier = modifier.padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
   ) { CircularProgressIndicator() }
 }
 
 @Composable
 private fun BillingError(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
-  SnackbarHost(hostState = snackbarHostState)
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHostState,
+  )
 
   if (error != null) {
     LaunchedEffect(error) {

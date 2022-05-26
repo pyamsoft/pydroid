@@ -26,8 +26,8 @@ public class BillingModule(params: Parameters) {
 
   private val impl =
       PlayStoreBillingInteractor(
-          params.context.applicationContext,
-          params.errorBus,
+          context = params.context.applicationContext,
+          errorBus = params.errorBus,
       )
 
   /** Provide a billing instance */
@@ -51,6 +51,6 @@ public class BillingModule(params: Parameters) {
   /** Module parameters */
   public data class Parameters(
       internal val context: Context,
-      internal val errorBus: EventBus<Throwable>
+      internal val errorBus: EventBus<Throwable>,
   )
 }

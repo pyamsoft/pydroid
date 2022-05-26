@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -179,7 +179,7 @@ internal fun ListPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.ListPreference,
 ) {
-  var showDialog by remember { mutableStateOf(false) }
+  val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
   val isEnabled = preference.isEnabled
   val title = preference.name
@@ -189,17 +189,21 @@ internal fun ListPreferenceItem(
   val entries = preference.entries
   val onPreferenceSelected = preference.onPreferenceSelected
 
+  val onDismiss by rememberUpdatedState { setShowDialog(false) }
+
   PreferenceItem(
       isEnabled = isEnabled,
       text = title,
       summary = summary,
       icon = icon,
-      modifier = { enabled -> modifier.clickable(enabled = enabled) { showDialog = !showDialog } },
+      modifier = { enabled ->
+        modifier.clickable(enabled = enabled) { setShowDialog(!showDialog) }
+      },
   )
 
-  if (showDialog) {
-    val onDismiss by rememberUpdatedState { showDialog = false }
-
+  AnimatedVisibility(
+      visible = showDialog,
+  ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -208,10 +212,10 @@ internal fun ListPreferenceItem(
               style = MaterialTheme.typography.h6,
           )
         },
-        buttons = {
+        text = {
           val items = remember(entries) { entries.toList() }
           LazyColumn(
-              modifier = Modifier.padding(MaterialTheme.keylines.content),
+              modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
           ) {
             items(
                 items = items,
@@ -238,11 +242,11 @@ internal fun ListPreferenceItem(
                                 }
                               },
                           )
-                          .padding(MaterialTheme.keylines.baseline),
+                          .padding(MaterialTheme.keylines.typography),
                   verticalAlignment = Alignment.CenterVertically,
               ) {
                 RadioButton(
-                    modifier = Modifier.padding(end = MaterialTheme.keylines.content),
+                    modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
                     selected = isSelected,
                     onClick = {
                       if (!isSelected) {
@@ -256,23 +260,22 @@ internal fun ListPreferenceItem(
                 )
               }
             }
+          }
+        },
+        buttons = {
+          Row(
+              modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
+          ) {
+            Spacer(
+                modifier = Modifier.weight(1F),
+            )
 
-            item {
-              Row(
-                  modifier = Modifier.padding(top = MaterialTheme.keylines.baseline).fillMaxWidth(),
-              ) {
-                Spacer(
-                    modifier = Modifier.weight(1F),
-                )
-
-                TextButton(
-                    onClick = onDismiss,
-                ) {
-                  Text(
-                      text = stringResource(R.string.close),
-                  )
-                }
-              }
+            TextButton(
+                onClick = onDismiss,
+            ) {
+              Text(
+                  text = stringResource(R.string.close),
+              )
             }
           }
         },

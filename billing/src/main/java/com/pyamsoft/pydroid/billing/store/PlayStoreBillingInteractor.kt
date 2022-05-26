@@ -49,7 +49,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class PlayStoreBillingInteractor
-internal constructor(context: Context, private val errorBus: EventBus<Throwable>) :
+internal constructor(
+    context: Context,
+    private val errorBus: EventBus<Throwable>,
+) :
     BillingInteractor,
     BillingConnector,
     BillingLauncher,
@@ -210,26 +213,36 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
 
   override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
       withContext(context = Dispatchers.Default) {
-        val billingSku = sku as PlayBillingSku
+        try {
+          val billingSku = sku as PlayBillingSku
 
-        val products =
-            listOf(
-                BillingFlowParams.ProductDetailsParams.newBuilder()
-                    .setProductDetails(billingSku.sku)
-                    // Do not need to set offerToken since we are not a subscription
-                    .build(),
-            )
+          val products =
+              listOf(
+                  BillingFlowParams.ProductDetailsParams.newBuilder()
+                      .setProductDetails(billingSku.sku)
+                      // Do not need to set offerToken since we are not a subscription
+                      .build(),
+              )
 
-        val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
+          val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
 
-        withContext(context = Dispatchers.Main) {
-          Logger.d("Launch purchase flow ${sku.id}")
-          client.launchBillingFlow(activity, params)
+          withContext(context = Dispatchers.Main) {
+            Logger.d("Launch purchase flow ${sku.id}")
+            client.launchBillingFlow(activity, params)
+          }
+        } catch (e: Throwable) {
+          Logger.e(e, "Failed purchase flow for SKU: $sku")
+          errorBus.send(RuntimeException(e.message ?: "An error occurred during purchasing."))
         }
       }
 
   override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
-      withContext(context = Dispatchers.IO) { errorBus.onEvent { onErrorReceived(it) } }
+      withContext(context = Dispatchers.IO) {
+        errorBus.onEvent { err ->
+          Logger.e(err, "Billing error received!")
+          onErrorReceived(err)
+        }
+      }
 
   override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
     if (result.isOk()) {

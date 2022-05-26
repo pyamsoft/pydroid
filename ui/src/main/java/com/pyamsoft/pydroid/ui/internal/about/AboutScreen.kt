@@ -126,7 +126,10 @@ private fun AboutList(
       modifier = modifier,
   ) {
     OutlinedTextField(
-        modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
+        modifier =
+            Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
+                .padding(vertical = MaterialTheme.keylines.typography)
+                .fillMaxWidth(),
         value = search,
         onValueChange = onSearchUpdated,
         textStyle = MaterialTheme.typography.body2,

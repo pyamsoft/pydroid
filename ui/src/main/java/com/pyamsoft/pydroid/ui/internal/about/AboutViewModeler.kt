@@ -33,14 +33,28 @@ internal constructor(
   private val licenseRunner =
       highlander<List<OssLibrary>, Boolean> { force -> interactor.loadLicenses(force) }
 
+  private fun resolveDisplayedLicenses() {
+    val s = state
+    val search = s.query
+    s.licenses =
+        if (search.isBlank()) s.allLicenses
+        else s.allLicenses.filter { it.name.contains(search.trim(), ignoreCase = true) }
+  }
+
   internal fun handleLoadLicenses(scope: CoroutineScope) {
     state.isLoading = true
     scope.launch(context = Dispatchers.Main) {
       state.apply {
-        licenses = licenseRunner.call(false)
+        allLicenses = licenseRunner.call(false)
+        resolveDisplayedLicenses()
         isLoading = false
       }
     }
+  }
+
+  internal fun handleSearchUpdated(search: String) {
+    state.query = search
+    resolveDisplayedLicenses()
   }
 
   internal fun handleFailedNavigation(e: Throwable) {

@@ -28,11 +28,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -53,9 +58,9 @@ internal fun AboutScreen(
     onNavigationErrorDismissed: () -> Unit,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
+    onSearchUpdated: (String) -> Unit,
     onClose: () -> Unit,
 ) {
-  val list = state.licenses
   val isLoading = state.isLoading
   val navigationError = state.navigationError
   val snackbarHostState = remember { SnackbarHostState() }
@@ -80,9 +85,10 @@ internal fun AboutScreen(
             Loading()
           } else {
             AboutList(
-                list = list,
+                state = state,
                 onViewHomePage = onViewHomePage,
                 onViewLicense = onViewLicense,
+                onSearchUpdated = onSearchUpdated,
             )
           }
         }
@@ -107,11 +113,35 @@ private fun Loading() {
 
 @Composable
 private fun AboutList(
-    list: List<OssLibrary>,
+    modifier: Modifier = Modifier,
+    state: AboutViewState,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
+    onSearchUpdated: (String) -> Unit,
 ) {
-  Box {
+  val list = state.licenses
+  val search = state.query
+
+  Column(
+      modifier = modifier,
+  ) {
+    OutlinedTextField(
+        modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
+        value = search,
+        onValueChange = onSearchUpdated,
+        textStyle = MaterialTheme.typography.body2,
+        leadingIcon = {
+          Icon(
+              imageVector = Icons.Filled.Search,
+              contentDescription = "Search",
+          )
+        },
+        label = {
+          Text(
+              text = "Search for a library...",
+          )
+        },
+    )
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
@@ -163,6 +193,7 @@ private fun PreviewAboutScreen(
 
   val state =
       object : AboutViewState {
+        override val query: String = ""
         override val isLoading: Boolean = isLoading
         override val licenses: List<OssLibrary> = OssLibraries.libraries().sortedBy { it.name }
         override val navigationError: Throwable? = error
@@ -170,6 +201,7 @@ private fun PreviewAboutScreen(
 
   AboutScreen(
       state = state,
+      onSearchUpdated = {},
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},

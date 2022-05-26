@@ -214,50 +214,52 @@ internal fun ListPreferenceItem(
         },
         text = {
           val items = remember(entries) { entries.toList() }
-          LazyColumn(
-              modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
-          ) {
-            items(
-                items = items,
-                key = { it.first },
-            ) { current ->
-              val name = current.first
-              val value = current.second
+          Box {
+            LazyColumn(
+                modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+            ) {
+              items(
+                  items = items,
+                  key = { it.first },
+              ) { current ->
+                val name = current.first
+                val value = current.second
 
-              val isSelected = remember(value, currentValue) { value == currentValue }
+                val isSelected = remember(value, currentValue) { value == currentValue }
 
-              val onEntrySelected by rememberUpdatedState {
-                onPreferenceSelected(name, value)
-                onDismiss()
-              }
+                val onEntrySelected by rememberUpdatedState {
+                  onPreferenceSelected(name, value)
+                  onDismiss()
+                }
 
-              Row(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .selectable(
-                              selected = isSelected,
-                              onClick = {
-                                if (!isSelected) {
-                                  onEntrySelected()
-                                }
-                              },
-                          )
-                          .padding(MaterialTheme.keylines.typography),
-                  verticalAlignment = Alignment.CenterVertically,
-              ) {
-                RadioButton(
-                    modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-                    selected = isSelected,
-                    onClick = {
-                      if (!isSelected) {
-                        onEntrySelected()
-                      }
-                    },
-                )
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.body1,
-                )
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .selectable(
+                                selected = isSelected,
+                                onClick = {
+                                  if (!isSelected) {
+                                    onEntrySelected()
+                                  }
+                                },
+                            )
+                            .padding(vertical = MaterialTheme.keylines.typography),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                  RadioButton(
+                      modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+                      selected = isSelected,
+                      onClick = {
+                        if (!isSelected) {
+                          onEntrySelected()
+                        }
+                      },
+                  )
+                  Text(
+                      text = name,
+                      style = MaterialTheme.typography.body1,
+                  )
+                }
               }
             }
           }

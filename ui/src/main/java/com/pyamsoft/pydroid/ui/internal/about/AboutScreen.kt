@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -112,6 +113,7 @@ private fun Loading() {
 }
 
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 private fun AboutList(
     modifier: Modifier = Modifier,
     state: AboutViewState,
@@ -125,31 +127,33 @@ private fun AboutList(
   Column(
       modifier = modifier,
   ) {
-    OutlinedTextField(
-        modifier =
-            Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
-                .padding(vertical = MaterialTheme.keylines.typography)
-                .fillMaxWidth(),
-        value = search,
-        onValueChange = onSearchUpdated,
-        textStyle = MaterialTheme.typography.body2,
-        leadingIcon = {
-          Icon(
-              imageVector = Icons.Filled.Search,
-              contentDescription = "Search",
-          )
-        },
-        label = {
-          Text(
-              text = "Search for a library...",
-          )
-        },
-    )
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
         contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
     ) {
+      stickyHeader {
+        OutlinedTextField(
+            modifier =
+                Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
+                    .padding(vertical = MaterialTheme.keylines.typography)
+                    .fillMaxWidth(),
+            value = search,
+            onValueChange = onSearchUpdated,
+            textStyle = MaterialTheme.typography.body2,
+            leadingIcon = {
+              Icon(
+                  imageVector = Icons.Filled.Search,
+                  contentDescription = "Search",
+              )
+            },
+            label = {
+              Text(
+                  text = "Search for a library...",
+              )
+            },
+        )
+      }
       items(
           items = list,
           key = { "${it.name}:${it.libraryUrl}" },

@@ -42,21 +42,20 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModeler
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface AppComponent {
 
   fun inject(activity: PYDroidActivity)
 
-  fun inject(dialog: VersionUpgradeDialog)
-
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
   @CheckResult fun plusChangeLogDialog(): ChangeLogComponent.Factory
 
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
+
+  @CheckResult fun plusVersionUpgrade(): VersionUpgradeComponent.Factory
 
   @CheckResult fun plusSettings(): SettingsComponent.Factory
 
@@ -97,6 +96,7 @@ internal interface AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
+    private val versionUpgradeState = MutableVersionUpgradeViewState()
     private val dataPolicyState = MutableDataPolicyViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
@@ -202,13 +202,14 @@ internal interface AppComponent {
           )
     }
 
-    override fun inject(dialog: VersionUpgradeDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.viewModel =
-          VersionUpgradeViewModeler(
-              state = MutableVersionUpgradeViewState(),
-              interactor = versionModule.provideInteractor(),
-          )
+    override fun plusVersionUpgrade(): VersionUpgradeComponent.Factory {
+      return VersionUpgradeComponent.Impl.FactoryImpl(
+          VersionUpgradeComponent.Factory.Parameters(
+              module = versionModule,
+              composeTheme = params.composeTheme,
+              versionUpgradeState = versionUpgradeState,
+          ),
+      )
     }
 
     override fun plusBilling(): BillingComponent.Factory {
@@ -220,6 +221,8 @@ internal interface AppComponent {
           VersionCheckComponent.Factory.Parameters(
               module = versionModule,
               composeTheme = params.composeTheme,
+              versionCheckState = versionCheckState,
+              versionUpgradeState = versionUpgradeState,
           ),
       )
     }

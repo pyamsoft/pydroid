@@ -20,6 +20,10 @@ import com.pyamsoft.pydroid.arch.UiViewState
 
 /** Version Checking UI state */
 public interface VersionCheckViewState : UiViewState {
+
   /** Is there an update available for this application? */
+  public val isUpdateAvailable: Boolean
+
+  /** Is the update downloaded and ready to install? */
   public val isUpdateReadyToInstall: Boolean
 }

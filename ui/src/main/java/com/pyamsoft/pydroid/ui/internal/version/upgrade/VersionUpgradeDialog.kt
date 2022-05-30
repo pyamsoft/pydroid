@@ -77,7 +77,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromActivity<AppComponent>(act).inject(this)
+    Injector.obtainFromActivity<AppComponent>(act).plusVersionUpgrade().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_upgrade

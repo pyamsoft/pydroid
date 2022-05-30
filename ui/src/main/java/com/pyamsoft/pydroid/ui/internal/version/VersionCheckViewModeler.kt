@@ -54,6 +54,11 @@ internal constructor(
       force: Boolean,
       onLaunchUpdate: (AppUpdateLauncher) -> Unit,
   ) {
+    if (state.isUpdateAvailable) {
+      Logger.d("Update is already available, do not check for update again")
+      return
+    }
+
     if (state.isUpdateReadyToInstall) {
       Logger.d("Update is already ready to install, do not check for update again")
       return
@@ -64,8 +69,10 @@ internal constructor(
       checkUpdateRunner
           .call(force)
           .onSuccess { Logger.d("Update data found as: $it") }
-          .onSuccess { onLaunchUpdate(it) }
+          .onSuccess { state.isUpdateAvailable = true }
+          .onSuccess(onLaunchUpdate)
           .onFailure { Logger.e(it, "Error checking for latest version") }
+          .onFailure { state.isUpdateAvailable = false }
           .onFinally { Logger.d("Done checking for updates") }
     }
   }

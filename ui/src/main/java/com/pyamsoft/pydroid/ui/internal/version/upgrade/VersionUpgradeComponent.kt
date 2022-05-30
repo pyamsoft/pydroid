@@ -14,42 +14,33 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.version
+package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModeler
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
-internal interface VersionCheckComponent {
+internal interface VersionUpgradeComponent {
 
-  fun inject(component: VersionUpgradeAvailable)
+  fun inject(dialog: VersionUpgradeDialog)
 
   interface Factory {
 
-    @CheckResult fun create(): VersionCheckComponent
+    @CheckResult fun create(): VersionUpgradeComponent
 
     data class Parameters
     internal constructor(
         internal val module: VersionModule,
         internal val composeTheme: ComposeThemeFactory,
-        internal val versionCheckState: MutableVersionCheckViewState,
         internal val versionUpgradeState: MutableVersionUpgradeViewState,
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
+  class Impl private constructor(private val params: Factory.Parameters) : VersionUpgradeComponent {
 
-    override fun inject(component: VersionUpgradeAvailable) {
-      component.composeTheme = params.composeTheme
-      component.checkViewModel =
-          VersionCheckViewModeler(
-              state = params.versionCheckState,
-              interactor = params.module.provideInteractor(),
-          )
-      component.upgradeViewModel =
+    override fun inject(dialog: VersionUpgradeDialog) {
+      dialog.composeTheme = params.composeTheme
+      dialog.viewModel =
           VersionUpgradeViewModeler(
               state = params.versionUpgradeState,
               interactor = params.module.provideInteractor(),
@@ -59,7 +50,7 @@ internal interface VersionCheckComponent {
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(): VersionCheckComponent {
+      override fun create(): VersionUpgradeComponent {
         return Impl(params)
       }
     }

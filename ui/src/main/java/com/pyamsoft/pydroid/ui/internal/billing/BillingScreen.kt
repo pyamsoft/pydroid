@@ -214,6 +214,24 @@ private data class ReadyState(
     val isEmpty: Boolean,
 )
 
+private val PREVIEW_SKUS =
+    listOf(
+        object : BillingSku {
+          override val id: String = "test"
+          override val displayPrice: String = "$10.00"
+          override val price: Long = 1000
+          override val title: String = "TEST"
+          override val description: String = "JUST A TEST"
+        },
+        object : BillingSku {
+          override val id: String = "test2"
+          override val displayPrice: String = "$20.00"
+          override val price: Long = 2000
+          override val title: String = "TEST AGAIN"
+          override val description: String = "JUST ANOTHER TEST"
+        },
+    )
+
 @Composable
 private fun PreviewBillingScreen(
     connected: BillingState,
@@ -260,15 +278,7 @@ private fun PreviewBillingScreenConnectedWithNoListError() {
 private fun PreviewBillingScreenConnectedWithListError() {
   PreviewBillingScreen(
       connected = BillingState.CONNECTED,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = RuntimeException("TEST"),
   )
 }
@@ -278,15 +288,7 @@ private fun PreviewBillingScreenConnectedWithListError() {
 private fun PreviewBillingScreenConnectedWithListNoError() {
   PreviewBillingScreen(
       connected = BillingState.CONNECTED,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = null,
   )
 }
@@ -296,15 +298,7 @@ private fun PreviewBillingScreenConnectedWithListNoError() {
 private fun PreviewBillingScreenDisconnectedWithListError() {
   PreviewBillingScreen(
       connected = BillingState.DISCONNECTED,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = RuntimeException("TEST"),
   )
 }
@@ -314,15 +308,7 @@ private fun PreviewBillingScreenDisconnectedWithListError() {
 private fun PreviewBillingScreenDisconnectedWithListNoError() {
   PreviewBillingScreen(
       connected = BillingState.DISCONNECTED,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = null,
   )
 }
@@ -352,15 +338,7 @@ private fun PreviewBillingScreenDisconnectedWithNoListError() {
 private fun PreviewBillingScreenLoadingWithListError() {
   PreviewBillingScreen(
       connected = BillingState.LOADING,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = RuntimeException("TEST"),
   )
 }
@@ -370,15 +348,7 @@ private fun PreviewBillingScreenLoadingWithListError() {
 private fun PreviewBillingScreenLoadingWithListNoError() {
   PreviewBillingScreen(
       connected = BillingState.LOADING,
-      skuList =
-          listOf(
-              object : BillingSku {
-                override val id: String = "test"
-                override val displayPrice: String = "$10.00"
-                override val price: Long = 1000
-                override val title: String = "TEST"
-                override val description: String = "JUST A TEST"
-              }),
+      skuList = PREVIEW_SKUS,
       error = null,
   )
 }

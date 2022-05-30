@@ -28,22 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.HairlineSize
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
 internal fun VersionCheckScreen(
     modifier: Modifier = Modifier,
     appName: String,
-    versionCheckState: VersionCheckViewState,
-    versionUpgradeState: VersionUpgradeViewState,
+    state: VersionCheckViewState,
     onUpgrade: () -> Unit,
 ) {
-  val isUpgradeReady = versionCheckState.isUpdateReadyToInstall
-  val isUpgraded = versionUpgradeState.upgraded
+  val isUpgradeReady = state.isUpdateReadyToInstall
 
-  if (!isUpgradeReady || isUpgraded) {
+  if (!isUpgradeReady) {
     return
   }
 
@@ -79,14 +75,12 @@ internal fun VersionCheckScreen(
 
 @Composable
 private fun PreviewVersionCheckScreen(
-    checkState: MutableVersionCheckViewState = MutableVersionCheckViewState(),
-    upgradeState: MutableVersionUpgradeViewState = MutableVersionUpgradeViewState(),
+    state: MutableVersionCheckViewState,
 ) {
   Surface {
     VersionCheckScreen(
         appName = "TEST APP",
-        versionCheckState = checkState,
-        versionUpgradeState = upgradeState,
+        state = state,
         onUpgrade = {},
     )
   }
@@ -96,7 +90,7 @@ private fun PreviewVersionCheckScreen(
 @Composable
 private fun PreviewVersionCheckScreenAvailable() {
   PreviewVersionCheckScreen(
-      checkState =
+      state =
           MutableVersionCheckViewState().apply {
             isUpdateAvailable = true
             isUpdateReadyToInstall = false
@@ -108,7 +102,7 @@ private fun PreviewVersionCheckScreenAvailable() {
 @Composable
 private fun PreviewVersionCheckScreenNotAvailable() {
   PreviewVersionCheckScreen(
-      checkState =
+      state =
           MutableVersionCheckViewState().apply {
             isUpdateAvailable = false
             isUpdateReadyToInstall = false
@@ -120,7 +114,7 @@ private fun PreviewVersionCheckScreenNotAvailable() {
 @Composable
 private fun PreviewVersionCheckScreenReady() {
   PreviewVersionCheckScreen(
-      checkState =
+      state =
           MutableVersionCheckViewState().apply {
             isUpdateAvailable = true
             isUpdateReadyToInstall = true
@@ -132,26 +126,10 @@ private fun PreviewVersionCheckScreenReady() {
 @Composable
 private fun PreviewVersionCheckScreenNotReady() {
   PreviewVersionCheckScreen(
-      checkState =
+      state =
           MutableVersionCheckViewState().apply {
             isUpdateAvailable = true
             isUpdateReadyToInstall = false
           },
-  )
-}
-
-@Preview
-@Composable
-private fun PreviewVersionCheckScreenNotUpgraded() {
-  PreviewVersionCheckScreen(
-      upgradeState = MutableVersionUpgradeViewState().apply { upgraded = false },
-  )
-}
-
-@Preview
-@Composable
-private fun PreviewVersionCheckScreenUpgraded() {
-  PreviewVersionCheckScreen(
-      upgradeState = MutableVersionUpgradeViewState().apply { upgraded = true },
   )
 }

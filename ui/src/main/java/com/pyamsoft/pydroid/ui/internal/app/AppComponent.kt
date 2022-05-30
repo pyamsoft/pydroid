@@ -163,7 +163,11 @@ internal interface AppComponent {
 
     override fun inject(activity: PYDroidActivity) {
       // Billing
-      activity.billing = BillingDelegate(pyDroidActivity, billingModule.provideConnector())
+      activity.billing =
+          BillingDelegate(
+              pyDroidActivity,
+              billingModule.provideConnector(),
+          )
 
       // Rating
       activity.rating =
@@ -222,7 +226,6 @@ internal interface AppComponent {
               module = versionModule,
               composeTheme = params.composeTheme,
               versionCheckState = versionCheckState,
-              versionUpgradeState = versionUpgradeState,
           ),
       )
     }

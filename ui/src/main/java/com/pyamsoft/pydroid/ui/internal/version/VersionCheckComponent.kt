@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModeler
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal interface VersionCheckComponent {
@@ -36,7 +34,6 @@ internal interface VersionCheckComponent {
         internal val module: VersionModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val versionCheckState: MutableVersionCheckViewState,
-        internal val versionUpgradeState: MutableVersionUpgradeViewState,
     )
   }
 
@@ -44,14 +41,9 @@ internal interface VersionCheckComponent {
 
     override fun inject(component: VersionUpgradeAvailable) {
       component.composeTheme = params.composeTheme
-      component.checkViewModel =
+      component.viewModel =
           VersionCheckViewModeler(
               state = params.versionCheckState,
-              interactor = params.module.provideInteractor(),
-          )
-      component.upgradeViewModel =
-          VersionUpgradeViewModeler(
-              state = params.versionUpgradeState,
               interactor = params.module.provideInteractor(),
           )
     }

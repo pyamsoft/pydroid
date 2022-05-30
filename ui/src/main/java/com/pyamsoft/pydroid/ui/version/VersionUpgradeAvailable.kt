@@ -20,8 +20,6 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
@@ -29,7 +27,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModeler
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 public class VersionUpgradeAvailable
@@ -43,8 +41,7 @@ internal constructor(
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
 
-  internal var checkViewModel: VersionCheckViewModeler? = null
-  internal var upgradeViewModel: VersionUpgradeViewModeler? = null
+  internal var viewModel: VersionCheckViewModeler? = null
 
   init {
     inject(activity)
@@ -54,7 +51,7 @@ internal constructor(
   private fun unbindOnDestroy(activity: FragmentActivity) {
     activity.doOnDestroy {
       this.activity = null
-      checkViewModel = null
+      viewModel = null
     }
   }
 
@@ -64,15 +61,7 @@ internal constructor(
 
   private fun handleUpgrade() {
     val act = activity.requireNotNull()
-    upgradeViewModel
-        .requireNotNull()
-        .completeUpgrade(
-            scope = act.lifecycleScope,
-            onUpgradeComplete = {
-              Logger.d("Upgrade complete, dismiss")
-              act.finish()
-            },
-        )
+    VersionUpgradeDialog.show(act)
   }
 
   /** Render into a composable the version check screen upsell */
@@ -80,18 +69,15 @@ internal constructor(
   public fun Render(
       modifier: Modifier = Modifier,
   ) {
-    upgradeViewModel.requireNotNull().Render { upgradeState ->
-        checkViewModel.requireNotNull().Render { checkState ->
-            composeTheme(activity.requireNotNull()) {
-                VersionCheckScreen(
-                    modifier = modifier,
-                    versionCheckState = checkState,
-                    versionUpgradeState = upgradeState,
-                    appName = appName,
-                    onUpgrade = { handleUpgrade() },
-                )
-            }
-        }
+    viewModel.requireNotNull().Render { state ->
+      composeTheme(activity.requireNotNull()) {
+        VersionCheckScreen(
+            modifier = modifier,
+            state = state,
+            appName = appName,
+            onUpgrade = { handleUpgrade() },
+        )
+      }
     }
   }
 

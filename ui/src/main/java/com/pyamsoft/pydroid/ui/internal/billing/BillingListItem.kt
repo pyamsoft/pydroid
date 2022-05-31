@@ -25,6 +25,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,9 +74,21 @@ private fun Name(
     modifier: Modifier = Modifier,
     sku: BillingSku,
 ) {
+  val title =
+      remember(sku.title) {
+        // In production, the title is something like "Pay me Money (APP_NAME)" even though we want
+        // it to just show "Pay me Money"
+        // So we modify it visually here
+        val title = sku.title
+        val indexOfTitle = title.indexOf(" (")
+
+        // Remove the (APP_NAME) section if it exists
+        return@remember if (indexOfTitle >= 0) title.substring(0, indexOfTitle) else title
+      }
+    
   Text(
       modifier = modifier,
-      text = sku.title,
+      text = title,
       style = MaterialTheme.typography.body1,
   )
 }
@@ -115,7 +128,7 @@ private fun PreviewBillingListItem() {
               override val displayPrice: String = "$1.00"
               override val price: Long = 100
               override val title: String = "TEST"
-              override val description: String = "Just a Test"
+              override val description: String = "Just a Test (THIS SHOULD NOT SHOW)"
             },
         onPurchase = {},
     )

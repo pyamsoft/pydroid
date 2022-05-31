@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -135,7 +136,9 @@ private fun AboutList(
       stickyHeader {
         OutlinedTextField(
             modifier =
-                Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
+                Modifier
+                    .background(color = MaterialTheme.colors.background)
+                    .padding(horizontal = MaterialTheme.keylines.baseline)
                     .padding(vertical = MaterialTheme.keylines.typography)
                     .fillMaxWidth(),
             value = search,

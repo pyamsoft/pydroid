@@ -176,6 +176,15 @@ public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$A
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutScreenKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function2;
+	public static field lambda-2 Lkotlin/jvm/functions/Function2;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
@@ -242,6 +251,13 @@ public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSin
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionCheckScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionCheckScreenKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSingletons$VersionUpgradeScreenKt {
@@ -458,6 +474,18 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun isUpdateAvailable ()Z
 	public abstract fun isUpdateReadyToInstall ()Z
+}
+
+public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
+	public final fun Render (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+}
+
+public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 

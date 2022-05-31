@@ -85,7 +85,7 @@ private fun Name(
         // Remove the (APP_NAME) section if it exists
         return@remember if (indexOfTitle >= 0) title.substring(0, indexOfTitle) else title
       }
-    
+
   Text(
       modifier = modifier,
       text = title,
@@ -127,8 +127,8 @@ private fun PreviewBillingListItem() {
               override val id: String = ""
               override val displayPrice: String = "$1.00"
               override val price: Long = 100
-              override val title: String = "TEST"
-              override val description: String = "Just a Test (THIS SHOULD NOT SHOW)"
+              override val title: String = "TEST (THIS SHOULD NOT SHOW)"
+              override val description: String = "Just a Test"
             },
         onPurchase = {},
     )

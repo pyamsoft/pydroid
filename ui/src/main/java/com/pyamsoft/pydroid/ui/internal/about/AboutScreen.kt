@@ -137,7 +137,7 @@ private fun AboutList(
         OutlinedTextField(
             modifier =
                 Modifier
-                    .background(color = MaterialTheme.colors.background)
+                    .background(color = MaterialTheme.colors.surface)
                     .padding(horizontal = MaterialTheme.keylines.baseline)
                     .padding(vertical = MaterialTheme.keylines.typography)
                     .fillMaxWidth(),

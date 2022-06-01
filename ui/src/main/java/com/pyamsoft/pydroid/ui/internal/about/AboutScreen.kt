@@ -31,6 +31,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalAbsoluteElevation
+import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.SnackbarDuration
@@ -134,12 +136,18 @@ private fun AboutList(
         contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
     ) {
       stickyHeader {
+        // Get fixed bg color from Surface Composable
+        val elevationOverlay = LocalElevationOverlay.current
+        val absoluteElevation = LocalAbsoluteElevation.current + DialogDefaults.Elevation
+        val backgroundColor =
+            elevationOverlay?.apply(MaterialTheme.colors.surface, absoluteElevation)
+                ?: MaterialTheme.colors.surface
+
         OutlinedTextField(
             modifier =
-                Modifier
-                    .background(color = MaterialTheme.colors.surface)
-                    .padding(horizontal = MaterialTheme.keylines.baseline)
+                Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
                     .padding(vertical = MaterialTheme.keylines.typography)
+                    .background(color = backgroundColor)
                     .fillMaxWidth(),
             value = search,
             onValueChange = onSearchUpdated,

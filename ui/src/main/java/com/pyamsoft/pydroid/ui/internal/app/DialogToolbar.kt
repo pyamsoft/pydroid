@@ -38,6 +38,7 @@ internal fun DialogToolbar(
   TopAppBar(
       modifier = modifier,
       backgroundColor = MaterialTheme.colors.primary,
+      contentColor = MaterialTheme.colors.onPrimary,
       title = {
         Text(
             text = title,

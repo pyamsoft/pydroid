@@ -100,7 +100,6 @@ internal class AboutDialog : AppCompatDialogFragment() {
                 onViewHomePage = { openLibrary(handler, it) },
                 onViewLicense = { openLicense(handler, it) },
                 onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
-                onSearchUpdated = { vm.handleSearchUpdated(it) },
                 onClose = { dismiss() },
             )
           }

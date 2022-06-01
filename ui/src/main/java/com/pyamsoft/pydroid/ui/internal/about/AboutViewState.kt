@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal interface AboutViewState : UiViewState {
   val isLoading: Boolean
-  val query: String
   val licenses: List<OssLibrary>
   val navigationError: Throwable?
 }
@@ -32,9 +31,5 @@ internal interface AboutViewState : UiViewState {
 internal class MutableAboutViewState : AboutViewState {
   override var isLoading by mutableStateOf(false)
   override var navigationError by mutableStateOf<Throwable?>(null)
-
-  override var query by mutableStateOf("")
-
-  internal var allLicenses by mutableStateOf<List<OssLibrary>>(emptyList())
   override var licenses by mutableStateOf<List<OssLibrary>>(emptyList())
 }

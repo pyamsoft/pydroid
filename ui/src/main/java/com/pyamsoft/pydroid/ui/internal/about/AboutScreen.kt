@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,18 +29,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalAbsoluteElevation
-import androidx.compose.material.LocalElevationOverlay
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -62,7 +54,6 @@ internal fun AboutScreen(
     onNavigationErrorDismissed: () -> Unit,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
-    onSearchUpdated: (String) -> Unit,
     onClose: () -> Unit,
 ) {
   val isLoading = state.isLoading
@@ -89,10 +80,10 @@ internal fun AboutScreen(
             Loading()
           } else {
             AboutList(
+                modifier = Modifier.fillMaxSize(),
                 state = state,
                 onViewHomePage = onViewHomePage,
                 onViewLicense = onViewLicense,
-                onSearchUpdated = onSearchUpdated,
             )
           }
         }
@@ -122,60 +113,24 @@ private fun AboutList(
     state: AboutViewState,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
-    onSearchUpdated: (String) -> Unit,
 ) {
   val list = state.licenses
-  val search = state.query
 
-  Column(
+  LazyColumn(
       modifier = modifier,
+      verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
+      contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
   ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.keylines.content),
-        contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
-    ) {
-      stickyHeader {
-        // Get fixed bg color from Surface Composable
-        val elevationOverlay = LocalElevationOverlay.current
-        val absoluteElevation = LocalAbsoluteElevation.current + DialogDefaults.Elevation
-        val backgroundColor =
-            elevationOverlay?.apply(MaterialTheme.colors.surface, absoluteElevation)
-                ?: MaterialTheme.colors.surface
-
-        OutlinedTextField(
-            modifier =
-                Modifier.padding(horizontal = MaterialTheme.keylines.baseline)
-                    .padding(vertical = MaterialTheme.keylines.typography)
-                    .background(color = backgroundColor)
-                    .fillMaxWidth(),
-            value = search,
-            onValueChange = onSearchUpdated,
-            textStyle = MaterialTheme.typography.body2,
-            leadingIcon = {
-              Icon(
-                  imageVector = Icons.Filled.Search,
-                  contentDescription = "Search",
-              )
-            },
-            label = {
-              Text(
-                  text = "Search for a library...",
-              )
-            },
-        )
-      }
-      items(
-          items = list,
-          key = { "${it.name}:${it.libraryUrl}" },
-      ) { item ->
-        AboutListItem(
-            modifier = Modifier.fillMaxWidth(),
-            library = item,
-            onViewHomePage = { onViewHomePage(item) },
-            onViewLicense = { onViewLicense(item) },
-        )
-      }
+    items(
+        items = list,
+        key = { "${it.name}:${it.libraryUrl}" },
+    ) { item ->
+      AboutListItem(
+          modifier = Modifier.fillMaxWidth(),
+          library = item,
+          onViewHomePage = { onViewHomePage(item) },
+          onViewLicense = { onViewLicense(item) },
+      )
     }
   }
 }
@@ -211,7 +166,6 @@ private fun PreviewAboutScreen(
 
   val state =
       object : AboutViewState {
-        override val query: String = ""
         override val isLoading: Boolean = isLoading
         override val licenses: List<OssLibrary> = OssLibraries.libraries().sortedBy { it.name }
         override val navigationError: Throwable? = error
@@ -219,7 +173,6 @@ private fun PreviewAboutScreen(
 
   AboutScreen(
       state = state,
-      onSearchUpdated = {},
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},

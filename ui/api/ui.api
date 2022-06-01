@@ -176,15 +176,6 @@ public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$A
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutScreenKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
-	public static field lambda-2 Lkotlin/jvm/functions/Function2;
-	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
-}
-
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;

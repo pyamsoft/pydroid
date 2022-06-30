@@ -58,7 +58,7 @@ buildscript {
     annotation = "1.4.0"
     core = "1.8.0"
     lifecycle = "2.4.1"
-    fragment = "1.4.1"
+    fragment = "1.5.0"
     startup = "1.1.1"
     appCompat = "1.4.2"
 

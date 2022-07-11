@@ -32,6 +32,8 @@ public final class com/pyamsoft/pydroid/core/ResultWrapper {
 	public final fun exceptionOrNull ()Ljava/lang/Throwable;
 	public final fun exceptionOrThrow ()Ljava/lang/Throwable;
 	public static final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+	public final fun getData ()Ljava/lang/Object;
+	public final fun getError ()Ljava/lang/Throwable;
 	public final fun getOrNull ()Ljava/lang/Object;
 	public final fun getOrThrow ()Ljava/lang/Object;
 	public fun hashCode ()I

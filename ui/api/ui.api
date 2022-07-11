@@ -272,6 +272,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavig
 public abstract class com/pyamsoft/pydroid/ui/navigator/BaseNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
 	public static final field $stable I
 	public fun <init> ()V
+	protected final fun clearCurrentScreen ()V
 	public final fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
 	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;)V
@@ -291,10 +292,12 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	protected final fun commit (ZLkotlin/jvm/functions/Function1;)V
 	public static synthetic fun commit$default (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	protected final fun commitNow (Lkotlin/jvm/functions/Function1;)V
+	protected final fun getCurrentScreenFromFragment ()Ljava/lang/Object;
 	public final fun goBack ()V
-	protected final fun handleBackNow ()V
+	protected final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
 	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Z)V
+	protected fun onBack (Ljava/lang/Object;Ljava/lang/Object;)V
 	protected abstract fun performFragmentTransaction (ILcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$FragmentTag;Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Ljava/lang/Object;)V
 	protected abstract fun provideFragmentTagMap ()Ljava/util/Map;
 }

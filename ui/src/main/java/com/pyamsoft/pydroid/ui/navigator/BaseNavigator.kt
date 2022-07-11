@@ -35,6 +35,11 @@ public abstract class BaseNavigator<S : Any> : Navigator<S> {
     screen.value = newScreen
   }
 
+  /** Mark screen as blank */
+  protected fun clearCurrentScreen() {
+    screen.value = null
+  }
+
   final override fun currentScreen(): S? {
     return screen.value
   }

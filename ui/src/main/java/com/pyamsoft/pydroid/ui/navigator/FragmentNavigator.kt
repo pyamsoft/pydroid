@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -28,6 +30,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.commitNow
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** A navigator backed by AndroidX Fragment transactions */
 public abstract class FragmentNavigator<S : Any>
@@ -46,15 +49,49 @@ protected constructor(
       fragmentContainerId = fragmentContainerId,
   )
 
+  private val lifecycleOwner by lazy(LazyThreadSafetyMode.NONE) { lifecycleOwner() }
+  private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { fragmentManager() }
+
+  private val handler by lazy(LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
+
   private val fragmentTagMap: Map<S, FragmentTag> by
       lazy(LazyThreadSafetyMode.NONE) { provideFragmentTagMap() }
 
-  private val lifecycleOwner by lazy(LazyThreadSafetyMode.NONE) { lifecycleOwner() }
-  private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { fragmentManager() }
+  init {
+    // When the owner is destroyed, we cancel any pending data messages
+    this.lifecycleOwner.doOnDestroy {
+      Logger.d("Remove pending messages")
+      handler.removeCallbacksAndMessages(null)
+    }
+  }
 
   @CheckResult
   private fun getCurrentExistingFragment(): Fragment? {
     return fragmentManager.findFragmentById(fragmentContainerId)
+  }
+
+  private fun handleBackStackPopped(previousScreen: S?) {
+    // The back stack is updated, grab the current screen which was the "previous" screen and
+    // update the screen data
+    val currentScreen = getCurrentScreenFromFragment()
+
+    if (currentScreen == null) {
+      clearCurrentScreen()
+    } else {
+      updateCurrentScreen(newScreen = currentScreen)
+    }
+
+    Logger.d("Screen restored to: $currentScreen from $previousScreen")
+    onBack(currentScreen, previousScreen)
+  }
+
+  @CheckResult
+  protected fun getCurrentScreenFromFragment(): S? {
+    val existing = getCurrentExistingFragment() ?: return null
+
+    // Look up the previous screen in the map
+    val tag = existing.tag
+    return fragmentTagMap.entries.find { it.value.tag == tag }?.key
   }
 
   /** Perform a fragment transaction commit */
@@ -79,8 +116,14 @@ protected constructor(
   }
 
   /** Go back immediately based on the FM back stack */
-  protected fun handleBackNow() {
+  protected fun goBackNow() {
+    // Grab current screen before pop
+    val screen = currentScreen()
+
     fragmentManager.popBackStackImmediate()
+
+    // Since this happens immediately, we can avoid handler.post {}
+    handleBackStackPopped(screen)
   }
 
   final override fun loadIfEmpty(onLoadDefaultScreen: () -> Navigator.Screen<S>) {
@@ -93,7 +136,13 @@ protected constructor(
   }
 
   final override fun goBack() {
+    // Grab current screen before pop
+    val screen = currentScreen()
+
     fragmentManager.popBackStack()
+
+    // Post so that this fires after back has happened
+    handler.post { handleBackStackPopped(screen) }
   }
 
   final override fun backStackSize(): Int {
@@ -103,20 +152,15 @@ protected constructor(
   final override fun navigateTo(screen: Navigator.Screen<S>, force: Boolean) {
     val entry = fragmentTagMap[screen.screen].requireNotNull()
 
-    val previousScreen: S?
-    val pushNew: Boolean
     val existing = getCurrentExistingFragment()
-    if (existing == null) {
-      Logger.d("Pushing a brand new fragment")
-      pushNew = true
-      previousScreen = null
-    } else {
-      val tag = existing.tag
 
-      // Look up the previous screen in the map
-      previousScreen = fragmentTagMap.entries.find { it.value.tag == tag }?.key
+    val pushNew =
+        if (existing == null) {
+          Logger.d("Pushing a brand new fragment")
+          true
+        } else {
+          val tag = existing.tag
 
-      pushNew =
           if (entry.tag == tag) {
             Logger.d("Pushing the same fragment")
             false
@@ -124,7 +168,7 @@ protected constructor(
             Logger.d("Pushing a new fragment over an old one")
             true
           }
-    }
+        }
 
     if (pushNew || force) {
       if (force) {
@@ -133,15 +177,27 @@ protected constructor(
         Logger.d("Commit fragment: ${entry.tag}")
       }
 
-      updateCurrentScreen(newScreen = screen.screen)
+      // Grab screen data before updating
+      val previousScreen = getCurrentScreenFromFragment()
+
+      // Push fragment
       performFragmentTransaction(
           fragmentContainerId,
           entry,
           screen,
           previousScreen,
       )
+
+      // After we post the fragment, we update the screen data
+      handler.post { updateCurrentScreen(newScreen = screen.screen) }
     }
   }
+
+  /** Called when [goBack] or [goBackNow] is called */
+  protected open fun onBack(
+      currentScreen: S?,
+      previousScreen: S?,
+  ) {}
 
   /** Provides a map of Screen types to FragmentTypes */
   @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>

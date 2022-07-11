@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -30,6 +28,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.commitNow
+import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** A navigator backed by AndroidX Fragment transactions */
@@ -52,17 +51,46 @@ protected constructor(
   private val lifecycleOwner by lazy(LazyThreadSafetyMode.NONE) { lifecycleOwner() }
   private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { fragmentManager() }
 
-  private val handler by lazy(LazyThreadSafetyMode.NONE) { Handler(Looper.getMainLooper()) }
-
   private val fragmentTagMap: Map<S, FragmentTag> by
       lazy(LazyThreadSafetyMode.NONE) { provideFragmentTagMap() }
 
   init {
-    // When the owner is destroyed, we cancel any pending data messages
-    this.lifecycleOwner.doOnDestroy {
-      Logger.d("Remove pending messages")
-      handler.removeCallbacksAndMessages(null)
-    }
+    // Keep track of the current stack size at all times
+    var stackSize = backStackSize()
+
+    val listener =
+        FragmentManager.OnBackStackChangedListener {
+          // If the backstack size has been changed, we should update the data backing screen
+          val oldSize = stackSize
+          val currentSize = backStackSize()
+
+          // Update the stack size (in case the stack has grown)
+          stackSize = currentSize
+
+          if (currentSize < oldSize) {
+            Logger.d("On Back event!")
+
+            // Because the data backing screen has not been updated yet, we can pull the "current"
+            // screen from data backing as the previous screen
+            val previousScreen = currentScreen()
+
+            // Update current screen data backing now
+            val currentScreen = getCurrentScreenFromFragment()
+            if (currentScreen == null) {
+              clearCurrentScreen()
+            } else {
+              updateCurrentScreen(newScreen = currentScreen)
+            }
+
+            // On back optional callback
+            onBack(currentScreen, previousScreen)
+          }
+        }
+
+    val fm = this.fragmentManager
+    val lo = this.lifecycleOwner
+    lo.doOnCreate { fm.addOnBackStackChangedListener(listener) }
+    lo.doOnDestroy { fm.removeOnBackStackChangedListener(listener) }
   }
 
   @CheckResult
@@ -75,18 +103,12 @@ protected constructor(
     // update the screen data
     val currentScreen = getCurrentScreenFromFragment()
 
-    if (currentScreen == null) {
-      clearCurrentScreen()
-    } else {
-      updateCurrentScreen(newScreen = currentScreen)
-    }
-
     Logger.d("Screen restored to: $currentScreen from $previousScreen")
     onBack(currentScreen, previousScreen)
   }
 
   @CheckResult
-  protected fun getCurrentScreenFromFragment(): S? {
+  private fun getCurrentScreenFromFragment(): S? {
     val existing = getCurrentExistingFragment() ?: return null
 
     // Look up the previous screen in the map
@@ -136,13 +158,8 @@ protected constructor(
   }
 
   final override fun goBack() {
-    // Grab current screen before pop
-    val screen = currentScreen()
-
+    Logger.d("Go Back!")
     fragmentManager.popBackStack()
-
-    // Post so that this fires after back has happened
-    handler.post { handleBackStackPopped(screen) }
   }
 
   final override fun backStackSize(): Int {
@@ -189,7 +206,10 @@ protected constructor(
       )
 
       // After we post the fragment, we update the screen data
-      handler.post { updateCurrentScreen(newScreen = screen.screen) }
+      //
+      // Because of fragment quirks with commit versus commitNow, the fragment
+      // may not actually be visually displayed at this point
+      updateCurrentScreen(newScreen = screen.screen)
     }
   }
 

@@ -292,7 +292,6 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	protected final fun commit (ZLkotlin/jvm/functions/Function1;)V
 	public static synthetic fun commit$default (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	protected final fun commitNow (Lkotlin/jvm/functions/Function1;)V
-	protected final fun getCurrentScreenFromFragment ()Ljava/lang/Object;
 	public final fun goBack ()V
 	protected final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V

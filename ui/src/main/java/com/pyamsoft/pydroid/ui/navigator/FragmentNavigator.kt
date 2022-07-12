@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.navigator.FragmentNavigator.Screen
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.commitNow
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -45,7 +46,7 @@ protected constructor(
     lifecycleOwner: LifecycleOwner,
     fragmentManager: FragmentManager,
     @IdRes private val fragmentContainerId: Int,
-) : BaseNavigator<Fragment>(), BackstackNavigator<Fragment> {
+) : BaseNavigator<Screen>(), BackstackNavigator<Screen> {
 
   protected constructor(
       activity: FragmentActivity,
@@ -60,7 +61,7 @@ protected constructor(
   private var fragmentManager: FragmentManager? = fragmentManager
   private var handler: Handler? = Handler(Looper.getMainLooper())
 
-  private var thisScreen: MutableState<Fragment?>? = mutableStateOf(null)
+  private var thisScreen: MutableState<Screen?>? = mutableStateOf(null)
 
   init {
     watchBackStack()
@@ -81,7 +82,7 @@ protected constructor(
     thisScreen?.apply {
       val screen = getCurrentExistingFragment()
       Logger.d("Current screen updated")
-      this.value = screen
+      this.value = if (screen == null) null else getTagForScreen(screen)
     }
   }
 
@@ -170,7 +171,7 @@ protected constructor(
     fragmentManager.requireNotNull().popBackStackImmediate()
   }
 
-  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Fragment) {
+  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Screen) {
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
@@ -187,7 +188,7 @@ protected constructor(
     return fragmentManager.requireNotNull().backStackEntryCount
   }
 
-  final override fun navigateTo(screen: Fragment, force: Boolean) {
+  final override fun navigateTo(screen: Screen, force: Boolean) {
     val existing = getCurrentExistingFragment()
 
     val pushNew =
@@ -195,7 +196,7 @@ protected constructor(
           Logger.d("Pushing a brand new fragment")
           true
         } else {
-          if (Navigator.getTagForScreen(screen) == Navigator.getTagForScreen(existing)) {
+          if (screen matches getTagForScreen(existing)) {
             Logger.d("Pushing the same fragment")
             false
           } else {
@@ -214,7 +215,7 @@ protected constructor(
       // Push fragment
       performFragmentTransaction(
           fragmentContainerId,
-          screen,
+          produceFragmentForScreen(screen),
           existing,
       )
 
@@ -225,12 +226,12 @@ protected constructor(
     }
   }
 
-  final override fun currentScreen(): Fragment? {
+  final override fun currentScreen(): Screen? {
     return thisScreen.requireNotNull().value
   }
 
   @Composable
-  final override fun currentScreenState(): State<Fragment?> {
+  final override fun currentScreenState(): State<Screen?> {
     return thisScreen.requireNotNull()
   }
 
@@ -246,6 +247,17 @@ protected constructor(
   /** Called when [goBack] or [goBackNow] is called */
   protected open fun onBack() {}
 
+  /**
+   * Given a Screen here generate a new Fragment
+   *
+   * We do not want to deal with Fragments directly as screen objects because that will lead to
+   * memory leaks since the Navigator holds onto a Fragment for the duration of an Activity scope.
+   */
+  @CheckResult
+  protected abstract fun <S> produceFragmentForScreen(screen: Screen): S where
+  S : Fragment,
+  S : Screen
+
   /** Performs a fragment transaction */
   protected abstract fun performFragmentTransaction(
       container: Int,
@@ -258,4 +270,35 @@ protected constructor(
 
   /** Called when state is saved */
   protected abstract fun onSaveState(outState: UiSavedStateWriter)
+
+  public companion object {
+
+    /** Gets the tag used internally by the Navigator for a given screen instance */
+    @JvmStatic
+    @CheckResult
+    public fun getTagForScreen(screen: Fragment): Screen {
+      if (screen is Screen) {
+        return screen
+      } else {
+        throw IllegalArgumentException("Must implement FragmentNavigator.Screen: $screen")
+      }
+    }
+  }
+
+  /** Screen type for FragmentNavigator */
+  public fun interface Screen {
+
+    /** Name of the screen */
+    @CheckResult public fun getScreenName(): String
+  }
+
+  /**
+   * Do these screens match
+   *
+   * Use this instead of using screen == otherScreen
+   */
+  @CheckResult
+  public infix fun Screen.matches(screen: Screen): Boolean {
+    return this.getScreenName() == screen.getScreenName()
+  }
 }

@@ -74,7 +74,21 @@ public interface Navigator<S : Any> {
     @JvmStatic
     @CheckResult
     public fun <S : Any> getTagForScreen(screen: S): String {
-      return "PYDroid-Navigator-${screen::class.java.name}"
+      // If this is a class, return the class name
+      if (screen is Class<*>) {
+        return "PYDroid-Navigator-${screen.name}"
+      }
+
+      // Else pull the class out (and remove the Companion if possible)
+      val name =
+          screen::class.java.name.let { n ->
+            return@let if (n.endsWith("Companion", ignoreCase = false)) {
+              n.replaceAfterLast("Companion", "")
+            } else {
+              n
+            }
+          }
+      return "PYDroid-Navigator-${name}"
     }
   }
 }

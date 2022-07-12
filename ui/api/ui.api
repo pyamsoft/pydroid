@@ -289,20 +289,17 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	protected final fun commit (ZLkotlin/jvm/functions/Function1;)V
 	public static synthetic fun commit$default (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
 	protected final fun commitNow (Lkotlin/jvm/functions/Function1;)V
-	public final fun currentScreen ()Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;
-	public synthetic fun currentScreen ()Ljava/lang/Object;
+	public final fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
 	public final fun goBack ()V
 	protected final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
-	public final fun matches (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;)Z
-	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;Z)V
-	public synthetic fun navigateTo (Ljava/lang/Object;Z)V
+	public final fun navigateTo (Ljava/lang/Object;Z)V
 	protected fun onBack ()V
 	protected abstract fun onRestoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
 	protected abstract fun onSaveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
 	protected abstract fun performFragmentTransaction (ILandroidx/fragment/app/Fragment;Landroidx/fragment/app/Fragment;)V
-	protected abstract fun produceFragmentForScreen (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;)Landroidx/fragment/app/Fragment;
+	protected abstract fun produceFragmentForScreen (Ljava/lang/Object;)Landroidx/fragment/app/Fragment;
 	protected final fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
 	protected final fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
 }
@@ -311,7 +308,7 @@ public final class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Companion
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen {
-	public abstract fun getScreenName ()Ljava/lang/String;
+	public abstract fun getScreenId ()Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/Navigator {

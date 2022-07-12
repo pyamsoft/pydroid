@@ -28,6 +28,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentOnAttachListener
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiSavedStateReader
+import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.util.commit
@@ -154,7 +156,7 @@ protected constructor(
     fragmentManager.requireNotNull().popBackStackImmediate()
   }
 
-  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Navigator.Screen<Fragment>) {
+  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Fragment) {
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
@@ -171,7 +173,7 @@ protected constructor(
     return fragmentManager.requireNotNull().backStackEntryCount
   }
 
-  final override fun navigateTo(screen: Navigator.Screen<Fragment>, force: Boolean) {
+  final override fun navigateTo(screen: Fragment, force: Boolean) {
     val existing = getCurrentExistingFragment()
 
     val pushNew =
@@ -179,7 +181,7 @@ protected constructor(
           Logger.d("Pushing a brand new fragment")
           true
         } else {
-          if (getTagForFragment(screen.screen) == getTagForFragment(existing)) {
+          if (getTagForFragment(screen) == getTagForFragment(existing)) {
             Logger.d("Pushing the same fragment")
             false
           } else {
@@ -213,22 +215,41 @@ protected constructor(
     return thisScreen.requireNotNull()
   }
 
+  final override fun restoreState(savedInstanceState: UiSavedStateReader) {
+    updateCurrentScreenState()
+    onRestoreState(savedInstanceState)
+  }
+
+  final override fun saveState(outState: UiSavedStateWriter) {
+    onSaveState(outState)
+  }
+
   /** Called when [goBack] or [goBackNow] is called */
   protected open fun onBack() {}
 
   /** Performs a fragment transaction */
   protected abstract fun performFragmentTransaction(
       container: Int,
-      newScreen: Navigator.Screen<Fragment>,
+      newScreen: Fragment,
       previousScreen: Fragment?
   )
+
+  protected abstract fun onRestoreState(savedInstanceState: UiSavedStateReader)
+
+  protected abstract fun onSaveState(outState: UiSavedStateWriter)
 
   public companion object {
 
     @JvmStatic
     @CheckResult
-    private fun getTagForFragment(fragment: Fragment): String {
-      return fragment::class.java.name
+    protected fun getTagForFragmentClass(fragment: Class<out Fragment>): String {
+      return fragment.name
+    }
+
+    @JvmStatic
+    @CheckResult
+    protected fun getTagForFragment(fragment: Fragment): String {
+      return getTagForFragmentClass(fragment::class.java)
     }
   }
 }

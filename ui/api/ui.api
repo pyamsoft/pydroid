@@ -272,7 +272,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavig
 public abstract class com/pyamsoft/pydroid/ui/navigator/BaseNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
 	public static final field $stable I
 	public fun <init> ()V
-	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;)V
+	public final fun navigateTo (Ljava/lang/Object;)V
 	public final fun restoreState (Landroid/os/Bundle;)V
 	protected abstract fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
 	public final fun saveState (Landroid/os/Bundle;)V
@@ -292,12 +292,19 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	public final fun currentScreen ()Landroidx/fragment/app/Fragment;
 	public synthetic fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
+	protected static final fun getTagForFragment (Landroidx/fragment/app/Fragment;)Ljava/lang/String;
+	protected static final fun getTagForFragmentClass (Ljava/lang/Class;)Ljava/lang/String;
 	public final fun goBack ()V
 	protected final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
-	public final fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Z)V
+	public final fun navigateTo (Landroidx/fragment/app/Fragment;Z)V
+	public synthetic fun navigateTo (Ljava/lang/Object;Z)V
 	protected fun onBack ()V
-	protected abstract fun performFragmentTransaction (ILcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Landroidx/fragment/app/Fragment;)V
+	protected abstract fun onRestoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	protected abstract fun onSaveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
+	protected abstract fun performFragmentTransaction (ILandroidx/fragment/app/Fragment;Landroidx/fragment/app/Fragment;)V
+	protected final fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
+	protected final fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
 }
 
 public final class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Companion {
@@ -307,15 +314,10 @@ public abstract interface class com/pyamsoft/pydroid/ui/navigator/Navigator {
 	public abstract fun currentScreen ()Ljava/lang/Object;
 	public abstract fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
 	public abstract fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;)V
-	public abstract fun navigateTo (Lcom/pyamsoft/pydroid/ui/navigator/Navigator$Screen;Z)V
+	public abstract fun navigateTo (Ljava/lang/Object;)V
+	public abstract fun navigateTo (Ljava/lang/Object;Z)V
 	public abstract fun restoreState (Landroid/os/Bundle;)V
 	public abstract fun saveState (Landroid/os/Bundle;)V
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/navigator/Navigator$Screen {
-	public abstract fun getArguments ()Landroid/os/Bundle;
-	public abstract fun getScreen ()Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt {

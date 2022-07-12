@@ -50,7 +50,7 @@ public interface Navigator<S : Any> {
    * If your default screen state is "blank", then do not call this function or represent a blank
    * screen [S]
    */
-  public fun loadIfEmpty(onLoadDefaultScreen: () -> Screen<S>)
+  public fun loadIfEmpty(onLoadDefaultScreen: () -> S)
 
   /**
    * Navigate to a new screen
@@ -59,22 +59,12 @@ public interface Navigator<S : Any> {
    * but if the [force] parameter is true, this will always navigate. This may cause an existing
    * screen to be replaced with the same screen again
    */
-  public fun navigateTo(screen: Screen<S>, force: Boolean)
+  public fun navigateTo(screen: S, force: Boolean)
 
   /**
    * Navigate to a new screen
    *
    * This may not actually navigate if conditions prevent it, such as, we are already on the screen.
    */
-  public fun navigateTo(screen: Screen<S>)
-
-  /** A screen object */
-  public interface Screen<S : Any> {
-
-    /** The screen */
-    public val screen: S
-
-    /** Any arguments to construct the screen */
-    public val arguments: Bundle?
-  }
+  public fun navigateTo(screen: S)
 }

@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.arch.toWriter
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
-  final override fun navigateTo(screen: Navigator.Screen<S>) {
+  final override fun navigateTo(screen: S) {
     navigateTo(screen, force = false)
   }
 

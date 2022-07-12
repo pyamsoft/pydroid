@@ -80,14 +80,7 @@ public interface Navigator<S : Any> {
       }
 
       // Else pull the class out (and remove the Companion if possible)
-      val name =
-          screen::class.java.name.let { n ->
-            return@let if (n.endsWith("Companion", ignoreCase = false)) {
-              n.replaceAfterLast("Companion", "")
-            } else {
-              n
-            }
-          }
+      val name = screen::class.java.name.removeSuffix("\$Companion")
       return "PYDroid-Navigator-${name}"
     }
   }

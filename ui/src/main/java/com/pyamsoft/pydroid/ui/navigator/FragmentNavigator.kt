@@ -259,11 +259,11 @@ protected constructor(
   R : Screen
 
   /** Performs a fragment transaction */
-  protected abstract fun <F> performFragmentTransaction(
+  protected abstract fun performFragmentTransaction(
       container: Int,
-      newScreen: F,
-      previousScreen: F?
-  ) where F : Fragment, F : Screen
+      newScreen: Fragment,
+      previousScreen: Fragment?
+  )
 
   /** Called when state is restored */
   protected abstract fun onRestoreState(savedInstanceState: UiSavedStateReader)

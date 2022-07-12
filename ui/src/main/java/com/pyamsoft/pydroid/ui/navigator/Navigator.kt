@@ -67,4 +67,14 @@ public interface Navigator<S : Any> {
    * This may not actually navigate if conditions prevent it, such as, we are already on the screen.
    */
   public fun navigateTo(screen: S)
+
+  public companion object {
+
+    /** Gets the tag used internally by the Navigator for a given screen instance */
+    @JvmStatic
+    @CheckResult
+    public fun <S : Any> getTagForScreen(screen: S): String {
+      return "PYDroid-Navigator-${screen::class.java.name}"
+    }
+  }
 }

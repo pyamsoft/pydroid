@@ -181,7 +181,7 @@ protected constructor(
           Logger.d("Pushing a brand new fragment")
           true
         } else {
-          if (getTagForFragment(screen) == getTagForFragment(existing)) {
+          if (Navigator.getTagForScreen(screen) == Navigator.getTagForScreen(existing)) {
             Logger.d("Pushing the same fragment")
             false
           } else {
@@ -234,22 +234,9 @@ protected constructor(
       previousScreen: Fragment?
   )
 
+  /** Called when state is restored */
   protected abstract fun onRestoreState(savedInstanceState: UiSavedStateReader)
 
+  /** Called when state is saved */
   protected abstract fun onSaveState(outState: UiSavedStateWriter)
-
-  public companion object {
-
-    @JvmStatic
-    @CheckResult
-    protected fun getTagForFragmentClass(fragment: Class<out Fragment>): String {
-      return fragment.name
-    }
-
-    @JvmStatic
-    @CheckResult
-    protected fun getTagForFragment(fragment: Fragment): String {
-      return getTagForFragmentClass(fragment::class.java)
-    }
-  }
 }

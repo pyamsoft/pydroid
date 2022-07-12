@@ -80,9 +80,9 @@ protected constructor(
 
   private fun updateCurrentScreenState() {
     thisScreen?.apply {
-      val screen = getCurrentExistingFragment()
+      val fragment = getCurrentExistingFragment()
       Logger.d("Current screen updated")
-      this.value = if (screen == null) null else getTagForScreen(screen)
+      this.value = if (fragment == null) null else getScreenFromFragment(fragment)
     }
   }
 
@@ -196,7 +196,7 @@ protected constructor(
           Logger.d("Pushing a brand new fragment")
           true
         } else {
-          if (screen matches getTagForScreen(existing)) {
+          if (screen matches getScreenFromFragment(existing)) {
             Logger.d("Pushing the same fragment")
             false
           } else {
@@ -254,9 +254,9 @@ protected constructor(
    * memory leaks since the Navigator holds onto a Fragment for the duration of an Activity scope.
    */
   @CheckResult
-  protected abstract fun <S> produceFragmentForScreen(screen: Screen): S where
-  S : Fragment,
-  S : Screen
+  protected abstract fun <R> produceFragmentForScreen(screen: Screen): R where
+  R : Fragment,
+  R : Screen
 
   /** Performs a fragment transaction */
   protected abstract fun performFragmentTransaction(
@@ -276,11 +276,11 @@ protected constructor(
     /** Gets the tag used internally by the Navigator for a given screen instance */
     @JvmStatic
     @CheckResult
-    public fun getTagForScreen(screen: Fragment): Screen {
-      if (screen is Screen) {
-        return screen
+    private fun getScreenFromFragment(fragment: Fragment): Screen {
+      if (fragment is Screen) {
+        return fragment
       } else {
-        throw IllegalArgumentException("Must implement FragmentNavigator.Screen: $screen")
+        throw IllegalArgumentException("Must implement FragmentNavigator.Screen: $fragment")
       }
     }
   }

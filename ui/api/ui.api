@@ -292,7 +292,6 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	public final fun currentScreen ()Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;
 	public synthetic fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
-	public static final fun getTagForScreen (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;
 	public final fun goBack ()V
 	protected final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
@@ -309,7 +308,6 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 }
 
 public final class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Companion {
-	public final fun getTagForScreen (Landroidx/fragment/app/Fragment;)Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen {

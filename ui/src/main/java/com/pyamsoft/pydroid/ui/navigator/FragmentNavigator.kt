@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.navigator
 
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.compose.runtime.Composable
@@ -56,6 +58,8 @@ protected constructor(
 
   private var lifecycleOwner: LifecycleOwner? = lifecycleOwner
   private var fragmentManager: FragmentManager? = fragmentManager
+  private var handler: Handler? = Handler(Looper.getMainLooper())
+
   private var thisScreen: MutableState<Fragment?>? = mutableStateOf(null)
 
   init {
@@ -68,6 +72,8 @@ protected constructor(
       this.fragmentManager = null
       this.lifecycleOwner = null
       this.thisScreen = null
+      this.handler?.also { it.removeCallbacksAndMessages(null) }
+      this.handler = null
     }
   }
 
@@ -82,6 +88,7 @@ protected constructor(
   private fun watchFragmentRegistrations() {
     val listener = FragmentOnAttachListener { _, _ ->
       // Keep the current screen state up to date
+      Logger.d("New fragment attached")
       updateCurrentScreenState()
     }
 
@@ -98,6 +105,7 @@ protected constructor(
     val listener =
         FragmentManager.OnBackStackChangedListener {
           // Keep the current screen state up to date
+          Logger.d("Back stack size changed")
           updateCurrentScreenState()
 
           // If the backstack size has been changed, we should update the data backing screen
@@ -139,6 +147,9 @@ protected constructor(
             immediate = immediate,
             transaction = transaction,
         )
+
+    // Post an update to the handler
+    handler.requireNotNull().post { updateCurrentScreenState() }
   }
 
   /** Perform a fragment transaction commitNow */
@@ -149,6 +160,9 @@ protected constructor(
             owner = lifecycleOwner.requireNotNull(),
             transaction = transaction,
         )
+
+    // Post an update to the handler
+    handler.requireNotNull().post { updateCurrentScreenState() }
   }
 
   /** Go back immediately based on the FM back stack */
@@ -203,6 +217,11 @@ protected constructor(
           screen,
           existing,
       )
+
+      // Post an update to the handler since we assume a fragment transaction has taken place, but
+      // are unsure
+      // if the transaction is commit() or commitNow()
+      handler.requireNotNull().post { updateCurrentScreenState() }
     }
   }
 

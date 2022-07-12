@@ -17,9 +17,6 @@
 package com.pyamsoft.pydroid.ui.navigator
 
 import android.os.Bundle
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import com.pyamsoft.pydroid.arch.toReader
@@ -27,27 +24,6 @@ import com.pyamsoft.pydroid.arch.toWriter
 
 /** A base class navigator, not backed by any specific system */
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
-
-  private val screen = mutableStateOf<S?>(null)
-
-  /** Updates the backing field which tracks the current screen */
-  protected fun updateCurrentScreen(newScreen: S) {
-    screen.value = newScreen
-  }
-
-  /** Mark screen as blank */
-  protected fun clearCurrentScreen() {
-    screen.value = null
-  }
-
-  final override fun currentScreen(): S? {
-    return screen.value
-  }
-
-  @Composable
-  final override fun currentScreenState(): State<S?> {
-    return screen
-  }
 
   final override fun navigateTo(screen: Navigator.Screen<S>) {
     navigateTo(screen, force = false)

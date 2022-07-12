@@ -16,12 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.navigator
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentOnAttachListener
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.Logger
@@ -32,34 +36,68 @@ import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** A navigator backed by AndroidX Fragment transactions */
-public abstract class FragmentNavigator<S : Any>
+public abstract class FragmentNavigator
 protected constructor(
-    lifecycleOwner: () -> LifecycleOwner,
-    fragmentManager: () -> FragmentManager,
+    lifecycleOwner: LifecycleOwner,
+    fragmentManager: FragmentManager,
     @IdRes private val fragmentContainerId: Int,
-) : BaseNavigator<S>(), BackstackNavigator<S> {
+) : BaseNavigator<Fragment>(), BackstackNavigator<Fragment> {
 
   protected constructor(
       activity: FragmentActivity,
       @IdRes fragmentContainerId: Int,
   ) : this(
-      lifecycleOwner = { activity },
-      fragmentManager = { activity.supportFragmentManager },
+      lifecycleOwner = activity,
+      fragmentManager = activity.supportFragmentManager,
       fragmentContainerId = fragmentContainerId,
   )
 
-  private val lifecycleOwner by lazy(LazyThreadSafetyMode.NONE) { lifecycleOwner() }
-  private val fragmentManager by lazy(LazyThreadSafetyMode.NONE) { fragmentManager() }
-
-  private val fragmentTagMap: Map<S, FragmentTag> by
-      lazy(LazyThreadSafetyMode.NONE) { provideFragmentTagMap() }
+  private var lifecycleOwner: LifecycleOwner? = lifecycleOwner
+  private var fragmentManager: FragmentManager? = fragmentManager
+  private var thisScreen: MutableState<Fragment?>? = mutableStateOf(null)
 
   init {
+    watchBackStack()
+    watchFragmentRegistrations()
+
+    // Watch for destroy event
+    this.lifecycleOwner?.doOnDestroy {
+      Logger.d("Destroy FragmentNavigator on lifecycle destroy")
+      this.fragmentManager = null
+      this.lifecycleOwner = null
+      this.thisScreen = null
+    }
+  }
+
+  private fun updateCurrentScreenState() {
+    thisScreen?.apply {
+      val screen = getCurrentExistingFragment()
+      Logger.d("Current screen updated")
+      this.value = screen
+    }
+  }
+
+  private fun watchFragmentRegistrations() {
+    val listener = FragmentOnAttachListener { _, _ ->
+      // Keep the current screen state up to date
+      updateCurrentScreenState()
+    }
+
+    val fm = this.fragmentManager.requireNotNull()
+    val lo = this.lifecycleOwner.requireNotNull()
+    lo.doOnCreate { fm.addFragmentOnAttachListener(listener) }
+    lo.doOnDestroy { fm.removeFragmentOnAttachListener(listener) }
+  }
+
+  private fun watchBackStack() {
     // Keep track of the current stack size at all times
     var stackSize = backStackSize()
 
     val listener =
         FragmentManager.OnBackStackChangedListener {
+          // Keep the current screen state up to date
+          updateCurrentScreenState()
+
           // If the backstack size has been changed, we should update the data backing screen
           val oldSize = stackSize
           val currentSize = backStackSize()
@@ -70,50 +108,20 @@ protected constructor(
           if (currentSize < oldSize) {
             Logger.d("On Back event!")
 
-            // Because the data backing screen has not been updated yet, we can pull the "current"
-            // screen from data backing as the previous screen
-            val previousScreen = currentScreen()
-
-            // Update current screen data backing now
-            val currentScreen = getCurrentScreenFromFragment()
-            if (currentScreen == null) {
-              clearCurrentScreen()
-            } else {
-              updateCurrentScreen(newScreen = currentScreen)
-            }
-
             // On back optional callback
-            onBack(currentScreen, previousScreen)
+            onBack()
           }
         }
 
-    val fm = this.fragmentManager
-    val lo = this.lifecycleOwner
+    val fm = this.fragmentManager.requireNotNull()
+    val lo = this.lifecycleOwner.requireNotNull()
     lo.doOnCreate { fm.addOnBackStackChangedListener(listener) }
     lo.doOnDestroy { fm.removeOnBackStackChangedListener(listener) }
   }
 
   @CheckResult
   private fun getCurrentExistingFragment(): Fragment? {
-    return fragmentManager.findFragmentById(fragmentContainerId)
-  }
-
-  private fun handleBackStackPopped(previousScreen: S?) {
-    // The back stack is updated, grab the current screen which was the "previous" screen and
-    // update the screen data
-    val currentScreen = getCurrentScreenFromFragment()
-
-    Logger.d("Screen restored to: $currentScreen from $previousScreen")
-    onBack(currentScreen, previousScreen)
-  }
-
-  @CheckResult
-  private fun getCurrentScreenFromFragment(): S? {
-    val existing = getCurrentExistingFragment() ?: return null
-
-    // Look up the previous screen in the map
-    val tag = existing.tag
-    return fragmentTagMap.entries.find { it.value.tag == tag }?.key
+    return fragmentManager.requireNotNull().findFragmentById(fragmentContainerId)
   }
 
   /** Perform a fragment transaction commit */
@@ -122,33 +130,31 @@ protected constructor(
       immediate: Boolean = false,
       transaction: FragmentTransaction.() -> FragmentTransaction,
   ) {
-    fragmentManager.commit(
-        owner = lifecycleOwner,
-        immediate = immediate,
-        transaction = transaction,
-    )
+    fragmentManager
+        .requireNotNull()
+        .commit(
+            owner = lifecycleOwner.requireNotNull(),
+            immediate = immediate,
+            transaction = transaction,
+        )
   }
 
   /** Perform a fragment transaction commitNow */
   protected fun commitNow(transaction: FragmentTransaction.() -> FragmentTransaction) {
-    fragmentManager.commitNow(
-        owner = lifecycleOwner,
-        transaction = transaction,
-    )
+    fragmentManager
+        .requireNotNull()
+        .commitNow(
+            owner = lifecycleOwner.requireNotNull(),
+            transaction = transaction,
+        )
   }
 
   /** Go back immediately based on the FM back stack */
   protected fun goBackNow() {
-    // Grab current screen before pop
-    val screen = currentScreen()
-
-    fragmentManager.popBackStackImmediate()
-
-    // Since this happens immediately, we can avoid handler.post {}
-    handleBackStackPopped(screen)
+    fragmentManager.requireNotNull().popBackStackImmediate()
   }
 
-  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Navigator.Screen<S>) {
+  final override fun loadIfEmpty(onLoadDefaultScreen: () -> Navigator.Screen<Fragment>) {
     val existing = getCurrentExistingFragment()
     if (existing == null) {
       Logger.d("No existing Fragment, load default screen")
@@ -158,17 +164,14 @@ protected constructor(
   }
 
   final override fun goBack() {
-    Logger.d("Go Back!")
-    fragmentManager.popBackStack()
+    fragmentManager.requireNotNull().popBackStack()
   }
 
   final override fun backStackSize(): Int {
-    return fragmentManager.backStackEntryCount
+    return fragmentManager.requireNotNull().backStackEntryCount
   }
 
-  final override fun navigateTo(screen: Navigator.Screen<S>, force: Boolean) {
-    val entry = fragmentTagMap[screen.screen].requireNotNull()
-
+  final override fun navigateTo(screen: Navigator.Screen<Fragment>, force: Boolean) {
     val existing = getCurrentExistingFragment()
 
     val pushNew =
@@ -176,9 +179,7 @@ protected constructor(
           Logger.d("Pushing a brand new fragment")
           true
         } else {
-          val tag = existing.tag
-
-          if (entry.tag == tag) {
+          if (getTagForFragment(screen.screen) == getTagForFragment(existing)) {
             Logger.d("Pushing the same fragment")
             false
           } else {
@@ -189,54 +190,45 @@ protected constructor(
 
     if (pushNew || force) {
       if (force) {
-        Logger.d("Force commit fragment: ${entry.tag}")
+        Logger.d("Force commit fragment: $screen")
       } else {
-        Logger.d("Commit fragment: ${entry.tag}")
+        Logger.d("Commit fragment: $screen")
       }
-
-      // Grab screen data before updating
-      val previousScreen = getCurrentScreenFromFragment()
 
       // Push fragment
       performFragmentTransaction(
           fragmentContainerId,
-          entry,
           screen,
-          previousScreen,
+          existing,
       )
-
-      // After we post the fragment, we update the screen data
-      //
-      // Because of fragment quirks with commit versus commitNow, the fragment
-      // may not actually be visually displayed at this point
-      updateCurrentScreen(newScreen = screen.screen)
     }
   }
 
-  /** Called when [goBack] or [goBackNow] is called */
-  protected open fun onBack(
-      currentScreen: S?,
-      previousScreen: S?,
-  ) {}
+  final override fun currentScreen(): Fragment? {
+    return thisScreen.requireNotNull().value
+  }
 
-  /** Provides a map of Screen types to FragmentTypes */
-  @CheckResult protected abstract fun provideFragmentTagMap(): Map<S, FragmentTag>
+  @Composable
+  final override fun currentScreenState(): State<Fragment?> {
+    return thisScreen.requireNotNull()
+  }
+
+  /** Called when [goBack] or [goBackNow] is called */
+  protected open fun onBack() {}
 
   /** Performs a fragment transaction */
   protected abstract fun performFragmentTransaction(
       container: Int,
-      data: FragmentTag,
-      newScreen: Navigator.Screen<S>,
-      previousScreen: S?
+      newScreen: Navigator.Screen<Fragment>,
+      previousScreen: Fragment?
   )
 
-  /** A mapping of string Tags to Fragment providers */
-  public interface FragmentTag {
+  public companion object {
 
-    /** Tag */
-    public val tag: String
-
-    /** Fragment provider */
-    public val fragment: (arguments: Bundle?) -> Fragment
+    @JvmStatic
+    @CheckResult
+    private fun getTagForFragment(fragment: Fragment): String {
+      return fragment::class.java.name
+    }
   }
 }

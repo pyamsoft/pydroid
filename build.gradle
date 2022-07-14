@@ -52,7 +52,7 @@ buildscript {
     coil = "2.1.0"
 
     // Kotlin
-    coroutines = '1.6.3'
+    coroutines = '1.6.4'
 
     // AndroidX
     annotation = "1.4.0"

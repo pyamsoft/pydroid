@@ -53,7 +53,7 @@ internal fun AppHeader(
     imageLoader: ImageLoader,
     content: @Composable () -> Unit,
 ) {
-  var titleHeight by remember { mutableStateOf(ZeroSize) }
+  val (titleHeight, setTitleHeight) = remember { mutableStateOf(ZeroSize) }
   val spaceHeight = remember(titleHeight) { titleHeight / 2 }
 
   Box(
@@ -79,7 +79,7 @@ internal fun AppHeader(
         icon = icon,
         name = name,
         imageLoader = imageLoader,
-        onMeasured = { titleHeight = it },
+        onMeasured = { setTitleHeight(it) },
     )
   }
 }

@@ -20,7 +20,7 @@
 buildscript {
   ext {
     kotlin_version = '1.6.10'
-    dokka_version = "1.6.21"
+    dokka_version = "1.7.10"
     agp_version = "7.2.1"
     compose_version = "1.1.1"
   }

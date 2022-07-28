@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -32,8 +31,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.ViewWindowInsetObserver
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -72,9 +69,6 @@ public abstract class SettingsFragment : Fragment() {
   internal var versionViewModel: VersionCheckViewModeler? = null
   internal var changeLogViewModel: ChangeLogViewModeler? = null
   internal var dataPolicyViewModel: DataPolicyViewModeler? = null
-
-  // Watches the window insets
-  private var windowInsetObserver: ViewWindowInsetObserver? = null
 
   @CheckResult
   private fun hideDataPolicy(): Boolean {
@@ -198,10 +192,6 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleOpenDeveloperPage(uriHandler: UriHandler) {
-    uriHandler.openUri(MarketLinker.getDeveloperPageLink())
-  }
-
   private fun handleOpenMarketPage(uriHandler: UriHandler) {
     uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
@@ -247,43 +237,37 @@ public abstract class SettingsFragment : Fragment() {
     return ComposeView(act).apply {
       id = R.id.fragment_settings
 
-      val observer = ViewWindowInsetObserver(this)
-      val windowInsets = observer.start()
-      windowInsetObserver = observer
-
       val vm = viewModel.requireNotNull()
       setContent {
         val handler = LocalUriHandler.current
 
         vm.Render { state ->
           composeTheme(act) {
-            CompositionLocalProvider(LocalWindowInsets provides windowInsets) {
-              SettingsScreen(
-                  elevation = customElevation(),
-                  state = state,
-                  hideClearAll = hideClearAll,
-                  hideUpgradeInformation = hideUpgradeInformation,
-                  hideDataPolicy = hideDataPolicy(),
-                  topItemMargin = customTopItemMargin(),
-                  bottomItemMargin = customBottomItemMargin(),
-                  customPreContent = customPrePreferences(),
-                  customPostContent = customPostPreferences(),
-                  onDarkModeChanged = { handleChangeDarkMode(it) },
-                  onLicensesClicked = { AboutDialog.show(act) },
-                  onCheckUpdateClicked = { handleCheckForUpdates() },
-                  onShowChangeLogClicked = { handleShowChangeLog() },
-                  onResetClicked = { ResetDialog.open(act) },
-                  onDonateClicked = { BillingDialog.open(act) },
-                  onBugReportClicked = { handleReportBug(handler) },
-                  onViewSourceClicked = { handleViewSourceCode(handler) },
-                  onViewDataPolicyClicked = { handleShowDisclosure() },
-                  onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
-                  onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
-                  onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
-                  onViewBlogClicked = { handleViewBlog(handler) },
-                  onOpenMarketPage = { handleOpenMarketPage(it) },
-              )
-            }
+            SettingsScreen(
+                elevation = customElevation(),
+                state = state,
+                hideClearAll = hideClearAll,
+                hideUpgradeInformation = hideUpgradeInformation,
+                hideDataPolicy = hideDataPolicy(),
+                topItemMargin = customTopItemMargin(),
+                bottomItemMargin = customBottomItemMargin(),
+                customPreContent = customPrePreferences(),
+                customPostContent = customPostPreferences(),
+                onDarkModeChanged = { handleChangeDarkMode(it) },
+                onLicensesClicked = { AboutDialog.show(act) },
+                onCheckUpdateClicked = { handleCheckForUpdates() },
+                onShowChangeLogClicked = { handleShowChangeLog() },
+                onResetClicked = { ResetDialog.open(act) },
+                onDonateClicked = { BillingDialog.open(act) },
+                onBugReportClicked = { handleReportBug(handler) },
+                onViewSourceClicked = { handleViewSourceCode(handler) },
+                onViewDataPolicyClicked = { handleShowDisclosure() },
+                onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
+                onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
+                onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
+                onViewBlogClicked = { handleViewBlog(handler) },
+                onOpenMarketPage = { handleOpenMarketPage(it) },
+            )
           }
         }
       }
@@ -328,9 +312,6 @@ public abstract class SettingsFragment : Fragment() {
     changeLogViewModel = null
     dataPolicyViewModel = null
     versionViewModel = null
-
-    windowInsetObserver?.stop()
-    windowInsetObserver = null
   }
 
   public companion object {

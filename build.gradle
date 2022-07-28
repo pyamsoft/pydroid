@@ -19,10 +19,10 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.6.10'
-    dokka_version = "1.6.21"
+    kotlin_version = '1.7.10'
+    dokka_version = "1.7.10"
     agp_version = "7.2.1"
-    compose_version = "1.1.1"
+    compose_version = "1.2.0"
   }
   repositories {
     mavenLocal()
@@ -47,8 +47,8 @@ buildscript {
     maxSdk = 32
 
     // Compose
-    composeActivity = "1.5.0"
-    accompanist = "0.23.1"
+    composeActivity = "1.5.1"
+    accompanist = "0.25.0"
     coil = "2.1.0"
 
     // Kotlin
@@ -57,8 +57,8 @@ buildscript {
     // AndroidX
     annotation = "1.4.0"
     core = "1.8.0"
-    lifecycle = "2.5.0"
-    fragment = "1.5.0"
+    lifecycle = "2.5.1"
+    fragment = "1.5.1"
     startup = "1.1.1"
     appCompat = "1.4.2"
 
@@ -66,8 +66,8 @@ buildscript {
     materialDesign = "1.6.1"
 
     // Us
-    cachify = "0.0.27"
-    highlander = "0.0.23"
+    cachify = "0.1.0"
+    highlander = "0.1.0"
 
     // In app updates and reviews
     playCore = "1.10.3"
@@ -117,7 +117,7 @@ subprojects {
   apply plugin: "org.gradle.android.cache-fix"
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "25.0.0-SNAPSHOT"
+  final POM_VERSION = "25.0.0"
 
 
   // Kapt flags

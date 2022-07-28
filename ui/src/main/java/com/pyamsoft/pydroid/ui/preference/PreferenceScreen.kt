@@ -18,6 +18,9 @@ package com.pyamsoft.pydroid.ui.preference
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
@@ -27,8 +30,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.statusBarsHeight
 import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
@@ -92,13 +93,7 @@ private fun renderPaddedItemsInScope(
 ) {
   if (index == 0) {
     listScope.item {
-      Spacer(
-          modifier =
-              Modifier.fillMaxWidth()
-                  .statusBarsHeight(
-                      additional = topItemMargin,
-                  ),
-      )
+      Spacer(modifier = Modifier.fillMaxWidth().statusBarsPadding().height(topItemMargin))
     }
   }
 
@@ -107,11 +102,7 @@ private fun renderPaddedItemsInScope(
   if (index == maxIndex) {
     listScope.item {
       Spacer(
-          modifier =
-              Modifier.fillMaxWidth()
-                  .navigationBarsHeight(
-                      additional = bottomItemMargin,
-                  ),
+          modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(bottomItemMargin),
       )
     }
   }

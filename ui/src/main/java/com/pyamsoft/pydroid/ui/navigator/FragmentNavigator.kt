@@ -169,7 +169,7 @@ protected constructor(
   }
 
   /** Go back immediately based on the FM back stack */
-  protected fun goBackNow() {
+  public fun goBackNow() {
     fragmentManager.requireNotNull().popBackStackImmediate()
   }
 

@@ -25,6 +25,7 @@ import androidx.startup.Initializer
  *
  * Overrides the default thread exception handler to instead launch the CrashActivity
  */
+@Suppress("unused")
 internal class AutopsyInitializer internal constructor() : Initializer<Boolean> {
 
   override fun create(context: Context): Boolean {

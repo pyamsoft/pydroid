@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +45,6 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 
 @Composable
-@OptIn(ExperimentalAnimationApi::class)
 internal fun AboutScreen(
     modifier: Modifier = Modifier,
     state: AboutViewState,
@@ -107,7 +104,6 @@ private fun Loading() {
 }
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 private fun AboutList(
     modifier: Modifier = Modifier,
     state: AboutViewState,

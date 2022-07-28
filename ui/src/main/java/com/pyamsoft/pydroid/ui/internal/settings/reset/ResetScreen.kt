@@ -54,13 +54,17 @@ internal fun ResetScreen(
       item {
         Box(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-        ) { Title() }
+        ) {
+          Title()
+        }
       }
 
       item {
         Box(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-        ) { Message() }
+        ) {
+          Message()
+        }
       }
 
       item {

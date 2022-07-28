@@ -120,7 +120,9 @@ private fun Loading() {
                   all = MaterialTheme.keylines.content,
               ),
       contentAlignment = Alignment.Center,
-  ) { CircularProgressIndicator() }
+  ) {
+    CircularProgressIndicator()
+  }
 }
 
 @Composable

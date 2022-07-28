@@ -56,7 +56,9 @@ public class VersionModule(params: Parameters) {
       return cachify<ResultWrapper<AppUpdateLauncher>>(
           context = Dispatchers.IO,
           storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) },
-      ) { network.checkVersion(true) }
+      ) {
+        network.checkVersion(true)
+      }
     }
   }
 

@@ -68,7 +68,9 @@ internal fun AppHeader(
       ) {
         Box(
             modifier = Modifier.padding(top = spaceHeight),
-        ) { content() }
+        ) {
+          content()
+        }
       }
     }
 

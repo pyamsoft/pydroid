@@ -182,7 +182,9 @@ private fun Loading(
   Box(
       modifier = modifier.padding(MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
-  ) { CircularProgressIndicator() }
+  ) {
+    CircularProgressIndicator()
+  }
 }
 
 @Composable

@@ -37,7 +37,9 @@ internal constructor(
   private val refreshRunner =
       highlander<Unit>(
           context = Dispatchers.IO,
-      ) { interactor.refresh() }
+      ) {
+        interactor.refresh()
+      }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {

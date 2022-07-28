@@ -292,7 +292,7 @@ public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/
 	public final fun currentScreen ()Ljava/lang/Object;
 	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
 	public final fun goBack ()V
-	protected final fun goBackNow ()V
+	public final fun goBackNow ()V
 	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
 	public final fun navigateTo (Ljava/lang/Object;Z)V
 	protected fun onBack ()V

@@ -29,5 +29,7 @@ internal fun PreferenceAlphaWrapper(
 ) {
   CompositionLocalProvider(
       LocalContentAlpha provides if (isEnabled) ContentAlpha.high else ContentAlpha.disabled,
-  ) { content() }
+  ) {
+    content()
+  }
 }

@@ -69,7 +69,9 @@ internal class VersionCheckDelegate(activity: PYDroidActivity, viewModel: Versio
 
     vm.handleConfirmUpgrade(
         scope = act.lifecycleScope,
-    ) { VersionUpgradeDialog.show(act) }
+    ) {
+      VersionUpgradeDialog.show(act)
+    }
   }
 
   /** Render a composable by watching the ViewModel state */

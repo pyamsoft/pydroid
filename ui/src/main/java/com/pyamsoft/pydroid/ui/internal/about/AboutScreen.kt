@@ -100,7 +100,9 @@ private fun Loading() {
   Box(
       modifier = Modifier.fillMaxSize().padding(all = MaterialTheme.keylines.content),
       contentAlignment = Alignment.Center,
-  ) { CircularProgressIndicator() }
+  ) {
+    CircularProgressIndicator()
+  }
 }
 
 @Composable

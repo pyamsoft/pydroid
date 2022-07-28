@@ -361,7 +361,9 @@ private fun DefaultPreferenceItem(
         badge?.let { compose ->
           Box(
               modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
-          ) { compose() }
+          ) {
+            compose()
+          }
         }
         Spacer(modifier = Modifier.weight(1F))
       }
@@ -387,7 +389,9 @@ private fun DefaultPreferenceItem(
               Modifier.padding(start = MaterialTheme.keylines.baseline)
                   .size(ListItemDefaults.LeadingSize),
           contentAlignment = Alignment.Center,
-      ) { compose(enabled) }
+      ) {
+        compose(enabled)
+      }
     }
   }
 }

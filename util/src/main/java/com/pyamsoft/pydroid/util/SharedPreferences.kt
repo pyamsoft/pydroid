@@ -19,69 +19,72 @@ package com.pyamsoft.pydroid.util
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CheckResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
-/** Create a preference listener for when a shared preference changes */
 @CheckResult
-public fun SharedPreferences.onChange(
+private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
     key: String,
-    onChange: suspend () -> Unit
-): PreferenceListener {
-  val listener =
-      object : ScopedPreferenceChangeListener(key) {
-
-        override suspend fun onChange() {
-          onChange()
-        }
+    defaultValue: T,
+    crossinline getter: SharedPreferences.(String, T) -> R,
+): Flow<R> {
+  val self = this
+  return callbackFlow {
+    val listener = OnSharedPreferenceChangeListener { prefs, changedKey ->
+      if (changedKey === key) {
+        // Block the listener
+        trySendBlocking(prefs.getter(key, defaultValue))
       }
-
-  return PreferenceListenerImpl(this, listener)
-}
-
-private abstract class ScopedPreferenceChangeListener(private val watchKey: String) :
-    OnSharedPreferenceChangeListener {
-
-  private val scope = MainScope()
-
-  final override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-    if (watchKey == key) {
-      scope.launch(context = Dispatchers.Default) { onChange() }
     }
-  }
 
-  protected abstract suspend fun onChange()
+    self.registerOnSharedPreferenceChangeListener(listener)
 
-  fun cancel() {
-    scope.cancel()
-  }
-}
+    // Block the flow while this is sending
+    trySendBlocking(self.getter(key, defaultValue))
 
-private class PreferenceListenerImpl(
-    private val preferences: SharedPreferences,
-    listener: ScopedPreferenceChangeListener
-) : PreferenceListener {
-
-  private var listener: ScopedPreferenceChangeListener? = listener
-
-  init {
-    preferences.registerOnSharedPreferenceChangeListener(listener)
-  }
-
-  override fun cancel() {
-    listener?.let { l ->
-      preferences.unregisterOnSharedPreferenceChangeListener(l)
-      l.cancel()
-    }
-    listener = null
+    awaitClose { self.unregisterOnSharedPreferenceChangeListener(listener) }
   }
 }
 
-/** The PreferenceListener interface */
-public interface PreferenceListener {
+/** Watch a SharedPreference Int for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.intFlow(key: String, defaultValue: Int): Flow<Int> {
+  return this.preferenceFlow(key, defaultValue) { k, v -> getInt(k, v) }
+}
 
-  /** Stop listening to the preference */
-  public fun cancel()
+/** Watch a SharedPreference Boolean for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.booleanFlow(key: String, defaultValue: Boolean): Flow<Boolean> {
+  return this.preferenceFlow(key, defaultValue) { k, v -> getBoolean(k, v) }
+}
+
+/** Watch a SharedPreference String for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.stringFlow(key: String, defaultValue: String): Flow<String> {
+  return this.preferenceFlow(key, defaultValue) { k, v -> getString(k, v) ?: defaultValue }
+}
+
+/** Watch a SharedPreference Float for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.floatFlow(key: String, defaultValue: Float): Flow<Float> {
+  return this.preferenceFlow(key, defaultValue) { k, v -> getFloat(k, v) }
+}
+
+/** Watch a SharedPreference Long for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.longFlow(key: String, defaultValue: Long): Flow<Long> {
+  return this.preferenceFlow(key, defaultValue) { k, v -> getLong(k, v) }
+}
+
+/** Watch a SharedPreference String Set for changes as a Flow */
+@CheckResult
+public fun SharedPreferences.stringSetFlow(
+    key: String,
+    defaultValue: Set<String>
+): Flow<Set<String>> {
+  return this.preferenceFlow(key, defaultValue) { k, v ->
+    getStringSet(k, v)?.toSet() ?: defaultValue
+  }
 }

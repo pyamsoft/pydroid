@@ -16,28 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewState
+import com.pyamsoft.pydroid.ui.internal.datapolicy.AbstractDataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class AppInternalViewModeler
 internal constructor(
-    private val state: MutableDataPolicyViewState,
     private val disableDataPolicy: Boolean,
-    private val interactor: DataPolicyInteractor,
-) : AbstractViewModeler<DataPolicyViewState>(state) {
-
-  internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
-      interactor.listenForPolicyAcceptedChanges().collectLatest { state.isAccepted = it }
-    }
-  }
+    state: MutableDataPolicyViewState,
+    interactor: DataPolicyInteractor,
+) : AbstractDataPolicyViewModeler(state, interactor) {
 
   /**
    * Decides the correct dialog to show so we don't spam dialogs
@@ -56,7 +48,7 @@ internal constructor(
 
     scope.launch(context = Dispatchers.Main) {
       // If data policy is enabled, show it if you can
-      if (!state.isAccepted) {
+      if (!isAccepted()) {
         onShowDataPolicy()
       }
     }

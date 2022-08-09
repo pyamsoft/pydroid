@@ -24,10 +24,10 @@ import com.pyamsoft.pydroid.arch.UiViewState
 
 @Stable
 internal interface DataPolicyViewState : UiViewState {
-  val isAccepted: Boolean
+  val isAccepted: Boolean?
 }
 
 @Stable
 internal class MutableDataPolicyViewState : DataPolicyViewState {
-  override var isAccepted by mutableStateOf(false)
+  override var isAccepted by mutableStateOf<Boolean?>(null)
 }

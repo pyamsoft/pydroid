@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.internal.datapolicy
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -26,49 +26,29 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class ChangeLogViewModeler
-internal constructor(
-    private val state: MutableChangeLogViewState,
-    private val interactor: ChangeLogInteractor,
-) : AbstractViewModeler<ChangeLogViewState>(state) {
+internal abstract class AbstractDataPolicyViewModeler
+protected constructor(
+    private val state: MutableDataPolicyViewState,
+    private val interactor: DataPolicyInteractor,
+) : AbstractViewModeler<DataPolicyViewState>(state) {
 
   @CheckResult
-  private suspend fun canShow(): Boolean =
+  protected suspend fun isAccepted(): Boolean =
       withContext(context = Dispatchers.IO) {
         val s = state
-        val show = s.canShow
-        if (show == null) {
-          val cs = interactor.listenShowChangeLogChanges().first()
-          s.canShow = cs
-          return@withContext cs
+        val accepted = s.isAccepted
+        if (accepted == null) {
+          val a = interactor.listenForPolicyAcceptedChanges().first()
+          s.isAccepted = a
+          return@withContext a
         } else {
-          return@withContext show
+          return@withContext accepted
         }
       }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
-      interactor.listenShowChangeLogChanges().collectLatest { state.canShow = it }
-    }
-  }
-
-  internal fun handleShow(
-      scope: CoroutineScope,
-      force: Boolean,
-      onShowChangeLog: () -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      var show = false
-      if (force) {
-        show = true
-      } else if (canShow()) {
-        show = true
-      }
-
-      if (show) {
-        interactor.markChangeLogShown()
-        onShowChangeLog()
-      }
+      interactor.listenForPolicyAcceptedChanges().collectLatest { state.isAccepted = it }
     }
   }
 }

@@ -24,10 +24,10 @@ import com.pyamsoft.pydroid.arch.UiViewState
 
 @Stable
 internal interface ChangeLogViewState : UiViewState {
-  val canShow: Boolean
+  val canShow: Boolean?
 }
 
 @Stable
 internal class MutableChangeLogViewState : ChangeLogViewState {
-  override var canShow by mutableStateOf(false)
+  override var canShow by mutableStateOf<Boolean?>(null)
 }

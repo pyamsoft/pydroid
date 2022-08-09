@@ -421,9 +421,9 @@ public final class com/pyamsoft/pydroid/ui/theme/ThemeProviderKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/Theming {
-	public abstract fun getMode (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun init (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun isDarkTheme (Landroid/app/Activity;)Z
+	public abstract fun listenForModeChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setDarkTheme (Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -436,7 +436,7 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/ThemingPreferences {
-	public abstract fun getDarkMode (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun listenForDarkModeChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setDarkMode (Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

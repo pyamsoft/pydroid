@@ -20,17 +20,18 @@ import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 internal class DataPolicyInteractorImpl
 internal constructor(context: Context, private val preferences: DataPolicyPreferences) :
     AppInteractorImpl(context), DataPolicyInteractor {
 
-  override suspend fun isPolicyAccepted(): Boolean =
+  override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext preferences.isPolicyAccepted()
+        return@withContext preferences.listenForPolicyAcceptedChanges()
       }
 
   override suspend fun acceptPolicy() =

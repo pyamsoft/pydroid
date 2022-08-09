@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
+import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
@@ -30,9 +31,18 @@ internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPoli
 
   /** Bind Activity for related DataPolicy events */
   fun bindEvents() {
-    activity.requireNotNull().doOnDestroy {
+    val a = activity.requireNotNull()
+    a.doOnDestroy {
       viewModel = null
       activity = null
+    }
+
+    a.doOnCreate {
+      viewModel
+          .requireNotNull()
+          .bind(
+              scope = a.lifecycleScope,
+          )
     }
   }
 

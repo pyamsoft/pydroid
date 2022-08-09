@@ -16,17 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-internal interface ChangeLogViewState : AppViewState {
+internal interface ChangeLogDialogViewState : AppViewState {
   val changeLog: List<ChangeLogLine>
 }
 
-internal class MutableChangeLogViewState : ChangeLogViewState {
+@Stable
+internal class MutableChangeLogDialogViewState : ChangeLogDialogViewState {
   override var changeLog by mutableStateOf(emptyList<ChangeLogLine>())
   override var icon by mutableStateOf(0)
   override var name by mutableStateOf("")

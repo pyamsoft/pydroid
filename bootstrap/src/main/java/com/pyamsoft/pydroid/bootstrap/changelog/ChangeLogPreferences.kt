@@ -17,12 +17,13 @@
 package com.pyamsoft.pydroid.bootstrap.changelog
 
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
 /** Preferences for change log */
 public interface ChangeLogPreferences {
 
   /** Return if the changelog should be shown or not */
-  @CheckResult public suspend fun showChangelog(): Boolean
+  @CheckResult public suspend fun listenForShowChangelogChanges(): Flow<Boolean>
 
   /** Mark the changelog as shown for the current application state */
   public suspend fun markChangeLogShown()

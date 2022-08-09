@@ -20,7 +20,10 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 /** Handles getting current dark mode state and setting dark mode state */
@@ -32,7 +35,7 @@ internal constructor(
   override suspend fun init() =
       withContext(context = Dispatchers.IO) {
         // Make sure we set the AppCompatDelegate from the saved preference mode
-        val mode = getMode()
+        val mode = listenForModeChanges().first()
         applyDarkTheme(mode)
       }
 
@@ -43,9 +46,11 @@ internal constructor(
   }
 
   /** Which mode are we in right now? */
-  override suspend fun getMode(): Theming.Mode {
-    return preferences.getDarkMode()
-  }
+  override suspend fun listenForModeChanges(): Flow<Theming.Mode> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+        return@withContext preferences.listenForDarkModeChanges()
+      }
 
   /** Set application wide dark mode */
   override suspend fun setDarkTheme(mode: Theming.Mode) =

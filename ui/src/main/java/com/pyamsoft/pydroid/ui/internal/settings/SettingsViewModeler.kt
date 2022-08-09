@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class SettingsViewModeler
@@ -42,11 +43,17 @@ internal constructor(
   }
 
   internal fun handleLoadPreferences(scope: CoroutineScope) {
-    state.isLoading = true
+    val s = state
+    s.isLoading = true
+
     scope.launch(context = Dispatchers.Main) {
-      state.apply {
-        darkMode = theming.getMode()
-        isLoading = false
+      theming.listenForModeChanges().collectLatest {
+        s.darkMode = it
+
+        // Upon sync, mark loaded
+        if (s.isLoading) {
+          s.isLoading = false
+        }
       }
     }
   }

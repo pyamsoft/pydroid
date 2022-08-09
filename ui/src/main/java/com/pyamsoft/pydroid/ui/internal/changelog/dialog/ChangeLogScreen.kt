@@ -44,7 +44,7 @@ import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 @JvmOverloads
 internal fun ChangeLogScreen(
     modifier: Modifier = Modifier,
-    state: ChangeLogViewState,
+    state: ChangeLogDialogViewState,
     imageLoader: ImageLoader,
     onRateApp: () -> Unit,
     onClose: () -> Unit
@@ -136,7 +136,7 @@ private fun Actions(
 private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
   ChangeLogScreen(
       state =
-          MutableChangeLogViewState().apply {
+          MutableChangeLogDialogViewState().apply {
             icon = 0
             name = "TEST"
             this.changeLog = changeLog

@@ -17,12 +17,13 @@
 package com.pyamsoft.pydroid.bootstrap.datapolicy
 
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
 /** Preferences for data policy */
 public interface DataPolicyPreferences {
 
   /** Has the user consented */
-  @CheckResult public suspend fun isPolicyAccepted(): Boolean
+  @CheckResult public suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean>
 
   /** User has given consent */
   public suspend fun respondToPolicy(accepted: Boolean)

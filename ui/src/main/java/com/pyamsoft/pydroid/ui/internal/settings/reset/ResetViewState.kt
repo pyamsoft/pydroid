@@ -16,15 +16,18 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
+@Stable
 internal interface ResetViewState : UiViewState {
   val reset: Boolean
 }
 
+@Stable
 internal class MutableResetViewState : ResetViewState {
   override var reset by mutableStateOf(false)
 }

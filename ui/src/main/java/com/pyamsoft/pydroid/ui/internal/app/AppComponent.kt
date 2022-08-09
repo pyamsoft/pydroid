@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
@@ -98,6 +99,7 @@ internal interface AppComponent {
     private val versionCheckState = MutableVersionCheckViewState()
     private val versionUpgradeState = MutableVersionUpgradeViewState()
     private val dataPolicyState = MutableDataPolicyViewState()
+    private val changeLogState = MutableChangeLogViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
@@ -152,6 +154,7 @@ internal interface AppComponent {
             theming = params.theming,
             versionCheckState = versionCheckState,
             dataPolicyState = dataPolicyState,
+            changeLogState = changeLogState,
         )
 
     private val changeLogParams =
@@ -200,9 +203,10 @@ internal interface AppComponent {
 
       // App Internal
       activity.presenter =
-          AppInternalPresenter(
+          AppInternalViewModeler(
               disableDataPolicy = disableDataPolicy,
-              dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),
+              state = dataPolicyState,
+              interactor = params.dataPolicyModule.provideInteractor(),
           )
     }
 

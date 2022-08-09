@@ -22,14 +22,18 @@ import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.core.Enforcer
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
+import com.pyamsoft.pydroid.util.booleanFlow
+import com.pyamsoft.pydroid.util.intFlow
+import com.pyamsoft.pydroid.util.stringFlow
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 internal class PYDroidPreferencesImpl
@@ -44,16 +48,11 @@ internal constructor(
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
-  override suspend fun showChangelog(): Boolean =
+  override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        // If the changelog has not yet been seen
-        val lastShown = prefs.getInt(LAST_SHOWN_CHANGELOG, -1)
-        if (lastShown < 0) {
-          return@withContext false
-        }
-        return@withContext lastShown < versionCode
+        return@withContext prefs.intFlow(LAST_SHOWN_CHANGELOG, -1).map { it < versionCode }
       }
 
   override suspend fun markChangeLogShown() =
@@ -64,7 +63,7 @@ internal constructor(
         return@withContext prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
       }
 
-  override suspend fun getDarkMode(): Mode =
+  override suspend fun listenForDarkModeChanges(): Flow<Mode> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
@@ -73,10 +72,9 @@ internal constructor(
           prefs.edit(commit = true) { putString(darkModeKey, DEFAULT_DARK_MODE) }
         }
 
-        return@withContext prefs
-            .getString(darkModeKey, DEFAULT_DARK_MODE)
-            .requireNotNull()
-            .toThemingMode()
+        return@withContext prefs.stringFlow(darkModeKey, DEFAULT_DARK_MODE).map {
+          it.toThemingMode()
+        }
       }
 
   override suspend fun setDarkMode(mode: Mode) =
@@ -86,12 +84,14 @@ internal constructor(
         return@withContext prefs.edit(commit = true) { putString(darkModeKey, mode.toRawString()) }
       }
 
-  override suspend fun isPolicyAccepted(): Boolean =
+  override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext prefs.getBoolean(
-            KEY_DATA_POLICY_CONSENTED, DEFAULT_DATA_POLICY_CONSENTED)
+        return@withContext prefs.booleanFlow(
+            KEY_DATA_POLICY_CONSENTED,
+            DEFAULT_DATA_POLICY_CONSENTED,
+        )
       }
 
   override suspend fun respondToPolicy(accepted: Boolean) =

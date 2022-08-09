@@ -49,7 +49,7 @@ internal interface ChangeLogComponent {
       dialog.imageLoader = params.imageLoader
       dialog.viewModel =
           ChangeLogDialogViewModeler(
-              state = MutableChangeLogViewState(),
+              state = MutableChangeLogDialogViewState(),
               interactor = params.changeLogModule.provideInteractor(),
               provider = provider,
           )

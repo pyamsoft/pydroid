@@ -16,11 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
+@Stable
 internal class MutableVersionCheckViewState : VersionCheckViewState {
   override var isUpdateReadyToInstall by mutableStateOf(false)
   override var isUpdateAvailable by mutableStateOf(false)

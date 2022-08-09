@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,6 +32,7 @@ internal interface BillingViewState : AppViewState {
   val error: Throwable?
 }
 
+@Stable
 internal class MutableBillingViewState : BillingViewState {
   override var skuList by mutableStateOf(emptyList<BillingSku>())
   override var connected by mutableStateOf(BillingState.LOADING)

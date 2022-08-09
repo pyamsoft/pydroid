@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractor
+import kotlinx.coroutines.flow.Flow
 
 /** Interactor for displaying an application changelog */
 public interface ChangeLogInteractor : AppInteractor {
 
   /** Show a changelog if allowed. */
-  @CheckResult public suspend fun canShowChangeLog(): Boolean
+  @CheckResult public suspend fun listenShowChangeLogChanges(): Flow<Boolean>
 
   /** Mark change log as shown. */
   public suspend fun markChangeLogShown()

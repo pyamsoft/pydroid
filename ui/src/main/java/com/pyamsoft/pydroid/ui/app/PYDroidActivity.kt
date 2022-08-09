@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalPresenter
+import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
@@ -70,7 +70,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   private var injector: AppComponent? = null
 
   /** Presenter */
-  internal var presenter: AppInternalPresenter? = null
+  internal var presenter: AppInternalViewModeler? = null
 
   init {
     connectBilling()

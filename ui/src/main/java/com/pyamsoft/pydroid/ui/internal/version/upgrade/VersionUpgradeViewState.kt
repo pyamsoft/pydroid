@@ -16,15 +16,18 @@
 
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
+@Stable
 internal interface VersionUpgradeViewState : UiViewState {
   val upgraded: Boolean
 }
 
+@Stable
 internal class MutableVersionUpgradeViewState : VersionUpgradeViewState {
   override var upgraded by mutableStateOf(false)
 }

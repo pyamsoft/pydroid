@@ -16,9 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
 
 /** Version Checking UI state */
+@Stable
 public interface VersionCheckViewState : UiViewState {
 
   /** Is there an update available for this application? */

@@ -16,8 +16,18 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
-internal interface DataPolicyViewState : UiViewState
+@Stable
+internal interface DataPolicyViewState : UiViewState {
+  val isAccepted: Boolean
+}
 
-internal class MutableDataPolicyViewState : DataPolicyViewState
+@Stable
+internal class MutableDataPolicyViewState : DataPolicyViewState {
+  override var isAccepted by mutableStateOf(false)
+}

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
 /** Handles getting current dark mode state and setting dark mode state */
 public interface Theming {
@@ -29,7 +30,7 @@ public interface Theming {
   @CheckResult public fun isDarkTheme(activity: Activity): Boolean
 
   /** Get current mode */
-  @CheckResult public suspend fun getMode(): Mode
+  @CheckResult public suspend fun listenForModeChanges(): Flow<Mode>
 
   /** Set application wide dark mode */
   public suspend fun setDarkTheme(mode: Mode)

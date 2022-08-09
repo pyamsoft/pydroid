@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings
+package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.ui.theme.Theming
 
 @Stable
-internal interface SettingsViewState : UiViewState {
-  val applicationName: CharSequence
-  val darkMode: Theming.Mode
-  val isLoading: Boolean
+internal interface ChangeLogViewState : UiViewState {
+  val canShow: Boolean
 }
 
 @Stable
-internal class MutableSettingsViewState : SettingsViewState {
-  override var applicationName by mutableStateOf("")
-  override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
-  override var isLoading by mutableStateOf(false)
+internal class MutableChangeLogViewState : ChangeLogViewState {
+  override var canShow by mutableStateOf(false)
 }

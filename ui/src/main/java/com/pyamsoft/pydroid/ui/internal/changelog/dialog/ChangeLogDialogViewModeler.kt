@@ -25,10 +25,10 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogDialogViewModeler
 internal constructor(
-    private val state: MutableChangeLogViewState,
+    private val state: MutableChangeLogDialogViewState,
     private val interactor: ChangeLogInteractor,
     private val provider: ChangeLogProvider
-) : AbstractViewModeler<ChangeLogViewState>(state) {
+) : AbstractViewModeler<ChangeLogDialogViewState>(state) {
 
   fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {

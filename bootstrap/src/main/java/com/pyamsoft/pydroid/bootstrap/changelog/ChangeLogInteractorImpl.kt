@@ -20,16 +20,17 @@ import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 internal class ChangeLogInteractorImpl
 internal constructor(context: Context, private val preferences: ChangeLogPreferences) :
     AppInteractorImpl(context), ChangeLogInteractor {
 
-  override suspend fun canShowChangeLog(): Boolean =
+  override suspend fun listenShowChangeLogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        return@withContext preferences.showChangelog()
+        return@withContext preferences.listenForShowChangelogChanges()
       }
 
   override suspend fun markChangeLogShown() =

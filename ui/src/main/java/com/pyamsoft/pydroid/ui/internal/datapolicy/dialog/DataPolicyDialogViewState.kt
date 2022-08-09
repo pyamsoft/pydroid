@@ -16,17 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
+@Stable
 internal interface DataPolicyDialogViewState : UiViewState {
   val name: String
   val icon: Int
   val navigationError: Throwable?
 }
 
+@Stable
 internal class MutableDataPolicyDialogViewState : DataPolicyDialogViewState {
   override var name by mutableStateOf("")
   override var icon by mutableStateOf(0)

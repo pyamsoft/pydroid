@@ -37,11 +37,13 @@ protected constructor(
       withContext(context = Dispatchers.IO) {
         val s = state
         val accepted = s.isAccepted
+        // If this is null, then the bind callback hasn't fired yet so grab it explicitly
         if (accepted == null) {
           val a = interactor.listenForPolicyAcceptedChanges().first()
           s.isAccepted = a
           return@withContext a
         } else {
+          // Otherwise we just return whatever the latest data is
           return@withContext accepted
         }
       }

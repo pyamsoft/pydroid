@@ -37,11 +37,13 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         val s = state
         val show = s.canShow
+        // If this is null, then the bind callback hasn't fired yet so grab it explicitly
         if (show == null) {
           val cs = interactor.listenShowChangeLogChanges().first()
           s.canShow = cs
           return@withContext cs
         } else {
+          // Otherwise we just return whatever the latest data is
           return@withContext show
         }
       }

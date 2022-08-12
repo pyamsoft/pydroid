@@ -60,7 +60,7 @@ buildscript {
     lifecycle = "2.5.1"
     fragment = "1.5.1"
     startup = "1.1.1"
-    appCompat = "1.4.2"
+    appCompat = "1.5.0"
 
     // Material Design
     materialDesign = "1.6.1"

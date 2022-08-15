@@ -30,7 +30,7 @@ android {
 
 dependencies {
   // Compose
-  implementation "androidx.compose.compiler:compiler:$compose_version"
+  implementation "androidx.compose.compiler:compiler:$compose_compiler_version"
   implementation "androidx.compose.runtime:runtime:$compose_version"
 
   api project(':bus')

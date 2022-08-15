@@ -33,8 +33,8 @@ dependencies {
   api project(':theme')
 
   // Compose
+  implementation "androidx.compose.compiler:compiler:$compose_compiler_version"
   implementation "androidx.activity:activity-compose:$composeActivity"
-  implementation "androidx.compose.compiler:compiler:$compose_version"
   implementation "androidx.compose.ui:ui:$compose_version"
   implementation "androidx.compose.material:material:$compose_version"
   implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"

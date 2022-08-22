@@ -37,7 +37,8 @@ public class VersionModule(params: Parameters) {
             params.isFakeUpgradeChecker,
             params.context.applicationContext,
             params.version,
-            params.isFakeUpgradeAvailable)
+            params.isFakeUpgradeAvailable,
+        )
     val network = VersionInteractorNetwork(updater)
     impl = VersionInteractorImpl(network, createCache(network))
   }

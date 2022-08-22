@@ -16,48 +16,39 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.core.Enforcer
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class VersionInteractorImpl
 internal constructor(
-    private val updater: AppUpdater,
+    private val networkInteractor: VersionInteractorNetwork,
     private val updateCache: Cached<ResultWrapper<AppUpdateLauncher>>
-) : VersionInteractor, Cache {
+) : VersionInteractor, VersionInteractor.Cache {
 
   override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
-
-        return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
+        return@withContext networkInteractor.watchForDownloadComplete(onDownloadCompleted)
       }
 
   override suspend fun completeUpdate() =
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
-
-        Logger.d("GOING DOWN FOR UPDATE")
-        updater.complete()
+        return@withContext networkInteractor.completeUpdate()
       }
 
-  override suspend fun checkVersion(force: Boolean): ResultWrapper<AppUpdateLauncher> =
+  override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
-
-        if (force) {
-          updateCache.clear()
-        }
-
         return@withContext updateCache.call()
       }
 
-  override suspend fun clear() {
-    Enforcer.assertOffMainThread()
-    updateCache.clear()
-  }
+  override suspend fun invalidateVersion() =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+        updateCache.clear()
+      }
 }

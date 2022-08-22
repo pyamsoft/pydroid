@@ -188,6 +188,7 @@ internal interface AppComponent {
               VersionCheckViewModeler(
                   state = versionCheckState,
                   interactor = versionModule.provideInteractor(),
+                  interactorCache = versionModule.provideInteractorCache(),
               ),
           )
 

@@ -39,12 +39,18 @@ public class VersionModule(params: Parameters) {
             params.version,
             params.isFakeUpgradeAvailable)
     val network = VersionInteractorNetwork(updater)
-    impl = VersionInteractorImpl(updater, createCache(network))
+    impl = VersionInteractorImpl(network, createCache(network))
   }
 
   /** Provide version interactor */
   @CheckResult
   public fun provideInteractor(): VersionInteractor {
+    return impl
+  }
+
+  /** Provide version interactor cache */
+  @CheckResult
+  public fun provideInteractorCache(): VersionInteractor.Cache {
     return impl
   }
 
@@ -57,7 +63,7 @@ public class VersionModule(params: Parameters) {
           context = Dispatchers.IO,
           storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) },
       ) {
-        network.checkVersion(true)
+        network.checkVersion()
       }
     }
   }

@@ -26,8 +26,15 @@ public interface VersionInteractor {
   public suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit)
 
   /** Check for a new version update */
-  @CheckResult public suspend fun checkVersion(force: Boolean): ResultWrapper<AppUpdateLauncher>
+  @CheckResult public suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher>
 
   /** Complete the update, which will restart the application */
   public suspend fun completeUpdate()
+
+  /** Cache for version related data */
+  public interface Cache {
+
+    /** Invalidate the version cache */
+    public suspend fun invalidateVersion()
+  }
 }

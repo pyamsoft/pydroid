@@ -83,6 +83,7 @@ internal interface SettingsComponent {
           VersionCheckViewModeler(
               state = params.versionCheckState,
               interactor = params.versionModule.provideInteractor(),
+              interactorCache = params.versionModule.provideInteractorCache(),
           )
     }
 

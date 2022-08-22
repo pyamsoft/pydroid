@@ -31,10 +31,17 @@ internal class VersionCheckViewModeler
 internal constructor(
     private val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
+    private val interactorCache: VersionInteractor.Cache,
 ) : AbstractViewModeler<VersionCheckViewState>(state) {
 
   private val checkUpdateRunner =
-      highlander<ResultWrapper<AppUpdateLauncher>, Boolean> { interactor.checkVersion(it) }
+      highlander<ResultWrapper<AppUpdateLauncher>, Boolean> { force ->
+        if (force) {
+          interactorCache.invalidateVersion()
+        }
+
+        return@highlander interactor.checkVersion()
+      }
 
   internal fun bind(
       scope: CoroutineScope,

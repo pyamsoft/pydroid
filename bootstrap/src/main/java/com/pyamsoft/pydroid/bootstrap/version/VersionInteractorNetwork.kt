@@ -23,16 +23,27 @@ import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class VersionInteractorNetwork internal constructor(private val updater: AppUpdater) :
-    VersionInteractor {
+internal class VersionInteractorNetwork
+internal constructor(
+    private val updater: AppUpdater,
+) : VersionInteractor {
 
   override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
-      throw IllegalStateException("This should never be called directly")
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
+      }
 
   override suspend fun completeUpdate() =
-      throw IllegalStateException("This should never be called directly")
+      withContext(context = Dispatchers.Main) {
+        Enforcer.assertOnMainThread()
 
-  override suspend fun checkVersion(force: Boolean): ResultWrapper<AppUpdateLauncher> =
+        Logger.d("GOING DOWN FOR UPDATE")
+        updater.complete()
+      }
+
+  override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 

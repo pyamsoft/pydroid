@@ -1,5 +1,5 @@
 public abstract interface class com/pyamsoft/pydroid/bootstrap/about/AboutInteractor {
-	public abstract fun loadLicenses (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun loadLicenses (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/about/AboutModule {
@@ -214,15 +214,20 @@ public abstract interface class com/pyamsoft/pydroid/bootstrap/version/AppUpdate
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor {
-	public abstract fun checkVersion (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun checkVersion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun completeUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun watchForDownloadComplete (Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor$Cache {
+	public abstract fun invalidateVersion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule {
 	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion;
 	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;)V
 	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/version/VersionInteractor;
+	public final fun provideInteractorCache ()Lcom/pyamsoft/pydroid/bootstrap/version/VersionInteractor$Cache;
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion {

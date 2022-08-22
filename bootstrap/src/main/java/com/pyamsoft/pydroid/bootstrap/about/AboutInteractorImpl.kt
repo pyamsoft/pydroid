@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 
 internal class AboutInteractorImpl internal constructor() : AboutInteractor {
 
-  override suspend fun loadLicenses(force: Boolean): List<OssLibrary> =
+  override suspend fun loadLicenses(): List<OssLibrary> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
         return@withContext OssLibraries.libraries().sortedBy { it.name.lowercase() }

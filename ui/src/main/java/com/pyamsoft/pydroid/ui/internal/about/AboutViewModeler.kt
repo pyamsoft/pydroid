@@ -30,14 +30,13 @@ internal constructor(
     interactor: AboutInteractor,
 ) : AbstractViewModeler<AboutViewState>(state) {
 
-  private val licenseRunner =
-      highlander<List<OssLibrary>, Boolean> { force -> interactor.loadLicenses(force) }
+  private val licenseRunner = highlander<List<OssLibrary>> { interactor.loadLicenses() }
 
   internal fun handleLoadLicenses(scope: CoroutineScope) {
     state.isLoading = true
     scope.launch(context = Dispatchers.Main) {
       state.apply {
-        licenses = licenseRunner.call(false)
+        licenses = licenseRunner.call()
         isLoading = false
       }
     }

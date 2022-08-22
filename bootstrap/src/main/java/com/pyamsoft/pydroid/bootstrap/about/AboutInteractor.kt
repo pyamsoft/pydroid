@@ -23,5 +23,5 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 public interface AboutInteractor {
 
   /** Load libraries for the application. */
-  @CheckResult public suspend fun loadLicenses(force: Boolean): List<OssLibrary>
+  @CheckResult public suspend fun loadLicenses(): List<OssLibrary>
 }

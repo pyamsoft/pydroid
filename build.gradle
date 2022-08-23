@@ -159,6 +159,12 @@ subprojects {
         jvmTarget = "11"
       }
 
+      publishing {
+        singleVariant("release") {
+          // Do not include withSources and withJavadoc here because we will
+          // add them with our own custom hooks below
+        }
+      }
     }
 
     buildTypes {

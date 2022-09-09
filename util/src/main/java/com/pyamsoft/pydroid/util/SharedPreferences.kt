@@ -32,7 +32,8 @@ private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
 ): Flow<R> {
   val self = this
   return callbackFlow {
-    val listener = OnSharedPreferenceChangeListener { prefs, changedKey ->
+    val listener = OnSharedPreferenceChangeListener { prefs, changedKey: String? ->
+      // changedKey can be NULL when preferences are cleared, see documentation
       if (changedKey === key) {
         // Block the listener
         trySendBlocking(prefs.getter(key, defaultValue))

@@ -45,7 +45,7 @@ buildscript {
   ext {
 
     minSdk = 22
-    maxSdk = 32
+    maxSdk = 33
 
     // Compose
     composeActivity = "1.5.1"

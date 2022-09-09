@@ -21,6 +21,7 @@ import android.app.Service
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.ServiceCompat
 
 internal class DefaultNotifier
 internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context: Context) :
@@ -122,7 +123,7 @@ internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context:
   }
 
   override fun stopForeground(service: Service, id: NotifyId, tag: NotifyTag) {
-    service.stopForeground(true)
+    ServiceCompat.stopForeground(service, ServiceCompat.STOP_FOREGROUND_REMOVE)
     cancel(id, tag)
   }
 

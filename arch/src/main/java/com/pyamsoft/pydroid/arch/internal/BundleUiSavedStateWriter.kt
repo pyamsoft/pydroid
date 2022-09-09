@@ -103,7 +103,8 @@ internal constructor(private val bundle: Bundle) : UiSavedStateWriter {
   }
 
   override fun <T : Any> remove(key: String): T? {
-    val storedValue: Any? = bundle.get(key)
+    // This is Deprecated but it still works, and no other API really replaces it
+    @Suppress("DEPRECATION") val storedValue: Any? = bundle.get(key)
     if (storedValue != null) {
       bundle.remove(key)
     }

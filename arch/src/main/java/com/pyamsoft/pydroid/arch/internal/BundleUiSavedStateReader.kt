@@ -26,7 +26,8 @@ internal class BundleUiSavedStateReader
 internal constructor(private val bundle: Bundle?) : UiSavedStateReader {
 
   override fun <T : Any> get(key: String): T? {
-    @Suppress("UNCHECKED_CAST") return bundle?.get(key) as? T
+    // This is Deprecated but it still works, and no other API really replaces it
+    @Suppress("UNCHECKED_CAST", "DEPRECATION") return bundle?.get(key) as? T
   }
 
   override fun all(): Map<String, *> {
@@ -35,7 +36,8 @@ internal constructor(private val bundle: Bundle?) : UiSavedStateReader {
 
     val result = mutableMapOf<String, Any?>()
     for (key in keys) {
-      val value = b.get(key)
+      // This is Deprecated but it still works, and no other API really replaces it
+      @Suppress("DEPRECATION") val value = b.get(key)
       result[key] = value
     }
 

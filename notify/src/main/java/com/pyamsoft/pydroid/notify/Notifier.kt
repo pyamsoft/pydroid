@@ -21,15 +21,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 
 /** Notifier manages various dispatchers and dispatches notification payloads to them */
-public interface Notifier {
-
-  /**
-   * Can we post notifications?
-   *
-   * Generally true, checks permission on Android 33+ Does not check if User Settings have
-   * notifications switched off
-   */
-  @CheckResult public fun canPostNotification(): Boolean
+public interface Notifier : NotifyGuard {
 
   /** Show a notification */
   @CheckResult

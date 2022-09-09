@@ -21,7 +21,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 
 /** Notifier manages various dispatchers and dispatches notification payloads to them */
-public interface Notifier : NotifyGuard {
+public interface Notifier {
 
   /** Show a notification */
   @CheckResult

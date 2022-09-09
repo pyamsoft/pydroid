@@ -17,26 +17,29 @@
 package com.pyamsoft.pydroid.notify
 
 import android.content.Context
-import androidx.annotation.CheckResult
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 
-/** Guards various Notification related APIs */
-public interface NotifyGuard {
+internal class DefaultNotifyGuard
+internal constructor(
+    private val context: Context,
+) : NotifyGuard {
 
-  /**
-   * Can we post notifications?
-   *
-   * Generally true, checks permission on Android 33+ Does not check if User Settings have
-   * notifications switched off
-   */
-  @CheckResult public fun canPostNotification(): Boolean
+  override fun canPostNotification(): Boolean {
+    // Check notification permission on API 33+
+    if (Build.VERSION.SDK_INT >= 33) {
+      val permission =
+          ContextCompat.checkSelfPermission(
+              context,
+              android.Manifest.permission.POST_NOTIFICATIONS,
+          )
 
-
-  public companion object {
-
-    /** Create a new instance of a default Notifier */
-    @CheckResult
-    public fun createDefault(context: Context): NotifyGuard {
-      return DefaultNotifyGuard(context = context.applicationContext)
+      if (permission != PackageManager.PERMISSION_GRANTED) {
+        return false
+      }
     }
+
+    return true
   }
 }

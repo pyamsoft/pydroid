@@ -19,37 +19,17 @@ package com.pyamsoft.pydroid.notify
 import android.app.Notification
 import android.app.Service
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
-import androidx.core.content.ContextCompat
 
 internal class DefaultNotifier
-internal constructor(private val dispatchers: Set<NotifyDispatcher<*>>, context: Context) :
-    Notifier {
+internal constructor(
+    private val dispatchers: Set<NotifyDispatcher<*>>,
+    context: Context,
+) : Notifier {
 
-  private val appContext = context.applicationContext
-
-  private val manager by lazy { NotificationManagerCompat.from(appContext) }
-
-  override fun canPostNotification(): Boolean {
-    // Check notification permission on API 33+
-    if (Build.VERSION.SDK_INT >= 33) {
-      val permission =
-          ContextCompat.checkSelfPermission(
-              appContext,
-              android.Manifest.permission.POST_NOTIFICATIONS,
-          )
-
-      if (permission != PackageManager.PERMISSION_GRANTED) {
-        return false
-      }
-    }
-
-    return true
-  }
+  private val manager by lazy { NotificationManagerCompat.from(context.applicationContext) }
 
   override fun <T : NotifyData> show(channelInfo: NotifyChannelInfo, notification: T): NotifyId {
     return show(generateNotificationId(), NOTIFY_EMPTY_TAG, channelInfo, notification)

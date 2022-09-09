@@ -42,6 +42,15 @@ public abstract interface class com/pyamsoft/pydroid/notify/NotifyDispatcher {
 	public abstract fun canShow (Lcom/pyamsoft/pydroid/notify/NotifyData;)Z
 }
 
+public abstract interface class com/pyamsoft/pydroid/notify/NotifyGuard {
+	public static final field Companion Lcom/pyamsoft/pydroid/notify/NotifyGuard$Companion;
+	public abstract fun canPostNotification ()Z
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyGuard$Companion {
+	public final fun createDefault (Landroid/content/Context;)Lcom/pyamsoft/pydroid/notify/NotifyGuard;
+}
+
 public final class com/pyamsoft/pydroid/notify/NotifyId {
 	public final fun component1 ()I
 	public final fun copy (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
@@ -54,6 +63,21 @@ public final class com/pyamsoft/pydroid/notify/NotifyId {
 
 public final class com/pyamsoft/pydroid/notify/NotifyIdKt {
 	public static final fun toNotifyId (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
+}
+
+public abstract interface class com/pyamsoft/pydroid/notify/NotifyPermission {
+	public static final field Companion Lcom/pyamsoft/pydroid/notify/NotifyPermission$Companion;
+	public abstract fun registerRequester (Landroidx/fragment/app/Fragment;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/notify/NotifyPermission$Requester;
+	public abstract fun registerRequester (Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/notify/NotifyPermission$Requester;
+}
+
+public final class com/pyamsoft/pydroid/notify/NotifyPermission$Companion {
+	public final fun createDefault ()Lcom/pyamsoft/pydroid/notify/NotifyPermission;
+}
+
+public abstract interface class com/pyamsoft/pydroid/notify/NotifyPermission$Requester {
+	public abstract fun requestPermissions ()V
+	public abstract fun unregister ()V
 }
 
 public final class com/pyamsoft/pydroid/notify/NotifyTag {

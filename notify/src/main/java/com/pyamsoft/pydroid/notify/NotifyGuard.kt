@@ -30,7 +30,6 @@ public interface NotifyGuard {
    */
   @CheckResult public fun canPostNotification(): Boolean
 
-
   public companion object {
 
     /** Create a new instance of a default Notifier */

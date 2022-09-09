@@ -14,35 +14,38 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.notify
+package com.pyamsoft.pydroid.util.internal
 
-import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.PermissionRequester
 
-internal class DefaultNotifyPermission internal constructor() : NotifyPermission {
+internal class DefaultPermissionRequester
+internal constructor(
+    private val permissions: Array<String>,
+) : PermissionRequester {
 
   @CheckResult
   private fun createRequester(
-      launcher: ActivityResultLauncher<String>,
+      launcher: ActivityResultLauncher<Array<String>>,
       onResponse: (Boolean) -> Unit
-  ): NotifyPermission.Requester {
-    return object : NotifyPermission.Requester {
+  ): PermissionRequester.Requester {
+    return object : PermissionRequester.Requester {
 
-      private var theLauncher: ActivityResultLauncher<String>? = launcher
+      private var theLauncher: ActivityResultLauncher<Array<String>>? = launcher
       private var responseCallback: ((Boolean) -> Unit)? = onResponse
 
       override fun requestPermissions() {
         // If this is already unregistered, this does nothing
-        if (Build.VERSION.SDK_INT >= 33) {
-          theLauncher?.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-        } else {
-          Logger.d("No need to request Notification permissions for API < 33, just fire callback")
+        if (permissions.isEmpty()) {
+          Logger.d("No permissions requested, API level differences? Fallback => true")
           responseCallback?.invoke(true)
+        } else {
+          theLauncher?.launch(permissions)
         }
       }
 
@@ -56,13 +59,29 @@ internal class DefaultNotifyPermission internal constructor() : NotifyPermission
     }
   }
 
+  private inline fun handlePermissionResults(
+      onResponse: (Boolean) -> Unit,
+      results: Map<String, Boolean>
+  ) {
+    val ungrantedPermissions = results.filterNot { it.value }.map { it.key }
+    val allPermissionsGranted = ungrantedPermissions.isEmpty()
+
+    if (allPermissionsGranted) {
+      Logger.d("All permissions were granted $permissions")
+    } else {
+      Logger.w("Not all permissions were granted $ungrantedPermissions")
+    }
+
+    onResponse(allPermissionsGranted)
+  }
+
   override fun registerRequester(
       activity: FragmentActivity,
       onResponse: (Boolean) -> Unit
-  ): NotifyPermission.Requester {
+  ): PermissionRequester.Requester {
     val launcher =
-        activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-          onResponse(granted)
+        activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+          handlePermissionResults(onResponse, it)
         }
 
     return createRequester(launcher, onResponse)
@@ -71,10 +90,10 @@ internal class DefaultNotifyPermission internal constructor() : NotifyPermission
   override fun registerRequester(
       fragment: Fragment,
       onResponse: (Boolean) -> Unit
-  ): NotifyPermission.Requester {
+  ): PermissionRequester.Requester {
     val launcher =
-        fragment.registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-          onResponse(granted)
+        fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+          handlePermissionResults(onResponse, it)
         }
 
     return createRequester(launcher, onResponse)

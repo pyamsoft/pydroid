@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.notify
+package com.pyamsoft.pydroid.notify.internal
 
 import android.app.Notification
 import android.app.Service
@@ -22,6 +22,15 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
+import com.pyamsoft.pydroid.notify.MissingDispatcherException
+import com.pyamsoft.pydroid.notify.Notifier
+import com.pyamsoft.pydroid.notify.NotifyChannelInfo
+import com.pyamsoft.pydroid.notify.NotifyData
+import com.pyamsoft.pydroid.notify.NotifyDispatcher
+import com.pyamsoft.pydroid.notify.NotifyId
+import com.pyamsoft.pydroid.notify.NotifyTag
+import com.pyamsoft.pydroid.notify.toNotifyId
+import com.pyamsoft.pydroid.notify.toNotifyTag
 
 internal class DefaultNotifier
 internal constructor(

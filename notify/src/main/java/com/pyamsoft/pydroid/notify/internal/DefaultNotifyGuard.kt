@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.notify
+package com.pyamsoft.pydroid.notify.internal
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.pyamsoft.pydroid.notify.NotifyGuard
 
 internal class DefaultNotifyGuard
 internal constructor(

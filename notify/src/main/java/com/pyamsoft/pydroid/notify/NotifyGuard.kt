@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.notify
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.notify.internal.DefaultNotifyGuard
 
 /** Guards various Notification related APIs */
 public interface NotifyGuard {

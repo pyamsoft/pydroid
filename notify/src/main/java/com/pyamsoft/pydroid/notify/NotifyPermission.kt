@@ -16,42 +16,23 @@
 
 package com.pyamsoft.pydroid.notify
 
+import android.os.Build
 import androidx.annotation.CheckResult
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.util.PermissionRequester
 
 /** Handles permission requesting related to notifications */
 public interface NotifyPermission {
-
-  /** Request notification permission from an Activity */
-  @CheckResult
-  public fun registerRequester(
-      activity: FragmentActivity,
-      onResponse: (Boolean) -> Unit,
-  ): Requester
-
-  /** Request notification permission from a Fragment */
-  @CheckResult
-  public fun registerRequester(
-      fragment: Fragment,
-      onResponse: (Boolean) -> Unit,
-  ): Requester
-
-  public interface Requester {
-
-    /** Request permission from the underlying ActivityResultContract launcher */
-    public fun requestPermissions()
-
-    /** Unregister the underlying ActivityResultContract launcher */
-    public fun unregister()
-  }
 
   public companion object {
 
     /** Create a new instance of a default NotifyPermission */
     @CheckResult
-    public fun createDefault(): NotifyPermission {
-      return DefaultNotifyPermission()
+    public fun createDefault(): PermissionRequester {
+      return if (Build.VERSION.SDK_INT >= 33) {
+        PermissionRequester.create(android.Manifest.permission.POST_NOTIFICATIONS)
+      } else {
+        PermissionRequester.NONE
+      }
     }
   }
 }

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.notify
 import android.app.Service
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.notify.internal.DefaultNotifier
 
 /** Notifier manages various dispatchers and dispatches notification payloads to them */
 public interface Notifier {

@@ -56,7 +56,7 @@ buildscript {
     coroutines = '1.6.4'
 
     // AndroidX
-    annotation = "1.4.0"
+    annotation = "1.5.0"
     core = "1.9.0"
     lifecycle = "2.5.1"
     fragment = "1.5.3"

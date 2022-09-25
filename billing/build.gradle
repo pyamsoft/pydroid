@@ -25,5 +25,5 @@ dependencies {
   api project(':util')
 
   implementation "androidx.appcompat:appcompat:$appCompat"
-  implementation "com.android.billingclient:billing:$playBilling"
+  implementation "com.android.billingclient:billing:$billing"
 }

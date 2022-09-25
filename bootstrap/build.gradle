@@ -21,9 +21,13 @@ android {
 }
 
 dependencies {
-  // Play Core for in app updates and reviews
-  implementation "com.google.android.play:core:$playCore"
-  implementation "com.google.android.play:core-ktx:$playCoreKtx"
+  // In-App Update
+  implementation "com.google.android.play:app-update:$appUpdate"
+  implementation "com.google.android.play:app-update-ktx:$appUpdate"
+
+  // In-App Review
+  implementation "com.google.android.play:review:$review"
+  implementation "com.google.android.play:review-ktx:$review"
 
   // Cachify
   implementation "com.github.pyamsoft:cachify:$cachify"

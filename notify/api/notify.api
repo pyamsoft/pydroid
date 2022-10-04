@@ -67,17 +67,10 @@ public final class com/pyamsoft/pydroid/notify/NotifyIdKt {
 
 public abstract interface class com/pyamsoft/pydroid/notify/NotifyPermission {
 	public static final field Companion Lcom/pyamsoft/pydroid/notify/NotifyPermission$Companion;
-	public abstract fun registerRequester (Landroidx/fragment/app/Fragment;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/notify/NotifyPermission$Requester;
-	public abstract fun registerRequester (Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/notify/NotifyPermission$Requester;
 }
 
 public final class com/pyamsoft/pydroid/notify/NotifyPermission$Companion {
-	public final fun createDefault ()Lcom/pyamsoft/pydroid/notify/NotifyPermission;
-}
-
-public abstract interface class com/pyamsoft/pydroid/notify/NotifyPermission$Requester {
-	public abstract fun requestPermissions ()V
-	public abstract fun unregister ()V
+	public final fun createDefault ()Lcom/pyamsoft/pydroid/util/PermissionRequester;
 }
 
 public final class com/pyamsoft/pydroid/notify/NotifyTag {

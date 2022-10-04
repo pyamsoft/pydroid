@@ -34,6 +34,23 @@ public final class com/pyamsoft/pydroid/util/MarketLinker {
 	public static synthetic fun getStorePageLink$default (Landroid/content/Context;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
+public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester {
+	public static final field Companion Lcom/pyamsoft/pydroid/util/PermissionRequester$Companion;
+	public abstract fun registerRequester (Landroidx/fragment/app/Fragment;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Requester;
+	public abstract fun registerRequester (Landroidx/fragment/app/FragmentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Requester;
+}
+
+public final class com/pyamsoft/pydroid/util/PermissionRequester$Companion {
+	public final fun create (Ljava/lang/String;)Lcom/pyamsoft/pydroid/util/PermissionRequester;
+	public final fun create ([Ljava/lang/String;)Lcom/pyamsoft/pydroid/util/PermissionRequester;
+	public final fun getNONE ()Lcom/pyamsoft/pydroid/util/PermissionRequester;
+}
+
+public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester$Requester {
+	public abstract fun requestPermissions ()V
+	public abstract fun unregister ()V
+}
+
 public final class com/pyamsoft/pydroid/util/SharedPreferencesKt {
 	public static final fun booleanFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Z)Lkotlinx/coroutines/flow/Flow;
 	public static final fun floatFlow (Landroid/content/SharedPreferences;Ljava/lang/String;F)Lkotlinx/coroutines/flow/Flow;

@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
+android {
+  namespace "com.pyamsoft.pydroid.core"
+
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
+}
+
 dependencies {
   // Expose annotations
   api "androidx.annotation:annotation:$annotation"
@@ -23,10 +31,4 @@ dependencies {
 
   // Expose coroutines
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
-}
-
-android {
-  kotlinOptions {
-    freeCompilerArgs += '-Xexplicit-api=strict'
-  }
 }

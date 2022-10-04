@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-dependencies {
-  api project(':core')
-}
-
 android {
+  namespace "com.pyamsoft.pydroid.inject"
+
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'
   }
+}
+
+dependencies {
+  api project(':core')
 }

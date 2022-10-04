@@ -15,6 +15,7 @@
  */
 
 android {
+  namespace "com.pyamsoft.pydroid.ui"
 
   kotlinOptions {
     freeCompilerArgs += '-Xexplicit-api=strict'

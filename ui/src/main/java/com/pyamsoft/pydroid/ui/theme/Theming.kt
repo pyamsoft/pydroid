@@ -18,6 +18,10 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import kotlinx.coroutines.flow.Flow
 
 /** Handles getting current dark mode state and setting dark mode state */
@@ -47,3 +51,21 @@ public interface Theming {
     SYSTEM
   }
 }
+
+@CheckResult
+internal fun String.toThemingMode(): Mode {
+  return when (this) {
+    "light" -> LIGHT
+    "dark" -> DARK
+    "system" -> SYSTEM
+    else -> SYSTEM
+  }
+}
+
+@CheckResult
+internal fun Mode.toRawString(): String =
+  when (this) {
+    LIGHT -> "light"
+    DARK -> "dark"
+    SYSTEM -> "system"
+  }

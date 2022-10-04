@@ -60,7 +60,12 @@ internal constructor(private val isFake: Boolean, context: Context) : RateMyApp 
                 Logger.d("App Review info received: $request")
                 if (request.isSuccessful) {
                   val info = request.result
-                  continuation.resume(PlayStoreAppRatingLauncher(manager, info))
+                  if (info == null) {
+                    Logger.w("Successful request had NULL review info")
+                    continuation.resume(AppRatingLauncher.empty())
+                  } else {
+                    continuation.resume(PlayStoreAppRatingLauncher(manager, info))
+                  }
                 } else {
                   Logger.d("Review is not available")
                   continuation.resume(AppRatingLauncher.empty())

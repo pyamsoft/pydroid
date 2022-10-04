@@ -146,16 +146,29 @@ public object OssLibraries {
         "https://github.com/pyamsoft/cachify",
         "Simple in-memory caching of all the things",
     )
+
     add(
-        "Google Play Core Library",
+        "Google Play In-App Updates Library",
         "https://developers.google.com/android/",
-        "Google Play Services Core library for Android.",
+        "Google Play Services In-App Updates library for Android.",
         license =
             OssLicenses.custom(
                 license = "Custom Google License",
                 location = "https://developer.android.com/distribute/play-services",
             ),
     )
+
+      add(
+          "Google Play In-App Review Library",
+          "https://developers.google.com/android/",
+          "Google Play Services In-App Review library for Android.",
+          license =
+          OssLicenses.custom(
+              license = "Custom Google License",
+              location = "https://developer.android.com/distribute/play-services",
+          ),
+      )
+
     add(
         "AndroidX Core KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",

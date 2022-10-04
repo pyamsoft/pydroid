@@ -24,12 +24,12 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.ktx.requestCompleteUpdate
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -72,8 +72,23 @@ internal constructor(
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
-        Logger.d("COMPLETED UPDATE")
-        manager.requestCompleteUpdate()
+        return@withContext suspendCancellableCoroutine { continuation ->
+          Logger.d("Now completing update...")
+          manager
+              .completeUpdate()
+              .addOnCanceledListener {
+                Logger.w("UPDATE CANCELLED")
+                continuation.resume(Unit)
+              }
+              .addOnFailureListener { err ->
+                Logger.e(err, "UPDATE ERROR")
+                continuation.resumeWithException(err)
+              }
+              .addOnSuccessListener {
+                Logger.d("UPDATE COMPLETE")
+                continuation.resume(Unit)
+              }
+        }
       }
 
   override suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit) =

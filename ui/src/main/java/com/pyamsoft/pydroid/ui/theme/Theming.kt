@@ -64,8 +64,8 @@ internal fun String.toThemingMode(): Mode {
 
 @CheckResult
 internal fun Mode.toRawString(): String =
-  when (this) {
-    LIGHT -> "light"
-    DARK -> "dark"
-    SYSTEM -> "system"
-  }
+    when (this) {
+      LIGHT -> "light"
+      DARK -> "dark"
+      SYSTEM -> "system"
+    }

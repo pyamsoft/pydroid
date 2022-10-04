@@ -158,16 +158,16 @@ public object OssLibraries {
             ),
     )
 
-      add(
-          "Google Play In-App Review Library",
-          "https://developers.google.com/android/",
-          "Google Play Services In-App Review library for Android.",
-          license =
-          OssLicenses.custom(
-              license = "Custom Google License",
-              location = "https://developer.android.com/distribute/play-services",
-          ),
-      )
+    add(
+        "Google Play In-App Review Library",
+        "https://developers.google.com/android/",
+        "Google Play Services In-App Review library for Android.",
+        license =
+            OssLicenses.custom(
+                license = "Custom Google License",
+                location = "https://developer.android.com/distribute/play-services",
+            ),
+    )
 
     add(
         "AndroidX Core KTX",

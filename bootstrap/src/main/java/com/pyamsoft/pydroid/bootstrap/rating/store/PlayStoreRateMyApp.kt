@@ -60,6 +60,8 @@ internal constructor(private val isFake: Boolean, context: Context) : RateMyApp 
                 Logger.d("App Review info received: $request")
                 if (request.isSuccessful) {
                   val info = request.result
+
+                  // Always false in play-core 1.10.3, but nullable in rating 2.0.0
                   if (info == null) {
                     Logger.w("Successful request had NULL review info")
                     continuation.resume(AppRatingLauncher.empty())

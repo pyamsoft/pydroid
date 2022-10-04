@@ -76,10 +76,6 @@ internal constructor(
           Logger.d("Now completing update...")
           manager
               .completeUpdate()
-              .addOnCanceledListener {
-                Logger.w("UPDATE CANCELLED")
-                continuation.resume(Unit)
-              }
               .addOnFailureListener { err ->
                 Logger.e(err, "UPDATE ERROR")
                 continuation.resumeWithException(err)

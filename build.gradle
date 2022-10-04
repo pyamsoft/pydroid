@@ -50,7 +50,7 @@ buildscript {
     // Compose
     composeActivity = "1.6.0"
     accompanist = "0.25.1"
-    coil = "2.2.1"
+    coil = "2.2.2"
 
     // Kotlin
     coroutines = '1.6.4'

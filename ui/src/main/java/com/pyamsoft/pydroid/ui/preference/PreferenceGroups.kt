@@ -45,7 +45,7 @@ internal fun PreferenceGroupHeader(
         style =
             MaterialTheme.typography.body2.copy(
                 color = MaterialTheme.colors.secondary,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.W700,
             ),
     )
   }

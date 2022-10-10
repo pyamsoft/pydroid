@@ -67,7 +67,7 @@ internal fun ChangeLogListItem(
 private fun Type(line: ChangeLogLine) {
   Text(
       text = line.type.name,
-      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.W700),
   )
 }
 

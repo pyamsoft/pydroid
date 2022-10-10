@@ -79,7 +79,7 @@ internal fun AboutListItem(
 @Composable
 private fun Name(library: OssLibrary) {
   Text(
-      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
+      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.W700),
       text = library.name,
   )
 }

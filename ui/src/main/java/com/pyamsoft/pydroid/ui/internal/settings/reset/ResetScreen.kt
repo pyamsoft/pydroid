@@ -108,7 +108,7 @@ private fun Message() {
     ) {
       Text(
           text = "This cannot be undone.",
-          style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+          style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.W700),
       )
     }
   }

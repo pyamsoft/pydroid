@@ -88,7 +88,7 @@ private fun ThreadName(
         style =
             MaterialTheme.typography.body1.copy(
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.W700,
                 fontFamily = FontFamily.Monospace,
             ),
     )
@@ -108,7 +108,7 @@ private fun ThrowableName(
         style =
             MaterialTheme.typography.body1.copy(
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.W700,
                 fontFamily = FontFamily.Monospace,
             ),
     )
@@ -131,7 +131,7 @@ private fun ThrowableMessage(
           style =
               MaterialTheme.typography.body1.copy(
                   fontSize = 14.sp,
-                  fontWeight = FontWeight.Bold,
+                  fontWeight = FontWeight.W700,
                   fontFamily = FontFamily.Monospace,
               ),
       )

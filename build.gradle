@@ -64,7 +64,7 @@ buildscript {
     appCompat = "1.5.1"
 
     // Material Design
-    materialDesign = "1.6.1"
+    materialDesign = "1.7.0"
 
     // Us
     cachify = "0.1.0"

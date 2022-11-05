@@ -358,7 +358,8 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
 	public static final fun checkBoxPreference (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun checkBoxPreference (Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static synthetic fun checkBoxPreference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun customPreference (Lkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun customPreference (ZLkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun customPreference$default (ZLkotlin/jvm/functions/Function3;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun inAppPreference (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun inAppPreference (Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun inAppPreference (Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;

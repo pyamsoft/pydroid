@@ -57,8 +57,8 @@ public sealed class Preferences {
   /** Represents a Custom Preference item */
   internal data class CustomPreference
   internal constructor(
+      override val isEnabled: Boolean,
       override val name: String = "",
-      override val isEnabled: Boolean = false,
       override val summary: String = "",
       override val icon: ImageVector? = null,
       internal val content: @Composable (isEnabled: Boolean) -> Unit,
@@ -132,12 +132,14 @@ public fun preferenceGroup(
   )
 }
 
-/** Create a new Preference.AdPreference */
+/** Create a new Preference.CustomPreference */
 @CheckResult
 public fun customPreference(
+    isEnabled: Boolean = true,
     content: @Composable (isEnabled: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.CustomPreference(
+      isEnabled = isEnabled,
       content = content,
   )
 }

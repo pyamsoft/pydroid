@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
+import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
@@ -96,6 +97,7 @@ internal interface AppComponent {
   ) : AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
+    private val ratingViewState = MutableRatingViewState()
     private val versionCheckState = MutableVersionCheckViewState()
     private val versionUpgradeState = MutableVersionUpgradeViewState()
     private val dataPolicyState = MutableDataPolicyViewState()
@@ -177,6 +179,7 @@ internal interface AppComponent {
           RatingDelegate(
               pyDroidActivity,
               RatingViewModeler(
+                  state = ratingViewState,
                   interactor = ratingModule.provideInteractor(),
               ),
           )

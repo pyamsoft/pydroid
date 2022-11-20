@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.pyamsoft.pydroid.arch.UiViewState
 
-/** A stateless UiViewState */
 @Stable
-@Deprecated("You should not use a UiViewState with no state in it.")
-public object UnitViewState : UiViewState
+internal interface RatingViewState : UiViewState {
+  val isRatingAlreadyShown: Boolean
+}
+
+@Stable
+internal class MutableRatingViewState : RatingViewState {
+  override var isRatingAlreadyShown by mutableStateOf(false)
+}

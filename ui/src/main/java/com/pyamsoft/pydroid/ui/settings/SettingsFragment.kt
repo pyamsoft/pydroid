@@ -241,34 +241,32 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        vm.Render { state ->
-          composeTheme(act) {
-            SettingsScreen(
-                elevation = customElevation(),
-                state = state,
-                hideClearAll = hideClearAll,
-                hideUpgradeInformation = hideUpgradeInformation,
-                hideDataPolicy = hideDataPolicy(),
-                topItemMargin = customTopItemMargin(),
-                bottomItemMargin = customBottomItemMargin(),
-                customPreContent = customPrePreferences(),
-                customPostContent = customPostPreferences(),
-                onDarkModeChanged = { handleChangeDarkMode(it) },
-                onLicensesClicked = { AboutDialog.show(act) },
-                onCheckUpdateClicked = { handleCheckForUpdates() },
-                onShowChangeLogClicked = { handleShowChangeLog() },
-                onResetClicked = { ResetDialog.open(act) },
-                onDonateClicked = { BillingDialog.open(act) },
-                onBugReportClicked = { handleReportBug(handler) },
-                onViewSourceClicked = { handleViewSourceCode(handler) },
-                onViewDataPolicyClicked = { handleShowDisclosure() },
-                onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
-                onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
-                onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
-                onViewBlogClicked = { handleViewBlog(handler) },
-                onOpenMarketPage = { handleOpenMarketPage(it) },
-            )
-          }
+        composeTheme(act) {
+          SettingsScreen(
+              elevation = customElevation(),
+              state = vm.state(),
+              hideClearAll = hideClearAll,
+              hideUpgradeInformation = hideUpgradeInformation,
+              hideDataPolicy = hideDataPolicy(),
+              topItemMargin = customTopItemMargin(),
+              bottomItemMargin = customBottomItemMargin(),
+              customPreContent = customPrePreferences(),
+              customPostContent = customPostPreferences(),
+              onDarkModeChanged = { handleChangeDarkMode(it) },
+              onLicensesClicked = { AboutDialog.show(act) },
+              onCheckUpdateClicked = { handleCheckForUpdates() },
+              onShowChangeLogClicked = { handleShowChangeLog() },
+              onResetClicked = { ResetDialog.open(act) },
+              onDonateClicked = { BillingDialog.open(act) },
+              onBugReportClicked = { handleReportBug(handler) },
+              onViewSourceClicked = { handleViewSourceCode(handler) },
+              onViewDataPolicyClicked = { handleShowDisclosure() },
+              onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
+              onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
+              onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
+              onViewBlogClicked = { handleViewBlog(handler) },
+              onOpenMarketPage = { handleOpenMarketPage(it) },
+          )
         }
       }
     }

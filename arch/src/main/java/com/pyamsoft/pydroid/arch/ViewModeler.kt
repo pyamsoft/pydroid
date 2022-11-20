@@ -53,7 +53,9 @@ import androidx.compose.runtime.Composable
 public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
 
   /** Render this state with arbitrary content */
-  @Composable public fun Render(content: @Composable (state: S) -> Unit)
+  @Composable
+  @Deprecated("Use state() instead")
+  public fun Render(content: @Composable (state: S) -> Unit)
 
   /** Get the current state */
   @Composable @CheckResult public fun state(): S

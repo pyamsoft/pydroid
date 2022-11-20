@@ -134,18 +134,16 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        vm.Render { state ->
-          composeTheme(act) {
-            DataPolicyDisclosureScreen(
-                state = state,
-                imageLoader = imageLoader.requireNotNull(),
-                onNavigationErrorDismissed = { vm.handleHideNavigationError() },
-                onAccept = { handleAcceptDataPolicy() },
-                onReject = { handleRejectDataPolicy() },
-                onPrivacyPolicyClicked = { handleViewPrivacy(handler) },
-                onTermsOfServiceClicked = { handleViewTos(handler) },
-            )
-          }
+        composeTheme(act) {
+          DataPolicyDisclosureScreen(
+              state = vm.state(),
+              imageLoader = imageLoader.requireNotNull(),
+              onNavigationErrorDismissed = { vm.handleHideNavigationError() },
+              onAccept = { handleAcceptDataPolicy() },
+              onReject = { handleRejectDataPolicy() },
+              onPrivacyPolicyClicked = { handleViewPrivacy(handler) },
+              onTermsOfServiceClicked = { handleViewTos(handler) },
+          )
         }
       }
     }

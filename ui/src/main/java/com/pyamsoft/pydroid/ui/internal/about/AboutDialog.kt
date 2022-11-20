@@ -93,16 +93,14 @@ internal class AboutDialog : AppCompatDialogFragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        vm.Render { state ->
-          composeTheme(act) {
-            AboutScreen(
-                state = state,
-                onViewHomePage = { openLibrary(handler, it) },
-                onViewLicense = { openLicense(handler, it) },
-                onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
-                onClose = { dismiss() },
-            )
-          }
+        composeTheme(act) {
+          AboutScreen(
+              state = vm.state(),
+              onViewHomePage = { openLibrary(handler, it) },
+              onViewLicense = { openLicense(handler, it) },
+              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
+              onClose = { dismiss() },
+          )
         }
       }
     }

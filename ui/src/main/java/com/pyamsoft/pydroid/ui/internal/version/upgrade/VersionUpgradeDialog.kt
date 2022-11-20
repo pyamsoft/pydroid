@@ -84,15 +84,13 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
       val vm = viewModel.requireNotNull()
       setContent {
-        vm.Render { state ->
-          composeTheme(act) {
-            VersionUpgradeScreen(
-                modifier = Modifier.fillMaxWidth(),
-                state = state,
-                onUpgrade = { handleCompleteUpgrade() },
-                onClose = { dismiss() },
-            )
-          }
+        composeTheme(act) {
+          VersionUpgradeScreen(
+              modifier = Modifier.fillMaxWidth(),
+              state = vm.state(),
+              onUpgrade = { handleCompleteUpgrade() },
+              onClose = { dismiss() },
+          )
         }
       }
     }

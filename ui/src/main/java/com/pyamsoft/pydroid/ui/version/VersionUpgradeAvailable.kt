@@ -69,15 +69,13 @@ internal constructor(
   public fun Render(
       modifier: Modifier = Modifier,
   ) {
-    viewModel.requireNotNull().Render { state ->
-      composeTheme(activity.requireNotNull()) {
-        VersionCheckScreen(
-            modifier = modifier,
-            state = state,
-            appName = appName,
-            onUpgrade = { handleUpgrade() },
-        )
-      }
+    composeTheme(activity.requireNotNull()) {
+      VersionCheckScreen(
+          modifier = modifier,
+          state = viewModel.requireNotNull().state(),
+          appName = appName,
+          onUpgrade = { handleUpgrade() },
+      )
     }
   }
 

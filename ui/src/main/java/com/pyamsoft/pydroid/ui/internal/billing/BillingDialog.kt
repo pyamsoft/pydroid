@@ -92,16 +92,14 @@ internal class BillingDialog : AppCompatDialogFragment() {
       val vm = viewModel.requireNotNull()
       val imageLoader = imageLoader.requireNotNull()
       setContent {
-        vm.Render { state ->
-          composeTheme(act) {
-            BillingScreen(
-                state = state,
-                imageLoader = imageLoader,
-                onPurchase = { launchPurchase(it) },
-                onBillingErrorDismissed = { vm.handleClearError() },
-                onClose = { dismiss() },
-            )
-          }
+        composeTheme(act) {
+          BillingScreen(
+              state = vm.state(),
+              imageLoader = imageLoader,
+              onPurchase = { launchPurchase(it) },
+              onBillingErrorDismissed = { vm.handleClearError() },
+              onClose = { dismiss() },
+          )
         }
       }
     }

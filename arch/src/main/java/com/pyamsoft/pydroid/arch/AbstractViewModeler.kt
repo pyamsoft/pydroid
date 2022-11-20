@@ -35,6 +35,7 @@ protected constructor(
   }
 
   @Composable
+  @Deprecated("Use state() instead")
   final override fun Render(content: @Composable (state: S) -> Unit) {
     content(state)
   }

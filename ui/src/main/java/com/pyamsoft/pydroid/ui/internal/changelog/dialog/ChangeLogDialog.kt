@@ -85,15 +85,13 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
       setContent {
         val uriHandler = LocalUriHandler.current
 
-        vm.Render { state ->
-          composeTheme(act) {
-            ChangeLogScreen(
-                state = state,
-                imageLoader = imageLoader,
-                onRateApp = { handleLaunchMarket(uriHandler) },
-                onClose = { dismiss() },
-            )
-          }
+        composeTheme(act) {
+          ChangeLogScreen(
+              state = vm.state(),
+              imageLoader = imageLoader,
+              onRateApp = { handleLaunchMarket(uriHandler) },
+              onClose = { dismiss() },
+          )
         }
       }
     }

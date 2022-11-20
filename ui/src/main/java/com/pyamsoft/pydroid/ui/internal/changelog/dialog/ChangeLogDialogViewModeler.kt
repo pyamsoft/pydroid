@@ -36,6 +36,7 @@ internal constructor(
       state.apply {
         name = displayName
         icon = provider.applicationIcon
+        appVersion = provider.appVersion
         changeLog = provider.changelog.build()
       }
     }

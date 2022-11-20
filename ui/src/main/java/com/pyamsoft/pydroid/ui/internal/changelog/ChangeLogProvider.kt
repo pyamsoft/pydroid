@@ -23,4 +23,6 @@ import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 internal interface ChangeLogProvider : AppProvider {
 
   @get:CheckResult val changelog: ChangeLogBuilder
+
+  @get:CheckResult val appVersion: Int
 }

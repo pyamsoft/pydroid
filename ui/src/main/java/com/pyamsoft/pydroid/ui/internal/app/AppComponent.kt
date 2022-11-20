@@ -193,6 +193,7 @@ internal interface AppComponent {
                   interactor = versionModule.provideInteractor(),
                   interactorCache = versionModule.provideInteractorCache(),
               ),
+              composeTheme = params.composeTheme,
           )
 
       // Data Policy

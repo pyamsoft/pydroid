@@ -22,8 +22,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
 import androidx.compose.material.SnackbarHost
@@ -46,7 +46,7 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
-private val MAX_HEIGHT_PORTRAIT = 400.dp
+private val MAX_HEIGHT_PORTRAIT = 360.dp
 
 @Composable
 internal fun DataPolicyDisclosureScreen(
@@ -59,45 +59,42 @@ internal fun DataPolicyDisclosureScreen(
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
-
-  val icon = state.icon
-  val name = state.name
-  val navigationError = state.navigationError
-
   val snackbarHostState = remember { SnackbarHostState() }
+  val name = state.name
 
-  LazyColumn(
+  AppHeader(
       modifier = modifier,
+      elevation = DialogDefaults.Elevation,
+      icon = state.icon,
+      name = name,
+      imageLoader = imageLoader,
   ) {
     item {
-      AppHeader(
-          elevation = DialogDefaults.Elevation,
-          icon = icon,
+      Disclosure(
+          modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
           name = name,
-          imageLoader = imageLoader,
-      ) {
-        Column {
-          Disclosure(
-              modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
-              name = name,
-          )
-          Links(
-              modifier = Modifier.fillMaxWidth(),
-              onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-              onTermsOfServiceClicked = onTermsOfServiceClicked,
-          )
-          Actions(
-              modifier = Modifier.fillMaxWidth(),
-              onAccept = onAccept,
-              onReject = onReject,
-          )
-          NavigationError(
-              snackbarHostState = snackbarHostState,
-              error = navigationError,
-              onSnackbarDismissed = onNavigationErrorDismissed,
-          )
-        }
-      }
+      )
+    }
+    item {
+      Links(
+          modifier = Modifier.fillMaxWidth(),
+          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+          onTermsOfServiceClicked = onTermsOfServiceClicked,
+      )
+    }
+    item {
+      Actions(
+          modifier = Modifier.fillMaxWidth(),
+          onAccept = onAccept,
+          onReject = onReject,
+      )
+    }
+    item {
+      NavigationError(
+          snackbarHostState = snackbarHostState,
+          error = state.navigationError,
+          onSnackbarDismissed = onNavigationErrorDismissed,
+      )
     }
   }
 }
@@ -140,16 +137,33 @@ private fun Disclosure(
     modifier: Modifier = Modifier,
     name: String,
 ) {
+  val typography = MaterialTheme.typography
+  val colors = MaterialTheme.colors
+  val alpha = ContentAlpha.medium
+  val disclosureStyle =
+      remember(
+          typography,
+          colors,
+          alpha,
+      ) {
+        typography.caption.copy(
+            color =
+                colors.onSurface.copy(
+                    alpha = alpha,
+                ),
+        )
+      }
+
   Column(
       modifier = modifier.padding(MaterialTheme.keylines.content),
   ) {
     Text(
         text = "$name is free and open source software.",
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.body2,
     )
 
     Text(
-        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.content),
         text =
             """
         Because it is distributed on the Google Play Store, the developer is provided
@@ -157,11 +171,11 @@ private fun Disclosure(
         You can opt out of these analytics from your device's system settings."""
                 .trimIndent()
                 .replace("\n", " "),
-        style = MaterialTheme.typography.body2,
+        style = disclosureStyle,
     )
 
     Text(
-        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+        modifier = Modifier.padding(top = MaterialTheme.keylines.content),
         text =
             """
               Aside from these Google Play Store Vitals, your application data is never knowingly
@@ -169,7 +183,7 @@ private fun Disclosure(
               """
                 .trimIndent()
                 .replace("\n", " "),
-        style = MaterialTheme.typography.body2,
+        style = disclosureStyle,
     )
   }
 }
@@ -198,7 +212,7 @@ private fun Actions(
     ) {
       Text(
           text = stringResource(R.string.dpd_reject),
-          fontSize = 12.sp,
+          fontSize = 10.sp,
       )
     }
   }

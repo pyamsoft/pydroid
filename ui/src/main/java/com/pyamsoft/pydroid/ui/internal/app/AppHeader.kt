@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -49,7 +51,7 @@ internal fun AppHeader(
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
-    content: @Composable () -> Unit,
+    renderItems: LazyListScope.() -> Unit,
 ) {
   val (titleHeight, setTitleHeight) = remember { mutableStateOf(ZeroSize) }
   val spaceHeight = remember(titleHeight) { titleHeight / 2 }
@@ -59,18 +61,16 @@ internal fun AppHeader(
       contentAlignment = Alignment.TopCenter,
   ) {
     // Behind the content
-    Column {
-      // Space half the height and draw the header behind it
-      Surface(
+    // Space half the height and draw the header behind it
+    Surface(
+        modifier = Modifier.padding(top = spaceHeight),
+        elevation = elevation,
+        shape = MaterialTheme.shapes.medium,
+    ) {
+      Box(
           modifier = Modifier.padding(top = spaceHeight),
-          elevation = elevation,
-          shape = MaterialTheme.shapes.medium,
       ) {
-        Box(
-            modifier = Modifier.padding(top = spaceHeight),
-        ) {
-          content()
-        }
+        LazyColumn { renderItems() }
       }
     }
 
@@ -121,15 +121,16 @@ private fun PreviewAppHeader() {
       icon = 0,
       name = "TEST",
       imageLoader = createNewTestImageLoader(),
-      content = {
-        Surface(
-            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-        ) {
-          Text(
-              text = "Test",
-              style = MaterialTheme.typography.body1,
-          )
-        }
-      },
-  )
+  ) {
+    item {
+      Surface(
+          modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+      ) {
+        Text(
+            text = "Test",
+            style = MaterialTheme.typography.body1,
+        )
+      }
+    }
+  }
 }

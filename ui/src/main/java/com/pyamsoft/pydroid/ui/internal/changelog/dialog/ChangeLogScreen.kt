@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -49,33 +48,26 @@ internal fun ChangeLogScreen(
     onRateApp: () -> Unit,
     onClose: () -> Unit
 ) {
-  val icon = state.icon
-  val name = state.name
-  val changeLog = state.changeLog
-
-  LazyColumn(
+  AppHeader(
       modifier = modifier,
+      elevation = DialogDefaults.Elevation,
+      icon = state.icon,
+      name = state.name,
+      imageLoader = imageLoader,
   ) {
     item {
-      AppHeader(
-          elevation = DialogDefaults.Elevation,
-          icon = icon,
-          name = name,
-          imageLoader = imageLoader,
-      ) {
-        Column {
-          ChangeLog(
-              modifier = Modifier.fillMaxWidth(),
-              changeLog = changeLog,
-          )
+      ChangeLog(
+          modifier = Modifier.fillMaxWidth(),
+          changeLog = state.changeLog,
+      )
+    }
 
-          Actions(
-              modifier = Modifier.fillMaxWidth(),
-              onRateApp = onRateApp,
-              onClose = onClose,
-          )
-        }
-      }
+    item {
+      Actions(
+          modifier = Modifier.fillMaxWidth(),
+          onRateApp = onRateApp,
+          onClose = onClose,
+      )
     }
   }
 }

@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
@@ -56,68 +55,61 @@ internal fun BillingScreen(
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val connection = state.connected
-  val icon = state.icon
-  val name = state.name
-  val skuList = state.skuList
-  val error = state.error
-
   val snackbarHostState = remember { SnackbarHostState() }
 
   // Scroll on small
-  LazyColumn(
+  AppHeader(
       modifier = modifier,
+      elevation = DialogDefaults.Elevation,
+      icon = state.icon,
+      name = state.name,
+      imageLoader = imageLoader,
   ) {
     item {
-      AppHeader(
-          elevation = DialogDefaults.Elevation,
-          icon = icon,
-          name = name,
-          imageLoader = imageLoader,
-      ) {
-        Column {
-          Crossfade(
-              targetState = connection,
-          ) { connected ->
-            // Remember computed value
-            val isLoading = remember { connected == BillingState.LOADING }
-            val isConnected = remember { connected == BillingState.CONNECTED }
+      Crossfade(
+          targetState = state.connected,
+      ) { connected ->
+        // Remember computed value
+        val isLoading = remember { connected == BillingState.LOADING }
+        val isConnected = remember { connected == BillingState.CONNECTED }
 
-            if (isLoading) {
-              Loading(
-                  modifier = Modifier.fillMaxWidth(),
-              )
-            } else {
-              SkuList(
-                  isConnected = isConnected,
-                  list = skuList,
-                  onPurchase = onPurchase,
-              )
-            }
-          }
-
-          Row(
-              modifier = Modifier.padding(MaterialTheme.keylines.content),
-          ) {
-            Spacer(
-                modifier = Modifier.weight(1F),
-            )
-            TextButton(
-                onClick = onClose,
-            ) {
-              Text(
-                  text = stringResource(R.string.close),
-              )
-            }
-          }
-
-          BillingError(
-              snackbarHostState = snackbarHostState,
-              error = error,
-              onSnackbarDismissed = onBillingErrorDismissed,
+        if (isLoading) {
+          Loading(
+              modifier = Modifier.fillMaxWidth(),
+          )
+        } else {
+          SkuList(
+              isConnected = isConnected,
+              list = state.skuList,
+              onPurchase = onPurchase,
           )
         }
       }
+    }
+
+    item {
+      Row(
+          modifier = Modifier.padding(MaterialTheme.keylines.content),
+      ) {
+        Spacer(
+            modifier = Modifier.weight(1F),
+        )
+        TextButton(
+            onClick = onClose,
+        ) {
+          Text(
+              text = stringResource(R.string.close),
+          )
+        }
+      }
+    }
+
+    item {
+      BillingError(
+          snackbarHostState = snackbarHostState,
+          error = state.error,
+          onSnackbarDismissed = onBillingErrorDismissed,
+      )
     }
   }
 }

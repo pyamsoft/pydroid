@@ -67,19 +67,9 @@ internal fun DataPolicyDisclosureScreen(
       modifier = modifier,
       elevation = DialogDefaults.Elevation,
       icon = state.icon,
+      name = name,
       imageLoader = imageLoader,
   ) {
-    item {
-      Text(
-          modifier = Modifier.fillMaxWidth(),
-          text = name,
-          style =
-              MaterialTheme.typography.h5.copy(
-                  textAlign = TextAlign.Center,
-              ),
-      )
-    }
-
     item {
       Disclosure(
           modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),

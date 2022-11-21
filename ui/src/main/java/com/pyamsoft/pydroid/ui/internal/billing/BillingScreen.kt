@@ -63,19 +63,9 @@ internal fun BillingScreen(
       modifier = modifier,
       elevation = DialogDefaults.Elevation,
       icon = state.icon,
+      name = state.name,
       imageLoader = imageLoader,
   ) {
-    item {
-      Text(
-          modifier = Modifier.fillMaxWidth(),
-          text = state.name,
-          style =
-              MaterialTheme.typography.h5.copy(
-                  textAlign = TextAlign.Center,
-              ),
-      )
-    }
-
     item {
       Crossfade(
           targetState = state.connected,

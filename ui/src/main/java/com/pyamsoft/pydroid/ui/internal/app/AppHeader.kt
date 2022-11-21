@@ -34,9 +34,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.theme.ZeroSize
@@ -50,6 +53,7 @@ internal fun AppHeader(
     modifier: Modifier = Modifier,
     elevation: Dp = ZeroElevation,
     @DrawableRes icon: Int,
+    name: String,
     imageLoader: ImageLoader,
     renderItems: LazyListScope.() -> Unit,
 ) {
@@ -69,13 +73,27 @@ internal fun AppHeader(
       Box(
           modifier = Modifier.padding(top = pinnedHeight),
       ) {
-        LazyColumn { renderItems() }
+        LazyColumn {
+          item {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = name,
+                style =
+                    MaterialTheme.typography.h5.copy(
+                        textAlign = TextAlign.Center,
+                    ),
+            )
+          }
+
+          renderItems()
+        }
       }
     }
 
     PinnedContent(
         modifier = Modifier.fillMaxWidth(),
         icon = icon,
+        name = name,
         imageLoader = imageLoader,
         onMeasured = { setPinnedHeight(it) },
     )
@@ -86,12 +104,34 @@ internal fun AppHeader(
 private fun PinnedContent(
     modifier: Modifier = Modifier,
     icon: Int,
+    name: String,
     imageLoader: ImageLoader,
     onMeasured: (Dp) -> Unit,
 ) {
   val keylines = MaterialTheme.keylines
   val density = LocalDensity.current
+  val configuration = LocalConfiguration.current
   val spacing = remember(keylines) { keylines.content }
+
+  // Size the icon based on the amount of screen height available
+  val iconSize =
+      remember(configuration) {
+        var size = ImageDefaults.LargeSize
+        val maxIconSize = (configuration.screenHeightDp / 4).dp
+        if (size >= maxIconSize) {
+          size = ImageDefaults.DefaultSize
+        }
+
+        if (size >= maxIconSize) {
+          size = ImageDefaults.ItemSize
+        }
+
+        if (size >= maxIconSize) {
+          size = ImageDefaults.IconSize
+        }
+
+        return@remember size
+      }
 
   Column(
       modifier =
@@ -105,8 +145,8 @@ private fun PinnedContent(
     AsyncImage(
         model = icon,
         imageLoader = imageLoader,
-        contentDescription = "App Icon",
-        modifier = Modifier.size(ImageDefaults.LargeSize),
+        contentDescription = "$name Icon",
+        modifier = Modifier.size(iconSize),
     )
   }
 }
@@ -116,6 +156,7 @@ private fun PinnedContent(
 private fun PreviewAppHeader() {
   AppHeader(
       icon = 0,
+      name = "TEST",
       imageLoader = createNewTestImageLoader(),
   ) {
     item {

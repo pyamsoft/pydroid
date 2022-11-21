@@ -25,13 +25,13 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
 internal interface ChangeLogDialogViewState : AppViewState {
   val changeLog: List<ChangeLogLine>
-  val appVersion: Int
+  val applicationVersionCode: Int
 }
 
 @Stable
 internal class MutableChangeLogDialogViewState : ChangeLogDialogViewState {
   override var changeLog by mutableStateOf(emptyList<ChangeLogLine>())
   override var icon by mutableStateOf(0)
-  override var appVersion by mutableStateOf(0)
+  override var applicationVersionCode by mutableStateOf(0)
   override var name by mutableStateOf("")
 }

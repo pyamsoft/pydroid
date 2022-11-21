@@ -33,9 +33,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import com.pyamsoft.pydroid.theme.ZeroSize
@@ -49,12 +50,11 @@ internal fun AppHeader(
     modifier: Modifier = Modifier,
     elevation: Dp = ZeroElevation,
     @DrawableRes icon: Int,
-    name: String,
     imageLoader: ImageLoader,
     renderItems: LazyListScope.() -> Unit,
 ) {
-  val (titleHeight, setTitleHeight) = remember { mutableStateOf(ZeroSize) }
-  val spaceHeight = remember(titleHeight) { titleHeight / 2 }
+  val (pinnedHeight, setPinnedHeight) = remember { mutableStateOf(ZeroSize) }
+  val spaceHeight = remember(pinnedHeight) { pinnedHeight / 2 }
 
   Box(
       modifier = modifier,
@@ -74,42 +74,41 @@ internal fun AppHeader(
       }
     }
 
-    TitleAndIcon(
+    PinnedContent(
         modifier = Modifier.fillMaxWidth(),
         icon = icon,
-        name = name,
         imageLoader = imageLoader,
-        onMeasured = { setTitleHeight(it) },
+        onMeasured = { setPinnedHeight(it) },
     )
   }
 }
 
 @Composable
-private fun TitleAndIcon(
+private fun PinnedContent(
     modifier: Modifier = Modifier,
     icon: Int,
-    name: String,
     imageLoader: ImageLoader,
     onMeasured: (Dp) -> Unit,
 ) {
+  val density = LocalDensity.current
   Column(
       modifier =
           modifier
               .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(top = MaterialTheme.keylines.content),
+              .padding(top = MaterialTheme.keylines.content)
+              .onSizeChanged { size ->
+                val space = size.height / 2
+                val height = density.run { space.toDp() }
+                onMeasured(height)
+              },
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
     AsyncImage(
         model = icon,
         imageLoader = imageLoader,
-        contentDescription = "$name Icon",
+        contentDescription = "App Icon",
         modifier = Modifier.size(ImageDefaults.LargeSize),
-    )
-    Text(
-        text = name,
-        style = MaterialTheme.typography.h5,
-        onTextLayout = { onMeasured((it.size.height / 2).dp + ImageDefaults.LargeSize) },
     )
   }
 }
@@ -119,7 +118,6 @@ private fun TitleAndIcon(
 private fun PreviewAppHeader() {
   AppHeader(
       icon = 0,
-      name = "TEST",
       imageLoader = createNewTestImageLoader(),
   ) {
     item {

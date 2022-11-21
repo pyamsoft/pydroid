@@ -54,9 +54,14 @@ internal fun ChangeLogScreen(
       modifier = modifier,
       elevation = DialogDefaults.Elevation,
       icon = state.icon,
-      name = state.name,
       imageLoader = imageLoader,
   ) {
+    item {
+      Text(
+          text = state.name,
+          style = MaterialTheme.typography.h5,
+      )
+    }
     item {
       ChangeLog(
           modifier = Modifier.fillMaxWidth(),
@@ -67,7 +72,7 @@ internal fun ChangeLogScreen(
     item {
       Actions(
           modifier = Modifier.fillMaxWidth(),
-          appVersion = state.appVersion,
+          applicationVersionCode = state.applicationVersionCode,
           onRateApp = onRateApp,
           onClose = onClose,
       )
@@ -101,7 +106,7 @@ private fun ChangeLog(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
-    appVersion: Int,
+    applicationVersionCode: Int,
     onRateApp: () -> Unit,
     onClose: () -> Unit,
 ) {
@@ -138,7 +143,7 @@ private fun Actions(
     Spacer(modifier = Modifier.weight(1F))
 
     Text(
-        text = "$appVersion",
+        text = "$applicationVersionCode",
         style = versionStyle,
     )
 

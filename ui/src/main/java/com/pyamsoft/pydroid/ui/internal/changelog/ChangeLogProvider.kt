@@ -24,5 +24,5 @@ internal interface ChangeLogProvider : AppProvider {
 
   @get:CheckResult val changelog: ChangeLogBuilder
 
-  @get:CheckResult val appVersion: Int
+  @get:CheckResult val applicationVersionCode: Int
 }

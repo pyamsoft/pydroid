@@ -118,16 +118,9 @@ private fun PinnedContent(
       remember(configuration) {
         var size = ImageDefaults.LargeSize
         val maxIconSize = (configuration.screenHeightDp / 4).dp
-        if (size >= maxIconSize) {
-          size = ImageDefaults.DefaultSize
-        }
 
         if (size >= maxIconSize) {
           size = ImageDefaults.ItemSize
-        }
-
-        if (size >= maxIconSize) {
-          size = ImageDefaults.IconSize
         }
 
         return@remember size

@@ -61,26 +61,35 @@ internal constructor(
       force: Boolean,
       onLaunchUpdate: (AppUpdateLauncher) -> Unit,
   ) {
-    if (state.isUpdateAvailable) {
+    val s = state
+
+    if (s.isUpdateAvailable) {
       Logger.d("Update is already available, do not check for update again")
       return
     }
 
-    if (state.isUpdateReadyToInstall) {
+    if (s.isUpdateReadyToInstall) {
       Logger.d("Update is already ready to install, do not check for update again")
       return
     }
 
+    if (s.isCheckingForUpdate) {
+      Logger.d("We are already checking for an update.")
+      return
+    }
+
     Logger.d("Begin check for updates")
+    s.isCheckingForUpdate = true
     scope.launch(context = Dispatchers.Main) {
       checkUpdateRunner
           .call(force)
           .onSuccess { Logger.d("Update data found as: $it") }
-          .onSuccess { state.isUpdateAvailable = true }
+          .onSuccess { s.isUpdateAvailable = true }
           .onSuccess(onLaunchUpdate)
           .onFailure { Logger.e(it, "Error checking for latest version") }
-          .onFailure { state.isUpdateAvailable = false }
+          .onFailure { s.isUpdateAvailable = false }
           .onFinally { Logger.d("Done checking for updates") }
+          .onFinally { s.isCheckingForUpdate = false }
     }
   }
 

@@ -16,14 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -34,13 +33,18 @@ import kotlinx.coroutines.launch
 internal class VersionCheckDelegate(
     activity: PYDroidActivity,
     viewModel: VersionCheckViewModeler,
-    /** May be provided by PYDroid, otherwise this is just a noop */
-    private val composeTheme: ComposeTheme = NoopTheme
 ) {
 
   private var activity: PYDroidActivity? = activity
 
   private var viewModel: VersionCheckViewModeler? = viewModel
+
+  /** Returns the view state to be rendered */
+  @Composable
+  @CheckResult
+  internal fun state(): VersionCheckViewState {
+    return viewModel.requireNotNull().state()
+  }
 
   /** Bind Activity for related VersionCheck events */
   fun bindEvents() {
@@ -79,16 +83,6 @@ internal class VersionCheckDelegate(
         scope = act.lifecycleScope,
     ) {
       VersionUpgradeDialog.show(act)
-    }
-  }
-
-  /** Render a composable by watching the ViewModel state */
-  @Composable
-  fun Render(content: @Composable (VersionCheckViewState) -> Unit) {
-    composeTheme(activity.requireNotNull()) {
-      content(
-          viewModel.requireNotNull().state(),
-      )
     }
   }
 

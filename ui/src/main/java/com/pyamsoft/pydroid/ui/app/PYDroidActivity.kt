@@ -177,12 +177,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Using VersionCheck state to render custom UI per application */
   @Composable
   public fun RenderVersionCheck(content: @Composable (VersionCheckViewState) -> Unit) {
-    if (disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionCheck.requireNotNull().Render(content)
+    val state = versionCheck.requireNotNull().state()
+    content(state)
   }
 
   /** On activity create */
@@ -196,7 +192,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                 activity = this,
                 disableDataPolicy = disableDataPolicy,
             )
-            .also { c -> c.inject(this) }
+            .also { it.inject(this) }
     super.onCreate(savedInstanceState)
   }
 

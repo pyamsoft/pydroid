@@ -23,6 +23,9 @@ import com.pyamsoft.pydroid.arch.UiViewState
 @Stable
 public interface VersionCheckViewState : UiViewState {
 
+  /** Are we currently checking for an update? */
+  public val isCheckingForUpdate: Boolean
+
   /** Is there an update available for this application? */
   public val isUpdateAvailable: Boolean
 

@@ -32,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
@@ -58,8 +59,11 @@ internal fun ChangeLogScreen(
   ) {
     item {
       Text(
+          modifier = Modifier.fillMaxWidth(),
           text = state.name,
-          style = MaterialTheme.typography.h5,
+          style = MaterialTheme.typography.h5.copy(
+              textAlign = TextAlign.Center,
+          ),
       )
     }
     item {

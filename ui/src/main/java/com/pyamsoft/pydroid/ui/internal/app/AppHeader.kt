@@ -54,7 +54,6 @@ internal fun AppHeader(
     renderItems: LazyListScope.() -> Unit,
 ) {
   val (pinnedHeight, setPinnedHeight) = remember { mutableStateOf(ZeroSize) }
-  val spaceHeight = remember(pinnedHeight) { pinnedHeight / 2 }
 
   Box(
       modifier = modifier,
@@ -63,12 +62,12 @@ internal fun AppHeader(
     // Behind the content
     // Space half the height and draw the header behind it
     Surface(
-        modifier = Modifier.padding(top = spaceHeight),
+        modifier = Modifier.padding(top = pinnedHeight),
         elevation = elevation,
         shape = MaterialTheme.shapes.medium,
     ) {
       Box(
-          modifier = Modifier.padding(top = spaceHeight),
+          modifier = Modifier.padding(top = pinnedHeight),
       ) {
         LazyColumn { renderItems() }
       }
@@ -90,17 +89,16 @@ private fun PinnedContent(
     imageLoader: ImageLoader,
     onMeasured: (Dp) -> Unit,
 ) {
+  val keylines = MaterialTheme.keylines
   val density = LocalDensity.current
+  val spacing = remember(keylines) { keylines.content }
+
   Column(
       modifier =
-          modifier
-              .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(top = MaterialTheme.keylines.content)
-              .onSizeChanged { size ->
-                val space = size.height / 2
-                val height = density.run { space.toDp() }
-                onMeasured(height)
-              },
+          modifier.padding(horizontal = spacing).padding(top = spacing).onSizeChanged { size ->
+            val height = density.run { size.height.toDp() }
+            onMeasured(height / 2 + spacing)
+          },
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

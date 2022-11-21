@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,8 +71,12 @@ internal fun DataPolicyDisclosureScreen(
   ) {
     item {
       Text(
+          modifier = Modifier.fillMaxWidth(),
           text = name,
-          style = MaterialTheme.typography.h5,
+          style =
+              MaterialTheme.typography.h5.copy(
+                  textAlign = TextAlign.Center,
+              ),
       )
     }
 
@@ -152,7 +157,7 @@ private fun Disclosure(
           colors,
           alpha,
       ) {
-        typography.caption.copy(
+        typography.body2.copy(
             color =
                 colors.onSurface.copy(
                     alpha = alpha,
@@ -164,8 +169,8 @@ private fun Disclosure(
       modifier = modifier.padding(MaterialTheme.keylines.content),
   ) {
     Text(
-        text = "$name is free and open source software.",
-        style = MaterialTheme.typography.body2,
+        text = "$name is open source software.",
+        style = MaterialTheme.typography.body1,
     )
 
     Text(
@@ -218,7 +223,7 @@ private fun Actions(
     ) {
       Text(
           text = stringResource(R.string.dpd_reject),
-          fontSize = 10.sp,
+          fontSize = 12.sp,
       )
     }
   }

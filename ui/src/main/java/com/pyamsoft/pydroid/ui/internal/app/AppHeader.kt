@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -62,7 +63,7 @@ private fun AppHeader(
     // Behind the content
     // Space half the height and draw the header behind it
     Surface(
-        modifier = Modifier.height(imageHeight / 2),
+        modifier = Modifier.fillMaxWidth().height(imageHeight / 2),
         elevation = elevation,
         color = color,
         shape =
@@ -73,12 +74,17 @@ private fun AppHeader(
         content = {},
     )
 
-    AsyncImage(
-        model = icon,
-        imageLoader = imageLoader,
-        contentDescription = "$name Icon",
-        modifier = Modifier.size(ImageDefaults.LargeSize),
-    )
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center,
+    ) {
+      AsyncImage(
+          modifier = Modifier.size(ImageDefaults.LargeSize),
+          model = icon,
+          imageLoader = imageLoader,
+          contentDescription = "$name Icon",
+      )
+    }
   }
 }
 
@@ -110,8 +116,13 @@ private data class AppHeaderScopeImpl(
 
   private var scope: LazyListScope? = null
 
-  fun applyScope(scope: LazyListScope) {
+  fun withScope(
+      scope: LazyListScope,
+      block: AppHeaderScope.() -> Unit,
+  ) {
     this.scope = scope
+    block()
+    this.scope = null
   }
 
   fun eraseScope() {
@@ -125,12 +136,17 @@ private data class AppHeaderScopeImpl(
   override fun item(modifier: Modifier, content: @Composable () -> Unit) {
     scope?.item {
       Surface(
-          modifier = modifier.padding(horizontal = MaterialTheme.keylines.content),
+          modifier = modifier,
           elevation = elevation,
           color = color,
           shape = RectangleShape,
-          content = content,
-      )
+      ) {
+        Box(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
+        ) {
+          content()
+        }
+      }
     }
   }
 
@@ -145,8 +161,9 @@ private data class AppHeaderScopeImpl(
           elevation = elevation,
           color = color,
           shape = RectangleShape,
-          content = content,
-      )
+      ) {
+        content()
+      }
     }
   }
 }
@@ -179,24 +196,22 @@ internal fun AppHeaderDialog(
   LazyColumn(
       modifier = modifier,
   ) {
-    // Apply the scope for this render pass
-    appHeaderScope.applyScope(this)
-
     item {
       AppHeader(
+          modifier = Modifier.fillMaxWidth(),
           elevation = elevation,
           icon = icon,
           name = name,
           imageLoader = imageLoader,
       )
     }
-
-    appHeaderScope.content()
+    // Apply the scope for this render pass
+    appHeaderScope.withScope(this) { content() }
 
     // Footer for dialogs
     item {
       Surface(
-          modifier = Modifier.height(MaterialTheme.keylines.content),
+          modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
           elevation = elevation,
           color = color,
           shape =

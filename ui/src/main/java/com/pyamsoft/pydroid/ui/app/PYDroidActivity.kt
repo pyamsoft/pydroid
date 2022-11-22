@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.app
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -32,7 +31,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.util.doOnCreate
 
 /**
@@ -172,13 +170,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     }
 
     versionCheck.requireNotNull().checkUpdates()
-  }
-
-  /** Using VersionCheck state to render custom UI per application */
-  @Composable
-  public fun RenderVersionCheck(content: @Composable (VersionCheckViewState) -> Unit) {
-    val state = versionCheck.requireNotNull().state()
-    content(state)
   }
 
   /** On activity create */

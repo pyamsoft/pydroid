@@ -40,7 +40,6 @@ internal interface VersionCheckComponent {
   class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
 
     override fun inject(component: VersionUpgradeAvailable) {
-      component.composeTheme = params.composeTheme
       component.viewModel =
           VersionCheckViewModeler(
               state = params.versionCheckState,

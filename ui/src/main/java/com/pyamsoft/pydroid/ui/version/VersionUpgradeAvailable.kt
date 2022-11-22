@@ -22,14 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnDestroy
 
+/**
+ * A self contained class which is able to check for updates and prompt the user to install them
+ * in-app. Adopts the theme from whichever composable it is rendered into
+ */
 public class VersionUpgradeAvailable
 internal constructor(
     activity: FragmentActivity,
@@ -37,9 +39,6 @@ internal constructor(
 ) {
 
   private var activity: FragmentActivity? = null
-
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
 
   internal var viewModel: VersionCheckViewModeler? = null
 
@@ -66,17 +65,15 @@ internal constructor(
 
   /** Render into a composable the version check screen upsell */
   @Composable
-  public fun Render(
+  public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
   ) {
-    composeTheme(activity.requireNotNull()) {
-      VersionCheckScreen(
-          modifier = modifier,
-          state = viewModel.requireNotNull().state(),
-          appName = appName,
-          onUpgrade = { handleUpgrade() },
-      )
-    }
+    VersionCheckScreen(
+        modifier = modifier,
+        state = viewModel.requireNotNull().state(),
+        appName = appName,
+        onUpgrade = { handleUpgrade() },
+    )
   }
 
   public companion object {

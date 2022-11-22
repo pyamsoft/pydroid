@@ -31,6 +31,13 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 /** Upon upgrade action started, this callback will run */
 public typealias OnUpgradeStartedCallback = () -> Unit
 
+/** A Composable that can display version upgrade availability */
+public typealias VersionUpgradeWidget =
+    (
+        VersionCheckViewState,
+        OnUpgradeStartedCallback,
+    ) -> Unit
+
 /**
  * A self contained class which is able to check for updates and prompt the user to install them
  * in-app. Adopts the theme from whichever composable it is rendered into
@@ -69,14 +76,7 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(
-      content:
-          @Composable
-          (
-              VersionCheckViewState,
-              OnUpgradeStartedCallback,
-          ) -> Unit,
-  ) {
+  public fun Render(content: @Composable VersionUpgradeWidget) {
     val state = viewModel.requireNotNull().state()
     content(state) { handleUpgrade() }
   }

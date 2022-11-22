@@ -41,7 +41,7 @@ internal constructor(
     private val appName: String,
 ) {
   // Keep for Dialog showing
-  private var activity: FragmentActivity? = null
+  private var activity: FragmentActivity? = activity
 
   internal var viewModel: VersionCheckViewModeler? = null
 

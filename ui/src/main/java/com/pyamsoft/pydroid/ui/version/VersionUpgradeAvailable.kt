@@ -20,7 +20,6 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
@@ -71,7 +70,12 @@ internal constructor(
    */
   @Composable
   public fun Render(
-      content: @Composable (VersionCheckViewState, OnUpgradeStartedCallback) -> Unit,
+      content:
+          @Composable
+          (
+              VersionCheckViewState,
+              OnUpgradeStartedCallback,
+          ) -> Unit,
   ) {
     val state = viewModel.requireNotNull().state()
     content(state) { handleUpgrade() }

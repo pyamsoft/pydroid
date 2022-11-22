@@ -207,8 +207,7 @@ private fun Actions(
       modifier =
           modifier
               .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(top = MaterialTheme.keylines.content)
-              .padding(bottom = MaterialTheme.keylines.baseline),
+              .padding(top = MaterialTheme.keylines.content),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

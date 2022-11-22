@@ -204,7 +204,11 @@ private fun Actions(
     onReject: () -> Unit,
 ) {
   Column(
-      modifier = modifier.padding(MaterialTheme.keylines.content),
+      modifier =
+          modifier
+              .padding(horizontal = MaterialTheme.keylines.content)
+              .padding(top = MaterialTheme.keylines.content)
+              .padding(bottom = MaterialTheme.keylines.baseline),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

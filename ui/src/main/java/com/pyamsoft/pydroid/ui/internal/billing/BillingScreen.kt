@@ -91,7 +91,10 @@ internal fun BillingScreen(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Row(
-          modifier = Modifier.padding(MaterialTheme.keylines.content),
+          modifier =
+              Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                  .padding(top = MaterialTheme.keylines.content)
+                  .padding(bottom = MaterialTheme.keylines.baseline),
       ) {
         Spacer(
             modifier = Modifier.weight(1F),

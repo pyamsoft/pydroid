@@ -47,6 +47,11 @@ buildscript {
     minSdk = 22
     maxSdk = 33
 
+    // Us (pyamsoft libraries)
+    // -SNAPSHOT versions are not published yet and must be built locally
+    cachify = "0.1.1-SNAPSHOT"
+    highlander = "0.1.1-SNAPSHOT"
+
     // Compose
     composeActivity = "1.6.1"
     accompanist = "0.27.1"
@@ -65,10 +70,6 @@ buildscript {
 
     // Material Design
     materialDesign = "1.7.0"
-
-    // Us
-    cachify = "0.1.0"
-    highlander = "0.1.0"
 
     // Google Play libraries
     appUpdate = "2.0.0"

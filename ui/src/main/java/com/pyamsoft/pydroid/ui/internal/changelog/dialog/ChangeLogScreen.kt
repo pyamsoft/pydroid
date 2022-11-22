@@ -126,7 +126,11 @@ private fun Actions(
       }
 
   Row(
-      modifier = modifier.padding(MaterialTheme.keylines.content),
+      modifier =
+          modifier
+              .padding(horizontal = MaterialTheme.keylines.content)
+              .padding(top = MaterialTheme.keylines.content)
+              .padding(bottom = MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {

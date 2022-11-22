@@ -36,15 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
-import com.pyamsoft.pydroid.ui.internal.app.AppHeader
+import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
@@ -58,15 +56,15 @@ internal fun BillingScreen(
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
 
-  // Scroll on small
-  AppHeader(
-      modifier = modifier,
-      elevation = DialogDefaults.Elevation,
+  AppHeaderDialog(
+      modifier = modifier.fillMaxWidth(),
       icon = state.icon,
       name = state.name,
       imageLoader = imageLoader,
   ) {
-    item {
+    item(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Crossfade(
           targetState = state.connected,
       ) { connected ->
@@ -88,7 +86,9 @@ internal fun BillingScreen(
       }
     }
 
-    item {
+    item(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Row(
           modifier = Modifier.padding(MaterialTheme.keylines.content),
       ) {
@@ -105,8 +105,11 @@ internal fun BillingScreen(
       }
     }
 
-    item {
+    snackbar(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       BillingError(
+          modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,
           error = state.error,
           onSnackbarDismissed = onBillingErrorDismissed,

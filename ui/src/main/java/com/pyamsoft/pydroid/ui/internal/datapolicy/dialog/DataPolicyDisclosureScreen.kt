@@ -36,15 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
-import com.pyamsoft.pydroid.ui.internal.app.AppHeader
+import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private val MAX_HEIGHT_PORTRAIT = 360.dp
@@ -63,35 +61,46 @@ internal fun DataPolicyDisclosureScreen(
   val snackbarHostState = remember { SnackbarHostState() }
   val name = state.name
 
-  AppHeader(
-      modifier = modifier,
-      elevation = DialogDefaults.Elevation,
+  AppHeaderDialog(
+      modifier = modifier.fillMaxWidth(),
       icon = state.icon,
       name = name,
       imageLoader = imageLoader,
   ) {
-    item {
+    item(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Disclosure(
           modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
           name = name,
       )
     }
-    item {
+
+    item(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Links(
           modifier = Modifier.fillMaxWidth(),
           onPrivacyPolicyClicked = onPrivacyPolicyClicked,
           onTermsOfServiceClicked = onTermsOfServiceClicked,
       )
     }
-    item {
+
+    item(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),
           onAccept = onAccept,
           onReject = onReject,
       )
     }
-    item {
+
+    snackbar(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       NavigationError(
+          modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,
           error = state.navigationError,
           onSnackbarDismissed = onNavigationErrorDismissed,
@@ -221,11 +230,15 @@ private fun Actions(
 
 @Composable
 private fun NavigationError(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
-  SnackbarHost(hostState = snackbarHostState)
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHostState,
+  )
 
   if (error != null) {
     LaunchedEffect(error) {

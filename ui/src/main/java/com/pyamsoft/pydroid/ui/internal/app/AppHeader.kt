@@ -17,130 +17,196 @@
 package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
-import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
-internal fun AppHeader(
+private fun AppHeader(
     modifier: Modifier = Modifier,
-    elevation: Dp = ZeroElevation,
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
-    renderItems: LazyListScope.() -> Unit,
+    elevation: Dp = ZeroElevation,
+    color: Color = MaterialTheme.colors.surface,
 ) {
-  val (pinnedHeight, setPinnedHeight) = remember { mutableStateOf(ZeroSize) }
-
+  val imageHeight = ImageDefaults.LargeSize
   Box(
       modifier = modifier,
-      contentAlignment = Alignment.TopCenter,
+      contentAlignment = Alignment.BottomCenter,
   ) {
     // Behind the content
     // Space half the height and draw the header behind it
     Surface(
-        modifier = Modifier.padding(top = pinnedHeight),
+        modifier = Modifier.height(imageHeight / 2),
         elevation = elevation,
-        shape = MaterialTheme.shapes.medium,
-    ) {
-      Box(
-          modifier = Modifier.padding(top = pinnedHeight),
-      ) {
-        LazyColumn {
-          item {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = name,
-                style =
-                    MaterialTheme.typography.h5.copy(
-                        textAlign = TextAlign.Center,
-                    ),
-            )
-          }
-
-          renderItems()
-        }
-      }
-    }
-
-    PinnedContent(
-        modifier = Modifier.fillMaxWidth(),
-        icon = icon,
-        name = name,
-        imageLoader = imageLoader,
-        onMeasured = { setPinnedHeight(it) },
+        color = color,
+        shape =
+            MaterialTheme.shapes.medium.copy(
+                bottomStart = ZeroCornerSize,
+                bottomEnd = ZeroCornerSize,
+            ),
+        content = {},
     )
-  }
-}
 
-@Composable
-private fun PinnedContent(
-    modifier: Modifier = Modifier,
-    icon: Int,
-    name: String,
-    imageLoader: ImageLoader,
-    onMeasured: (Dp) -> Unit,
-) {
-  val keylines = MaterialTheme.keylines
-  val density = LocalDensity.current
-  val configuration = LocalConfiguration.current
-  val spacing = remember(keylines) { keylines.content }
-
-  // Size the icon based on the amount of screen height available
-  val iconSize =
-      remember(configuration) {
-        var size = ImageDefaults.LargeSize
-        val maxIconSize = (configuration.screenHeightDp / 4).dp
-
-        if (size >= maxIconSize) {
-          size = ImageDefaults.ItemSize
-        }
-
-        return@remember size
-      }
-
-  Column(
-      modifier =
-          modifier.padding(horizontal = spacing).padding(top = spacing).onSizeChanged { size ->
-            val height = density.run { size.height.toDp() }
-            onMeasured(height / 2 + spacing)
-          },
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
-  ) {
     AsyncImage(
         model = icon,
         imageLoader = imageLoader,
         contentDescription = "$name Icon",
-        modifier = Modifier.size(iconSize),
+        modifier = Modifier.size(ImageDefaults.LargeSize),
     )
+  }
+}
+
+internal interface AppHeaderScope {
+
+  fun item(
+      content: @Composable () -> Unit,
+  )
+
+  fun item(
+      modifier: Modifier,
+      content: @Composable () -> Unit,
+  )
+
+  fun snackbar(
+      content: @Composable () -> Unit,
+  )
+
+  fun snackbar(
+      modifier: Modifier,
+      content: @Composable () -> Unit,
+  )
+}
+
+private data class AppHeaderScopeImpl(
+    private val elevation: Dp,
+    private val color: Color,
+) : AppHeaderScope {
+
+  private var scope: LazyListScope? = null
+
+  fun applyScope(scope: LazyListScope) {
+    this.scope = scope
+  }
+
+  fun eraseScope() {
+    this.scope = null
+  }
+
+  override fun item(content: @Composable () -> Unit) {
+    this.item(modifier = Modifier, content = content)
+  }
+
+  override fun item(modifier: Modifier, content: @Composable () -> Unit) {
+    scope?.item {
+      Surface(
+          modifier = modifier.padding(horizontal = MaterialTheme.keylines.content),
+          elevation = elevation,
+          color = color,
+          shape = RectangleShape,
+          content = content,
+      )
+    }
+  }
+
+  override fun snackbar(content: @Composable () -> Unit) {
+    this.snackbar(modifier = Modifier, content = content)
+  }
+
+  override fun snackbar(modifier: Modifier, content: @Composable () -> Unit) {
+    scope?.item {
+      Surface(
+          modifier = modifier,
+          elevation = elevation,
+          color = color,
+          shape = RectangleShape,
+          content = content,
+      )
+    }
+  }
+}
+
+@Composable
+internal fun AppHeaderDialog(
+    modifier: Modifier = Modifier,
+    @DrawableRes icon: Int,
+    name: String,
+    imageLoader: ImageLoader,
+    color: Color = MaterialTheme.colors.surface,
+    content: AppHeaderScope.() -> Unit,
+) {
+  val elevation = remember { DialogDefaults.Elevation }
+  val appHeaderScope =
+      remember(
+          elevation,
+          color,
+      ) {
+        AppHeaderScopeImpl(elevation, color)
+      }
+
+  DisposableEffect(appHeaderScope) {
+    onDispose {
+      Logger.d("Erase AppHeader scope on dispose")
+      appHeaderScope.eraseScope()
+    }
+  }
+
+  LazyColumn(
+      modifier = modifier,
+  ) {
+    // Apply the scope for this render pass
+    appHeaderScope.applyScope(this)
+
+    item {
+      AppHeader(
+          elevation = elevation,
+          icon = icon,
+          name = name,
+          imageLoader = imageLoader,
+      )
+    }
+
+    appHeaderScope.content()
+
+    // Footer for dialogs
+    item {
+      Surface(
+          modifier = Modifier.height(MaterialTheme.keylines.content),
+          elevation = elevation,
+          color = color,
+          shape =
+              MaterialTheme.shapes.medium.copy(
+                  topStart = ZeroCornerSize,
+                  topEnd = ZeroCornerSize,
+              ),
+          content = {},
+      )
+    }
   }
 }
 
@@ -151,16 +217,21 @@ private fun PreviewAppHeader() {
       icon = 0,
       name = "TEST",
       imageLoader = createNewTestImageLoader(),
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewAppHeaderDialog() {
+  AppHeaderDialog(
+      icon = 0,
+      name = "TEST",
+      imageLoader = createNewTestImageLoader(),
   ) {
     item {
-      Surface(
-          modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-      ) {
-        Text(
-            text = "Test",
-            style = MaterialTheme.typography.body1,
-        )
-      }
+      Text(
+          text = "Just a Test",
+      )
     }
   }
 }

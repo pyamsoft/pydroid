@@ -28,6 +28,9 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnDestroy
 
+/** Upon upgrade action started, this callback will run */
+public typealias OnUpgradeStartedCallback = () -> Unit
+
 /**
  * A self contained class which is able to check for updates and prompt the user to install them
  * in-app. Adopts the theme from whichever composable it is rendered into
@@ -63,17 +66,32 @@ internal constructor(
     VersionUpgradeDialog.show(act)
   }
 
-  /** Render into a composable the version check screen upsell */
+  /**
+   * Render into a composable the version check screen upsell
+   *
+   * Using custom UI
+   */
+  @Composable
+  public fun Render(
+      content: @Composable (VersionCheckViewState, OnUpgradeStartedCallback) -> Unit,
+  ) {
+    val state = viewModel.requireNotNull().state()
+    content(state) { handleUpgrade() }
+  }
+
+  /** Render into a composable the default version check screen upsell */
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
   ) {
-    VersionCheckScreen(
-        modifier = modifier,
-        state = viewModel.requireNotNull().state(),
-        appName = appName,
-        onUpgrade = { handleUpgrade() },
-    )
+    Render { state, onUpgradeStarted ->
+      VersionCheckScreen(
+          modifier = modifier,
+          state = state,
+          appName = appName,
+          onUpgrade = onUpgradeStarted,
+      )
+    }
   }
 
   public companion object {

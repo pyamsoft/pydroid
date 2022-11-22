@@ -43,6 +43,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
+import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private val MAX_HEIGHT_PORTRAIT = 360.dp
@@ -67,7 +68,7 @@ internal fun DataPolicyDisclosureScreen(
       name = name,
       imageLoader = imageLoader,
   ) {
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Disclosure(
@@ -76,7 +77,7 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Links(
@@ -86,7 +87,7 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Actions(
@@ -96,9 +97,7 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    snackbar(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    item {
       NavigationError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,

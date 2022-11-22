@@ -20,7 +20,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -29,8 +28,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,12 +38,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import coil.ImageLoader
 import coil.compose.AsyncImage
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
 private fun AppHeader(
@@ -52,10 +49,10 @@ private fun AppHeader(
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
-    elevation: Dp = ZeroElevation,
-    color: Color = MaterialTheme.colors.surface,
 ) {
-  val imageHeight = ImageDefaults.LargeSize
+  val elevation = LocalDialogElevation.current
+  val color = LocalDialogColor.current
+
   Box(
       modifier = modifier,
       contentAlignment = Alignment.BottomCenter,
@@ -63,7 +60,7 @@ private fun AppHeader(
     // Behind the content
     // Space half the height and draw the header behind it
     Surface(
-        modifier = Modifier.fillMaxWidth().height(imageHeight / 2),
+        modifier = Modifier.fillMaxWidth().height(ImageDefaults.LargeSize / 2),
         elevation = elevation,
         color = color,
         shape =
@@ -88,85 +85,16 @@ private fun AppHeader(
   }
 }
 
-internal interface AppHeaderScope {
-
-  fun item(
-      content: @Composable () -> Unit,
-  )
-
-  fun item(
-      modifier: Modifier,
-      content: @Composable () -> Unit,
-  )
-
-  fun snackbar(
-      content: @Composable () -> Unit,
-  )
-
-  fun snackbar(
-      modifier: Modifier,
-      content: @Composable () -> Unit,
-  )
+private fun noLocalProvidedFor(name: String): Nothing {
+  error("CompositionLocal $name not present")
 }
 
-private data class AppHeaderScopeImpl(
-    private val elevation: Dp,
-    private val color: Color,
-) : AppHeaderScope {
+/** Dialog elevation */
+private val LocalDialogElevation =
+    compositionLocalOf<Dp> { noLocalProvidedFor("LocalDialogElevation") }
 
-  private var scope: LazyListScope? = null
-
-  fun withScope(
-      scope: LazyListScope,
-      block: AppHeaderScope.() -> Unit,
-  ) {
-    this.scope = scope
-    block()
-    this.scope = null
-  }
-
-  fun eraseScope() {
-    this.scope = null
-  }
-
-  override fun item(content: @Composable () -> Unit) {
-    this.item(modifier = Modifier, content = content)
-  }
-
-  override fun item(modifier: Modifier, content: @Composable () -> Unit) {
-    scope?.item {
-      Surface(
-          modifier = modifier,
-          elevation = elevation,
-          color = color,
-          shape = RectangleShape,
-      ) {
-        Box(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
-        ) {
-          content()
-        }
-      }
-    }
-  }
-
-  override fun snackbar(content: @Composable () -> Unit) {
-    this.snackbar(modifier = Modifier, content = content)
-  }
-
-  override fun snackbar(modifier: Modifier, content: @Composable () -> Unit) {
-    scope?.item {
-      Surface(
-          modifier = modifier,
-          elevation = elevation,
-          color = color,
-          shape = RectangleShape,
-      ) {
-        content()
-      }
-    }
-  }
-}
+/** Dialog color */
+private val LocalDialogColor = compositionLocalOf<Color> { noLocalProvidedFor("LocalDialogColor") }
 
 @Composable
 internal fun AppHeaderDialog(
@@ -175,52 +103,65 @@ internal fun AppHeaderDialog(
     name: String,
     imageLoader: ImageLoader,
     color: Color = MaterialTheme.colors.surface,
-    content: AppHeaderScope.() -> Unit,
+    content: LazyListScope.() -> Unit,
 ) {
-  val elevation = remember { DialogDefaults.Elevation }
-  val appHeaderScope =
-      remember(
-          elevation,
-          color,
-      ) {
-        AppHeaderScopeImpl(elevation, color)
+  CompositionLocalProvider(
+      LocalDialogElevation provides DialogDefaults.Elevation,
+      LocalDialogColor provides color,
+  ) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
+      val scope = this
+      item {
+        AppHeader(
+            modifier = Modifier.fillMaxWidth(),
+            icon = icon,
+            name = name,
+            imageLoader = imageLoader,
+        )
       }
 
-  DisposableEffect(appHeaderScope) {
-    onDispose {
-      Logger.d("Erase AppHeader scope on dispose")
-      appHeaderScope.eraseScope()
+      scope.content()
+
+      // Footer for dialogs
+      item {
+        val elevation = LocalDialogElevation.current
+        val c = LocalDialogColor.current
+
+        Surface(
+            modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
+            elevation = elevation,
+            color = c,
+            shape =
+                MaterialTheme.shapes.medium.copy(
+                    topStart = ZeroCornerSize,
+                    topEnd = ZeroCornerSize,
+                ),
+            content = {},
+        )
+      }
     }
   }
+}
 
-  LazyColumn(
-      modifier = modifier,
-  ) {
-    item {
-      AppHeader(
-          modifier = Modifier.fillMaxWidth(),
-          elevation = elevation,
-          icon = icon,
-          name = name,
-          imageLoader = imageLoader,
-      )
-    }
-    // Apply the scope for this render pass
-    appHeaderScope.withScope(this) { content() }
+/** Wraps a LazyListScope.item in a Surface so it appears in the Dialog correctly */
+internal inline fun LazyListScope.dialogItem(
+    modifier: Modifier = Modifier,
+    crossinline content: @Composable () -> Unit
+) {
+  val self = this
+  self.item {
+    val elevation = LocalDialogElevation.current
+    val color = LocalDialogColor.current
 
-    // Footer for dialogs
-    item {
-      Surface(
-          modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
-          elevation = elevation,
-          color = color,
-          shape =
-              MaterialTheme.shapes.medium.copy(
-                  topStart = ZeroCornerSize,
-                  topEnd = ZeroCornerSize,
-              ),
-          content = {},
-      )
+    Surface(
+        modifier = modifier,
+        elevation = elevation,
+        color = color,
+        shape = RectangleShape,
+    ) {
+      content()
     }
   }
 }

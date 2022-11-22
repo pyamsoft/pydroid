@@ -43,6 +43,7 @@ import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
+import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 @Composable
@@ -62,7 +63,7 @@ internal fun BillingScreen(
       name = state.name,
       imageLoader = imageLoader,
   ) {
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Crossfade(
@@ -86,7 +87,7 @@ internal fun BillingScreen(
       }
     }
 
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Row(
@@ -105,9 +106,7 @@ internal fun BillingScreen(
       }
     }
 
-    snackbar(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    item {
       BillingError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,

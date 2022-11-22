@@ -37,6 +37,7 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
+import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
@@ -55,7 +56,7 @@ internal fun ChangeLogScreen(
       name = state.name,
       imageLoader = imageLoader,
   ) {
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       ChangeLog(
@@ -64,7 +65,7 @@ internal fun ChangeLogScreen(
       )
     }
 
-    item(
+    dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Actions(

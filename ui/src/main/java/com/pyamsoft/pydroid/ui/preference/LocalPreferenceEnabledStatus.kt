@@ -16,10 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.structuralEqualityPolicy
 
 /** Preference is enabled local */
-internal val LocalPreferenceEnabledStatus: ProvidableCompositionLocal<Boolean> =
-    compositionLocalOf(structuralEqualityPolicy()) { true }
+internal val LocalPreferenceEnabledStatus = compositionLocalOf { true }

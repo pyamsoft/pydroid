@@ -20,13 +20,13 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
-import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Upon upgrade action started, this callback will run */
 public typealias OnUpgradeStartedCallback = () -> Unit
@@ -40,21 +40,13 @@ internal constructor(
     activity: FragmentActivity,
     private val appName: String,
 ) {
-
+  // Keep for Dialog showing
   private var activity: FragmentActivity? = null
 
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
     inject(activity)
-    unbindOnDestroy(activity)
-  }
-
-  private fun unbindOnDestroy(activity: FragmentActivity) {
-    activity.doOnDestroy {
-      this.activity = null
-      viewModel = null
-    }
   }
 
   private fun inject(activity: FragmentActivity) {
@@ -62,8 +54,14 @@ internal constructor(
   }
 
   private fun handleUpgrade() {
-    val act = activity.requireNotNull()
+    val act = activity.requireNotNull { "Lost Activity somewhere! Was destroy() already called?" }
     VersionUpgradeDialog.show(act)
+  }
+
+  public fun destroy() {
+    Logger.d("Destroy, clear Activity ref")
+    activity = null
+    viewModel = null
   }
 
   /**

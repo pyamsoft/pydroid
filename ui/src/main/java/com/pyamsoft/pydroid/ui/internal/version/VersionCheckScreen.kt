@@ -46,7 +46,6 @@ internal fun VersionCheckScreen(
   Column(
       modifier =
           modifier
-              .padding(MaterialTheme.keylines.content)
               .border(
                   width = HairlineSize,
                   color = MaterialTheme.colors.primary,

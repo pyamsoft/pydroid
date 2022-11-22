@@ -66,11 +66,6 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     recompose()
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    isCancelable = false
-  }
-
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,

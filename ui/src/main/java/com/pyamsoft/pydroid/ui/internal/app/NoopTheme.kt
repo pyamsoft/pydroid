@@ -37,35 +37,8 @@ internal val NoopTheme: ComposeTheme =
 
       /** Must be named "invoke" to work with Kotlin function calling */
       @Composable
-      @SuppressLint("ComposableNaming")
       override operator fun invoke(
           activity: Activity,
-          content: @Composable () -> Unit,
-      ) {
-        // We update the LocalContentColor to match our onBackground. This allows the default
-        // content color to be more appropriate to the theme background
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colors.onBackground,
-            content = content,
-        )
-      }
-    }
-
-/**
- * A Compose theme provider which does nothing
- *
- * Can't use object literal or we lose @Composable context
- */
-@Suppress("ObjectLiteralToLambda")
-internal val NoopThemeProvider: ComposeThemeProvider =
-    object : ComposeThemeProvider {
-
-      /** Must be named "invoke" to work with Kotlin function calling */
-      @Composable
-      @SuppressLint("ComposableNaming")
-      override operator fun invoke(
-          activity: Activity,
-          themeProvider: ThemeProvider,
           content: @Composable () -> Unit,
       ) {
         // We update the LocalContentColor to match our onBackground. This allows the default

@@ -27,7 +27,8 @@ internal class ChangeLogDialogViewModeler
 internal constructor(
     private val state: MutableChangeLogDialogViewState,
     private val interactor: ChangeLogInteractor,
-    private val provider: ChangeLogProvider
+    private val provider: ChangeLogProvider,
+    private val version: Int,
 ) : AbstractViewModeler<ChangeLogDialogViewState>(state) {
 
   fun bind(scope: CoroutineScope) {
@@ -36,7 +37,7 @@ internal constructor(
       state.apply {
         name = displayName
         icon = provider.applicationIcon
-        applicationVersionCode = provider.applicationVersionCode
+        applicationVersionCode = version
         changeLog = provider.changelog.build()
       }
     }

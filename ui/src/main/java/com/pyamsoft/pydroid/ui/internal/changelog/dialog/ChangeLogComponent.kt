@@ -35,6 +35,7 @@ internal interface ChangeLogComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
+        internal val version: Int,
     )
   }
 
@@ -52,6 +53,7 @@ internal interface ChangeLogComponent {
               state = MutableChangeLogDialogViewState(),
               interactor = params.changeLogModule.provideInteractor(),
               provider = provider,
+              version = params.version,
           )
     }
 

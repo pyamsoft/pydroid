@@ -164,6 +164,7 @@ internal interface AppComponent {
             changeLogModule = params.changeLogModule,
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
+            version = params.version,
         )
 
     override fun inject(activity: PYDroidActivity) {

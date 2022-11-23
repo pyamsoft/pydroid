@@ -22,18 +22,6 @@ import androidx.compose.runtime.Composable
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 
-/** Alias for a theme type */
-internal fun interface ComposeTheme {
-
-  /** Must be named "invoke" to work with Kotlin function calling */
-  @Composable
-  @SuppressLint("ComposableNaming")
-  operator fun invoke(
-      activity: Activity,
-      content: @Composable () -> Unit,
-  )
-}
-
 /** Composable theme consumer */
 public fun interface ComposeThemeProvider {
 
@@ -43,6 +31,18 @@ public fun interface ComposeThemeProvider {
   public operator fun invoke(
       activity: Activity,
       themeProvider: ThemeProvider,
+      content: @Composable () -> Unit,
+  )
+}
+
+/** Alias for a theme type */
+internal fun interface ComposeTheme {
+
+  /** Must be named "invoke" to work with Kotlin function calling */
+  @Composable
+  @SuppressLint("ComposableNaming")
+  operator fun invoke(
+      activity: Activity,
       content: @Composable () -> Unit,
   )
 }

@@ -16,15 +16,37 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
+import androidx.compose.runtime.Composable
 import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
+import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
+
+/**
+ * A Compose theme provider which does nothing
+ *
+ * Can't use object literal or we lose @Composable context
+ */
+private object NoopThemeProvider : ComposeThemeProvider {
+
+  /** Must be named "invoke" to work with Kotlin function calling */
+  @Composable
+  override operator fun invoke(
+      activity: Activity,
+      themeProvider: ThemeProvider,
+      content: @Composable () -> Unit,
+  ) {
+    NoopTheme(activity, content)
+  }
+}
 
 /** PYDroid library entry point */
 public object PYDroid {
@@ -54,7 +76,7 @@ public object PYDroid {
    *    name = getString(R.string.app_name),
    *    bugReportUrl = getString(R.string.bug_report),
    *    version = BuildConfig.VERSION_CODE,
-   *    debug = BuildConfig.DEBUG
+   *    debug = PYDroid.DebugParameters( ... )
    * ```
    * ))
    */
@@ -89,21 +111,43 @@ public object PYDroid {
   public data class Parameters
   @JvmOverloads
   public constructor(
+      /** The Coil image loader instance */
       override val lazyImageLoader: Lazy<ImageLoader>,
+
+      /** URL to view application source code */
       override val viewSourceUrl: String,
+
+      /** URL to submit application bug reports */
       override val bugReportUrl: String,
+
+      /** URL for privacy policy */
       override val privacyPolicyUrl: String,
+
+      /** URL for TOS */
       override val termsConditionsUrl: String,
+
+      /** Application version code */
       override val version: Int,
+
+      /** Logger implementation */
       override val logger: PYDroidLogger? = null,
-      internal val theme: ComposeThemeProvider? = null,
+
+      /** Theme for Composables */
+      internal val theme: ComposeThemeProvider = NoopThemeProvider,
+
+      /** Debug options */
       internal val debug: DebugParameters? = null,
   ) : BaseParameters
 
   /** PYDroid debugging parameters */
   public data class DebugParameters(
+      /** Is general debugging enabled (log messages, testing behaviors) */
       internal val enabled: Boolean,
+
+      /** Is there an upgrade ready to install? */
       internal val upgradeAvailable: Boolean,
+
+      /** Should the user be prompted to rate the application? */
       internal val ratingAvailable: Boolean,
   )
 

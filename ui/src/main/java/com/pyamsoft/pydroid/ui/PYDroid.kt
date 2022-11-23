@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
+import com.pyamsoft.pydroid.ui.app.invoke
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -37,9 +38,8 @@ import java.util.concurrent.atomic.AtomicReference
  */
 private object NoopThemeProvider : ComposeThemeProvider {
 
-  /** Must be named "invoke" to work with Kotlin function calling */
   @Composable
-  override operator fun invoke(
+  override fun Render(
       activity: Activity,
       themeProvider: ThemeProvider,
       content: @Composable () -> Unit,

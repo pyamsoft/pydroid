@@ -32,14 +32,15 @@ import com.pyamsoft.pydroid.ui.app.ComposeTheme
 internal val NoopTheme: ComposeTheme =
     object : ComposeTheme {
 
-      /** Must be named "invoke" to work with Kotlin function calling */
       @Composable
-      override operator fun invoke(
+      override fun Render(
           activity: Activity,
           content: @Composable () -> Unit,
       ) {
         // We update the LocalContentColor to match our onBackground. This allows the default
         // content color to be more appropriate to the theme background
+        //
+        // This is what a default MaterialTheme does. Otherwise, do nothing else.
         CompositionLocalProvider(
             LocalContentColor provides MaterialTheme.colors.onBackground,
             content = content,

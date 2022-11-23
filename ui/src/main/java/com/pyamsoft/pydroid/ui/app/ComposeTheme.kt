@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.runtime.Composable
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
@@ -25,26 +24,45 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 /** Composable theme consumer */
 public fun interface ComposeThemeProvider {
 
-  /** Must be named "invoke" to work with Kotlin function calling */
+  /** Renders content() with the provided compose theme */
   @Composable
-  @SuppressLint("ComposableNaming")
-  public operator fun invoke(
+  public fun Render(
       activity: Activity,
       themeProvider: ThemeProvider,
       content: @Composable () -> Unit,
   )
 }
 
+/** Convenience method for rendering a theme provider */
+@Composable
+public operator fun ComposeThemeProvider.invoke(
+    activity: Activity,
+    themeProvider: ThemeProvider,
+    content: @Composable () -> Unit,
+) {
+  val self = this
+  self.Render(activity, themeProvider, content)
+}
+
 /** Alias for a theme type */
 internal fun interface ComposeTheme {
 
-  /** Must be named "invoke" to work with Kotlin function calling */
+  /** Renders content() with the provided compose theme */
   @Composable
-  @SuppressLint("ComposableNaming")
-  operator fun invoke(
+  fun Render(
       activity: Activity,
       content: @Composable () -> Unit,
   )
+}
+
+/** Convenience method for rendering a theme provider */
+@Composable
+internal operator fun ComposeTheme.invoke(
+    activity: Activity,
+    content: @Composable () -> Unit,
+) {
+  val self = this
+  self.Render(activity, content)
 }
 
 /** Generates a ComposeTheme */
@@ -53,10 +71,8 @@ internal class ComposeThemeFactory(
     private val themeProvider: ComposeThemeProvider,
 ) : ComposeTheme {
 
-  /** Must be named "invoke" to work with Kotlin function calling */
   @Composable
-  @SuppressLint("ComposableNaming")
-  override operator fun invoke(activity: Activity, content: @Composable () -> Unit) {
+  override fun Render(activity: Activity, content: @Composable () -> Unit) {
     val provider = ThemeProvider { theming.isDarkTheme(activity) }
     themeProvider(
         activity = activity,

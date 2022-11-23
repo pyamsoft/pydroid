@@ -52,12 +52,18 @@ private constructor(
     private val instance: PYDroidInitializer,
 ) {
 
+  /** Resolve and return exposed Modules for this PYDroid instance */
+  @CheckResult
+  public fun modules(): ModuleProvider.Modules {
+    return instance.moduleProvider.get()
+  }
+
   /** Override Application.getSystemService() with this to get the PYDroid object graph */
   @CheckResult
   public fun getSystemService(name: String): Any? =
       when (name) {
         PYDroidComponent::class.java.name -> instance.component
-        Theming::class.java.name -> instance.moduleProvider.get().theming()
+        Theming::class.java.name -> modules().theming()
         else -> null
       }
 
@@ -65,7 +71,11 @@ private constructor(
   public data class Parameters
   @JvmOverloads
   public constructor(
-      /** The Coil image loader instance */
+      /**
+       * The Coil image loader instance
+       *
+       * Must be lazy since Coil calls getSystemService() internally, leading to SO exception
+       */
       override val lazyImageLoader: Lazy<ImageLoader>,
 
       /** URL to view application source code */
@@ -152,7 +162,10 @@ private constructor(
      */
     @JvmStatic
     @CheckResult
-    public fun init(application: Application, params: Parameters): PYDroid {
+    public fun init(
+        application: Application,
+        params: Parameters,
+    ): PYDroid {
       val instance = PYDroidInitializer.create(application, params)
       Logger.d("Initialize new PYDroid instance: $instance")
       return PYDroid(instance)

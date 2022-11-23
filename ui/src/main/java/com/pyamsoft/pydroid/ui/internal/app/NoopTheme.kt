@@ -16,15 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.pyamsoft.pydroid.ui.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
-import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 
 /**
  * A Compose theme which does nothing

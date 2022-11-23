@@ -125,12 +125,25 @@ private constructor(
      * Track the Instance at the application level, such as:
      *
      * ```
-     * val pydroid = PYDroid.init(this, PYDroid.Parameters(
-     *    name = getString(R.string.app_name),
-     *    bugReportUrl = getString(R.string.bug_report),
-     *    version = BuildConfig.VERSION_CODE,
-     *    debug = PYDroid.DebugParameters( ... )
-     * ))
+     * Application.kt
+     *
+     * private var pydroid: PYDroid? = null
+     *
+     * override fun onCreate() {
+     *   this.pydroid = PYDroid.init(
+     *     this,
+     *     PYDroid.Parameters(
+     *       name = getString(R.string.app_name),
+     *       bugReportUrl = getString(R.string.bug_report),
+     *       version = BuildConfig.VERSION_CODE,
+     *       debug = PYDroid.DebugParameters( ... ),
+     *     ),
+     *   )
+     * }
+     *
+     * override fun getSystemService(name: String): Any? {
+     *   return pydroid?.getSystemService(name) ?: super.getSystemService(name)
+     * }
      * ```
      *
      * Generally speaking, you should treat a PYDroid instance as a Singleton. If you create more

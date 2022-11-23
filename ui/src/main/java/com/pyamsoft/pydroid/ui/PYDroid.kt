@@ -23,13 +23,11 @@ import androidx.compose.runtime.Composable
 import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
-import com.pyamsoft.pydroid.ui.app.invoke
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
-import java.util.concurrent.atomic.AtomicReference
 
 /**
  * A Compose theme provider which does nothing
@@ -49,61 +47,17 @@ private object NoopThemeProvider : ComposeThemeProvider {
 }
 
 /** PYDroid library entry point */
-public object PYDroid {
-
-  private val instance = AtomicReference<PYDroidInitializer?>(null)
-
-  /**
-   * Access point for library versionComponent graph
-   *
-   * PYDroid internal
-   */
-  @JvmStatic
-  @CheckResult
-  private fun instance(): PYDroidInitializer {
-    return instance.get().requireNotNull {
-      "PYDroid not initialized, call PYDroid.init() in Application.onCreate()"
-    }
-  }
-
-  /**
-   * Initialize the library
-   *
-   * Track the Instance at the application level, such as:
-   *
-   * PYDroid.init(this, PYDroid.Parameters(
-   * ```
-   *    name = getString(R.string.app_name),
-   *    bugReportUrl = getString(R.string.bug_report),
-   *    version = BuildConfig.VERSION_CODE,
-   *    debug = PYDroid.DebugParameters( ... )
-   * ```
-   * ))
-   */
-  @JvmStatic
-  @CheckResult
-  public fun init(application: Application, params: Parameters): ModuleProvider {
-    if (instance.get() == null) {
-      synchronized(this) {
-        if (instance.get() == null) {
-          val pydroid = PYDroidInitializer.create(application, params)
-          if (instance.compareAndSet(null, pydroid)) {
-            Logger.d("PYDroid is initialized.")
-          }
-        }
-      }
-    }
-
-    return instance().moduleProvider
-  }
+public class PYDroid
+private constructor(
+    private val instance: PYDroidInitializer,
+) {
 
   /** Override Application.getSystemService() with this to get the PYDroid object graph */
-  @JvmStatic
   @CheckResult
   public fun getSystemService(name: String): Any? =
       when (name) {
-        PYDroidComponent::class.java.name -> instance().component
-        Theming::class.java.name -> instance().moduleProvider.get().theming()
+        PYDroidComponent::class.java.name -> instance.component
+        Theming::class.java.name -> instance.moduleProvider.get().theming()
         else -> null
       }
 
@@ -160,5 +114,35 @@ public object PYDroid {
     val termsConditionsUrl: String
     val version: Int
     val logger: PYDroidLogger?
+  }
+
+  /** Static methods */
+  public companion object {
+
+    /**
+     * Initialize the library
+     *
+     * Track the Instance at the application level, such as:
+     *
+     * ```
+     * val pydroid = PYDroid.init(this, PYDroid.Parameters(
+     *    name = getString(R.string.app_name),
+     *    bugReportUrl = getString(R.string.bug_report),
+     *    version = BuildConfig.VERSION_CODE,
+     *    debug = PYDroid.DebugParameters( ... )
+     * ))
+     * ```
+     *
+     * Generally speaking, you should treat a PYDroid instance as a Singleton. If you create more
+     * than one instance and attempt to swap them out at runtime, the behavior of the library and
+     * its dependent components is completely undefined.
+     */
+    @JvmStatic
+    @CheckResult
+    public fun init(application: Application, params: Parameters): PYDroid {
+      val instance = PYDroidInitializer.create(application, params)
+      Logger.d("Initialize new PYDroid instance: $instance")
+      return PYDroid(instance)
+    }
   }
 }

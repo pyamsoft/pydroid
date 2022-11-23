@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 
 internal interface ChangeLogComponent {

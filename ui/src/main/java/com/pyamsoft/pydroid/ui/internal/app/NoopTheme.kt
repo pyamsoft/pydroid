@@ -21,7 +21,6 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
 
 /**
  * A Compose theme which does nothing

@@ -27,10 +27,10 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent

@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface DataPolicyDialogComponent {
 

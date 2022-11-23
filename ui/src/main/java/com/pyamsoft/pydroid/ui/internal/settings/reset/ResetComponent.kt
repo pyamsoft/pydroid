@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface ResetComponent {
 

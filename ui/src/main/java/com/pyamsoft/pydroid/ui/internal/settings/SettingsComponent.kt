@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler

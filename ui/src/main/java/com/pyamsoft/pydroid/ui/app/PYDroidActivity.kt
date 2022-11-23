@@ -40,6 +40,9 @@ import com.pyamsoft.pydroid.util.doOnCreate
  */
 public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
+  /** Injector component for Dialog and Fragment injection */
+  private var injector: AppComponent? = null
+
   /** DataPolicy Delegate */
   internal var dataPolicy: DataPolicyDelegate? = null
 
@@ -52,6 +55,9 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Version Check Delegate */
   internal var versionCheck: VersionCheckDelegate? = null
 
+  /** Presenter */
+  internal var presenter: AppInternalViewModeler? = null
+
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
 
@@ -63,12 +69,6 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Disable the data policy component */
   protected open val disableDataPolicy: Boolean = false
-
-  /** Injector component for Dialog and Fragment injection */
-  private var injector: AppComponent? = null
-
-  /** Presenter */
-  internal var presenter: AppInternalViewModeler? = null
 
   init {
     connectBilling()

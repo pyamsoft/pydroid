@@ -32,11 +32,11 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.app.invoke
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose

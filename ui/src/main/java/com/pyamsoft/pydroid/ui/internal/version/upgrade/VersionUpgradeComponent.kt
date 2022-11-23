@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
-import com.pyamsoft.pydroid.ui.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface VersionUpgradeComponent {
 

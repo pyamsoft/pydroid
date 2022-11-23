@@ -8,9 +8,14 @@ public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider$Modules {
 
 public final class com/pyamsoft/pydroid/ui/PYDroid {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/PYDroid;
-	public static final fun getSystemService (Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun init (Landroid/app/Application;Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;)Lcom/pyamsoft/pydroid/ui/ModuleProvider;
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/PYDroid$Companion;
+	public synthetic fun <init> (Lcom/pyamsoft/pydroid/ui/PYDroidInitializer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getSystemService (Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun init (Landroid/app/Application;Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;)Lcom/pyamsoft/pydroid/ui/PYDroid;
+}
+
+public final class com/pyamsoft/pydroid/ui/PYDroid$Companion {
+	public final fun init (Landroid/app/Application;Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;)Lcom/pyamsoft/pydroid/ui/PYDroid;
 }
 
 public final class com/pyamsoft/pydroid/ui/PYDroid$DebugParameters {
@@ -52,7 +57,11 @@ public final class com/pyamsoft/pydroid/ui/PYDroid$Parameters : com/pyamsoft/pyd
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/app/ComposeThemeProvider {
-	public abstract fun invoke (Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+	public abstract fun Render (Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
+}
+
+public final class com/pyamsoft/pydroid/ui/app/ComposeThemeProviderKt {
+	public static final fun invoke (Lcom/pyamsoft/pydroid/ui/app/ComposeThemeProvider;Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
@@ -70,7 +79,6 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/internal/changelog/ChangeLogProvider {
 	public static final field $stable I
 	public fun <init> ()V
-	public final fun RenderVersionCheck (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 	public final fun checkUpdates ()V
 	public final fun confirmUpgrade ()V
 	protected fun getDisableBilling ()Z
@@ -180,9 +188,13 @@ public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$App
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public static field lambda-2 Lkotlin/jvm/functions/Function2;
+	public static field lambda-3 Lkotlin/jvm/functions/Function3;
+	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
@@ -468,6 +480,7 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun isCheckingForUpdate ()Z
 	public abstract fun isUpdateAvailable ()Z
 	public abstract fun isUpdateReadyToInstall ()Z
 }
@@ -475,8 +488,10 @@ public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckView
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
-	public final fun Render (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
+	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public final fun destroy ()V
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {

@@ -61,7 +61,6 @@ internal interface PYDroidComponent {
 
     data class Parameters
     internal constructor(
-        override val lazyImageLoader: Lazy<ImageLoader>,
         override val privacyPolicyUrl: String,
         override val bugReportUrl: String,
         override val viewSourceUrl: String,
@@ -83,7 +82,13 @@ internal interface PYDroidComponent {
 
     private val context: Context = params.application
 
-    private val imageLoader: ImageLoader by params.lazyImageLoader
+    // Must be Lazy since ImageLoader calls getSystemService() internally.
+    // Since we override Application.getSystemService() for PYDroid.getSystemService()
+    // this can lead to StackOverflow errors unless initialization is done in a very specific order.
+    //
+    // This setup system is not perfect and we are looking to hopefully have something better soon.
+    private val imageLoader: ImageLoader by
+        lazy(LazyThreadSafetyMode.NONE) { ImageLoader(params.application) }
 
     private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
 
@@ -175,6 +180,11 @@ internal interface PYDroidComponent {
             private val modules by
                 lazy(LazyThreadSafetyMode.NONE) {
                   object : ModuleProvider.Modules {
+
+                    override fun imageLoader(): ImageLoader {
+                      return imageLoader
+                    }
+
                     override fun theming(): Theming {
                       return theming
                     }

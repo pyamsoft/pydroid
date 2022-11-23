@@ -71,13 +71,6 @@ private constructor(
   public data class Parameters
   @JvmOverloads
   public constructor(
-      /**
-       * The Coil image loader instance
-       *
-       * Must be lazy since Coil calls getSystemService() internally, leading to SO exception
-       */
-      override val lazyImageLoader: Lazy<ImageLoader>,
-
       /** URL to view application source code */
       override val viewSourceUrl: String,
 
@@ -117,7 +110,6 @@ private constructor(
 
   /** Base parameters for PYDroid */
   internal interface BaseParameters {
-    val lazyImageLoader: Lazy<ImageLoader>
     val viewSourceUrl: String
     val bugReportUrl: String
     val privacyPolicyUrl: String

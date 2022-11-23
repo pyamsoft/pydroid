@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
+import coil.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 /** Provide constructed objects from PYDroid to outside consumers */
@@ -28,7 +29,10 @@ public interface ModuleProvider {
   /** Modules from PYDroid */
   public interface Modules {
 
-    /** Provide a dark-light theming interface */
+    /** System dark-light theming interface */
+    @CheckResult public fun imageLoader(): ImageLoader
+
+    /** System dark-light theming interface */
     @CheckResult public fun theming(): Theming
   }
 }

@@ -52,7 +52,6 @@ internal constructor(
                       version = params.version,
                       theme = params.theme,
                       logger = params.logger,
-                      lazyImageLoader = params.lazyImageLoader,
                       debug =
                           PYDroidComponent.Component.DebugParameters(
                               enabled = isDebug,

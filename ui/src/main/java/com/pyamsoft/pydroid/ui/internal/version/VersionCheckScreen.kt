@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.HairlineSize
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
@@ -43,31 +45,39 @@ internal fun VersionCheckScreen(
     return
   }
 
-  Column(
-      modifier =
-          modifier
-              .border(
-                  width = HairlineSize,
-                  color = MaterialTheme.colors.primary,
-                  shape = MaterialTheme.shapes.medium,
-              )
-              .padding(MaterialTheme.keylines.content),
+  Surface(
+      modifier = modifier,
+      border =
+          BorderStroke(
+              width = HairlineSize,
+              color = MaterialTheme.colors.primary,
+          ),
+      elevation = CardDefaults.VersionCheckElevation,
+      color =
+          MaterialTheme.colors.primary.copy(
+              alpha = 0.16F,
+          ),
+      shape = MaterialTheme.shapes.medium,
   ) {
-    Text(
-        text = "An update is available to a newer version of $appName!",
-        style =
-            MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.primary,
-            ),
-    )
-
-    Button(
-        modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        onClick = onUpgrade,
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       Text(
-          text = "Update",
+          text = "An update is available for $appName",
+          style =
+              MaterialTheme.typography.body2.copy(
+                  color = MaterialTheme.colors.primary,
+              ),
       )
+
+      OutlinedButton(
+          modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+          onClick = onUpgrade,
+      ) {
+        Text(
+            text = "Update",
+        )
+      }
     }
   }
 }

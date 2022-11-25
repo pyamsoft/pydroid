@@ -20,7 +20,6 @@ import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
-import coil.ImageLoader
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider

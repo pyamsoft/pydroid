@@ -109,6 +109,7 @@ public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/CardDefaults;
 	public final fun getElevation-D9Ej5fM ()F
+	public final fun getVersionCheckElevation-D9Ej5fM ()F
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/DialogDefaults {
@@ -268,12 +269,10 @@ public final class com/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSi
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public static field lambda-3 Lkotlin/jvm/functions/Function3;
-	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
@@ -480,8 +479,8 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun getAvailableUpdateVersionCode ()I
 	public abstract fun isCheckingForUpdate ()Z
-	public abstract fun isUpdateAvailable ()Z
 	public abstract fun isUpdateReadyToInstall ()Z
 }
 
@@ -490,11 +489,11 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 	public final fun destroy ()V
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 

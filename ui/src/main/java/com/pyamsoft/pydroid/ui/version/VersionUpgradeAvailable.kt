@@ -45,7 +45,6 @@ public typealias VersionUpgradeWidget =
 public class VersionUpgradeAvailable
 internal constructor(
     activity: FragmentActivity,
-    private val appName: String,
 ) {
   private var hostingActivity: FragmentActivity? = activity
 
@@ -60,9 +59,14 @@ internal constructor(
     }
   }
 
-  private fun handleUpgrade() {
+  private fun handleUpgrade(
+      newVersionCode: Int,
+  ) {
     val act = hostingActivity.requireNotNull()
-    VersionUpgradeDialog.show(act)
+    VersionUpgradeDialog.show(
+        activity = act,
+        newVersionCode = newVersionCode,
+    )
   }
 
   public fun destroy() {
@@ -78,7 +82,11 @@ internal constructor(
   @Composable
   public fun Render(content: @Composable VersionUpgradeWidget) {
     val state = viewModel.requireNotNull().state()
-    content(state) { handleUpgrade() }
+    content(state) {
+      handleUpgrade(
+          newVersionCode = state.availableUpdateVersionCode,
+      )
+    }
   }
 
   /** Render into a composable the default version check screen upsell */
@@ -90,7 +98,6 @@ internal constructor(
       VersionCheckScreen(
           modifier = modifier,
           state = state,
-          appName = appName,
           onUpgrade = onUpgradeStarted,
       )
     }
@@ -103,12 +110,8 @@ internal constructor(
     @CheckResult
     public fun create(
         activity: FragmentActivity,
-        appName: String,
     ): VersionUpgradeAvailable {
-      return VersionUpgradeAvailable(
-          activity,
-          appName,
-      )
+      return VersionUpgradeAvailable(activity)
     }
   }
 }

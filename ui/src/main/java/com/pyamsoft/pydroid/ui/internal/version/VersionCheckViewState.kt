@@ -20,11 +20,13 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Stable
 internal class MutableVersionCheckViewState : VersionCheckViewState {
   override var isCheckingForUpdate by mutableStateOf(false)
   override var isUpdateReadyToInstall by mutableStateOf(false)
-  override var isUpdateAvailable by mutableStateOf(false)
+  override var availableUpdateVersionCode by
+      mutableStateOf(AppUpdateLauncher.NO_VALID_UPDATE_VERSION)
 }

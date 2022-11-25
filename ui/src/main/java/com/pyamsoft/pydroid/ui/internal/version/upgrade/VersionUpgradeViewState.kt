@@ -24,10 +24,13 @@ import com.pyamsoft.pydroid.arch.UiViewState
 
 @Stable
 internal interface VersionUpgradeViewState : UiViewState {
+  val oldVersionCode: Int
   val upgraded: Boolean
 }
 
 @Stable
-internal class MutableVersionUpgradeViewState : VersionUpgradeViewState {
+internal class MutableVersionUpgradeViewState(
+    override val oldVersionCode: Int,
+) : VersionUpgradeViewState {
   override var upgraded by mutableStateOf(false)
 }

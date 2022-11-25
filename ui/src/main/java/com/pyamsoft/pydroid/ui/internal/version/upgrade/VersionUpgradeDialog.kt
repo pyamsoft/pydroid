@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.inject.Injector
@@ -62,6 +63,13 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
         )
   }
 
+  @CheckResult
+  private fun getNewVersionCode(): Int {
+    return requireArguments()
+        .getInt(KEY_NEW_VERSION, AppUpdateLauncher.NO_VALID_UPDATE_VERSION)
+        .also { require(it != AppUpdateLauncher.NO_VALID_UPDATE_VERSION) }
+  }
+
   private fun handleConfigurationChanged() {
     makeFullWidth()
     recompose()
@@ -75,6 +83,8 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     val act = requireActivity()
     Injector.obtainFromActivity<AppComponent>(act).plusVersionUpgrade().create().inject(this)
 
+    val newVersionCode = getNewVersionCode()
+
     return ComposeView(act).apply {
       id = R.id.dialog_upgrade
 
@@ -84,6 +94,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
           VersionUpgradeScreen(
               modifier = Modifier.fillMaxWidth(),
               state = vm.state(),
+              newVersionCode = newVersionCode,
               onUpgrade = { handleCompleteUpgrade() },
               onClose = { dismiss() },
           )
@@ -117,17 +128,23 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
   companion object {
 
+    private const val KEY_NEW_VERSION = "key_new_version"
     private const val TAG = "VersionUpgradeDialog"
 
     @JvmStatic
     @CheckResult
-    private fun newInstance(): DialogFragment {
-      return VersionUpgradeDialog().apply { arguments = Bundle().apply {} }
+    private fun newInstance(newVersionCode: Int): DialogFragment {
+      return VersionUpgradeDialog().apply {
+        arguments = Bundle().apply { putInt(KEY_NEW_VERSION, newVersionCode) }
+      }
     }
 
     @JvmStatic
-    fun show(activity: FragmentActivity) {
-      return newInstance().show(activity, TAG)
+    fun show(
+        activity: FragmentActivity,
+        newVersionCode: Int,
+    ) {
+      return newInstance(newVersionCode).show(activity, TAG)
     }
   }
 }

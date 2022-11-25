@@ -27,7 +27,7 @@ public interface VersionCheckViewState : UiViewState {
   public val isCheckingForUpdate: Boolean
 
   /** Is there an update available for this application? */
-  public val isUpdateAvailable: Boolean
+  public val availableUpdateVersionCode: Int
 
   /** Is the update downloaded and ready to install? */
   public val isUpdateReadyToInstall: Boolean

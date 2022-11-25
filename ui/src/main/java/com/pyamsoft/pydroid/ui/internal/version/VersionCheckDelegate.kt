@@ -81,8 +81,11 @@ internal class VersionCheckDelegate(
 
     vm.handleConfirmUpgrade(
         scope = act.lifecycleScope,
-    ) {
-      VersionUpgradeDialog.show(act)
+    ) { newVersionCode ->
+      VersionUpgradeDialog.show(
+          activity = act,
+          newVersionCode = newVersionCode,
+      )
     }
   }
 

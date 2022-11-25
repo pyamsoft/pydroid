@@ -53,6 +53,8 @@ internal constructor(
     self.downloadCompletes()
   }
 
+  override fun availableUpdateVersion(): Int = info.availableVersionCode()
+
   override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()

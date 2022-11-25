@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -38,6 +39,7 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 internal fun VersionUpgradeScreen(
     modifier: Modifier = Modifier,
     state: VersionUpgradeViewState,
+    newVersionCode: Int,
     onUpgrade: () -> Unit,
     onClose: () -> Unit,
 ) {
@@ -62,7 +64,10 @@ internal fun VersionUpgradeScreen(
         Box(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         ) {
-          Message()
+          Message(
+              oldVersionCode = state.oldVersionCode,
+              newVersionCode = newVersionCode,
+          )
         }
       }
 
@@ -78,27 +83,52 @@ internal fun VersionUpgradeScreen(
 }
 
 @Composable
-private fun Title() {
+private fun Title(
+    modifier: Modifier = Modifier,
+) {
   Text(
+      modifier = modifier,
       text = "Upgrade Available",
       style = MaterialTheme.typography.h4,
   )
 }
 
 @Composable
-private fun Message() {
-  Column {
+private fun Message(
+    modifier: Modifier = Modifier,
+    oldVersionCode: Int,
+    newVersionCode: Int,
+) {
+  Column(
+      modifier = modifier,
+  ) {
     Text(
         text = "A new version has been downloaded!",
         style = MaterialTheme.typography.body1,
     )
 
-    Box(
+    Column(
         modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
           text = "Click to restart the app and upgrade to the latest version!",
           style = MaterialTheme.typography.body1,
+      )
+
+      Text(
+          text = "Current Version: $oldVersionCode",
+          style =
+              MaterialTheme.typography.caption.copy(
+                  color =
+                      MaterialTheme.colors.onSurface.copy(
+                          alpha = ContentAlpha.medium,
+                      ),
+              ),
+      )
+
+      Text(
+          text = "New Version: $newVersionCode",
+          style = MaterialTheme.typography.caption,
       )
     }
   }
@@ -141,7 +171,12 @@ private fun Actions(
 @Composable
 private fun PreviewVersionUpgradeScreen(upgraded: Boolean) {
   VersionUpgradeScreen(
-      state = MutableVersionUpgradeViewState().apply { this.upgraded = upgraded },
+      state =
+          MutableVersionUpgradeViewState(
+                  oldVersionCode = 1,
+              )
+              .apply { this.upgraded = upgraded },
+      newVersionCode = 2,
       onUpgrade = {},
       onClose = {},
   )

@@ -98,7 +98,7 @@ internal interface AppComponent {
     // Create these here to share between the Settings and PYDroidActivity screens
     private val ratingViewState = MutableRatingViewState()
     private val versionCheckState = MutableVersionCheckViewState()
-    private val versionUpgradeState = MutableVersionUpgradeViewState()
+    private val versionUpgradeState = MutableVersionUpgradeViewState(params.version)
     private val dataPolicyState = MutableDataPolicyViewState()
     private val changeLogState = MutableChangeLogViewState()
 

@@ -63,7 +63,7 @@ internal constructor(
   ) {
     val s = state
 
-    if (s.isUpdateAvailable) {
+    if (s.availableUpdateVersionCode != AppUpdateLauncher.NO_VALID_UPDATE_VERSION) {
       Logger.d("Update is already available, do not check for update again")
       return
     }
@@ -84,10 +84,10 @@ internal constructor(
       checkUpdateRunner
           .call(force)
           .onSuccess { Logger.d("Update data found as: $it") }
-          .onSuccess { s.isUpdateAvailable = true }
+          .onSuccess { s.availableUpdateVersionCode = it.availableUpdateVersion() }
           .onSuccess(onLaunchUpdate)
           .onFailure { Logger.e(it, "Error checking for latest version") }
-          .onFailure { s.isUpdateAvailable = false }
+          .onFailure { s.availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION }
           .onFinally { Logger.d("Done checking for updates") }
           .onFinally { s.isCheckingForUpdate = false }
     }
@@ -95,13 +95,21 @@ internal constructor(
 
   internal fun handleConfirmUpgrade(
       scope: CoroutineScope,
-      onConfirmed: () -> Unit,
+      onConfirmed: (Int) -> Unit,
   ) {
-    if (!state.isUpdateReadyToInstall) {
+    val s = state
+
+    val newVersionCode = s.availableUpdateVersionCode
+    if (newVersionCode == AppUpdateLauncher.NO_VALID_UPDATE_VERSION) {
+      Logger.w("No update version code is available, cannot confirm upgrade")
+      return
+    }
+
+    if (!s.isUpdateReadyToInstall) {
       Logger.w("Update is not ready to install, cannot confirm upgrade!")
       return
     }
 
-    scope.launch(context = Dispatchers.Main) { onConfirmed() }
+    scope.launch(context = Dispatchers.Main) { onConfirmed(newVersionCode) }
   }
 }

@@ -27,15 +27,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.theme.HairlineSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @Composable
 internal fun VersionCheckScreen(
     modifier: Modifier = Modifier,
-    appName: String,
     state: VersionCheckViewState,
     onUpgrade: () -> Unit,
 ) {
@@ -63,7 +65,7 @@ internal fun VersionCheckScreen(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       Text(
-          text = "An update is available for $appName",
+          text = "An update is available to version ${state.availableUpdateVersionCode}",
           style =
               MaterialTheme.typography.body2.copy(
                   color = MaterialTheme.colors.primary,
@@ -88,7 +90,6 @@ private fun PreviewVersionCheckScreen(
 ) {
   Surface {
     VersionCheckScreen(
-        appName = "TEST APP",
         state = state,
         onUpgrade = {},
     )
@@ -101,7 +102,7 @@ private fun PreviewVersionCheckScreenAvailable() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            isUpdateAvailable = true
+            availableUpdateVersionCode = Random.nextInt(1..100)
             isUpdateReadyToInstall = false
           },
   )
@@ -113,7 +114,7 @@ private fun PreviewVersionCheckScreenNotAvailable() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            isUpdateAvailable = false
+            availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
             isUpdateReadyToInstall = false
           },
   )
@@ -125,7 +126,7 @@ private fun PreviewVersionCheckScreenReady() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            isUpdateAvailable = true
+            availableUpdateVersionCode = Random.nextInt(1..100)
             isUpdateReadyToInstall = true
           },
   )
@@ -137,7 +138,7 @@ private fun PreviewVersionCheckScreenNotReady() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            isUpdateAvailable = true
+            availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
             isUpdateReadyToInstall = false
           },
   )

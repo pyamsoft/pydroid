@@ -10,5 +10,5 @@ public object CardDefaults {
   public val Elevation: Dp = 2.dp
 
   /** Elevation for the Version Check Card */
-  public val VersionCheckElevation: Dp = 8.dp
+  public val VersionCheckElevation: Dp = 4.dp
 }

@@ -60,8 +60,9 @@ internal constructor(
       crossinline onDownloadComplete: () -> Unit
   ): InstallStateUpdatedListener {
     return InstallStateUpdatedListener { state ->
-      Logger.d("Install state changed: ${state.installStatus()}")
-      if (state.installStatus() == InstallStatus.DOWNLOADED) {
+      val status = state.installStatus()
+      Logger.d("Install state changed: $status")
+      if (status == InstallStatus.DOWNLOADED) {
         Logger.d("Download completed!")
         onDownloadComplete()
       }

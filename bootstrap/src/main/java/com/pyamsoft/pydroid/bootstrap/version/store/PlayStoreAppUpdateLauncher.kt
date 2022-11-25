@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 internal class PlayStoreAppUpdateLauncher
@@ -35,6 +36,22 @@ internal constructor(
     private val info: AppUpdateInfo,
     @AppUpdateType private val type: Int,
 ) : AppUpdateLauncher {
+
+  private suspend fun FakeAppUpdateManager.fakeUpdate() {
+    val self = this
+
+    Logger.d("User accepts fake update")
+    self.userAcceptsUpdate()
+
+    Logger.d("Start a fake download")
+    self.downloadStarts()
+
+    Logger.d("Fake a delay so the download can happen")
+    delay(4000L)
+
+    Logger.d("Complete a fake download")
+    self.downloadCompletes()
+  }
 
   override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
@@ -45,14 +62,7 @@ internal constructor(
           if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
             Logger.d("Update flow has started")
             if (manager is FakeAppUpdateManager) {
-              Logger.d("User accepts fake update")
-              manager.userAcceptsUpdate()
-
-              Logger.d("Start a fake download")
-              manager.downloadStarts()
-
-              Logger.d("Complete a fake download")
-              manager.downloadCompletes()
+              manager.fakeUpdate()
             }
           }
 

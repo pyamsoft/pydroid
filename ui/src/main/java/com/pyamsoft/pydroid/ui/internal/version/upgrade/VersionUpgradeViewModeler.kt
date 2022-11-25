@@ -38,9 +38,8 @@ internal constructor(
       return
     }
 
+    state.upgraded = true
     scope.launch(context = Dispatchers.Main) {
-      state.upgraded = true
-
       Logger.d("Updating app, restart via update manager!")
       interactor.completeUpdate()
 

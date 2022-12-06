@@ -31,7 +31,9 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnCreate
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 /**
  * The base Activity class for PYDroid.
@@ -57,6 +59,9 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Presenter */
   internal var presenter: AppInternalViewModeler? = null
+
+  /** Accessed from NewVersionWidget */
+  internal var versionUpgrader: VersionUpgradeAvailable? = null
 
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
@@ -184,6 +189,11 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                 disableDataPolicy = disableDataPolicy,
             )
             .also { it.inject(this) }
+
+    // Create it here to be used by NewVersionWidget later on
+    versionUpgrader =
+        VersionUpgradeAvailable.create(activity = this).also { vu -> doOnDestroy { vu.destroy() } }
+
     super.onCreate(savedInstanceState)
   }
 
@@ -226,8 +236,8 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
     rating = null
     versionCheck = null
     dataPolicy = null
-
     injector = null
     presenter = null
+    versionUpgrader = null
   }
 }

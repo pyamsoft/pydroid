@@ -23,6 +23,19 @@ import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.graphics.Color
+
+private val GREEN = Color(0xFF4CAF50)
+
+/** Provide a Theme color for Success */
+@Suppress("unused")
+public val Colors.success: Color
+  get() = GREEN
+
+/** Provide a Theme color for OnSuccess */
+@Suppress("unused")
+public val Colors.onSuccess: Color
+  get() = this.onError
 
 /** A Spacing extension on the Material theme */
 @Suppress("unused")

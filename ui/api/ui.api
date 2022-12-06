@@ -497,3 +497,38 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Compa
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 
+public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/MaterialCheckableKt {
+	public static final fun ColoredMaterialCheckable-0hWCJGs (Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;FLandroidx/compose/runtime/Composer;II)V
+	public static final fun MaterialCheckable-au3_HiA (Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;FLandroidx/compose/runtime/Composer;II)V
+	public static final fun rememberMaterialCheckableHeightMatcherGenerator (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcherGenerator;
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
+	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {
+	public static final fun SwipeRefresh (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcher {
+	public abstract fun getExtraHeight-D9Ej5fM ()F
+	public abstract fun getOnSizeChangedModifier ()Landroidx/compose/ui/Modifier;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcherGenerator {
+	public abstract fun generateFor (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcher;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/MaterialCheckableAlpha {
+	public abstract fun getPrimary ()F
+	public abstract fun getSecondary ()F
+}
+

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.notify
+package com.pyamsoft.pydroid.ui.widget.materialcheckable.internal
 
-/** Exception thrown when no NotifyDispatcher can handle a given notification */
-public class MissingDispatcherException
-internal constructor(dispatchers: Set<NotifyDispatcher<*>>, notification: NotifyData) :
-    IllegalArgumentException(
-        """
-    No dispatcher available to handle notification: $notification
-    Available dispatchers: $dispatchers
-    """
-            .trimIndent())
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
+import com.pyamsoft.pydroid.ui.widget.materialcheckable.HeightMatcher
+
+internal data class HeightMatcherImpl
+internal constructor(
+    override val extraHeight: Dp,
+    override val onSizeChangedModifier: Modifier,
+) : HeightMatcher

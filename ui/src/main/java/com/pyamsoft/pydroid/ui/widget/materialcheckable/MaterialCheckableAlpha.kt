@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.notify
+package com.pyamsoft.pydroid.ui.widget.materialcheckable
 
-/** Exception thrown when no NotifyDispatcher can handle a given notification */
-public class MissingDispatcherException
-internal constructor(dispatchers: Set<NotifyDispatcher<*>>, notification: NotifyData) :
-    IllegalArgumentException(
-        """
-    No dispatcher available to handle notification: $notification
-    Available dispatchers: $dispatchers
-    """
-            .trimIndent())
+/**
+ * MaterialCheckable Alphas
+ *
+ * Alpha can changed based on editable and selected state
+ */
+public interface MaterialCheckableAlpha {
+  /** Primary content alpha */
+  public val primary: Float
+
+  /** Secondary content alpha */
+  public val secondary: Float
+}

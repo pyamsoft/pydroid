@@ -17,16 +17,11 @@
 package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 import com.pyamsoft.pydroid.ui.app.AppProvider
 
-/**
- * Provide app info and changelog
- */
+/** Provide app info and changelog */
 public interface ChangeLogProvider : AppProvider {
 
-  /**
-   * Construct the changelog
-   */
+  /** Construct the changelog */
   @get:CheckResult public val changelog: ChangeLogBuilder
 }

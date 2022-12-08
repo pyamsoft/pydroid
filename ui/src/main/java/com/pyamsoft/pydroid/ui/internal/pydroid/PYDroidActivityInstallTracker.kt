@@ -27,8 +27,8 @@ internal object PYDroidActivityInstallTracker {
   private val trackingMap = mutableMapOf<FragmentActivity, PYDroidActivityDelegateInternal>()
 
   fun install(
-    activity: FragmentActivity,
-    internals: PYDroidActivityDelegateInternal,
+      activity: FragmentActivity,
+      internals: PYDroidActivityDelegateInternal,
   ) {
     trackingMap[activity] = internals
     Logger.d("Track PYDroid.Activity install: $activity $internals")

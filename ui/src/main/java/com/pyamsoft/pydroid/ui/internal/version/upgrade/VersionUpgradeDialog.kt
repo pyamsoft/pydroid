@@ -36,8 +36,8 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -81,7 +81,11 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   ): View {
     val act = requireActivity()
 
-    PYDroidActivityInstallTracker.retrieve(act).injector().plusVersionUpgrade().create().inject(this)
+    PYDroidActivityInstallTracker.retrieve(act)
+        .injector()
+        .plusVersionUpgrade()
+        .create()
+        .inject(this)
 
     val newVersionCode = getNewVersionCode()
 

@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.ui.app
 
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+/** Various options for PYDroidActivity */
+public data class PYDroidActivityOptions(
+    /** Disable the billing component */
+    internal val disableBilling: Boolean = false,
 
-internal interface AppProvider {
+    /** Disable the rating component */
+    internal val disableRating: Boolean = false,
 
-  @get:[CheckResult DrawableRes]
-  val applicationIcon: Int
-}
+    /** Disable the version check component */
+    internal val disableVersionCheck: Boolean = false,
+
+    /** Disable the data policy component */
+    internal val disableDataPolicy: Boolean = false,
+)

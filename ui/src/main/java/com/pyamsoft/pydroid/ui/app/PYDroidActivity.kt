@@ -16,22 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.os.Bundle
-import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
-import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
-import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -40,28 +31,8 @@ import com.pyamsoft.pydroid.util.doOnDestroy
  *
  * You are required to extend this class so that other ui bits work.
  */
+@Deprecated("Use AppCompatActivity.installPYDroid(provider, options) instead")
 public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
-
-  /** Injector component for Dialog and Fragment injection */
-  private var injector: AppComponent? = null
-
-  /** DataPolicy Delegate */
-  internal var dataPolicy: DataPolicyDelegate? = null
-
-  /** Billing Delegate */
-  internal var billing: BillingDelegate? = null
-
-  /** Rating Delegate */
-  internal var rating: RatingDelegate? = null
-
-  /** Version Check Delegate */
-  internal var versionCheck: VersionCheckDelegate? = null
-
-  /** Presenter */
-  internal var presenter: AppInternalViewModeler? = null
-
-  /** Accessed from NewVersionWidget */
-  internal var versionUpgrader: VersionUpgradeAvailable? = null
 
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
@@ -75,73 +46,25 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
   /** Disable the data policy component */
   protected open val disableDataPolicy: Boolean = false
 
+  /** Activity delegate */
+  private var delegate: PYDroidActivityDelegate? = null
+
   init {
-    connectBilling()
-    connectRating()
-    connectVersionCheck()
-    connectDataPolicy()
-  }
-
-  private fun showDataPolicyDisclosure() {
-    if (disableDataPolicy) {
-      Logger.w("Application has disabled the Data Policy component")
-      return
-    }
-
-    // Attempt to show the data policy if we are not disabled
-    dataPolicy.requireNotNull().showDataPolicyDisclosure()
-  }
-
-  /** Attempts to connect to in-app billing */
-  private fun connectBilling() {
-    if (disableBilling) {
-      Logger.w("Application has disabled the billing component")
-      return
-    }
-
     this.doOnCreate {
-      Logger.d("Attempt Connect Billing")
-      billing.requireNotNull().connect()
-    }
-  }
-
-  /** Attempts to connect to in-app rating */
-  private fun connectRating() {
-    if (disableRating) {
-      Logger.w("Application has disabled the Rating component")
-      return
-    }
-
-    this.doOnCreate {
-      Logger.d("Attempt Connect Rating")
-      rating.requireNotNull().bindEvents()
-    }
-  }
-
-  /** Attempts to connect to in-app data policy dialog */
-  private fun connectDataPolicy() {
-    if (disableDataPolicy) {
-      Logger.w("Application has disabled the Data Policy component")
-      return
+      delegate =
+          installPYDroid(
+              provider = this,
+              options =
+                  PYDroidActivityOptions(
+                      disableBilling = disableBilling,
+                      disableRating = disableRating,
+                      disableVersionCheck = disableVersionCheck,
+                      disableDataPolicy = disableDataPolicy,
+                  ),
+          )
     }
 
-    this.doOnCreate {
-      Logger.d("Attempt Connect Data Policy")
-      dataPolicy.requireNotNull().bindEvents()
-    }
-  }
-
-  /** Attempts to connect to in-app updates */
-  private fun connectVersionCheck() {
-    if (disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    this.doOnCreate {
-      Logger.d("Attempt Connect Version Check")
-      versionCheck.requireNotNull().bindEvents()
-    }
+    this.doOnDestroy { delegate = null }
   }
 
   /**
@@ -149,95 +72,46 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
    * is up to Google
    */
   public fun loadInAppRating() {
-    if (disableRating) {
-      Logger.w("Application has disabled the Rating component")
-      return
-    }
-
-    rating.requireNotNull().loadInAppRating()
+    delegate.requireNotNull().loadInAppRating()
   }
 
   /** Confirm the potential version upgrade */
   public fun confirmUpgrade() {
-    if (disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionCheck.requireNotNull().handleConfirmUpgrade()
+    delegate.requireNotNull().confirmUpgrade()
   }
 
   /** Check for in-app updates */
   public fun checkUpdates() {
-    if (disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionCheck.requireNotNull().checkUpdates()
+    delegate.requireNotNull().checkUpdates()
   }
+}
 
-  /** On activity create */
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    // Must inject before super.onCreate or else getSystemService will be called and NPE
-    injector =
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusApp()
-            .create(
-                activity = this,
-                disableDataPolicy = disableDataPolicy,
-            )
-            .also { it.inject(this) }
+@CheckResult
+private fun createPYDroidActivity(
+    activity: AppCompatActivity,
+    provider: ChangeLogProvider,
+    options: PYDroidActivityOptions,
+): PYDroidActivityDelegateInternal {
+  val component =
+      PYDroidApplicationInstallTracker.retrieve(activity.application)
+          .injector()
+          .plusApp()
+          .create(options)
+  return PYDroidActivityDelegateInternal(component, provider, activity)
+}
 
-    // Create it here to be used by NewVersionWidget later on
-    versionUpgrader =
-        VersionUpgradeAvailable.create(activity = this).also { vu -> doOnDestroy { vu.destroy() } }
-
-    super.onCreate(savedInstanceState)
-  }
-
-  /** Check for updates onStart if possible */
-  @CallSuper
-  override fun onStart() {
-    super.onStart()
-    checkUpdates()
-  }
-
-  /** On Resume show changelog if possible */
-  @CallSuper
-  override fun onPostResume() {
-    super.onPostResume()
-
-    // DialogFragments cannot be shown safely until at least onPostResume
-    presenter
-        .requireNotNull()
-        .handleShowCorrectDialog(
-            scope = lifecycleScope,
-            onShowDataPolicy = { showDataPolicyDisclosure() },
-        )
-  }
-
-  /** Get system service */
-  @CallSuper
-  override fun getSystemService(name: String): Any? =
-      when (name) {
-        // Must be defined before super.onCreate() is called or this will be null
-        AppComponent::class.java.name -> injector.requireNotNull()
-        else -> super.getSystemService(name)
-      }
-
-  /** On activity destroy */
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-
-    billing = null
-    rating = null
-    versionCheck = null
-    dataPolicy = null
-    injector = null
-    presenter = null
-    versionUpgrader = null
-  }
+/**
+ * Install PYDroid into an Activity
+ *
+ * Don't need @CheckResult just in case PYDroidActivity is not used
+ */
+@JvmOverloads
+public fun AppCompatActivity.installPYDroid(
+    provider: ChangeLogProvider,
+    options: PYDroidActivityOptions = PYDroidActivityOptions(),
+): PYDroidActivityDelegate {
+  val self = this
+  val internals = createPYDroidActivity(self, provider, options)
+  PYDroidActivityInstallTracker.install(self, internals)
+  return internals
 }

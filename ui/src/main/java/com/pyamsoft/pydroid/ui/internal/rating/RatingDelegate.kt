@@ -16,21 +16,27 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class RatingDelegate(activity: PYDroidActivity, viewModel: RatingViewModeler) {
+internal class RatingDelegate(
+    activity: FragmentActivity,
+    viewModel: RatingViewModeler,
+) {
 
-  private var activity: PYDroidActivity? = activity
+  private var activity: FragmentActivity? = activity
   private var viewModel: RatingViewModeler? = viewModel
 
-  private fun showRating(activity: PYDroidActivity, launcher: AppRatingLauncher) {
+  private fun showRating(
+      activity: FragmentActivity,
+      launcher: AppRatingLauncher,
+  ) {
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
       launcher

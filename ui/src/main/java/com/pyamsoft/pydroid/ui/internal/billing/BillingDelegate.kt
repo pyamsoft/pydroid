@@ -16,37 +16,24 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
 internal class BillingDelegate(
-    activity: PYDroidActivity,
+    activity: FragmentActivity,
     connector: BillingConnector,
 ) {
 
-  private var activity: PYDroidActivity? = activity
+  private var activity: FragmentActivity? = activity
   private var connector: BillingConnector? = connector
 
-  /** Connect to the billing service */
-  fun connect() {
-    val act = activity.requireNotNull()
-
-    connectBilling(act)
-
-    act.doOnDestroy {
-      connector = null
-      activity = null
-    }
-  }
-
   /** Attempts to connect to in-app billing */
-  private fun connectBilling(activity: AppCompatActivity) {
+  private fun connectBilling(activity: FragmentActivity) {
     Logger.d("Prepare application billing connection on create callback")
     activity.doOnCreate {
       Logger.d("Attempt Connect Billing")
@@ -60,6 +47,18 @@ internal class BillingDelegate(
         Logger.d("In-App billing is created, connect")
         billing.start(activity)
       }
+    }
+  }
+
+  /** Connect to the billing service */
+  fun connect() {
+    val act = activity.requireNotNull()
+
+    connectBilling(act)
+
+    act.doOnDestroy {
+      connector = null
+      activity = null
     }
   }
 }

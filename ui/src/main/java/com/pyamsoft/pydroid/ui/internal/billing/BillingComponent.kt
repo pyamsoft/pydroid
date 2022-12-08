@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface BillingComponent {

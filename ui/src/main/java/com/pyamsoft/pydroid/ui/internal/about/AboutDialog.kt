@@ -29,13 +29,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -85,7 +84,11 @@ internal class AboutDialog : AppCompatDialogFragment() {
   ): View {
     val act = requireActivity()
 
-    Injector.obtainFromApplication<PYDroidComponent>(act).plusAbout().create().inject(this)
+    PYDroidApplicationInstallTracker.retrieve(act.application)
+        .injector()
+        .plusAbout()
+        .create()
+        .inject(this)
     val vm = viewModel.requireNotNull()
 
     return ComposeView(act).apply {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.app
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
-import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import androidx.annotation.DrawableRes
 
-internal interface ChangeLogProvider : AppProvider {
+public interface AppProvider {
 
-  @get:CheckResult val changelog: ChangeLogBuilder
+  @get:[CheckResult DrawableRes]
+  public val applicationIcon: Int
 }

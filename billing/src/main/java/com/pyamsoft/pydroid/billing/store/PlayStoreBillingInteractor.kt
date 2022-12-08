@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.billing.store
 import android.app.Activity
 import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -147,7 +147,7 @@ internal constructor(
     }
   }
 
-  override fun start(activity: AppCompatActivity) {
+  override fun start(activity: FragmentActivity) {
     activity.lifecycle.doOnCreate {
       Logger.d("Attempt to connect Billing on Activity create")
       connect()

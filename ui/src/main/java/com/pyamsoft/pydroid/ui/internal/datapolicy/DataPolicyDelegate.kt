@@ -16,17 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
-/** Handles Billing related work in an Activity */
-internal class DataPolicyDelegate(activity: PYDroidActivity, viewModel: DataPolicyViewModeler) {
+/** Handles Data Policy related work in an Activity */
+internal class DataPolicyDelegate(
+    activity: FragmentActivity,
+    viewModel: DataPolicyViewModeler,
+) {
 
-  private var activity: PYDroidActivity? = activity
+  private var activity: FragmentActivity? = activity
   private var viewModel: DataPolicyViewModeler? = viewModel
 
   /** Bind Activity for related DataPolicy events */

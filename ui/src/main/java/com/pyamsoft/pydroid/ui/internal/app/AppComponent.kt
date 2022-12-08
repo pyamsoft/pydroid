@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
@@ -26,7 +27,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
@@ -34,6 +35,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityComponents
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
@@ -45,10 +47,13 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal interface AppComponent {
 
-  fun inject(activity: PYDroidActivity)
+  @CheckResult fun options(): PYDroidActivityOptions
+
+  @CheckResult fun create(activity: FragmentActivity): PYDroidActivityComponents
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
@@ -62,11 +67,7 @@ internal interface AppComponent {
 
   interface Factory {
 
-    @CheckResult
-    fun create(
-        activity: PYDroidActivity,
-        disableDataPolicy: Boolean,
-    ): AppComponent
+    @CheckResult fun create(options: PYDroidActivityOptions): AppComponent
 
     data class Parameters
     internal constructor(
@@ -91,8 +92,7 @@ internal interface AppComponent {
   class Impl
   private constructor(
       private val params: Factory.Parameters,
-      private val pyDroidActivity: PYDroidActivity,
-      private val disableDataPolicy: Boolean,
+      private val options: PYDroidActivityOptions,
   ) : AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
@@ -166,52 +166,48 @@ internal interface AppComponent {
             version = params.version,
         )
 
-    override fun inject(activity: PYDroidActivity) {
-      // Billing
-      activity.billing =
-          BillingDelegate(
-              pyDroidActivity,
-              billingModule.provideConnector(),
-          )
+    override fun options(): PYDroidActivityOptions = options
 
-      // Rating
-      activity.rating =
-          RatingDelegate(
-              pyDroidActivity,
-              RatingViewModeler(
-                  state = ratingViewState,
-                  interactor = ratingModule.provideInteractor(),
+    override fun create(activity: FragmentActivity): PYDroidActivityComponents {
+      return PYDroidActivityComponents(
+          billing =
+              BillingDelegate(
+                  activity,
+                  billingModule.provideConnector(),
               ),
-          )
-
-      // Version Check
-      activity.versionCheck =
-          VersionCheckDelegate(
-              pyDroidActivity,
-              VersionCheckViewModeler(
-                  state = versionCheckState,
-                  interactor = versionModule.provideInteractor(),
-                  interactorCache = versionModule.provideInteractorCache(),
+          rating =
+              RatingDelegate(
+                  activity,
+                  RatingViewModeler(
+                      state = ratingViewState,
+                      interactor = ratingModule.provideInteractor(),
+                  ),
               ),
-          )
-
-      // Data Policy
-      activity.dataPolicy =
-          DataPolicyDelegate(
-              pyDroidActivity,
-              DataPolicyViewModeler(
+          versionCheck =
+              VersionCheckDelegate(
+                  activity,
+                  VersionCheckViewModeler(
+                      state = versionCheckState,
+                      interactor = versionModule.provideInteractor(),
+                      interactorCache = versionModule.provideInteractorCache(),
+                  ),
+              ),
+          dataPolicy =
+              DataPolicyDelegate(
+                  activity,
+                  DataPolicyViewModeler(
+                      state = dataPolicyState,
+                      interactor = params.dataPolicyModule.provideInteractor(),
+                  ),
+              ),
+          internalPresenter =
+              AppInternalViewModeler(
+                  disableDataPolicy = options.disableDataPolicy,
                   state = dataPolicyState,
                   interactor = params.dataPolicyModule.provideInteractor(),
               ),
-          )
-
-      // App Internal
-      activity.presenter =
-          AppInternalViewModeler(
-              disableDataPolicy = disableDataPolicy,
-              state = dataPolicyState,
-              interactor = params.dataPolicyModule.provideInteractor(),
-          )
+          versionUpgrader = VersionUpgradeAvailable.create(activity),
+      )
     }
 
     override fun plusVersionUpgrade(): VersionUpgradeComponent.Factory {
@@ -249,15 +245,10 @@ internal interface AppComponent {
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
       override fun create(
-          activity: PYDroidActivity,
-          disableDataPolicy: Boolean,
+          options: PYDroidActivityOptions,
       ): AppComponent {
         OssLibraries.usingUi = true
-        return Impl(
-            params,
-            activity,
-            disableDataPolicy,
-        )
+        return Impl(params, options)
       }
     }
   }

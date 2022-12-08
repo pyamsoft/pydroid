@@ -34,13 +34,12 @@ import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
-import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
@@ -233,7 +232,7 @@ public abstract class SettingsFragment : Fragment() {
   ): View {
     val act = requireActivity()
 
-    Injector.obtainFromActivity<AppComponent>(act).plusSettings().create().inject(this)
+    PYDroidActivityInstallTracker.retrieve(act).injector().plusSettings().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.fragment_settings

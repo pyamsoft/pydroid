@@ -31,13 +31,12 @@ import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
-import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
@@ -82,7 +81,8 @@ internal class BillingDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromActivity<AppComponent>(act)
+    PYDroidActivityInstallTracker.retrieve(act)
+        .injector()
         .plusBilling()
         .create(getApplicationProvider())
         .inject(this)

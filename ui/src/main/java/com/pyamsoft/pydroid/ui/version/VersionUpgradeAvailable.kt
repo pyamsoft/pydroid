@@ -21,11 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Upon upgrade action started, this callback will run */
@@ -51,7 +51,15 @@ internal constructor(
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
-    Injector.obtainFromActivity<AppComponent>(activity).plusVersionCheck().create().inject(this)
+    // Need to wait until after onCreate so that the PYDroidActivityInstallTracker is
+    // correctly set up otherwise we crash.
+    activity.doOnCreate {
+      PYDroidActivityInstallTracker.retrieve(activity)
+          .injector()
+          .plusVersionCheck()
+          .create()
+          .inject(this)
+    }
 
     activity.doOnDestroy {
       hostingActivity = null
@@ -67,11 +75,6 @@ internal constructor(
         activity = act,
         newVersionCode = newVersionCode,
     )
-  }
-
-  public fun destroy() {
-    hostingActivity = null
-    viewModel = null
   }
 
   /**

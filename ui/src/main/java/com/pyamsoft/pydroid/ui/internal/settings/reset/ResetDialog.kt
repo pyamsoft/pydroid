@@ -31,13 +31,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.inject.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -72,7 +71,12 @@ internal class ResetDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    Injector.obtainFromApplication<PYDroidComponent>(act).plusReset().create().inject(this)
+
+    PYDroidApplicationInstallTracker.retrieve(act.application)
+        .injector()
+        .plusReset()
+        .create()
+        .inject(this)
 
     return ComposeView(act).apply {
       id = R.id.dialog_reset

@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
-import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.app.AppProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

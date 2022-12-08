@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 
 internal interface ChangeLogComponent {
 

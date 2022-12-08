@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.ui.changelog
 
-import androidx.fragment.app.FragmentActivity
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
+import com.pyamsoft.pydroid.ui.app.AppProvider
 
-/** Abstracts the Play Store Billing client */
-public interface BillingConnector {
+/**
+ * Provide app info and changelog
+ */
+public interface ChangeLogProvider : AppProvider {
 
   /**
-   * Start the billing client
-   *
-   * Will automatically manage connections
+   * Construct the changelog
    */
-  public fun start(activity: FragmentActivity)
+  @get:CheckResult public val changelog: ChangeLogBuilder
 }

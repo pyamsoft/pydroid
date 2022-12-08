@@ -18,11 +18,11 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -31,13 +31,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class VersionCheckDelegate(
-    activity: PYDroidActivity,
+    activity: FragmentActivity,
     viewModel: VersionCheckViewModeler,
 ) {
 
-  private var activity: PYDroidActivity? = activity
+  private var activity: FragmentActivity? = activity
 
   private var viewModel: VersionCheckViewModeler? = viewModel
+
+  private fun showVersionUpgrade(
+      activity: FragmentActivity,
+      launcher: AppUpdateLauncher,
+  ) {
+    // Enforce that we do this on the Main thread
+    activity.lifecycleScope.launch(context = Dispatchers.Main) {
+      launcher
+          .update(activity, RC_APP_UPDATE)
+          .onSuccess { Logger.d("Call was made for in-app update request") }
+          .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
+    }
+  }
 
   /** Returns the view state to be rendered */
   @Composable
@@ -104,16 +117,6 @@ internal class VersionCheckDelegate(
               )
             },
         )
-  }
-
-  private fun showVersionUpgrade(activity: PYDroidActivity, launcher: AppUpdateLauncher) {
-    // Enforce that we do this on the Main thread
-    activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher
-          .update(activity, RC_APP_UPDATE)
-          .onSuccess { Logger.d("Call was made for in-app update request") }
-          .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
-    }
   }
 
   companion object {

@@ -25,28 +25,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 @CheckResult
-private fun resolveActivity(context: Context): PYDroidActivity {
+private fun resolveActivity(context: Context): FragmentActivity {
   return when (context) {
-    is Activity -> context as? PYDroidActivity
+    is Activity -> context as? FragmentActivity
     is ContextWrapper -> resolveActivity(context.baseContext)
     else -> {
       Logger.w("Provided Context is not an Activity or a ContextWrapper: $context")
       null
     }
   }
-      ?: throw IllegalStateException("Could not resolve PYDroidActivity from Context: $context")
+      ?: throw IllegalStateException("Could not resolve FragmentActivity from Context: $context")
 }
 
 @Composable
 @CheckResult
 private fun rememberVersionUpgrader(context: Context): VersionUpgradeAvailable {
-  return remember(context) { resolveActivity(context).versionUpgrader.requireNotNull() }
+  return remember(context) {
+    val act = resolveActivity(context)
+    return@remember PYDroidActivityInstallTracker.retrieve(act).versionUpgrader()
+  }
 }
 
 /**

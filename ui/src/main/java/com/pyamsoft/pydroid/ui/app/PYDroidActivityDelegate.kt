@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.ui.app
 
-import androidx.fragment.app.FragmentActivity
-
-/** Abstracts the Play Store Billing client */
-public interface BillingConnector {
+public interface PYDroidActivityDelegate {
 
   /**
-   * Start the billing client
-   *
-   * Will automatically manage connections
+   * Rating Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that
+   * is up to Google
    */
-  public fun start(activity: FragmentActivity)
+  public fun loadInAppRating()
+
+  /** Confirm the potential version upgrade */
+  public fun confirmUpgrade()
+
+  /** Check for in-app updates */
+  public fun checkUpdates()
 }

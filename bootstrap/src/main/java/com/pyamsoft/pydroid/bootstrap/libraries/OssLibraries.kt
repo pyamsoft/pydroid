@@ -219,7 +219,6 @@ public object OssLibraries {
     addArchLibraries()
     addBillingLibraries()
     addBootstrapLibraries()
-    addInjectLibraries()
     addUtilLibraries()
     addThemeLibraries()
   }

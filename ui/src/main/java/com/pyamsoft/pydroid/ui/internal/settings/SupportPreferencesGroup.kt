@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 @Composable
 @CheckResult
 internal fun createSupportPreferencesGroup(
-    hideDataPolicy: Boolean,
     applicationName: CharSequence,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
@@ -68,7 +67,6 @@ internal fun createSupportPreferencesGroup(
               ),
           ) +
               decideDataPolicyPreference(
-                  hideDataPolicy = hideDataPolicy,
                   onViewDataPolicyClicked = onViewDataPolicyClicked,
               ) +
               listOf(
@@ -85,17 +83,13 @@ internal fun createSupportPreferencesGroup(
 @Composable
 @CheckResult
 private fun decideDataPolicyPreference(
-    hideDataPolicy: Boolean,
     onViewDataPolicyClicked: () -> Unit,
 ): List<Preferences.Item> {
-  return if (hideDataPolicy) emptyList()
-  else {
-    listOf(
-        dataPolicyPreference(
-            onViewDataPolicyClicked = onViewDataPolicyClicked,
-        ),
-    )
-  }
+  return listOf(
+      dataPolicyPreference(
+          onViewDataPolicyClicked = onViewDataPolicyClicked,
+      ),
+  )
 }
 
 @Composable

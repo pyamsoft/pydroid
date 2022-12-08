@@ -44,7 +44,6 @@ internal fun SettingsScreen(
     elevation: Dp = ZeroElevation,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
-    hideDataPolicy: Boolean,
     state: SettingsViewState,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
@@ -86,7 +85,6 @@ internal fun SettingsScreen(
             customPostContent = customPostContent,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
-            hideDataPolicy = hideDataPolicy,
             applicationName = applicationName,
             darkMode = darkMode,
             onDarkModeChanged = onDarkModeChanged,
@@ -133,7 +131,6 @@ private fun SettingsList(
     customPostContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
-    hideDataPolicy: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
@@ -172,7 +169,6 @@ private fun SettingsList(
         )
         add(
             createSupportPreferencesGroup(
-                hideDataPolicy = hideDataPolicy,
                 applicationName = applicationName,
                 onDonateClicked = onDonateClicked,
                 onBugReportClicked = onBugReportClicked,
@@ -213,7 +209,6 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
           },
       hideClearAll = false,
       hideUpgradeInformation = false,
-      hideDataPolicy = false,
       topItemMargin = ZeroSize,
       bottomItemMargin = ZeroSize,
       customPreContent = emptyList(),

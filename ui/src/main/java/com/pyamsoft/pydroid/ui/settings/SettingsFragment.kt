@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PYDroidActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
@@ -69,12 +68,6 @@ public abstract class SettingsFragment : Fragment() {
   internal var versionViewModel: VersionCheckViewModeler? = null
   internal var changeLogViewModel: ChangeLogViewModeler? = null
   internal var dataPolicyViewModel: DataPolicyViewModeler? = null
-
-  @CheckResult
-  private fun hideDataPolicy(): Boolean {
-    // Data Policy is only supported when Activity is PYDroidActivity, hide it otherwise
-    return requireActivity() !is PYDroidActivity
-  }
 
   private fun openPage(handler: UriHandler, url: String) {
     handler.openUri(url)
@@ -247,7 +240,6 @@ public abstract class SettingsFragment : Fragment() {
               state = vm.state(),
               hideClearAll = hideClearAll,
               hideUpgradeInformation = hideUpgradeInformation,
-              hideDataPolicy = hideDataPolicy(),
               topItemMargin = customTopItemMargin(),
               bottomItemMargin = customBottomItemMargin(),
               customPreContent = customPrePreferences(),

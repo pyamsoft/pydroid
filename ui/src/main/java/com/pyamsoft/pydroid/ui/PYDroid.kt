@@ -69,9 +69,22 @@ internal constructor(
     return instance.component
   }
 
-  /** Override Application.getSystemService() with this to get the PYDroid object graph */
+  /**
+   * Override Application.getSystemService() with this to get the PYDroid object graph
+   *
+   * See also [installPYDroid]
+   */
   @CheckResult
-  @Deprecated("Do not use, use Application.installPYDroid() instead")
+  @Deprecated(
+      """Do not use, use Application.installPYDroid() instead
+
+PYDroid.init requires that an Application class call it at a very specific point, and override
+the getSystemService() function in a very specific order which is prone to mistakes.
+
+Users are instead encouraged to use the extension function Application.installPYDroid()
+which will set up all of the expected bits of the old PYDroid.init but can be used anywhere,
+including outside of an Application class.
+""")
   public fun getSystemService(name: String): Any? =
       when (name) {
         PYDroidComponent::class.java.name -> instance.component
@@ -163,10 +176,21 @@ internal constructor(
      * Generally speaking, you should treat a PYDroid instance as a Singleton. If you create more
      * than one instance and attempt to swap them out at runtime, the behavior of the library and
      * its dependent components is completely undefined.
+     *
+     * See also [installPYDroid]
      */
     @JvmStatic
     @CheckResult
-    @Deprecated("Do not use, use Application.installPYDroid() instead")
+    @Deprecated(
+        """Do not use, use Application.installPYDroid() instead
+
+PYDroid.init requires that an Application class call it at a very specific point, and override
+the getSystemService() function in a very specific order which is prone to mistakes.
+
+Users are instead encouraged to use the extension function Application.installPYDroid()
+which will set up all of the expected bits of the old PYDroid.init but can be used anywhere,
+including outside of an Application class.
+    """)
     public fun init(
         application: Application,
         params: Parameters,
@@ -197,9 +221,47 @@ private fun Application.internalInstallPYDroid(
 }
 
 /**
- * Install PYDroid into an Application
+ * Initialize the library
  *
- * Don't need @CheckResult just in case modules are not used
+ * Track the Instance at the application level, such as:
+ *
+ * ```
+ * Application.kt
+ *
+ * override fun onCreate() {
+ *   val optionalModuleProvider = installPYDroid(
+ *     PYDroid.Parameters(
+ *       name = getString(R.string.app_name),
+ *       bugReportUrl = getString(R.string.bug_report),
+ *       version = BuildConfig.VERSION_CODE,
+ *       debug = PYDroid.DebugParameters( ... ),
+ *     ),
+ *   )
+ * }
+ * ```
+ *
+ * OR
+ *
+ * ```
+ * Activity.kt
+ *
+ * override fun onCreate(savedInstanceState: Bundle?) {
+ *   val optionalModuleProvider = application.installPYDroid(
+ *     PYDroid.Parameters(
+ *       name = getString(R.string.app_name),
+ *       bugReportUrl = getString(R.string.bug_report),
+ *       version = BuildConfig.VERSION_CODE,
+ *       debug = PYDroid.DebugParameters( ... ),
+ *     ),
+ *   )
+ * }
+ *
+ * ```
+ *
+ * Generally speaking, you should only call installPYDroid once per application lifecycle.
+ *
+ * Returns a delegate that can optionally be saved or used in the to resolve PYDroid initialized
+ * singletons like Activity Theming or the internal Coil ImageLoader
  */
 public fun Application.installPYDroid(
     params: PYDroid.Parameters,

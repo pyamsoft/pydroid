@@ -30,8 +30,20 @@ import com.pyamsoft.pydroid.util.doOnDestroy
  * The base Activity class for PYDroid.
  *
  * You are required to extend this class so that other ui bits work.
+ *
+ * Also see [installPYDroid] and [PYDroidActivityDelegate]
  */
-@Deprecated("Use AppCompatActivity.installPYDroid(provider, options) instead")
+@Deprecated(
+    """Use AppCompatActivity.installPYDroid(provider, options) instead.
+
+PYDroidActivity requires that an implementation extend it, which may not be easy for
+an application which already has its own BaseActivity style implementation.
+
+Users are instead encouraged to use the extension function AppCompatActivity.installPYDroid()
+which will set up all of the expected bits of the old PYDroidActivity but can be used
+with any kind of BaseActivity as long as it extends from the AppCompat library's AppCompatActivity
+(as PYDroid internally relies on the use of FragmentActivity and its LifecycleOwner)
+""")
 public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Disable the billing component */
@@ -103,7 +115,8 @@ private fun createPYDroidActivity(
 /**
  * Install PYDroid into an Activity
  *
- * Don't need @CheckResult just in case PYDroidActivity is not used
+ * Returns a delegate that can optionally be saved or used in the calling Activity level to handle
+ * common functions like checking for updates or showing an in-app review dialog
  */
 @JvmOverloads
 public fun AppCompatActivity.installPYDroid(

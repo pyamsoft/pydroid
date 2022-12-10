@@ -24,7 +24,25 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Logger
 
+private const val DEPRECATION_MESSAGE = """Do not use the Injector framework.
+
+This framework is flakey at best because it expects any consumer to understand it's internal
+implementation. This class and all of its obtain* methods expects the caller to override the
+getSystemService() method in whatever component the scope is expected to pull from. In that override,
+the caller must be very careful to provide the requested target data when asked, while also not
+breaking the getSystemService() function call for methods which expect it to be used.
+
+On top of all this, if a theoretical third-party also overrides the getSystemService function and
+does so in a way that this library does not expect, it will fail.
+
+Consumers are instead encouraged to create their own simple object graph following internal
+patterns used in the PYDroid-UI library, like those seen in [PYDroidActivityInstallTracker] to
+create a way to inject an object graph at various points in the application.
+"""
+
 /** Injects PYDroid and its managed services into a context */
+@Suppress("DeprecatedCallableAddReplaceWith")
+@Deprecated(DEPRECATION_MESSAGE)
 public object Injector {
 
   /**
@@ -34,6 +52,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public inline fun <reified T : Any> obtainFromApplication(application: Application): T {
     return obtainFromApplication(application, T::class.java)
   }
@@ -45,6 +64,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public fun <T : Any> obtainFromApplication(application: Application, targetClass: Class<T>): T {
     return resolve(application, targetClass)
   }
@@ -56,6 +76,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public inline fun <reified T : Any> obtainFromApplication(context: Context): T {
     return obtainFromApplication(context, T::class.java)
   }
@@ -67,6 +88,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public fun <T : Any> obtainFromApplication(context: Context, targetClass: Class<T>): T {
     return resolve(context.applicationContext, targetClass)
   }
@@ -78,6 +100,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public inline fun <reified T : Any> obtainFromActivity(activity: Activity): T {
     return obtainFromActivity(activity, T::class.java)
   }
@@ -89,6 +112,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public fun <T : Any> obtainFromActivity(activity: Activity, targetClass: Class<T>): T {
     return resolve(activity, targetClass)
   }
@@ -100,6 +124,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public inline fun <reified T : Any> obtainFromService(service: Service): T {
     return obtainFromService(service, T::class.java)
   }
@@ -111,6 +136,7 @@ public object Injector {
    */
   @JvmStatic
   @CheckResult
+  @Deprecated(DEPRECATION_MESSAGE)
   public fun <T : Any> obtainFromService(service: Service, targetClass: Class<T>): T {
     return resolve(service, targetClass)
   }

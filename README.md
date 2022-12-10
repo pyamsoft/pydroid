@@ -17,10 +17,13 @@ such is not meant for use outside of pyamsoft projects.
 [bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap)
 [bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 [core](https://github.com/pyamsoft/pydroid/tree/main/core)
-[inject](https://github.com/pyamsoft/pydroid/tree/main/inject)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
 [ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
 [util](https://github.com/pyamsoft/pydroid/tree/main/util)
+
+#### Deprecated
+
+[inject](https://github.com/pyamsoft/pydroid/tree/main/inject)
 
 ## Contributions
 

@@ -50,6 +50,7 @@ public object OssLibraries {
   public var usingUtil: Boolean = false
 
   /** Using pydroid-inject library */
+  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
   public var usingInject: Boolean = false
 
   private var addedBus: Boolean = false
@@ -65,6 +66,8 @@ public object OssLibraries {
   private var addedUi: Boolean = false
   private var addedTheme: Boolean = false
   private var addedUtil: Boolean = false
+
+  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
   private var addedInject: Boolean = false
 
   private fun addBuildLibraries() {
@@ -359,6 +362,7 @@ public object OssLibraries {
     addUtilLibraries()
   }
 
+  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
   private fun addInjectLibraries() {
     if (addedInject) {
       return

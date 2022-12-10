@@ -51,12 +51,6 @@ internal constructor(
     private val instance: PYDroidInitializer,
 ) {
 
-  /** Resolve and return exposed Modules for this PYDroid instance */
-  @CheckResult
-  public fun modules(): ModuleProvider.Modules {
-    return moduleProvider().get()
-  }
-
   /** Return module provider */
   @CheckResult
   internal fun moduleProvider(): ModuleProvider {
@@ -67,6 +61,12 @@ internal constructor(
   @CheckResult
   internal fun injector(): PYDroidComponent {
     return instance.component
+  }
+
+  /** Resolve and return exposed Modules for this PYDroid instance */
+  @CheckResult
+  public fun modules(): ModuleProvider.Modules {
+    return moduleProvider().get()
   }
 
   /**

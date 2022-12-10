@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,7 +53,14 @@ internal fun BillingScreen(
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
+  val skuList = state.skuList
+  val connected = state.connected
+
   val snackbarHostState = remember { SnackbarHostState() }
+
+  // Remember computed value
+  val isLoading = remember { connected == BillingState.LOADING }
+  val isConnected = remember { connected == BillingState.CONNECTED }
 
   AppHeaderDialog(
       modifier = modifier.fillMaxWidth(),
@@ -63,24 +68,30 @@ internal fun BillingScreen(
       name = state.name,
       imageLoader = imageLoader,
   ) {
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-      Crossfade(
-          targetState = state.connected,
-      ) { connected ->
-        // Remember computed value
-        val isLoading = remember { connected == BillingState.LOADING }
-        val isConnected = remember { connected == BillingState.CONNECTED }
-
-        if (isLoading) {
-          Loading(
+    if (isLoading) {
+      dialogItem(
+          modifier = Modifier.fillMaxWidth(),
+      ) {
+        Loading(
+            modifier = Modifier.fillMaxWidth(),
+        )
+      }
+    } else if (skuList.isEmpty() || !isConnected) {
+      dialogItem(
+          modifier = Modifier.fillMaxWidth(),
+      ) {
+        ErrorText(
+            modifier = Modifier.fillMaxWidth(),
+        )
+      }
+    } else {
+      skuList.forEach { item ->
+        dialogItem(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+          BillingListItem(
               modifier = Modifier.fillMaxWidth(),
-          )
-        } else {
-          SkuList(
-              isConnected = isConnected,
-              list = state.skuList,
+              sku = item,
               onPurchase = onPurchase,
           )
         }
@@ -115,45 +126,6 @@ internal fun BillingScreen(
           error = state.error,
           onSnackbarDismissed = onBillingErrorDismissed,
       )
-    }
-  }
-}
-
-@Composable
-private fun SkuList(
-    modifier: Modifier = Modifier,
-    isConnected: Boolean,
-    list: List<BillingSku>,
-    onPurchase: (BillingSku) -> Unit,
-) {
-  // Remember the computed ready state
-  val readyState = remember {
-    ReadyState(
-        isConnected = isConnected,
-        isEmpty = list.isEmpty(),
-    )
-  }
-
-  Crossfade(
-      modifier = modifier,
-      targetState = readyState,
-  ) { ready ->
-    if (ready.isEmpty || !isConnected) {
-      ErrorText(
-          modifier = Modifier.fillMaxWidth(),
-      )
-    } else {
-      Column(
-          modifier = Modifier.fillMaxWidth(),
-      ) {
-        list.forEach { item ->
-          BillingListItem(
-              modifier = Modifier.fillMaxWidth(),
-              sku = item,
-              onPurchase = onPurchase,
-          )
-        }
-      }
     }
   }
 }
@@ -207,11 +179,6 @@ private fun BillingError(
     }
   }
 }
-
-private data class ReadyState(
-    val isConnected: Boolean,
-    val isEmpty: Boolean,
-)
 
 private val PREVIEW_SKUS =
     listOf(

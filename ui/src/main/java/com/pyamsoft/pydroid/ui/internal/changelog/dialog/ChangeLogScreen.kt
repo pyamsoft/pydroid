@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,13 +54,15 @@ internal fun ChangeLogScreen(
       name = state.name,
       imageLoader = imageLoader,
   ) {
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-      ChangeLog(
+    state.changeLog.forEach { line ->
+      dialogItem(
           modifier = Modifier.fillMaxWidth(),
-          changeLog = state.changeLog,
-      )
+      ) {
+        ChangeLogListItem(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
+            line = line,
+        )
+      }
     }
 
     dialogItem(
@@ -74,29 +74,6 @@ internal fun ChangeLogScreen(
           onRateApp = onRateApp,
           onClose = onClose,
       )
-    }
-  }
-}
-
-@Composable
-private fun ChangeLog(
-    modifier: Modifier = Modifier,
-    changeLog: List<ChangeLogLine>,
-) {
-  Column(
-      modifier = modifier,
-  ) {
-    changeLog.forEach { line ->
-      Box(
-          modifier =
-              Modifier.padding(horizontal = MaterialTheme.keylines.content)
-                  .padding(vertical = MaterialTheme.keylines.baseline),
-      ) {
-        ChangeLogListItem(
-            modifier = Modifier.fillMaxWidth(),
-            line = line,
-        )
-      }
     }
   }
 }

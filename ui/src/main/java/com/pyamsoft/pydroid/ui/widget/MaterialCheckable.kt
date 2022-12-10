@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
+import com.pyamsoft.pydroid.ui.icons.RadioButtonUnchecked
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.HeightMatcherGenerator
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.HeightMatcherGeneratorImpl
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.createGapHeightGenerator
@@ -149,6 +150,11 @@ private fun MaterialCheckable(
   val iconColor = rememberMaterialCheckableIcon(condition)
   val alphas = rememberMaterialCheckableAlpha(isEditable, condition)
 
+  val checkIcon =
+      remember(condition) {
+        if (condition) Icons.Filled.CheckCircle else Icons.Filled.RadioButtonUnchecked
+      }
+
   Card(
       modifier =
           modifier.border(
@@ -178,7 +184,7 @@ private fun MaterialCheckable(
 
         Icon(
             modifier = Modifier.size(ImageDefaults.IconSize),
-            imageVector = Icons.Filled.CheckCircle,
+            imageVector = checkIcon,
             contentDescription = title,
             tint = iconColor.copy(alpha = alphas.secondary),
         )

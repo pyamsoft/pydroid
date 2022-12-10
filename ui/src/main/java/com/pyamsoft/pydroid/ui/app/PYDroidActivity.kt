@@ -99,7 +99,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 }
 
 @CheckResult
-private fun createPYDroidActivity(
+private fun createPYDroidDelegate(
     activity: AppCompatActivity,
     provider: ChangeLogProvider,
     options: PYDroidActivityOptions,
@@ -124,7 +124,7 @@ public fun AppCompatActivity.installPYDroid(
     options: PYDroidActivityOptions = PYDroidActivityOptions(),
 ): PYDroidActivityDelegate {
   val self = this
-  val internals = createPYDroidActivity(self, provider, options)
+  val internals = createPYDroidDelegate(self, provider, options)
   PYDroidActivityInstallTracker.install(self, internals)
   return internals
 }

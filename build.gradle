@@ -49,8 +49,8 @@ buildscript {
 
     // Us (pyamsoft libraries)
     // -SNAPSHOT versions are not published yet and must be built locally
-    cachify = "0.2.0-SNAPSHOT"
-    highlander = "0.2.0-SNAPSHOT"
+    cachify = "0.2.0"
+    highlander = "0.2.0"
 
     // Compose
     composeActivity = "1.6.1"
@@ -117,7 +117,7 @@ subprojects {
   apply plugin: "org.gradle.android.cache-fix"
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "26.0.0-SNAPSHOT"
+  final POM_VERSION = "26.0.0"
 
 
   // Kapt flags

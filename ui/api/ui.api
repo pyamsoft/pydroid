@@ -139,7 +139,6 @@ public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/CardDefaults;
 	public final fun getElevation-D9Ej5fM ()F
-	public final fun getVersionCheckElevation-D9Ej5fM ()F
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/DialogDefaults {
@@ -291,8 +290,8 @@ public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSin
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionCheckScreenKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionCheckScreenKt;
+public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;

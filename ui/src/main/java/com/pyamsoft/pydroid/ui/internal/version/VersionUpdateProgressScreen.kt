@@ -39,7 +39,9 @@ internal fun VersionUpdateProgressScreen(
   val validProgress = remember(progress) { if (progress.isNaN()) 0F else progress }
 
   val isVisible =
-      remember(isUpgradeReady, validProgress) { !isUpgradeReady && validProgress >= 100 }
+      remember(isUpgradeReady, validProgress) {
+        !isUpgradeReady && validProgress > 0 && validProgress <= 1
+      }
 
   VersionCard(
       modifier = modifier,
@@ -60,6 +62,7 @@ internal fun VersionUpdateProgressScreen(
       )
 
       LinearProgressIndicator(
+          modifier = Modifier.fillMaxWidth(),
           progress = validProgress,
       )
     }

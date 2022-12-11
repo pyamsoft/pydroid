@@ -24,7 +24,8 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Logger
 
-private const val DEPRECATION_MESSAGE = """Do not use the Injector framework.
+private const val DEPRECATION_MESSAGE =
+    """Do not use the Injector framework.
 
 This framework is flakey at best because it expects any consumer to understand it's internal
 implementation. This class and all of its obtain* methods expects the caller to override the

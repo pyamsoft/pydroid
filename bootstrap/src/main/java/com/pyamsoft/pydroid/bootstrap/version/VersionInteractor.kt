@@ -25,8 +25,8 @@ public interface VersionInteractor {
 
   /** Watch for a download progress */
   public suspend fun watchDownloadStatus(
-    onDownloadProgress: (Float) -> Unit,
-    onDownloadCompleted: () -> Unit,
+      onDownloadProgress: (Float) -> Unit,
+      onDownloadCompleted: () -> Unit,
   )
 
   /** Check for a new version update */

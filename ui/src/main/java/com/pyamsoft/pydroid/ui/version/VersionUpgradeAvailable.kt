@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckScreen
+import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeAvailableScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -98,7 +98,7 @@ internal constructor(
       modifier: Modifier = Modifier,
   ) {
     Render { state, onUpgradeStarted ->
-      VersionCheckScreen(
+      VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,
           onUpgrade = onUpgradeStarted,

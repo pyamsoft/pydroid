@@ -16,8 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,14 +38,32 @@ internal fun VersionUpdateProgressScreen(
   val progress = state.updateProgressPercent
   val validProgress = remember(progress) { if (progress.isNaN()) 0F else progress }
 
-  if (isUpgradeReady || validProgress <= 0) {
-    return
-  }
+  val isVisible =
+      remember(isUpgradeReady, validProgress) { !isUpgradeReady && validProgress >= 100 }
 
-  LinearProgressIndicator(
+  VersionCard(
       modifier = modifier,
-      progress = validProgress,
-  )
+      visible = isVisible,
+  ) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+      Text(
+          text = "Update Downloading...",
+          style =
+              MaterialTheme.typography.caption.copy(
+                  color =
+                      MaterialTheme.colors.primary.copy(
+                          alpha = ContentAlpha.medium,
+                      ),
+              ),
+      )
+
+      LinearProgressIndicator(
+          progress = validProgress,
+      )
+    }
+  }
 }
 
 @Composable
@@ -59,6 +82,14 @@ private fun PreviewVersionUpdateProgress(
 private fun PreviewVersionCheckScreenNone() {
   PreviewVersionUpdateProgress(
       state = MutableVersionCheckViewState().apply { updateProgressPercent = 0F },
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewVersionCheckScreenGuarded() {
+  PreviewVersionUpdateProgress(
+      state = MutableVersionCheckViewState().apply { updateProgressPercent = Float.NaN },
   )
 }
 

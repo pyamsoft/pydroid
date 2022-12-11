@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,38 +27,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.theme.HairlineSize
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 @Composable
-internal fun VersionCheckScreen(
+internal fun VersionUpgradeAvailableScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onUpgrade: () -> Unit,
 ) {
-  val isUpgradeReady = state.isUpdateReadyToInstall
-
-  if (!isUpgradeReady) {
-    return
-  }
-
-  Surface(
+  VersionCard(
       modifier = modifier,
-      border =
-          BorderStroke(
-              width = HairlineSize,
-              color = MaterialTheme.colors.primary,
-          ),
-      elevation = CardDefaults.VersionCheckElevation,
-      color =
-          MaterialTheme.colors.primary.copy(
-              alpha = 0.16F,
-          ),
-      shape = MaterialTheme.shapes.medium,
+      visible = state.isUpdateReadyToInstall,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -89,7 +70,7 @@ private fun PreviewVersionCheckScreen(
     state: MutableVersionCheckViewState,
 ) {
   Surface {
-    VersionCheckScreen(
+    VersionUpgradeAvailableScreen(
         state = state,
         onUpgrade = {},
     )

@@ -8,7 +8,4 @@ public object CardDefaults {
 
   /** Elevation for a Card */
   public val Elevation: Dp = 2.dp
-
-  /** Elevation for the Version Check Card */
-  public val VersionCheckElevation: Dp = 4.dp
 }

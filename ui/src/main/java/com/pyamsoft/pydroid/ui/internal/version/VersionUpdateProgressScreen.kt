@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
@@ -48,9 +50,10 @@ internal fun VersionUpdateProgressScreen(
       visible = isVisible,
   ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       Text(
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.typography),
           text = "Update Downloading...",
           style =
               MaterialTheme.typography.caption.copy(
@@ -109,5 +112,17 @@ private fun PreviewVersionCheckScreenHalf() {
 private fun PreviewVersionCheckFull() {
   PreviewVersionUpdateProgress(
       state = MutableVersionCheckViewState().apply { updateProgressPercent = 1.00F },
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewVersionCheckReady() {
+  PreviewVersionUpdateProgress(
+      state =
+          MutableVersionCheckViewState().apply {
+            updateProgressPercent = 0.50F
+            isUpdateReadyToInstall = true
+          },
   )
 }

@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
@@ -47,12 +47,21 @@ internal constructor(
       scope: CoroutineScope,
       onUpgradeReady: () -> Unit,
   ) {
+    val s = state
     scope.launch(context = Dispatchers.Main) {
       interactor.watchDownloadStatus(
-          onDownloadProgress = {},
+          onDownloadProgress = { percent ->
+            if (!s.isUpdateReadyToInstall) {
+              Logger.d("Update progress: $percent")
+              s.updateProgressPercent = percent
+            } else {
+              Logger.w("Download marks progress, but update is ready to install: $percent")
+            }
+          },
           onDownloadCompleted = {
             Logger.d("App update download ready!")
-            state.isUpdateReadyToInstall = true
+            s.isUpdateReadyToInstall = true
+            s.updateProgressPercent = 0F
             onUpgradeReady()
           },
       )
@@ -65,11 +74,6 @@ internal constructor(
       onLaunchUpdate: (AppUpdateLauncher) -> Unit,
   ) {
     val s = state
-
-    if (s.availableUpdateVersionCode != AppUpdateLauncher.NO_VALID_UPDATE_VERSION) {
-      Logger.d("Update is already available, do not check for update again")
-      return
-    }
 
     if (s.isUpdateReadyToInstall) {
       Logger.d("Update is already ready to install, do not check for update again")

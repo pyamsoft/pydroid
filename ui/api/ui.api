@@ -192,6 +192,10 @@ public final class com/pyamsoft/pydroid/ui/icons/PolicyKt {
 	public static final fun getPolicy (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }
 
+public final class com/pyamsoft/pydroid/ui/icons/RadioButtonUncheckedKt {
+	public static final fun getRadioButtonUnchecked (Landroidx/compose/material/icons/Icons$Filled;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
 public final class com/pyamsoft/pydroid/ui/icons/RedeemKt {
 	public static final fun getRedeem (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }
@@ -510,8 +514,21 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
 	public abstract fun getAvailableUpdateVersionCode ()I
+	public abstract fun getUpdateProgressPercent ()F
 	public abstract fun isCheckingForUpdate ()Z
 	public abstract fun isUpdateReadyToInstall ()Z
+}
+
+public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;
+	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+}
+
+public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion {
+	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
@@ -545,6 +562,10 @@ public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
 
 public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {
 	public static final fun SwipeRefresh (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/UpdateProgressWidgetKt {
+	public static final fun UpdateProgressWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcher {

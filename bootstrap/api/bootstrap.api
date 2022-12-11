@@ -197,29 +197,10 @@ public final class com/pyamsoft/pydroid/bootstrap/settings/SettingsModule$Parame
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class com/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher {
-	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher$Companion;
-	public static final field NO_VALID_UPDATE_VERSION I
-	public abstract fun availableUpdateVersion ()I
-	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher;
-	public abstract fun update (Landroid/app/Activity;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class com/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher$Companion {
-	public static final field NO_VALID_UPDATE_VERSION I
-	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/AppUpdateLauncher;
-}
-
-public abstract interface class com/pyamsoft/pydroid/bootstrap/version/AppUpdater {
-	public abstract fun checkForUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun complete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun watchForDownloadComplete (Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor {
 	public abstract fun checkVersion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun completeUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun watchForDownloadComplete (Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchDownloadStatus (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor$Cache {
@@ -243,5 +224,24 @@ public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Paramete
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher$Companion;
+	public static final field NO_VALID_UPDATE_VERSION I
+	public abstract fun availableUpdateVersion ()I
+	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
+	public abstract fun update (Landroid/app/Activity;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher$Companion {
+	public static final field NO_VALID_UPDATE_VERSION I
+	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdater {
+	public abstract fun checkForUpdate (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun complete (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchDownloadStatus (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

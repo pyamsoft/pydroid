@@ -16,12 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
@@ -38,14 +36,11 @@ internal fun VersionUpdateProgressScreen(
   if (isUpgradeReady || validProgress <= 0) {
     return
   }
-  Box(
+
+  LinearProgressIndicator(
       modifier = modifier,
-      contentAlignment = Alignment.CenterStart,
-  ) {
-    LinearProgressIndicator(
-        progress = validProgress,
-    )
-  }
+      progress = validProgress,
+  )
 }
 
 @Composable

@@ -67,7 +67,9 @@ internal constructor(
         Logger.d("Download in progress")
         val bytesDownloaded = state.bytesDownloaded()
         val totalBytes = state.totalBytesToDownload()
-        onDownloadProgress((bytesDownloaded / totalBytes.toFloat()))
+        val progress = (bytesDownloaded / totalBytes.toFloat())
+        Logger.d("Download status: $bytesDownloaded / $totalBytes => $progress")
+        onDownloadProgress(progress)
       } else if (status == InstallStatus.DOWNLOADED) {
         Logger.d("Download completed!")
         onDownloadCompleted()

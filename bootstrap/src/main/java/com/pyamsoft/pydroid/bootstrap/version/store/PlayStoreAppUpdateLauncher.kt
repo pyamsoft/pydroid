@@ -45,11 +45,12 @@ internal constructor(
 
     Logger.d("Start a fake download")
 
+    // Mark download started (we need this first to then set bytes)
+    self.downloadStarts()
+
     // Set total bytes
     val totalBytes = 100L
     self.setTotalBytesToDownload(totalBytes)
-
-    self.downloadStarts()
 
     // Download the update
     var downloaded = 0L

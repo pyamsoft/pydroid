@@ -44,10 +44,20 @@ internal constructor(
     self.userAcceptsUpdate()
 
     Logger.d("Start a fake download")
+
+    // Set total bytes
+    val totalBytes = 100L
+    self.setTotalBytesToDownload(totalBytes)
+
     self.downloadStarts()
 
-    Logger.d("Fake a delay so the download can happen")
-    delay(4000L)
+    // Download the update
+    var downloaded = 0L
+    while (downloaded < totalBytes) {
+      delay(100L)
+      downloaded += 1
+      self.setBytesDownloaded(downloaded)
+    }
 
     Logger.d("Complete a fake download")
     self.downloadCompletes()

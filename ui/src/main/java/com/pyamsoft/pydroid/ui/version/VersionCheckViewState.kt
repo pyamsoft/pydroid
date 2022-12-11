@@ -31,4 +31,7 @@ public interface VersionCheckViewState : UiViewState {
 
   /** Is the update downloaded and ready to install? */
   public val isUpdateReadyToInstall: Boolean
+
+  /** If an upload is downloading, how close are we to done? */
+  public val updateProgressPercent: Float
 }

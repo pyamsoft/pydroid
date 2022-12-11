@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
+import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal data class PYDroidActivityComponents
@@ -31,4 +32,5 @@ internal constructor(
     internal val dataPolicy: DataPolicyDelegate,
     internal val internalPresenter: AppInternalViewModeler,
     internal val versionUpgrader: VersionUpgradeAvailable,
+    internal val versionUdateProgress: VersionUpdateProgress,
 )

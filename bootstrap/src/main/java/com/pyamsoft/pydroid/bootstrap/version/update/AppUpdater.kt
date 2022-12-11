@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.version.update
 
 import androidx.annotation.CheckResult
 
 /** An in-app updater */
 public interface AppUpdater {
 
-  /** Watch for the update being downloaded */
-  public suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit)
+  /** Watch for the update status */
+  public suspend fun watchDownloadStatus(
+      onDownloadProgress: (Float) -> Unit,
+      onDownloadCompleted: () -> Unit,
+  )
 
   /** Check for a new update */
   @CheckResult public suspend fun checkForUpdate(): AppUpdateLauncher

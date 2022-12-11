@@ -17,13 +17,17 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ResultWrapper
 
 /** An interactor for version checking related code */
 public interface VersionInteractor {
 
-  /** Watch for a completed download */
-  public suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit)
+  /** Watch for a download progress */
+  public suspend fun watchDownloadStatus(
+    onDownloadProgress: (Float) -> Unit,
+    onDownloadCompleted: () -> Unit,
+  )
 
   /** Check for a new version update */
   @CheckResult public suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher>

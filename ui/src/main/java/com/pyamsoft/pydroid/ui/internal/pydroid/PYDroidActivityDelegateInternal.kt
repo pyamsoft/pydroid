@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
+import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -51,6 +52,7 @@ internal constructor(
   private var ratingDelegate: RatingDelegate?
   private var versionCheckDelegate: VersionCheckDelegate?
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
+  private var versionUpdateProgress: VersionUpdateProgress?
 
   init {
     val components = component.create(activity)
@@ -63,6 +65,7 @@ internal constructor(
     ratingDelegate = rd
     versionCheckDelegate = vc
     versionUpgradeAvailable = components.versionUpgrader
+    versionUpdateProgress = components.versionUdateProgress
 
     activity.doOnCreate {
       connectBilling(
@@ -112,6 +115,7 @@ internal constructor(
       ratingDelegate = null
       versionCheckDelegate = null
       versionUpgradeAvailable = null
+      versionUpdateProgress = null
     }
   }
 
@@ -235,6 +239,14 @@ internal constructor(
   internal fun versionUpgrader(): VersionUpgradeAvailable {
     return versionUpgradeAvailable.requireNotNull {
       "VersionUpgradeAvailable is NULL, was this destroyed?"
+    }
+  }
+
+  /** Used in UpdateProgressWidget */
+  @CheckResult
+  internal fun updateProgress(): VersionUpdateProgress {
+    return versionUpdateProgress.requireNotNull {
+      "VersionUpdateProgress is NULL, was this destroyed?"
     }
   }
 

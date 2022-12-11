@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
@@ -28,11 +30,17 @@ internal constructor(
     private val updater: AppUpdater,
 ) : VersionInteractor {
 
-  override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
+  override suspend fun watchDownloadStatus(
+      onDownloadProgress: (Float) -> Unit,
+      onDownloadCompleted: () -> Unit
+  ) =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
+        return@withContext updater.watchDownloadStatus(
+            onDownloadProgress = onDownloadProgress,
+            onDownloadCompleted = onDownloadCompleted,
+        )
       }
 
   override suspend fun completeUpdate() =

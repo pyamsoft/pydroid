@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.version.update
 
 import android.app.Activity
 import androidx.annotation.CheckResult

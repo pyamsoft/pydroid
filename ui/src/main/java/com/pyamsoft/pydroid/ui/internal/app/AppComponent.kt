@@ -47,6 +47,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal interface AppComponent {
@@ -207,6 +208,7 @@ internal interface AppComponent {
                   interactor = params.dataPolicyModule.provideInteractor(),
               ),
           versionUpgrader = VersionUpgradeAvailable.create(activity),
+          versionUdateProgress = VersionUpdateProgress.create(activity),
       )
     }
 

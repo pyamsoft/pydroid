@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
@@ -48,11 +48,14 @@ internal constructor(
       onUpgradeReady: () -> Unit,
   ) {
     scope.launch(context = Dispatchers.Main) {
-      interactor.watchForDownloadComplete {
-        Logger.d("App update download ready!")
-        state.isUpdateReadyToInstall = true
-        onUpgradeReady()
-      }
+      interactor.watchDownloadStatus(
+          onDownloadProgress = {},
+          onDownloadCompleted = {
+            Logger.d("App update download ready!")
+            state.isUpdateReadyToInstall = true
+            onUpgradeReady()
+          },
+      )
     }
   }
 

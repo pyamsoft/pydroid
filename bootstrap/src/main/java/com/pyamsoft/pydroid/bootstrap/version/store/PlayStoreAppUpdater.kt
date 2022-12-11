@@ -24,8 +24,8 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdater
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import kotlin.coroutines.resume
@@ -57,14 +57,20 @@ internal constructor(
 
   @CheckResult
   private inline fun createStatusListener(
-      crossinline onDownloadComplete: () -> Unit
+      crossinline onDownloadProgress: (Float) -> Unit,
+      crossinline onDownloadCompleted: () -> Unit
   ): InstallStateUpdatedListener {
     return InstallStateUpdatedListener { state ->
       val status = state.installStatus()
       Logger.d("Install state changed: $status")
-      if (status == InstallStatus.DOWNLOADED) {
+      if (status == InstallStatus.DOWNLOADING) {
+        Logger.d("Download in progress")
+        val bytesDownloaded = state.bytesDownloaded()
+        val totalBytes = state.totalBytesToDownload()
+        onDownloadProgress((bytesDownloaded / totalBytes.toFloat()))
+      } else if (status == InstallStatus.DOWNLOADED) {
         Logger.d("Download completed!")
-        onDownloadComplete()
+        onDownloadCompleted()
       }
     }
   }
@@ -88,14 +94,21 @@ internal constructor(
         }
       }
 
-  override suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit) =
+  override suspend fun watchDownloadStatus(
+      onDownloadProgress: (Float) -> Unit,
+      onDownloadCompleted: () -> Unit
+  ) =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
         return@withContext suspendCancellableCoroutine<Unit> { continuation ->
-          val listener = createStatusListener(onDownloadComplete)
+          val listener =
+              createStatusListener(
+                  onDownloadProgress = onDownloadProgress,
+                  onDownloadCompleted = onDownloadCompleted,
+              )
 
-          Logger.d("Listen for install status DOWNLOADED")
+          Logger.d("Listen for install status")
           manager.registerListener(listener)
 
           continuation.invokeOnCancellation {

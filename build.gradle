@@ -72,8 +72,8 @@ buildscript {
     materialDesign = "1.7.0"
 
     // Google Play libraries
-    appUpdate = "2.0.0"
-    review = "2.0.0"
+    appUpdate = "2.0.1"
+    review = "2.0.1"
     billing = "5.1.0"
 
     // Needed just for androidx.preference.PreferenceManager

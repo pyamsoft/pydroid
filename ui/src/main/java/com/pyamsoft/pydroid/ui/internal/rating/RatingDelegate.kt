@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.util.doOnDestroy

@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
+import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper

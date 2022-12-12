@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.store
+package com.pyamsoft.pydroid.bootstrap.version.play
 
 import android.app.Activity
 import com.google.android.play.core.appupdate.AppUpdateInfo

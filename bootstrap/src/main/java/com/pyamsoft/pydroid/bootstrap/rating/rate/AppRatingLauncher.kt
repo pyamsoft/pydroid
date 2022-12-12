@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.rating.rate
 
 import android.app.Activity
 import androidx.annotation.CheckResult

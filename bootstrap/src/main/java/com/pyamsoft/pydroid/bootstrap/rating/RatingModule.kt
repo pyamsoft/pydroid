@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.rating.store.PlayStoreRateMyApp
+import com.pyamsoft.pydroid.bootstrap.rating.play.PlayStoreRateMyApp
 
 /** Rating module */
 public class RatingModule(params: Parameters) {

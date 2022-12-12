@@ -70,7 +70,9 @@ public class VersionModule(params: Parameters) {
   }
 
   /** Module parameters */
-  public data class Parameters(
+  public data class Parameters
+  @JvmOverloads
+  public constructor(
       internal val context: Context,
       internal val version: Int,
 

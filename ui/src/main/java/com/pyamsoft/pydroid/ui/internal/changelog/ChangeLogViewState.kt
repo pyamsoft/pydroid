@@ -22,12 +22,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
+/** Change Log UI state */
 @Stable
-internal interface ChangeLogViewState : UiViewState {
-  val canShow: Boolean?
+public interface ChangeLogViewState : UiViewState {
+
+  /** Can we show the changelog */
+  public val canShow: Boolean
 }
 
 @Stable
 internal class MutableChangeLogViewState : ChangeLogViewState {
-  override var canShow by mutableStateOf<Boolean?>(null)
+  override var canShow by mutableStateOf<Boolean>(false)
 }

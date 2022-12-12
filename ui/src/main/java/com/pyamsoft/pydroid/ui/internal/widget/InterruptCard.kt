@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.version
+package com.pyamsoft.pydroid.ui.internal.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
-internal fun VersionCard(
+internal fun InterruptCard(
     modifier: Modifier = Modifier,
     visible: Boolean,
     content: @Composable () -> Unit,

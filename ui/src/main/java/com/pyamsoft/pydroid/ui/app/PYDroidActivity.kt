@@ -59,9 +59,6 @@ public abstract class PYDroidActivity :
   /** Disable the data policy component */
   protected open val disableDataPolicy: Boolean = false
 
-  /** Disable the changelog component */
-  protected open val disableChangeLog: Boolean = false
-
   /** Activity delegate */
   private var delegate: PYDroidActivityDelegate? = null
 
@@ -76,7 +73,6 @@ public abstract class PYDroidActivity :
                       disableRating = disableRating,
                       disableVersionCheck = disableVersionCheck,
                       disableDataPolicy = disableDataPolicy,
-                      disableChangeLog = disableChangeLog,
                   ),
           )
     }
@@ -100,10 +96,6 @@ public abstract class PYDroidActivity :
   /** Check for in-app updates */
   override fun checkUpdates() {
     delegate.requireNotNull().checkUpdates()
-  }
-
-  override fun showChangelog() {
-    delegate.requireNotNull().showChangelog()
   }
 }
 

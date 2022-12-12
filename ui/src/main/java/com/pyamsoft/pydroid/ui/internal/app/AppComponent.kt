@@ -28,12 +28,12 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
-import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
@@ -60,7 +60,9 @@ internal interface AppComponent {
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
-  @CheckResult fun plusChangeLogDialog(): ChangeLogComponent.Factory
+  @CheckResult fun plusChangeLog(): ChangeLogComponent.Factory
+
+  @CheckResult fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
 
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
 
@@ -159,11 +161,15 @@ internal interface AppComponent {
             versionCheckState = versionCheckState,
             dataPolicyState = dataPolicyState,
             changeLogState = changeLogState,
-            version = params.version,
         )
 
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
+            changeLogModule = params.changeLogModule,
+        )
+
+    private val changeLogDialogParams =
+        ChangeLogDialogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
@@ -210,16 +216,7 @@ internal interface AppComponent {
                   state = dataPolicyState,
                   interactor = params.dataPolicyModule.provideInteractor(),
               ),
-          changeLog =
-              ChangeLogDelegate(
-                  activity,
-                  ChangeLogViewModeler(
-                      state = changeLogState,
-                      changeLogInteractor = params.changeLogModule.provideInteractor(),
-                      dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),
-                      version = params.version,
-                  ),
-              ),
+          showUpdateChangeLog = ShowUpdateChangeLog.create(activity),
           versionUpgrader = VersionUpgradeAvailable.create(activity),
           versionUpdateProgress = VersionUpdateProgress.create(activity),
       )
@@ -253,8 +250,12 @@ internal interface AppComponent {
       return SettingsComponent.Impl.FactoryImpl(settingsParams)
     }
 
-    override fun plusChangeLogDialog(): ChangeLogComponent.Factory {
+    override fun plusChangeLog(): ChangeLogComponent.Factory {
       return ChangeLogComponent.Impl.FactoryImpl(changeLogParams)
+    }
+
+    override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
+      return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
     }
 
     class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {

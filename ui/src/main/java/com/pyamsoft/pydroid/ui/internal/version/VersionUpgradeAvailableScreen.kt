@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -38,7 +39,7 @@ internal fun VersionUpgradeAvailableScreen(
     state: VersionCheckViewState,
     onUpgrade: () -> Unit,
 ) {
-  VersionCard(
+  InterruptCard(
       modifier = modifier,
       visible = state.isUpdateReadyToInstall,
   ) {

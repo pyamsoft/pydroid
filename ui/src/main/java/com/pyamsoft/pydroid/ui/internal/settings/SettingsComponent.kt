@@ -40,7 +40,6 @@ internal interface SettingsComponent {
 
     data class Parameters
     internal constructor(
-        internal val version: Int,
         internal val changeLogState: MutableChangeLogViewState,
         internal val dataPolicyState: MutableDataPolicyViewState,
         internal val versionCheckState: MutableVersionCheckViewState,
@@ -78,9 +77,7 @@ internal interface SettingsComponent {
       fragment.changeLogViewModel =
           ChangeLogViewModeler(
               state = params.changeLogState,
-              changeLogInteractor = params.changeLogModule.provideInteractor(),
-              dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),
-              version = params.version,
+              interactor = params.changeLogModule.provideInteractor(),
           )
       fragment.versionViewModel =
           VersionCheckViewModeler(

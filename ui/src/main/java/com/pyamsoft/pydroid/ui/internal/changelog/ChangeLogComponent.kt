@@ -14,54 +14,44 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog
+package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 
 internal interface ChangeLogComponent {
 
-  fun inject(dialog: ChangeLogDialog)
+  fun inject(component: ShowUpdateChangeLog)
 
   interface Factory {
 
-    @CheckResult fun create(provider: ChangeLogProvider): ChangeLogComponent
+    @CheckResult fun create(): ChangeLogComponent
 
     data class Parameters
     internal constructor(
         internal val changeLogModule: ChangeLogModule,
-        internal val composeTheme: ComposeThemeFactory,
-        internal val imageLoader: ImageLoader,
-        internal val version: Int,
     )
   }
 
   class Impl
   private constructor(
-      private val provider: ChangeLogProvider,
       private val params: Factory.Parameters,
   ) : ChangeLogComponent {
 
-    override fun inject(dialog: ChangeLogDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.imageLoader = params.imageLoader
-      dialog.viewModel =
-          ChangeLogDialogViewModeler(
-              state = MutableChangeLogDialogViewState(),
+    override fun inject(component: ShowUpdateChangeLog) {
+      component.viewModel =
+          ChangeLogViewModeler(
+              state = MutableChangeLogViewState(),
               interactor = params.changeLogModule.provideInteractor(),
-              provider = provider,
-              version = params.version,
           )
     }
 
     internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
         Factory {
 
-      override fun create(provider: ChangeLogProvider): ChangeLogComponent {
-        return Impl(provider, params)
+      override fun create(): ChangeLogComponent {
+        return Impl(params)
       }
     }
   }

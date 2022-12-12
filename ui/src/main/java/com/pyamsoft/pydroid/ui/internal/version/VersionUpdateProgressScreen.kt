@@ -29,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
@@ -45,7 +46,7 @@ internal fun VersionUpdateProgressScreen(
         !isUpgradeReady && validProgress > 0 && validProgress <= 1
       }
 
-  VersionCard(
+  InterruptCard(
       modifier = modifier,
       visible = isVisible,
   ) {

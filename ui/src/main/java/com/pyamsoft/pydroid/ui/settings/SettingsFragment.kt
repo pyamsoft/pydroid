@@ -152,7 +152,6 @@ public abstract class SettingsFragment : Fragment() {
         .requireNotNull()
         .handleShow(
             scope = viewLifecycleOwner.lifecycleScope,
-            force = true,
             onShowChangeLog = { ChangeLogDialog.show(requireActivity()) },
         )
   }

@@ -54,7 +54,7 @@ internal fun VersionUpdateProgressScreen(
     ) {
       Text(
           modifier = Modifier.padding(bottom = MaterialTheme.keylines.typography),
-          text = "Update Downloading...",
+          text = "Downloading Update...",
           style =
               MaterialTheme.typography.caption.copy(
                   color =

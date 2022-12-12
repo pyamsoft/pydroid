@@ -29,8 +29,10 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 internal class PlayStoreAppRatingLauncher
-internal constructor(private val manager: ReviewManager, private val info: ReviewInfo) :
-    AppRatingLauncher {
+internal constructor(
+    private val manager: ReviewManager,
+    private val info: ReviewInfo,
+) : AppRatingLauncher {
 
   override suspend fun rate(activity: Activity): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {

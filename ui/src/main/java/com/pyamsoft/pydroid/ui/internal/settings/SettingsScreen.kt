@@ -156,7 +156,6 @@ private fun SettingsList(
   val applicationPrefs =
       rememberApplicationPreferencesGroup(
           options = options,
-          hideClearAll = hideClearAll,
           hideUpgradeInformation = hideUpgradeInformation,
           applicationName = applicationName,
           darkMode = darkMode,
@@ -164,7 +163,6 @@ private fun SettingsList(
           onLicensesClicked = onLicensesClicked,
           onCheckUpdateClicked = onCheckUpdateClicked,
           onShowChangeLogClicked = onShowChangeLogClicked,
-          onResetClicked = onResetClicked,
       )
 
   val supportPrefs =

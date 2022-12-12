@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringArrayResource
@@ -41,7 +40,6 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 @CheckResult
 internal fun rememberApplicationPreferencesGroup(
     options: PYDroidActivityOptions,
-    hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
@@ -49,7 +47,6 @@ internal fun rememberApplicationPreferencesGroup(
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
-    onResetClicked: () -> Unit,
 ): Preferences.Group {
 
   val darkThemePreference =
@@ -73,22 +70,15 @@ internal fun rememberApplicationPreferencesGroup(
           onClick = onShowChangeLogClicked,
       )
 
-  val resetPreference =
-      rememberResetPreference(
-          onClick = onResetClicked,
-      )
-
   val preferences =
       remember(
           options.disableChangeLog,
           options.disableVersionCheck,
-          hideClearAll,
           hideUpgradeInformation,
           darkThemePreference,
           licensePreference,
           updatePreference,
           changeLogPreference,
-          resetPreference,
       ) {
         mutableListOf<Preferences.Item>().apply {
           add(darkThemePreference)
@@ -97,12 +87,8 @@ internal fun rememberApplicationPreferencesGroup(
             add(updatePreference)
           }
 
-          if (!options.disableChangeLog && !hideClearAll) {
+          if (!options.disableChangeLog && !hideUpgradeInformation) {
             add(changeLogPreference)
-          }
-
-          if (!hideClearAll) {
-            add(resetPreference)
           }
         }
       }
@@ -211,28 +197,6 @@ private fun rememberChangeLogPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Whatshot,
-        onClick = onClick,
-    )
-  }
-}
-
-@Composable
-@CheckResult
-private fun rememberResetPreference(
-    onClick: () -> Unit,
-): Preferences.Item {
-  val name = stringResource(R.string.clear_all_title)
-  val summary = stringResource(R.string.clear_all_summary)
-
-  return remember(
-      name,
-      summary,
-      onClick,
-  ) {
-    preference(
-        name = name,
-        summary = summary,
-        icon = Icons.Outlined.Warning,
         onClick = onClick,
     )
   }

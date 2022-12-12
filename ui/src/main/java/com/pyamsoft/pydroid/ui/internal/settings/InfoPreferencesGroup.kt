@@ -87,7 +87,7 @@ internal fun rememberInfoPreferencesGroup(
         }
       }
 
-  val title = remember(applicationName) { "$applicationName Information and Support" }
+  val title = remember(applicationName) { "$applicationName Information" }
   return remember(
       title,
       preferences,

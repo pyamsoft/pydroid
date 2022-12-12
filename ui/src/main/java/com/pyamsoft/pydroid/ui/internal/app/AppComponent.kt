@@ -30,6 +30,8 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
@@ -157,6 +159,7 @@ internal interface AppComponent {
             versionCheckState = versionCheckState,
             dataPolicyState = dataPolicyState,
             changeLogState = changeLogState,
+            version = params.version,
         )
 
     private val changeLogParams =
@@ -207,8 +210,18 @@ internal interface AppComponent {
                   state = dataPolicyState,
                   interactor = params.dataPolicyModule.provideInteractor(),
               ),
+          changeLog =
+              ChangeLogDelegate(
+                  activity,
+                  ChangeLogViewModeler(
+                      state = changeLogState,
+                      changeLogInteractor = params.changeLogModule.provideInteractor(),
+                      dataPolicyInteractor = params.dataPolicyModule.provideInteractor(),
+                      version = params.version,
+                  ),
+              ),
           versionUpgrader = VersionUpgradeAvailable.create(activity),
-          versionUdateProgress = VersionUpdateProgress.create(activity),
+          versionUpdateProgress = VersionUpdateProgress.create(activity),
       )
     }
 

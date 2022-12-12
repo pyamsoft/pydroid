@@ -29,4 +29,9 @@ public interface PYDroidActivityDelegate {
 
   /** Check for in-app updates */
   public fun checkUpdates()
+
+  /**
+   * Show the application changelog
+   */
+  public fun showChangelog()
 }

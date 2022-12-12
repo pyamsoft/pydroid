@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
@@ -53,6 +54,7 @@ internal constructor(
   private var versionCheckDelegate: VersionCheckDelegate?
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
   private var versionUpdateProgress: VersionUpdateProgress?
+  private var changeLogDelegate: ChangeLogDelegate?
 
   init {
     val components = component.create(activity)
@@ -61,11 +63,13 @@ internal constructor(
     val rd = components.rating
     val vc = components.versionCheck
     val dp = components.dataPolicy
+    val cl = components.changeLog
 
     ratingDelegate = rd
     versionCheckDelegate = vc
+    changeLogDelegate = cl
     versionUpgradeAvailable = components.versionUpgrader
-    versionUpdateProgress = components.versionUdateProgress
+    versionUpdateProgress = components.versionUpdateProgress
 
     activity.doOnCreate {
       connectBilling(
@@ -92,17 +96,28 @@ internal constructor(
           options = options,
       )
 
+      connectChangeLog(
+          activity = activity,
+          changeLogDelegate = cl,
+          options = options,
+      )
+    }
+
+    activity.doOnStart {
       showDataPolicyDisclosure(
           activity = activity,
           presenter = components.internalPresenter,
           dataPolicy = dp,
           options = options,
       )
-    }
 
-    activity.doOnStart {
       checkUpdates(
           versionCheckDelegate = vc,
+          options = options,
+      )
+
+      showChangelog(
+          changeLogDelegate = cl,
           options = options,
       )
     }
@@ -116,6 +131,7 @@ internal constructor(
       versionCheckDelegate = null
       versionUpgradeAvailable = null
       versionUpdateProgress = null
+      changeLogDelegate = null
     }
   }
 
@@ -210,6 +226,35 @@ internal constructor(
     }
   }
 
+  /** Attempts to connect to changelog */
+  private fun connectChangeLog(
+      activity: FragmentActivity,
+      changeLogDelegate: ChangeLogDelegate,
+      options: PYDroidActivityOptions,
+  ) {
+    if (options.disableChangeLog) {
+      Logger.w("Application has disabled the ChangeLog component")
+      return
+    }
+
+    activity.doOnCreate {
+      Logger.d("Attempt Connect ChangeLog")
+      changeLogDelegate.bindEvents()
+    }
+  }
+
+  private fun showChangelog(
+      changeLogDelegate: ChangeLogDelegate,
+      options: PYDroidActivityOptions,
+  ) {
+    if (options.disableChangeLog) {
+      Logger.w("Application has disabled the ChangeLog component")
+      return
+    }
+
+    changeLogDelegate.showChangeLog()
+  }
+
   private fun checkUpdates(
       versionCheckDelegate: VersionCheckDelegate,
       options: PYDroidActivityOptions,
@@ -287,5 +332,13 @@ internal constructor(
     val options = appOptions.requireNotNull { "AppOptions is NULL, was this destroyed?" }
 
     checkUpdates(versionCheck, options)
+  }
+
+  override fun showChangelog() {
+    val changeLog =
+        changeLogDelegate.requireNotNull { "ChangeLogDelegate is NULL, was this destroyed?" }
+    val options = appOptions.requireNotNull { "AppOptions is NULL, was this destroyed?" }
+
+    showChangelog(changeLog, options)
   }
 }

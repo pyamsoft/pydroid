@@ -131,7 +131,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     private const val TAG = "ChangeLogDialog"
 
     @JvmStatic
-    internal fun open(activity: FragmentActivity) {
+    internal fun show(activity: FragmentActivity) {
       ChangeLogDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
   }

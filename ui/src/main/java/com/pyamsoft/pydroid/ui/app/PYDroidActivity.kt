@@ -44,7 +44,8 @@ which will set up all of the expected bits of the old PYDroidActivity but can be
 with any kind of BaseActivity as long as it extends from the AppCompat library's AppCompatActivity
 (as PYDroid internally relies on the use of FragmentActivity and its LifecycleOwner)
 """)
-public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
+public abstract class PYDroidActivity :
+    AppCompatActivity(), ChangeLogProvider, PYDroidActivityDelegate {
 
   /** Disable the billing component */
   protected open val disableBilling: Boolean = false
@@ -57,6 +58,9 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
 
   /** Disable the data policy component */
   protected open val disableDataPolicy: Boolean = false
+
+  /** Disable the changelog component */
+  protected open val disableChangeLog: Boolean = false
 
   /** Activity delegate */
   private var delegate: PYDroidActivityDelegate? = null
@@ -72,6 +76,7 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
                       disableRating = disableRating,
                       disableVersionCheck = disableVersionCheck,
                       disableDataPolicy = disableDataPolicy,
+                      disableChangeLog = disableChangeLog,
                   ),
           )
     }
@@ -83,18 +88,22 @@ public abstract class PYDroidActivity : AppCompatActivity(), ChangeLogProvider {
    * Rating Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that
    * is up to Google
    */
-  public fun loadInAppRating() {
+  override fun loadInAppRating() {
     delegate.requireNotNull().loadInAppRating()
   }
 
   /** Confirm the potential version upgrade */
-  public fun confirmUpgrade() {
+  override fun confirmUpgrade() {
     delegate.requireNotNull().confirmUpgrade()
   }
 
   /** Check for in-app updates */
-  public fun checkUpdates() {
+  override fun checkUpdates() {
     delegate.requireNotNull().checkUpdates()
+  }
+
+  override fun showChangelog() {
+    delegate.requireNotNull().showChangelog()
   }
 }
 

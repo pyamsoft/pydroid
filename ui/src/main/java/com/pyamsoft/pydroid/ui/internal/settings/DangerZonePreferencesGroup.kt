@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
@@ -27,32 +29,33 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 
 @Composable
 @CheckResult
-internal fun rememberSocialMediaPreferencesGroup(
-    onViewSocialMediaClicked: () -> Unit,
-    onViewBlogClicked: () -> Unit,
+internal fun rememberDangerZonePreferencesGroup(
+    hideClearAll: Boolean,
+    onResetClicked: () -> Unit,
 ): Preferences.Group {
-  val socialMediaPreference =
-      rememberSocialMediaPreference(
-          onClick = onViewSocialMediaClicked,
-      )
-  val blogPreference =
-      rememberBlogPreference(
-          onClick = onViewBlogClicked,
+
+  val resetPreference =
+      rememberResetPreference(
+          onClick = onResetClicked,
       )
 
   val preferences =
       remember(
-          socialMediaPreference,
-          blogPreference,
+          hideClearAll,
+          resetPreference,
       ) {
         mutableListOf<Preferences.Item>().apply {
-          add(socialMediaPreference)
-          add(blogPreference)
+          if (!hideClearAll) {
+            add(resetPreference)
+          }
         }
       }
 
-  val title = stringResource(R.string.follow_pyamsoft_around_the_web)
-  return remember(title, preferences) {
+  val title = remember { "Danger Zone" }
+  return remember(
+      title,
+      preferences,
+  ) {
     preferenceGroup(
         name = title,
         preferences = preferences,
@@ -62,11 +65,11 @@ internal fun rememberSocialMediaPreferencesGroup(
 
 @Composable
 @CheckResult
-private fun rememberSocialMediaPreference(
+private fun rememberResetPreference(
     onClick: () -> Unit,
 ): Preferences.Item {
-  val name = stringResource(R.string.social_media_f_title)
-  val summary = stringResource(R.string.social_media_f_summary)
+  val name = stringResource(R.string.clear_all_title)
+  val summary = stringResource(R.string.clear_all_summary)
 
   return remember(
       name,
@@ -76,27 +79,7 @@ private fun rememberSocialMediaPreference(
     preference(
         name = name,
         summary = summary,
-        onClick = onClick,
-    )
-  }
-}
-
-@Composable
-@CheckResult
-private fun rememberBlogPreference(
-    onClick: () -> Unit,
-): Preferences.Item {
-  val name = stringResource(R.string.social_media_b_title)
-  val summary = stringResource(R.string.social_media_b_summary)
-
-  return remember(
-      name,
-      summary,
-      onClick,
-  ) {
-    preference(
-        name = name,
-        summary = summary,
+        icon = Icons.Outlined.Warning,
         onClick = onClick,
     )
   }

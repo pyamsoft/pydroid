@@ -144,6 +144,7 @@ internal interface AppComponent {
 
     private val settingsParams =
         SettingsComponent.Factory.Parameters(
+            options = options,
             versionModule = versionModule,
             bugReportUrl = params.bugReportUrl,
             termsConditionsUrl = params.termsConditionsUrl,

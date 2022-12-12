@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
@@ -38,7 +39,7 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 
 @Composable
 @CheckResult
-internal fun createApplicationPreferencesGroup(
+internal fun rememberApplicationPreferencesGroup(
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
@@ -50,143 +51,189 @@ internal fun createApplicationPreferencesGroup(
     onShowChangeLogClicked: () -> Unit,
     onResetClicked: () -> Unit,
 ): Preferences.Group {
-  val darkName = stringResource(R.string.dark_mode_title)
-  val darkSummary = stringResource(R.string.dark_mode_summary)
-  val darkNames = stringArrayResource(R.array.dark_mode_names_v1)
-  val darkValues = stringArrayResource(R.array.dark_mode_values_v1)
 
-  val preferences =
-      listOf(
-          darkThemePreference(
-              name = darkName,
-              summary = darkSummary,
-              names = darkNames,
-              values = darkValues,
-              darkMode = darkMode,
-              onDarkModeChanged = onDarkModeChanged,
-          ),
-          licensesPreference(
-              onLicensesClicked = onLicensesClicked,
-          ),
-          updatePreference(
-              onCheckUpdateClicked = { onCheckUpdateClicked() },
-          ),
+  val darkThemePreference =
+      rememberDarkThemePreference(
+          darkMode = darkMode,
+          onChange = onDarkModeChanged,
       )
 
-  return preferenceGroup(
-      name = "$applicationName Settings",
-      preferences =
-          preferences +
-              decideUpgradeInformationPreference(
-                  hideUpgradeInformation = hideUpgradeInformation,
-                  onShowChangeLogClicked = onShowChangeLogClicked,
-              ) +
-              decideResetPreference(
-                  hideClearAll = hideClearAll,
-                  onResetClicked = onResetClicked,
-              ),
-  )
-}
+  val licensePreference =
+      rememberLicensesPreference(
+          onClick = onLicensesClicked,
+      )
 
-@Composable
-@CheckResult
-private fun decideUpgradeInformationPreference(
-    hideUpgradeInformation: Boolean,
-    onShowChangeLogClicked: () -> Unit,
-): List<Preferences.Item> {
-  return if (hideUpgradeInformation) emptyList()
-  else {
-    listOf(
-        changeLogPreference(
-            onShowChangeLogClicked = onShowChangeLogClicked,
-        ),
+  val updatePreference =
+      rememberUpdatePreference(
+          onClick = onCheckUpdateClicked,
+      )
+
+  val changeLogPreference =
+      rememberChangeLogPreference(
+          onClick = onShowChangeLogClicked,
+      )
+
+  val resetPreference =
+      rememberResetPreference(
+          onClick = onResetClicked,
+      )
+
+  val preferences =
+      remember(
+          options.disableChangeLog,
+          options.disableVersionCheck,
+          hideClearAll,
+          hideUpgradeInformation,
+          darkThemePreference,
+          licensePreference,
+          updatePreference,
+          changeLogPreference,
+          resetPreference,
+      ) {
+        mutableListOf<Preferences.Item>().apply {
+          add(darkThemePreference)
+          add(licensePreference)
+          if (!options.disableVersionCheck) {
+            add(updatePreference)
+          }
+
+          if (!options.disableChangeLog && !hideClearAll) {
+            add(changeLogPreference)
+          }
+
+          if (!hideClearAll) {
+            add(resetPreference)
+          }
+        }
+      }
+
+  val title = remember(applicationName) { "$applicationName Settings" }
+  return remember(
+      title,
+      preferences,
+  ) {
+    preferenceGroup(
+        name = title,
+        preferences = preferences,
     )
   }
 }
 
 @Composable
 @CheckResult
-private fun decideResetPreference(
-    hideClearAll: Boolean,
-    onResetClicked: () -> Unit,
-): List<Preferences.Item> {
-  return if (hideClearAll) emptyList()
-  else {
-    listOf(
-        resetPreference(
-            onResetClicked = onResetClicked,
-        ),
-    )
-  }
-}
-
-@Composable
-@CheckResult
-private fun darkThemePreference(
-    name: String,
-    summary: String,
-    names: Array<String>,
-    values: Array<String>,
+private fun rememberDarkThemePreference(
     darkMode: Theming.Mode,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onChange: (Theming.Mode) -> Unit,
 ): Preferences.Item {
+  val name = stringResource(R.string.dark_mode_title)
+  val summary = stringResource(R.string.dark_mode_summary)
+  val names = stringArrayResource(R.array.dark_mode_names_v1)
+  val values = stringArrayResource(R.array.dark_mode_values_v1)
+  val rawValue = remember(darkMode) { darkMode.toRawString() }
 
-  return listPreference(
-      name = name,
-      summary = summary,
-      icon = Icons.Outlined.Visibility,
-      value = darkMode.toRawString(),
-      entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
-      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toThemingMode()) },
-  )
+  return remember(
+      name,
+      summary,
+      names,
+      values,
+      rawValue,
+      onChange,
+  ) {
+    listPreference(
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.Visibility,
+        value = rawValue,
+        entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
+        onPreferenceSelected = { _, value -> onChange(value.toThemingMode()) },
+    )
+  }
 }
 
 @Composable
 @CheckResult
-private fun licensesPreference(
-    onLicensesClicked: () -> Unit,
+private fun rememberLicensesPreference(
+    onClick: () -> Unit,
 ): Preferences.Item {
-  return preference(
-      name = stringResource(R.string.about_license_title),
-      summary = stringResource(R.string.about_license_summary),
-      icon = Icons.Outlined.LibraryBooks,
-      onClick = onLicensesClicked,
-  )
+  val name = stringResource(R.string.about_license_title)
+  val summary = stringResource(R.string.about_license_summary)
+
+  return remember(
+      name,
+      summary,
+      onClick,
+  ) {
+    preference(
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.LibraryBooks,
+        onClick = onClick,
+    )
+  }
 }
 
 @Composable
 @CheckResult
-private fun updatePreference(
-    onCheckUpdateClicked: () -> Unit,
+private fun rememberUpdatePreference(
+    onClick: () -> Unit,
 ): Preferences.Item {
-  return preference(
-      name = stringResource(R.string.check_version_title),
-      summary = stringResource(R.string.check_version_summary),
-      icon = Icons.Outlined.Download,
-      onClick = onCheckUpdateClicked,
-  )
+  val name = stringResource(R.string.check_version_title)
+  val summary = stringResource(R.string.check_version_summary)
+
+  return remember(
+      name,
+      summary,
+      onClick,
+  ) {
+    preference(
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.Download,
+        onClick = onClick,
+    )
+  }
 }
 
 @Composable
 @CheckResult
-private fun changeLogPreference(
-    onShowChangeLogClicked: () -> Unit,
+private fun rememberChangeLogPreference(
+    onClick: () -> Unit,
 ): Preferences.Item {
-  return preference(
-      name = stringResource(R.string.upgrade_info_title),
-      summary = stringResource(R.string.upgrade_info_summary),
-      icon = Icons.Outlined.Whatshot,
-      onClick = onShowChangeLogClicked,
-  )
+  val name = stringResource(R.string.upgrade_info_title)
+  val summary = stringResource(R.string.upgrade_info_summary)
+
+  return remember(
+      name,
+      summary,
+      onClick,
+  ) {
+    preference(
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.Whatshot,
+        onClick = onClick,
+    )
+  }
 }
 
 @Composable
 @CheckResult
-private fun resetPreference(onResetClicked: () -> Unit): Preferences.Item {
-  return preference(
-      name = stringResource(R.string.clear_all_title),
-      summary = stringResource(R.string.clear_all_summary),
-      icon = Icons.Outlined.Warning,
-      onClick = onResetClicked,
-  )
+private fun rememberResetPreference(
+    onClick: () -> Unit,
+): Preferences.Item {
+  val name = stringResource(R.string.clear_all_title)
+  val summary = stringResource(R.string.clear_all_summary)
+
+  return remember(
+      name,
+      summary,
+      onClick,
+  ) {
+    preference(
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.Warning,
+        onClick = onClick,
+    )
+  }
 }

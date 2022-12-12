@@ -26,6 +26,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.UriHandler
@@ -152,48 +153,76 @@ private fun SettingsList(
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: (UriHandler) -> Unit,
 ) {
+  val applicationPrefs =
+      rememberApplicationPreferencesGroup(
+          options = options,
+          hideClearAll = hideClearAll,
+          hideUpgradeInformation = hideUpgradeInformation,
+          applicationName = applicationName,
+          darkMode = darkMode,
+          onDarkModeChanged = onDarkModeChanged,
+          onLicensesClicked = onLicensesClicked,
+          onCheckUpdateClicked = onCheckUpdateClicked,
+          onShowChangeLogClicked = onShowChangeLogClicked,
+          onResetClicked = onResetClicked,
+      )
+
+  val supportPrefs =
+      rememberSupportPreferencesGroup(
+          options = options,
+          applicationName = applicationName,
+          onDonateClicked = onDonateClicked,
+          onOpenMarketPage = onOpenMarketPage,
+      )
+
+  val infoPreferences =
+      rememberInfoPreferencesGroup(
+          options = options,
+          applicationName = applicationName,
+          onBugReportClicked = onBugReportClicked,
+          onViewSourceClicked = onViewSourceClicked,
+          onViewDataPolicyClicked = onViewDataPolicyClicked,
+          onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+          onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+      )
+
+  val socialMediaPreferences =
+      rememberSocialMediaPreferencesGroup(
+          onViewSocialMediaClicked = onViewSocialMediaClicked,
+          onViewBlogClicked = onViewBlogClicked,
+      )
+
+  val dangerZonePreferences =
+      rememberDangerZonePreferencesGroup(
+          hideClearAll = hideClearAll,
+          onResetClicked = onResetClicked,
+      )
+
   val preferences =
-      mutableListOf<Preferences>().apply {
-        if (customPreContent.isNotEmpty()) {
-          addAll(customPreContent)
-        }
+      remember(
+          customPreContent,
+          customPostContent,
+          applicationPrefs,
+          supportPrefs,
+          infoPreferences,
+          socialMediaPreferences,
+          dangerZonePreferences,
+      ) {
+        mutableListOf<Preferences>().apply {
+          if (customPreContent.isNotEmpty()) {
+            addAll(customPreContent)
+          }
 
-        add(
-            createApplicationPreferencesGroup(
-                options = options,
-                hideClearAll = hideClearAll,
-                hideUpgradeInformation = hideUpgradeInformation,
-                applicationName = applicationName,
-                darkMode = darkMode,
-                onDarkModeChanged = onDarkModeChanged,
-                onLicensesClicked = onLicensesClicked,
-                onCheckUpdateClicked = onCheckUpdateClicked,
-                onShowChangeLogClicked = onShowChangeLogClicked,
-                onResetClicked = onResetClicked,
-            ),
-        )
-        add(
-            createSupportPreferencesGroup(
-                options = options,
-                applicationName = applicationName,
-                onDonateClicked = onDonateClicked,
-                onBugReportClicked = onBugReportClicked,
-                onViewSourceClicked = onViewSourceClicked,
-                onViewDataPolicyClicked = onViewDataPolicyClicked,
-                onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-                onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-                onOpenMarketPage = onOpenMarketPage,
-            ),
-        )
-        add(
-            createSocialMediaPreferencesGroup(
-                onViewSocialMediaClicked = onViewSocialMediaClicked,
-                onViewBlogClicked = onViewBlogClicked,
-            ),
-        )
+          add(applicationPrefs)
+          add(supportPrefs)
+          add(infoPreferences)
+          add(socialMediaPreferences)
 
-        if (customPostContent.isNotEmpty()) {
-          addAll(customPostContent)
+          if (customPostContent.isNotEmpty()) {
+            addAll(customPostContent)
+          }
+
+          add(dangerZonePreferences)
         }
       }
 

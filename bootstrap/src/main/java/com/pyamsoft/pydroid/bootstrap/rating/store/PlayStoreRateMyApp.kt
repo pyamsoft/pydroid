@@ -23,17 +23,17 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.isDebugMode
 import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
-internal class PlayStoreRateMyApp
-internal constructor(private val isFake: Boolean, context: Context) : RateMyApp {
+internal class PlayStoreRateMyApp internal constructor(context: Context) : RateMyApp {
 
   private val manager by lazy {
-    if (isFake) {
+    if (context.isDebugMode()) {
       FakeReviewManager(context.applicationContext)
     } else {
       ReviewManagerFactory.create(context.applicationContext)
@@ -44,7 +44,7 @@ internal constructor(private val isFake: Boolean, context: Context) : RateMyApp 
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        if (isFake) {
+        if (manager is FakeReviewManager) {
           Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
           delay(2000L)
         }

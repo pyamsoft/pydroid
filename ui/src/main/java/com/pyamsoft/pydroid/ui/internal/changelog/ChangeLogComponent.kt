@@ -47,8 +47,10 @@ internal interface ChangeLogComponent {
           )
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): ChangeLogComponent {
         return Impl(params)

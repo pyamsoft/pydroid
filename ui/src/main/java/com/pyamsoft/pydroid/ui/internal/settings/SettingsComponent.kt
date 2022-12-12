@@ -55,7 +55,10 @@ internal interface SettingsComponent {
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : SettingsComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+  ) : SettingsComponent {
 
     override fun inject(fragment: SettingsFragment) {
       fragment.composeTheme = params.composeTheme
@@ -87,8 +90,10 @@ internal interface SettingsComponent {
           )
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): SettingsComponent {
         return Impl(params)

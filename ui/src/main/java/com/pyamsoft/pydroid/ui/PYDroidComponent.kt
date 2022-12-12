@@ -68,17 +68,15 @@ internal interface PYDroidComponent {
         override val version: Int,
         override val logger: PYDroidLogger?,
         internal val application: Application,
-        internal val debug: DebugParameters,
         internal val theme: ComposeThemeProvider,
+        internal val debug: PYDroid.DebugParameters,
     ) : PYDroid.BaseParameters
-
-    data class DebugParameters(
-        internal val enabled: Boolean,
-        internal val upgradeAvailable: Boolean,
-    )
   }
 
-  class ComponentImpl private constructor(params: Component.Parameters) : Component {
+  class ComponentImpl
+  private constructor(
+      params: Component.Parameters,
+  ) : Component {
 
     private val context: Context = params.application
 
@@ -104,7 +102,7 @@ internal interface PYDroidComponent {
         lazy(LazyThreadSafetyMode.NONE) {
           DataPolicyModule(
               DataPolicyModule.Parameters(
-                  context = context.applicationContext,
+                  context = context,
                   preferences = preferences,
               ),
           )
@@ -114,8 +112,9 @@ internal interface PYDroidComponent {
         lazy(LazyThreadSafetyMode.NONE) {
           ChangeLogModule(
               ChangeLogModule.Parameters(
-                  context = context.applicationContext,
+                  context = context,
                   preferences = preferences,
+                  isFakeChangeLogAvailable = params.debug.changeLogAvailable,
               ),
           )
         }
@@ -123,21 +122,19 @@ internal interface PYDroidComponent {
     private val appParams by
         lazy(LazyThreadSafetyMode.NONE) {
           AppComponent.Factory.Parameters(
-              context = context.applicationContext,
+              context = context,
               theming = theming,
               billingErrorBus = EventBus.create(),
               changeLogModule = changeLogModule,
               composeTheme = composeTheme,
               imageLoader = imageLoader,
               version = params.version,
-              isFakeUpgradeChecker = params.debug.enabled,
-              isFakeUpgradeAvailable = params.debug.upgradeAvailable,
-              isFake = params.debug.enabled,
               dataPolicyModule = dataPolicyModule,
               bugReportUrl = params.bugReportUrl,
               termsConditionsUrl = params.termsConditionsUrl,
               privacyPolicyUrl = params.privacyPolicyUrl,
               viewSourceUrl = params.viewSourceUrl,
+              debug = params.debug,
           )
         }
 
@@ -166,7 +163,7 @@ internal interface PYDroidComponent {
               module =
                   SettingsModule(
                       SettingsModule.Parameters(
-                          context = context.applicationContext,
+                          context = context,
                       ),
                   ),
               composeTheme = composeTheme,

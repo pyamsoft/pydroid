@@ -36,16 +36,19 @@ internal interface VersionCheckComponent {
     internal constructor(
         internal val module: VersionModule,
         internal val composeTheme: ComposeThemeFactory,
-        internal val versionCheckState: MutableVersionCheckViewState,
+        internal val state: MutableVersionCheckViewState,
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : VersionCheckComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+  ) : VersionCheckComponent {
 
     override fun inject(component: VersionUpgradeAvailable) {
       component.viewModel =
           VersionCheckViewModeler(
-              state = params.versionCheckState,
+              state = params.state,
               interactor = params.module.provideInteractor(),
               interactorCache = params.module.provideInteractorCache(),
           )
@@ -54,14 +57,16 @@ internal interface VersionCheckComponent {
     override fun inject(component: VersionUpdateProgress) {
       component.viewModel =
           VersionCheckViewModeler(
-              state = params.versionCheckState,
+              state = params.state,
               interactor = params.module.provideInteractor(),
               interactorCache = params.module.provideInteractorCache(),
           )
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): VersionCheckComponent {
         return Impl(params)

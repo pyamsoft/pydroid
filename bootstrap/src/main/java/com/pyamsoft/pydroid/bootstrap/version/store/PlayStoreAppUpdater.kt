@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.isDebugMode
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.Dispatchers
@@ -37,14 +38,13 @@ import kotlinx.coroutines.withContext
 
 internal class PlayStoreAppUpdater
 internal constructor(
-    private val isFake: Boolean,
     context: Context,
     version: Int,
-    isFakeUpgradeAvailable: Boolean
+    isFakeUpgradeAvailable: Boolean,
 ) : AppUpdater {
 
   private val manager by lazy {
-    if (isFake) {
+    if (context.isDebugMode()) {
       FakeAppUpdateManager(context.applicationContext).apply {
         if (isFakeUpgradeAvailable) {
           setUpdateAvailable(version + 1)
@@ -124,7 +124,7 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        if (isFake) {
+        if (manager is FakeAppUpdateManager) {
           Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
           delay(2000L)
         }

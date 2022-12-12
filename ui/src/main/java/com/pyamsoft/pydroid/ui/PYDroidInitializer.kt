@@ -34,9 +34,8 @@ internal constructor(
         application: Application,
         params: PYDroid.Parameters,
     ): PYDroidInitializer {
-      val isDebug = params.debug?.enabled ?: application.isDebugMode()
 
-      if (isDebug) {
+      if (application.isDebugMode()) {
         setStrictMode()
       }
 
@@ -53,9 +52,9 @@ internal constructor(
                       theme = params.theme,
                       logger = params.logger,
                       debug =
-                          PYDroidComponent.Component.DebugParameters(
-                              enabled = isDebug,
+                          PYDroid.DebugParameters(
                               upgradeAvailable = params.debug?.upgradeAvailable ?: false,
+                              changeLogAvailable = params.debug?.changeLogAvailable ?: false,
                           ),
                   ),
               )

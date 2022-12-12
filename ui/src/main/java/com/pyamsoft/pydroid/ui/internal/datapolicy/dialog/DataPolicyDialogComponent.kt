@@ -62,8 +62,10 @@ internal interface DataPolicyDialogComponent {
           )
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(provider: AppProvider): DataPolicyDialogComponent {
         return Impl(provider, params)

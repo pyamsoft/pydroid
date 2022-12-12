@@ -35,7 +35,10 @@ internal interface ResetComponent {
     )
   }
 
-  class Impl internal constructor(private val params: Factory.Parameters) : ResetComponent {
+  class Impl
+  internal constructor(
+      private val params: Factory.Parameters,
+  ) : ResetComponent {
 
     override fun inject(dialog: ResetDialog) {
       dialog.composeTheme = params.composeTheme
@@ -46,7 +49,10 @@ internal interface ResetComponent {
           )
     }
 
-    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
+    class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): ResetComponent {
         return Impl(params)

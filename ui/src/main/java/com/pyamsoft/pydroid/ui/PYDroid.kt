@@ -123,14 +123,11 @@ including outside of an Application class.
 
   /** PYDroid debugging parameters */
   public data class DebugParameters(
-      /** Is general debugging enabled (log messages, testing behaviors) */
-      internal val enabled: Boolean,
-
       /** Is there an upgrade ready to install? */
-      internal val upgradeAvailable: Boolean,
+      internal val upgradeAvailable: Boolean = false,
 
-      /** Should the user be prompted to rate the application? */
-      internal val ratingAvailable: Boolean,
+      /** Should the user be shown the changelog? */
+      internal val changeLogAvailable: Boolean = false,
   )
 
   /** Base parameters for PYDroid */

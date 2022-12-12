@@ -21,16 +21,23 @@ import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 internal class ChangeLogInteractorImpl
-internal constructor(context: Context, private val preferences: ChangeLogPreferences) :
-    AppInteractorImpl(context), ChangeLogInteractor {
+internal constructor(
+    context: Context,
+    private val preferences: ChangeLogPreferences,
+    private val isFakeChangeLogAvailable: Boolean,
+) : AppInteractorImpl(context), ChangeLogInteractor {
 
   override suspend fun listenShowChangeLogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.Default) {
         Enforcer.assertOffMainThread()
-        return@withContext preferences.listenForShowChangelogChanges()
+        return@withContext preferences.listenForShowChangelogChanges().map { show ->
+          // Force to show if this is faked
+          return@map show || isFakeChangeLogAvailable
+        }
       }
 
   override suspend fun markChangeLogShown() =

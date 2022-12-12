@@ -32,23 +32,28 @@ internal interface VersionUpgradeComponent {
     internal constructor(
         internal val module: VersionModule,
         internal val composeTheme: ComposeThemeFactory,
-        internal val versionUpgradeState: MutableVersionUpgradeViewState,
+        internal val state: MutableVersionUpgradeViewState,
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : VersionUpgradeComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+  ) : VersionUpgradeComponent {
 
     override fun inject(dialog: VersionUpgradeDialog) {
       dialog.composeTheme = params.composeTheme
       dialog.viewModel =
           VersionUpgradeViewModeler(
-              state = params.versionUpgradeState,
+              state = params.state,
               interactor = params.module.provideInteractor(),
           )
     }
 
-    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
-        Factory {
+    internal class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): VersionUpgradeComponent {
         return Impl(params)

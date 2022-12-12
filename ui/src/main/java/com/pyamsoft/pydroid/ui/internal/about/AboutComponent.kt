@@ -36,7 +36,10 @@ internal interface AboutComponent {
     )
   }
 
-  class Impl private constructor(private val params: Factory.Parameters) : AboutComponent {
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+  ) : AboutComponent {
 
     override fun inject(dialog: AboutDialog) {
       dialog.composeTheme = params.composeTheme
@@ -47,7 +50,10 @@ internal interface AboutComponent {
           )
     }
 
-    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
+    class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(): AboutComponent {
         OssLibraries.usingUi = true

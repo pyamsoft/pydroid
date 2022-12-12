@@ -31,6 +31,7 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
+      // Decide based on preference (have we seen the current version changelog)
       val show = interactor.listenShowChangeLogChanges().first()
       state.canShow = show
 

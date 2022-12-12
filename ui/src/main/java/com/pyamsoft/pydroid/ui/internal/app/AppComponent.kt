@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
@@ -85,12 +86,10 @@ internal interface AppComponent {
         internal val composeTheme: ComposeThemeFactory,
         internal val billingErrorBus: EventBus<Throwable>,
         internal val imageLoader: ImageLoader,
-        internal val isFake: Boolean,
         internal val version: Int,
-        internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean,
         internal val changeLogModule: ChangeLogModule,
         internal val dataPolicyModule: DataPolicyModule,
+        internal val debug: DebugParameters,
     )
   }
 
@@ -123,7 +122,6 @@ internal interface AppComponent {
         RatingModule(
             RatingModule.Parameters(
                 context = params.context.applicationContext,
-                isFake = params.isFake,
             ),
         )
 
@@ -134,8 +132,7 @@ internal interface AppComponent {
             VersionModule.Parameters(
                 context = params.context.applicationContext,
                 version = params.version,
-                isFakeUpgradeChecker = params.isFakeUpgradeChecker,
-                isFakeUpgradeAvailable = params.isFakeUpgradeAvailable,
+                isFakeUpgradeAvailable = params.debug.upgradeAvailable,
             ),
         )
 
@@ -221,7 +218,7 @@ internal interface AppComponent {
           VersionUpgradeComponent.Factory.Parameters(
               module = versionModule,
               composeTheme = params.composeTheme,
-              versionUpgradeState = versionUpgradeState,
+              state = versionUpgradeState,
           ),
       )
     }
@@ -235,7 +232,7 @@ internal interface AppComponent {
           VersionCheckComponent.Factory.Parameters(
               module = versionModule,
               composeTheme = params.composeTheme,
-              versionCheckState = versionCheckState,
+              state = versionCheckState,
           ),
       )
     }
@@ -252,7 +249,10 @@ internal interface AppComponent {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
     }
 
-    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
+    class FactoryImpl
+    internal constructor(
+        private val params: Factory.Parameters,
+    ) : Factory {
 
       override fun create(
           options: PYDroidActivityOptions,

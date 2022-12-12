@@ -35,7 +35,6 @@ public class VersionModule(params: Parameters) {
   init {
     val updater =
         PlayStoreAppUpdater(
-            params.isFakeUpgradeChecker,
             params.context.applicationContext,
             params.version,
             params.isFakeUpgradeAvailable,
@@ -74,7 +73,8 @@ public class VersionModule(params: Parameters) {
   public data class Parameters(
       internal val context: Context,
       internal val version: Int,
-      internal val isFakeUpgradeChecker: Boolean,
-      internal val isFakeUpgradeAvailable: Boolean,
+
+      /** If this field is set, the version module will always deliver an update */
+      internal val isFakeUpgradeAvailable: Boolean = false,
   )
 }

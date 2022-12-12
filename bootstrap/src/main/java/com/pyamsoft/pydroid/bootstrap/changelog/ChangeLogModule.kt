@@ -22,7 +22,11 @@ import androidx.annotation.CheckResult
 /** Change log module */
 public class ChangeLogModule(params: Parameters) {
 
-  private val impl = ChangeLogInteractorImpl(params.context, params.preferences)
+  private val impl = ChangeLogInteractorImpl(
+      context = params.context,
+      preferences = params.preferences,
+      isFakeChangeLogAvailable = params.isFakeChangeLogAvailable,
+  )
 
   /** Provide a change log interactor */
   @CheckResult
@@ -33,6 +37,8 @@ public class ChangeLogModule(params: Parameters) {
   /** ChangeLogModule parameters */
   public data class Parameters(
       internal val context: Context,
-      internal val preferences: ChangeLogPreferences
+      internal val preferences: ChangeLogPreferences,
+      /** If this field is set, the changelog module will always request to show a changelog */
+      internal val isFakeChangeLogAvailable: Boolean = false
   )
 }

@@ -210,12 +210,6 @@ internal interface AppComponent {
                       interactor = params.dataPolicyModule.provideInteractor(),
                   ),
               ),
-          internalPresenter =
-              AppInternalViewModeler(
-                  disableDataPolicy = options.disableDataPolicy,
-                  state = dataPolicyState,
-                  interactor = params.dataPolicyModule.provideInteractor(),
-              ),
           showUpdateChangeLog = ShowUpdateChangeLog.create(activity),
           versionUpgrader = VersionUpgradeAvailable.create(activity),
           versionUpdateProgress = VersionUpdateProgress.create(activity),

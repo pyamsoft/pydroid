@@ -83,16 +83,16 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static synthetic fun makeFullscreen$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
 }
 
-public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/changelog/ChangeLogProvider {
+public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate, com/pyamsoft/pydroid/ui/changelog/ChangeLogProvider {
 	public static final field $stable I
 	public fun <init> ()V
-	public final fun checkUpdates ()V
-	public final fun confirmUpgrade ()V
+	public fun checkUpdates ()V
+	public fun confirmUpgrade ()V
 	protected fun getDisableBilling ()Z
 	protected fun getDisableDataPolicy ()Z
 	protected fun getDisableRating ()Z
 	protected fun getDisableVersionCheck ()Z
-	public final fun loadInAppRating ()V
+	public fun loadInAppRating ()V
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate {
@@ -133,6 +133,18 @@ public final class com/pyamsoft/pydroid/ui/changelog/ChangeLogBuilderKt {
 
 public abstract interface class com/pyamsoft/pydroid/ui/changelog/ChangeLogProvider : com/pyamsoft/pydroid/ui/app/AppProvider {
 	public abstract fun getChangelog ()Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogBuilder;
+}
+
+public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;
+	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
+	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+}
+
+public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion {
+	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
@@ -247,6 +259,17 @@ public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingScreenKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/internal/changelog/ChangeLogViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun getCanShow ()Z
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/changelog/ComposableSingletons$ShowChangeLogScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/ComposableSingletons$ShowChangeLogScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -540,6 +563,10 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {
+	public static final fun ShowChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt {

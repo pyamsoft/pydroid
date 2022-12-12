@@ -140,10 +140,9 @@ public abstract class SettingsFragment : Fragment() {
   private fun handleShowDisclosure() {
     dataPolicyViewModel
         .requireNotNull()
-        .handleShowDisclosure(
+        .handleShowDataPolicyDialogIfPossible(
             scope = viewLifecycleOwner.lifecycleScope,
-            force = true,
-            onShowPolicy = { DataPolicyDisclosureDialog.show(requireActivity()) },
+            onNeedsToShow = { DataPolicyDisclosureDialog.show(requireActivity()) },
         )
   }
 
@@ -276,7 +275,10 @@ public abstract class SettingsFragment : Fragment() {
 
     dataPolicyViewModel.requireNotNull().also { vm ->
       vm.restoreState(savedInstanceState)
-      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
+      vm.bind(
+          scope = viewLifecycleOwner.lifecycleScope,
+          onShowPolicy = { DataPolicyDisclosureDialog.show(requireActivity()) },
+      )
     }
     changeLogViewModel.requireNotNull().also { vm ->
       vm.restoreState(savedInstanceState)

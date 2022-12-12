@@ -18,7 +18,8 @@ package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
@@ -26,7 +27,6 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
@@ -35,8 +35,6 @@ import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
-import com.pyamsoft.pydroid.util.doOnResume
-import com.pyamsoft.pydroid.util.doOnStart
 
 internal class PYDroidActivityDelegateInternal
 internal constructor(
@@ -96,21 +94,29 @@ internal constructor(
       )
     }
 
-    activity.doOnStart {
-      showDataPolicyDisclosure(
-          activity = activity,
-          presenter = components.internalPresenter,
-          dataPolicy = dp,
-          options = options,
-      )
+    val repeatedActions =
+        object : DefaultLifecycleObserver {
 
-      checkUpdates(
-          versionCheckDelegate = vc,
-          options = options,
-      )
-    }
+          // Do on each start
+          override fun onStart(owner: LifecycleOwner) {
+            super.onStart(owner)
+            checkUpdates(
+                versionCheckDelegate = vc,
+                options = options,
+            )
+          }
 
+          // Do on each Resume
+          override fun onResume(owner: LifecycleOwner) {
+            super.onResume(owner)
+            dp.attemptReShowIfNeeded()
+          }
+        }
+
+    activity.lifecycle.addObserver(repeatedActions)
     activity.doOnDestroy {
+      activity.lifecycle.removeObserver(repeatedActions)
+
       appComponent = null
       appOptions = null
       appProvider = null
@@ -119,29 +125,6 @@ internal constructor(
       versionCheckDelegate = null
       versionUpgradeAvailable = null
       versionUpdateProgress = null
-    }
-  }
-
-  private fun showDataPolicyDisclosure(
-      activity: FragmentActivity,
-      presenter: AppInternalViewModeler,
-      dataPolicy: DataPolicyDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableDataPolicy) {
-      Logger.w("Application has disabled the Data Policy component")
-      return
-    }
-
-    activity.doOnResume {
-      // DialogFragments cannot be shown safely until at least onPostResume
-      presenter.handleShowCorrectDialog(
-          scope = activity.lifecycleScope,
-          onShowDataPolicy = {
-            // Attempt to show the data policy if we are not disabled
-            dataPolicy.showDataPolicyDisclosure()
-          },
-      )
     }
   }
 

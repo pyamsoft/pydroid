@@ -16,32 +16,41 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
+import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
-import com.pyamsoft.pydroid.core.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class DataPolicyViewModeler
 internal constructor(
-    state: MutableDataPolicyViewState,
-    interactor: DataPolicyInteractor,
-) : AbstractDataPolicyViewModeler(state, interactor) {
+    private val state: MutableDataPolicyViewState,
+    private val interactor: DataPolicyInteractor,
+) : AbstractViewModeler<DataPolicyViewState>(state) {
 
-  internal fun handleShowDisclosure(
+  internal fun bind(
       scope: CoroutineScope,
-      force: Boolean,
       onShowPolicy: () -> Unit,
   ) {
     scope.launch(context = Dispatchers.Main) {
-      if (force) {
-        Logger.d("Force showing DPD")
-        onShowPolicy()
-      } else if (!isAccepted()) {
-        Logger.d("DPD policy not accepted, show")
-        onShowPolicy()
-      } else {
-        Logger.d("DPD Policy already accepted, no-op")
+      interactor.listenForPolicyAcceptedChanges().collectLatest { accepted ->
+        state.isAccepted = accepted
+        if (!accepted) {
+          onShowPolicy()
+        }
+      }
+    }
+  }
+
+  /** Used from DPD Delegate */
+  internal fun handleShowDataPolicyDialogIfPossible(
+      scope: CoroutineScope,
+      onNeedsToShow: () -> Unit,
+  ) {
+    scope.launch(context = Dispatchers.Main) {
+      if (state.isAccepted == false) {
+        onNeedsToShow()
       }
     }
   }

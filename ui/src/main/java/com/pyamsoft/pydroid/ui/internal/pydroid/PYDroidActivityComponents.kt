@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
-import com.pyamsoft.pydroid.ui.internal.app.AppInternalViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
@@ -31,7 +30,6 @@ internal constructor(
     internal val rating: RatingDelegate,
     internal val versionCheck: VersionCheckDelegate,
     internal val dataPolicy: DataPolicyDelegate,
-    internal val internalPresenter: AppInternalViewModeler,
     internal val versionUpgrader: VersionUpgradeAvailable,
     internal val versionUpdateProgress: VersionUpdateProgress,
     internal val showUpdateChangeLog: ShowUpdateChangeLog,

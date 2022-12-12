@@ -45,19 +45,27 @@ internal class DataPolicyDelegate(
           .requireNotNull()
           .bind(
               scope = a.lifecycleScope,
+              onShowPolicy = { DataPolicyDisclosureDialog.show(a) },
           )
     }
   }
 
-  /** Show Data policy */
-  fun showDataPolicyDisclosure() {
-    val act = activity.requireNotNull()
+  /**
+   * Show if needed
+   *
+   * If somehow the dialog was dismissed without interaction, this will check and re-fire the show
+   * event
+   */
+  fun attemptReShowIfNeeded() {
+    val a = activity.requireNotNull()
     viewModel
         .requireNotNull()
-        .handleShowDisclosure(
-            scope = act.lifecycleScope,
-            force = false,
-            onShowPolicy = { DataPolicyDisclosureDialog.show(act) },
+        .handleShowDataPolicyDialogIfPossible(
+            scope = a.lifecycleScope,
+            onNeedsToShow = {
+              // This will not show again if one is already displayed
+              DataPolicyDisclosureDialog.show(a)
+            },
         )
   }
 }

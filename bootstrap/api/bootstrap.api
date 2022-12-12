@@ -22,6 +22,7 @@ public final class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule {
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters {
+	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;)V
 	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;Z)V
 	public synthetic fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences;Z)Lcom/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Parameters;
@@ -148,20 +149,6 @@ public final class com/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactor
 	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/bootstrap/network/DelegatingSocketFactory$Companion;Ljavax/net/SocketFactory;ILjava/lang/Object;)Ljavax/net/SocketFactory;
 }
 
-public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher {
-	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher$Companion;
-	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher;
-	public abstract fun rate (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class com/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher$Companion {
-	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/AppRatingLauncher;
-}
-
-public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RateMyApp {
-	public abstract fun startRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/RatingInteractor {
 	public abstract fun askForRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -178,6 +165,20 @@ public final class com/pyamsoft/pydroid/bootstrap/rating/RatingModule$Parameters
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/rate/AppRatingLauncher {
+	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/rating/rate/AppRatingLauncher$Companion;
+	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/rate/AppRatingLauncher;
+	public abstract fun rate (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/rating/rate/AppRatingLauncher$Companion {
+	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/rating/rate/AppRatingLauncher;
+}
+
+public abstract interface class com/pyamsoft/pydroid/bootstrap/rating/rate/RateMyApp {
+	public abstract fun startRating (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/settings/SettingsInteractor {
@@ -219,6 +220,7 @@ public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Companio
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters {
+	public fun <init> (Landroid/content/Context;I)V
 	public fun <init> (Landroid/content/Context;IZ)V
 	public synthetic fun <init> (Landroid/content/Context;IZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun copy (Landroid/content/Context;IZ)Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;

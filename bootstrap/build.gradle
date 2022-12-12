@@ -23,24 +23,13 @@ android {
 }
 
 dependencies {
-  // Use old CORE until bugs are fixed
-//  implementation "com.google.android.play:core:1.10.3"
+  implementation "androidx.core:core-ktx:$core"
 
-  // In-App Update
-  // BUGGED: Still uses support libs and needs jetifier at 2.0.0
   implementation "com.google.android.play:app-update:$appUpdate"
-
-  // In-App Review
-  // BUGGED: Still uses support libs and needs jetifier at 2.0.0
   implementation "com.google.android.play:review:$review"
 
-  // Cachify
   implementation "com.github.pyamsoft:cachify:$cachify"
-
-  // Highlander
   implementation "com.github.pyamsoft:highlander:$highlander"
-
-  implementation "androidx.core:core-ktx:$core"
 
   api project(':util')
 }

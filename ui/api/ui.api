@@ -112,10 +112,10 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityKt {
 public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
 	public static final field $stable I
 	public fun <init> ()V
-	public fun <init> (ZZZZ)V
-	public synthetic fun <init> (ZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun copy (ZZZZ)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;ZZZZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;
+	public fun <init> (ZZZZZ)V
+	public synthetic fun <init> (ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy (ZZZZZ)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;ZZZZZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -143,10 +143,13 @@ public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
 	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
 
 public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion {
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
@@ -548,11 +551,12 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
@@ -561,10 +565,13 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {

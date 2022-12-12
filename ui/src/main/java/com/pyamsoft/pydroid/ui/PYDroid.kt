@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
 import com.pyamsoft.pydroid.ui.theme.Theming
 
@@ -216,7 +216,7 @@ private fun Application.internalInstallPYDroid(
 ): PYDroid {
   val self = this
   val internals = createPYDroidApplication(self, params)
-  PYDroidApplicationInstallTracker.install(self, internals)
+  ObjectGraph.ApplicationScope.install(self, internals)
   return internals
 }
 

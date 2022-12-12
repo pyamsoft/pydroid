@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -72,7 +72,7 @@ internal class ResetDialog : AppCompatDialogFragment() {
   ): View {
     val act = requireActivity()
 
-    PYDroidApplicationInstallTracker.retrieve(act.application)
+    ObjectGraph.ApplicationScope.retrieve(act.application)
         .injector()
         .plusReset()
         .create()

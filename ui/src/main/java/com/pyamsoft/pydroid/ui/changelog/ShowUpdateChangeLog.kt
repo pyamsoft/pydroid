@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -52,10 +52,10 @@ internal constructor(
   internal var viewModel: ChangeLogViewModeler? = null
 
   init {
-    // Need to wait until after onCreate so that the PYDroidActivityInstallTracker is
+    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
     // correctly set up otherwise we crash.
     activity.doOnCreate {
-      PYDroidActivityInstallTracker.retrieve(activity)
+      ObjectGraph.ActivityScope.retrieve(activity)
           .injector()
           .plusChangeLog()
           .create()

@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -57,7 +57,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   @CheckResult
   private fun getApplicationProvider(): AppProvider {
-    return PYDroidActivityInstallTracker.retrieve(requireActivity()).changeLogProvider()
+    return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
   }
 
   private fun launchPurchase(sku: BillingSku) {
@@ -81,7 +81,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
       savedInstanceState: Bundle?
   ): View {
     val act = requireActivity()
-    PYDroidActivityInstallTracker.retrieve(act)
+    ObjectGraph.ActivityScope.retrieve(act)
         .injector()
         .plusBilling()
         .create(getApplicationProvider())

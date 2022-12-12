@@ -37,7 +37,7 @@ On top of all this, if a theoretical third-party also overrides the getSystemSer
 does so in a way that this library does not expect, it will fail.
 
 Consumers are instead encouraged to create their own simple object graph following internal
-patterns used in the PYDroid-UI library, like those seen in [PYDroidActivityInstallTracker] to
+patterns used in the PYDroid-UI library, like those seen in [ObjectGraph.ActivityScope] to
 create a way to inject an object graph at various points in the application.
 """
 

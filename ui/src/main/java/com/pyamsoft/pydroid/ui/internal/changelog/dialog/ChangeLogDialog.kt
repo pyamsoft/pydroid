@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 import com.pyamsoft.pydroid.ui.util.show
@@ -53,7 +53,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
 
   @CheckResult
   private fun getChangelogProvider(): ChangeLogProvider {
-    return PYDroidActivityInstallTracker.retrieve(requireActivity()).changeLogProvider()
+    return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
   }
 
   private fun handleLaunchMarket(uriHandler: UriHandler) {
@@ -72,7 +72,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
   ): View {
     val act = requireActivity()
 
-    PYDroidActivityInstallTracker.retrieve(act)
+    ObjectGraph.ActivityScope.retrieve(act)
         .injector()
         .plusChangeLogDialog()
         .create(getChangelogProvider())

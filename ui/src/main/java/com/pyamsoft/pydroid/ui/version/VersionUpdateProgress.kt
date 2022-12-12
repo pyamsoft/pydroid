@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpdateProgressScreen
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -46,10 +46,10 @@ internal constructor(
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
-    // Need to wait until after onCreate so that the PYDroidActivityInstallTracker is
+    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
     // correctly set up otherwise we crash.
     activity.doOnCreate {
-      PYDroidActivityInstallTracker.retrieve(activity)
+      ObjectGraph.ActivityScope.retrieve(activity)
           .injector()
           .plusVersionCheck()
           .create()

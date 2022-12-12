@@ -24,8 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
 
 @CheckResult
 private fun resolveActivity(context: Context): FragmentActivity {
@@ -45,6 +45,6 @@ private fun resolveActivity(context: Context): FragmentActivity {
 internal fun rememberPYDroidDelegate(context: Context): PYDroidActivityDelegateInternal {
   return remember(context) {
     val act = resolveActivity(context)
-    return@remember PYDroidActivityInstallTracker.retrieve(act)
+    return@remember ObjectGraph.ActivityScope.retrieve(act)
   }
 }

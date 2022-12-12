@@ -44,7 +44,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
@@ -223,7 +223,7 @@ public abstract class SettingsFragment : Fragment() {
   ): View {
     val act = requireActivity()
 
-    PYDroidActivityInstallTracker.retrieve(act).injector().plusSettings().create().inject(this)
+    ObjectGraph.ActivityScope.retrieve(act).injector().plusSettings().create().inject(this)
 
     return ComposeView(act).apply {
       id = R.id.fragment_settings

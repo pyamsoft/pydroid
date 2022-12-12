@@ -20,9 +20,8 @@ import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityInstallTracker
-import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidApplicationInstallTracker
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -106,7 +105,7 @@ private fun createPYDroidDelegate(
     options: PYDroidActivityOptions,
 ): PYDroidActivityDelegateInternal {
   val component =
-      PYDroidApplicationInstallTracker.retrieve(activity.application)
+      ObjectGraph.ApplicationScope.retrieve(activity.application)
           .injector()
           .plusApp()
           .create(options)
@@ -126,6 +125,6 @@ public fun AppCompatActivity.installPYDroid(
 ): PYDroidActivityDelegate {
   val self = this
   val internals = createPYDroidDelegate(self, provider, options)
-  PYDroidActivityInstallTracker.install(self, internals)
+  ObjectGraph.ActivityScope.install(self, internals)
   return internals
 }

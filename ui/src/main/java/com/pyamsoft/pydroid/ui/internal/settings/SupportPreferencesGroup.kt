@@ -20,10 +20,12 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.icons.BugReport
 import com.pyamsoft.pydroid.ui.icons.Business
 import com.pyamsoft.pydroid.ui.icons.Code
@@ -37,6 +39,7 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 @Composable
 @CheckResult
 internal fun createSupportPreferencesGroup(
+    options: PYDroidActivityOptions,
     applicationName: CharSequence,
     onDonateClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
@@ -48,137 +51,210 @@ internal fun createSupportPreferencesGroup(
 ): Preferences.Group {
   val uriHandler = LocalUriHandler.current
 
-  return preferenceGroup(
-      name = "Support pyamsoft",
-      preferences =
-          listOf(
-              ratePreference(
-                  applicationName = applicationName,
-                  onRateClicked = { onOpenMarketPage(uriHandler) },
-              ),
-              donatePreference(
-                  onDonateClicked = onDonateClicked,
-              ),
+  val ratingSummary = stringResource(R.string.rating_summary)
+  val donateName = stringResource(R.string.donate_title)
+  val donateSummary = stringResource(R.string.donate_summary)
+  val bugReportName = stringResource(R.string.bugreport_title)
+  val bugReportSummary = stringResource(R.string.bugreport_summary)
+  val viewSourceName = stringResource(R.string.view_source_title)
+  val viewSourceSummary = stringResource(R.string.view_source_summary)
+  val dataPolicyName = stringResource(R.string.view_data_policy_title)
+  val dataPolicySummary = stringResource(R.string.view_data_policy_summary)
+  val privacyName = stringResource(R.string.view_privacy_title)
+  val privacySummary = stringResource(R.string.view_privacy_summary)
+  val tosName = stringResource(R.string.view_terms_title)
+  val tosSummary = stringResource(R.string.view_terms_summary)
+
+  val preferences =
+      remember(
+          options.disableDataPolicy,
+          options.disableBilling,
+          options.disableRating,
+          ratingSummary,
+          donateName,
+          donateSummary,
+          bugReportName,
+          bugReportSummary,
+          viewSourceName,
+          viewSourceSummary,
+          dataPolicyName,
+          dataPolicySummary,
+          privacyName,
+          privacySummary,
+          tosName,
+          tosSummary,
+          uriHandler,
+          applicationName,
+          onOpenMarketPage,
+          onDonateClicked,
+          onBugReportClicked,
+          onViewDataPolicyClicked,
+          onViewSourceClicked,
+          onViewPrivacyPolicyClicked,
+          onViewTermsOfServiceClicked,
+      ) {
+        mutableListOf<Preferences.Item>().apply {
+          if (!options.disableRating) {
+            add(
+                ratePreference(
+                    applicationName = applicationName,
+                    summary = ratingSummary,
+                    onRateClicked = { onOpenMarketPage(uriHandler) },
+                ),
+            )
+          }
+
+          if (!options.disableBilling) {
+            add(
+                donatePreference(
+                    name = donateName,
+                    summary = donateSummary,
+                    onDonateClicked = onDonateClicked,
+                ),
+            )
+          }
+
+          add(
               bugReportPreference(
+                  name = bugReportName,
+                  summary = bugReportSummary,
                   onBugReportClicked = onBugReportClicked,
               ),
+          )
+          add(
               sourceCodePreference(
+                  name = viewSourceName,
+                  summary = viewSourceSummary,
                   onViewSourceClicked = onViewSourceClicked,
               ),
-          ) +
-              decideDataPolicyPreference(
-                  onViewDataPolicyClicked = onViewDataPolicyClicked,
-              ) +
-              listOf(
-                  privacyPolicyPreference(
-                      onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-                  ),
-                  termsOfServicePreference(
-                      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-                  ),
+          )
+
+          if (!options.disableDataPolicy) {
+            add(
+                dataPolicyPreference(
+                    name = dataPolicyName,
+                    summary = dataPolicySummary,
+                    onViewDataPolicyClicked = onViewDataPolicyClicked,
+                ),
+            )
+          }
+
+          add(
+              privacyPolicyPreference(
+                  name = privacyName,
+                  summary = privacySummary,
+                  onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
               ),
+          )
+          add(
+              termsOfServicePreference(
+                  name = tosName,
+                  summary = tosSummary,
+                  onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+              ),
+          )
+        }
+      }
+
+  return preferenceGroup(
+      name = "Support pyamsoft",
+      preferences = preferences,
   )
 }
 
-@Composable
-@CheckResult
-private fun decideDataPolicyPreference(
-    onViewDataPolicyClicked: () -> Unit,
-): List<Preferences.Item> {
-  return listOf(
-      dataPolicyPreference(
-          onViewDataPolicyClicked = onViewDataPolicyClicked,
-      ),
-  )
-}
-
-@Composable
 @CheckResult
 private fun ratePreference(
     applicationName: CharSequence,
+    summary: String,
     onRateClicked: () -> Unit
 ): Preferences.Item {
   return preference(
       name = "Rate $applicationName",
-      summary = stringResource(R.string.rating_summary),
+      summary = summary,
       icon = Icons.Outlined.Star,
       onClick = onRateClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun donatePreference(
+    name: String,
+    summary: String,
     onDonateClicked: () -> Unit,
 ): Preferences.Item {
   return inAppPreference(
-      name = stringResource(R.string.donate_title),
-      summary = stringResource(R.string.donate_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Redeem,
       onClick = onDonateClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun bugReportPreference(
+    name: String,
+    summary: String,
     onBugReportClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
-      name = stringResource(R.string.bugreport_title),
-      summary = stringResource(R.string.bugreport_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.BugReport,
       onClick = onBugReportClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun sourceCodePreference(
+    name: String,
+    summary: String,
     onViewSourceClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
-      name = stringResource(R.string.view_source_title),
-      summary = stringResource(R.string.view_source_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Code,
       onClick = onViewSourceClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun dataPolicyPreference(
+    name: String,
+    summary: String,
     onViewDataPolicyClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
-      name = stringResource(R.string.view_data_policy_title),
-      summary = stringResource(R.string.view_data_policy_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Policy,
       onClick = onViewDataPolicyClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun privacyPolicyPreference(
+    name: String,
+    summary: String,
     onViewPrivacyPolicyClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
-      name = stringResource(R.string.view_privacy_title),
-      summary = stringResource(R.string.view_privacy_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Policy,
       onClick = onViewPrivacyPolicyClicked,
   )
 }
 
-@Composable
 @CheckResult
 private fun termsOfServicePreference(
+    name: String,
+    summary: String,
     onViewTermsOfServiceClicked: () -> Unit,
 ): Preferences.Item {
   return preference(
-      name = stringResource(R.string.view_terms_title),
-      summary = stringResource(R.string.view_terms_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Business,
       onClick = onViewTermsOfServiceClicked,
   )

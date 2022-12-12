@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -42,11 +43,12 @@ import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     elevation: Dp = ZeroElevation,
-    hideClearAll: Boolean,
-    hideUpgradeInformation: Boolean,
-    state: SettingsViewState,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
+    state: SettingsViewState,
+    options: PYDroidActivityOptions,
+    hideClearAll: Boolean,
+    hideUpgradeInformation: Boolean,
     customPreContent: List<Preferences> = emptyList(),
     customPostContent: List<Preferences> = emptyList(),
     onDarkModeChanged: (Theming.Mode) -> Unit,
@@ -79,6 +81,7 @@ internal fun SettingsScreen(
         Loading()
       } else {
         SettingsList(
+            options = options,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
             customPreContent = customPreContent,
@@ -125,6 +128,7 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
+    options: PYDroidActivityOptions,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     customPreContent: List<Preferences>,
@@ -156,6 +160,7 @@ private fun SettingsList(
 
         add(
             createApplicationPreferencesGroup(
+                options = options,
                 hideClearAll = hideClearAll,
                 hideUpgradeInformation = hideUpgradeInformation,
                 applicationName = applicationName,
@@ -169,6 +174,7 @@ private fun SettingsList(
         )
         add(
             createSupportPreferencesGroup(
+                options = options,
                 applicationName = applicationName,
                 onDonateClicked = onDonateClicked,
                 onBugReportClicked = onBugReportClicked,
@@ -201,6 +207,7 @@ private fun SettingsList(
 @Composable
 private fun PreviewSettingsScreen(isLoading: Boolean) {
   SettingsScreen(
+      options = PYDroidActivityOptions(),
       state =
           MutableSettingsViewState().apply {
             this.isLoading = isLoading

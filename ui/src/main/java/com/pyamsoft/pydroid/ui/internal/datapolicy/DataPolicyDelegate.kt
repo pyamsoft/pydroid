@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -27,26 +28,27 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 internal class DataPolicyDelegate(
     activity: FragmentActivity,
     viewModel: DataPolicyViewModeler,
+    private val disabled: Boolean,
 ) {
 
-  private var activity: FragmentActivity? = activity
-  private var viewModel: DataPolicyViewModeler? = viewModel
+  private var hostingActivity: FragmentActivity? = activity
+  private var dataPolicyViewModel: DataPolicyViewModeler? = viewModel
 
-  /** Bind Activity for related DataPolicy events */
-  fun bindEvents() {
-    val a = activity.requireNotNull()
-    a.doOnDestroy {
-      viewModel = null
-      activity = null
+  init {
+    if (disabled) {
+      Logger.w("Application has disabled the Data Policy component")
+    } else {
+      activity.doOnCreate {
+        viewModel.bind(
+            scope = activity.lifecycleScope,
+            onShowPolicy = { DataPolicyDisclosureDialog.show(activity) },
+        )
+      }
     }
 
-    a.doOnCreate {
-      viewModel
-          .requireNotNull()
-          .bind(
-              scope = a.lifecycleScope,
-              onShowPolicy = { DataPolicyDisclosureDialog.show(a) },
-          )
+    activity.doOnDestroy {
+      dataPolicyViewModel = null
+      hostingActivity = null
     }
   }
 
@@ -57,8 +59,13 @@ internal class DataPolicyDelegate(
    * event
    */
   fun attemptReShowIfNeeded() {
-    val a = activity.requireNotNull()
-    viewModel
+    if (disabled) {
+      Logger.w("Application has disabled the Data Policy component")
+      return
+    }
+
+    val a = hostingActivity.requireNotNull()
+    dataPolicyViewModel
         .requireNotNull()
         .handleShowDataPolicyDialogIfPossible(
             scope = a.lifecycleScope,

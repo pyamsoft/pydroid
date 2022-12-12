@@ -20,20 +20,15 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
-import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class PYDroidActivityDelegateInternal
@@ -45,7 +40,6 @@ internal constructor(
 
   private var appComponent: AppComponent? = component
   private var appProvider: ChangeLogProvider? = provider
-  private var appOptions: PYDroidActivityOptions? = component.options()
 
   // Copy these out of PYDroidActivityComponents so we can null them out onDestroy
   private var ratingDelegate: RatingDelegate?
@@ -56,7 +50,6 @@ internal constructor(
 
   init {
     val components = component.create(activity)
-    val options = component.options()
 
     val rd = components.rating
     val vc = components.versionCheck
@@ -68,42 +61,13 @@ internal constructor(
     versionUpdateProgress = components.versionUpdateProgress
     showUpdateChangeLog = components.showUpdateChangeLog
 
-    activity.doOnCreate {
-      connectBilling(
-          activity = activity,
-          billingDelegate = components.billing,
-          options = options,
-      )
-
-      connectDataPolicy(
-          activity = activity,
-          dataPolicy = dp,
-          options = options,
-      )
-
-      connectRating(
-          activity = activity,
-          ratingDelegate = rd,
-          options = options,
-      )
-
-      connectVersionCheck(
-          activity = activity,
-          versionCheckDelegate = vc,
-          options = options,
-      )
-    }
-
     val repeatedActions =
         object : DefaultLifecycleObserver {
 
           // Do on each start
           override fun onStart(owner: LifecycleOwner) {
             super.onStart(owner)
-            checkUpdates(
-                versionCheckDelegate = vc,
-                options = options,
-            )
+            vc.checkUpdates()
           }
 
           // Do on each Resume
@@ -118,7 +82,6 @@ internal constructor(
       activity.lifecycle.removeObserver(repeatedActions)
 
       appComponent = null
-      appOptions = null
       appProvider = null
 
       ratingDelegate = null
@@ -126,86 +89,6 @@ internal constructor(
       versionUpgradeAvailable = null
       versionUpdateProgress = null
     }
-  }
-
-  /** Attempts to connect to in-app billing */
-  private fun connectBilling(
-      activity: FragmentActivity,
-      billingDelegate: BillingDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableBilling) {
-      Logger.w("Application has disabled the billing component")
-      return
-    }
-
-    activity.doOnCreate {
-      Logger.d("Attempt Connect Billing")
-      billingDelegate.connect()
-    }
-  }
-
-  /** Attempts to connect to in-app rating */
-  private fun connectRating(
-      activity: FragmentActivity,
-      ratingDelegate: RatingDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableRating) {
-      Logger.w("Application has disabled the Rating component")
-      return
-    }
-
-    activity.doOnCreate {
-      Logger.d("Attempt Connect Rating")
-      ratingDelegate.bindEvents()
-    }
-  }
-
-  /** Attempts to connect to in-app data policy dialog */
-  private fun connectDataPolicy(
-      activity: FragmentActivity,
-      dataPolicy: DataPolicyDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableDataPolicy) {
-      Logger.w("Application has disabled the Data Policy component")
-      return
-    }
-
-    activity.doOnCreate {
-      Logger.d("Attempt Connect Data Policy")
-      dataPolicy.bindEvents()
-    }
-  }
-
-  /** Attempts to connect to in-app updates */
-  private fun connectVersionCheck(
-      activity: FragmentActivity,
-      versionCheckDelegate: VersionCheckDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    activity.doOnCreate {
-      Logger.d("Attempt Connect Version Check")
-      versionCheckDelegate.bindEvents()
-    }
-  }
-
-  private fun checkUpdates(
-      versionCheckDelegate: VersionCheckDelegate,
-      options: PYDroidActivityOptions,
-  ) {
-    if (options.disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionCheckDelegate.checkUpdates()
   }
 
   /** Expose the ChangeLogProvider */
@@ -247,37 +130,22 @@ internal constructor(
    * is up to Google
    */
   override fun loadInAppRating() {
-    val rating = ratingDelegate.requireNotNull { "RatingDelegate is NULL, was this destroyed?" }
-    val options = appOptions.requireNotNull { "AppOptions is NULL, was this destroyed?" }
-
-    if (options.disableRating) {
-      Logger.w("Application has disabled the Rating component")
-      return
-    }
-
-    rating.loadInAppRating()
+    ratingDelegate
+        .requireNotNull { "RatingDelegate is NULL, was this destroyed?" }
+        .loadInAppRating()
   }
 
   /** Confirm the potential version upgrade */
   override fun confirmUpgrade() {
-    val versionCheck =
-        versionCheckDelegate.requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
-    val options = appOptions.requireNotNull { "AppOptions is NULL, was this destroyed?" }
-
-    if (options.disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionCheck.handleConfirmUpgrade()
+    versionCheckDelegate
+        .requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
+        .handleConfirmUpgrade()
   }
 
   /** Check for in-app updates */
   override fun checkUpdates() {
-    val versionCheck =
-        versionCheckDelegate.requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
-    val options = appOptions.requireNotNull { "AppOptions is NULL, was this destroyed?" }
-
-    checkUpdates(versionCheck, options)
+    versionCheckDelegate
+        .requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
+        .checkUpdates()
   }
 }

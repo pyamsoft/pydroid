@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
@@ -52,6 +53,7 @@ internal interface SettingsComponent {
         internal val versionModule: VersionModule,
         internal val dataPolicyModule: DataPolicyModule,
         internal val changeLogModule: ChangeLogModule,
+        internal val options: PYDroidActivityOptions,
     )
   }
 
@@ -62,6 +64,7 @@ internal interface SettingsComponent {
 
     override fun inject(fragment: SettingsFragment) {
       fragment.composeTheme = params.composeTheme
+      fragment.options = params.options
       fragment.viewModel =
           SettingsViewModeler(
               state = MutableSettingsViewState(),

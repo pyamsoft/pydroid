@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
@@ -63,6 +64,8 @@ public abstract class SettingsFragment : Fragment() {
 
   /** May be provided by PYDroid, otherwise this is just a noop */
   internal var composeTheme: ComposeTheme = NoopTheme
+
+  internal var options: PYDroidActivityOptions? = null
 
   internal var viewModel: SettingsViewModeler? = null
   internal var versionViewModel: VersionCheckViewModeler? = null
@@ -138,6 +141,11 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleShowDisclosure() {
+    if (options.requireNotNull().disableDataPolicy) {
+      Logger.w("Application has disabled the Data Policy component")
+      return
+    }
+
     dataPolicyViewModel
         .requireNotNull()
         .handleShowDataPolicyDialogIfPossible(
@@ -147,6 +155,11 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleShowChangeLog() {
+    if (options.requireNotNull().disableChangeLog) {
+      Logger.w("Application has disabled the ChangeLog component")
+      return
+    }
+
     changeLogViewModel
         .requireNotNull()
         .handleShow(
@@ -156,6 +169,11 @@ public abstract class SettingsFragment : Fragment() {
   }
 
   private fun handleCheckForUpdates() {
+    if (options.requireNotNull().disableVersionCheck) {
+      Logger.w("Application has disabled the VersionCheck component")
+      return
+    }
+
     versionViewModel
         .requireNotNull()
         .handleCheckForUpdates(
@@ -174,6 +192,11 @@ public abstract class SettingsFragment : Fragment() {
       activity: FragmentActivity,
       launcher: AppUpdateLauncher,
   ) {
+    if (options.requireNotNull().disableVersionCheck) {
+      Logger.w("Application has disabled the VersionCheck component")
+      return
+    }
+
     // Enforce that we do this on the Main thread
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
       launcher
@@ -229,6 +252,7 @@ public abstract class SettingsFragment : Fragment() {
       id = R.id.fragment_settings
 
       val vm = viewModel.requireNotNull()
+      val opts = options.requireNotNull()
       setContent {
         val handler = LocalUriHandler.current
 
@@ -236,6 +260,7 @@ public abstract class SettingsFragment : Fragment() {
           SettingsScreen(
               elevation = customElevation(),
               state = vm.state(),
+              options = opts,
               hideClearAll = hideClearAll,
               hideUpgradeInformation = hideUpgradeInformation,
               topItemMargin = customTopItemMargin(),
@@ -310,6 +335,7 @@ public abstract class SettingsFragment : Fragment() {
     changeLogViewModel = null
     dataPolicyViewModel = null
     versionViewModel = null
+    options = null
   }
 
   public companion object {

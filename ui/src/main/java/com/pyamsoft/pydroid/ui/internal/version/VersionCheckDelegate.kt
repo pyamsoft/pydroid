@@ -33,11 +33,29 @@ import kotlinx.coroutines.launch
 internal class VersionCheckDelegate(
     activity: FragmentActivity,
     viewModel: VersionCheckViewModeler,
+    private val disabled: Boolean,
 ) {
 
-  private var activity: FragmentActivity? = activity
+  private var hostingActivity: FragmentActivity? = activity
+  private var versionViewModel: VersionCheckViewModeler? = viewModel
 
-  private var viewModel: VersionCheckViewModeler? = viewModel
+  init {
+    if (disabled) {
+      Logger.w("Application has disabled the VersionCheck component")
+    } else {
+      activity.doOnCreate {
+        viewModel.bind(
+            scope = activity.lifecycleScope,
+            onUpgradeReady = { handleConfirmUpgrade(viewModel, activity) },
+        )
+      }
+    }
+
+    activity.doOnDestroy {
+      versionViewModel = null
+      hostingActivity = null
+    }
+  }
 
   private fun showVersionUpgrade(
       activity: FragmentActivity,
@@ -56,42 +74,13 @@ internal class VersionCheckDelegate(
   @Composable
   @CheckResult
   internal fun state(): VersionCheckViewState {
-    return viewModel.requireNotNull().state()
+    return versionViewModel.requireNotNull().state()
   }
 
-  /** Bind Activity for related VersionCheck events */
-  fun bindEvents() {
-    activity.requireNotNull().also { a ->
-      a.doOnDestroy {
-        viewModel = null
-        activity = null
-      }
-
-      a.doOnCreate {
-        viewModel
-            .requireNotNull()
-            .bind(
-                scope = a.lifecycleScope,
-                onUpgradeReady = { handleConfirmUpgrade() },
-            )
-      }
-    }
-  }
-
-  /** Attempt to confirm an upgrade if one is possible */
-  fun handleConfirmUpgrade() {
-    val vm = viewModel
-    if (vm == null) {
-      Logger.w("Cannot confirm upgrade with null ViewModel")
-      return
-    }
-
-    val act = activity
-    if (act == null) {
-      Logger.w("Cannot confirm upgrade with null Activity")
-      return
-    }
-
+  private fun handleConfirmUpgrade(
+      vm: VersionCheckViewModeler,
+      act: FragmentActivity,
+  ) {
     vm.handleConfirmUpgrade(
         scope = act.lifecycleScope,
     ) { newVersionCode ->
@@ -102,10 +91,37 @@ internal class VersionCheckDelegate(
     }
   }
 
+  /** Attempt to confirm an upgrade if one is possible */
+  fun handleConfirmUpgrade() {
+    if (disabled) {
+      Logger.w("Application has disabled the VersionCheck component")
+      return
+    }
+
+    val vm = versionViewModel
+    if (vm == null) {
+      Logger.w("Cannot confirm upgrade with null ViewModel")
+      return
+    }
+
+    val act = hostingActivity
+    if (act == null) {
+      Logger.w("Cannot confirm upgrade with null Activity")
+      return
+    }
+
+    handleConfirmUpgrade(vm, act)
+  }
+
   /** Check for in-app updates */
   fun checkUpdates() {
-    val act = activity.requireNotNull()
-    viewModel
+    if (disabled) {
+      Logger.w("Application has disabled the VersionCheck component")
+      return
+    }
+
+    val act = hostingActivity.requireNotNull()
+    versionViewModel
         .requireNotNull()
         .handleCheckForUpdates(
             scope = act.lifecycleScope,

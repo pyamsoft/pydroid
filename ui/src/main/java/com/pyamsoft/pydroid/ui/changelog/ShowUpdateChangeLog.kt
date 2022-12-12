@@ -18,8 +18,11 @@ package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewState
@@ -46,16 +49,31 @@ public typealias ShowUpdateChangeLogWidget =
 public class ShowUpdateChangeLog
 internal constructor(
     activity: FragmentActivity,
+    private val disabled: Boolean,
 ) {
-  private var hostingActivity: FragmentActivity? = activity
 
+  private var hostingActivity: FragmentActivity? = activity
   internal var viewModel: ChangeLogViewModeler? = null
 
   init {
-    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
-    // correctly set up otherwise we crash.
-    activity.doOnCreate {
-      ObjectGraph.ActivityScope.retrieve(activity).injector().plusChangeLog().create().inject(this)
+    if (disabled) {
+      Logger.w("Application has disabled the ChangeLog component")
+    } else {
+      // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
+      // correctly set up otherwise we crash.
+      activity.doOnCreate {
+        ObjectGraph.ActivityScope.retrieve(activity)
+            .injector()
+            .plusChangeLog()
+            .create()
+            .inject(this)
+
+        viewModel
+            .requireNotNull()
+            .bind(
+                scope = activity.lifecycleScope,
+            )
+      }
     }
 
     activity.doOnDestroy {
@@ -75,6 +93,12 @@ internal constructor(
    */
   @Composable
   public fun Render(content: @Composable ShowUpdateChangeLogWidget) {
+    if (disabled) {
+      // Log in a LE so that we only log once per lifecycle instead of per-render
+      LaunchedEffect(Unit) { Logger.w("Application has disabled the ChangeLog component") }
+      return
+    }
+
     val state = viewModel.requireNotNull().state()
     content(state) { handleChangeLog() }
   }
@@ -101,10 +125,12 @@ internal constructor(
     /** Create a new show update changelog UI component */
     @JvmStatic
     @CheckResult
+    @JvmOverloads
     public fun create(
         activity: FragmentActivity,
+        disabled: Boolean = false,
     ): ShowUpdateChangeLog {
-      return ShowUpdateChangeLog(activity)
+      return ShowUpdateChangeLog(activity, disabled)
     }
   }
 }

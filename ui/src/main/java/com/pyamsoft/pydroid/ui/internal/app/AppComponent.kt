@@ -55,8 +55,6 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal interface AppComponent {
 
-  @CheckResult fun options(): PYDroidActivityOptions
-
   @CheckResult fun create(activity: FragmentActivity): PYDroidActivityComponents
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
@@ -173,14 +171,13 @@ internal interface AppComponent {
             version = params.version,
         )
 
-    override fun options(): PYDroidActivityOptions = options
-
     override fun create(activity: FragmentActivity): PYDroidActivityComponents {
       return PYDroidActivityComponents(
           billing =
               BillingDelegate(
                   activity,
-                  billingModule.provideConnector(),
+                  connector = billingModule.provideConnector(),
+                  disabled = options.disableBilling,
               ),
           rating =
               RatingDelegate(
@@ -189,6 +186,7 @@ internal interface AppComponent {
                       state = ratingViewState,
                       interactor = ratingModule.provideInteractor(),
                   ),
+                  disabled = options.disableRating,
               ),
           versionCheck =
               VersionCheckDelegate(
@@ -198,6 +196,7 @@ internal interface AppComponent {
                       interactor = versionModule.provideInteractor(),
                       interactorCache = versionModule.provideInteractorCache(),
                   ),
+                  disabled = options.disableVersionCheck,
               ),
           dataPolicy =
               DataPolicyDelegate(
@@ -206,10 +205,23 @@ internal interface AppComponent {
                       state = dataPolicyState,
                       interactor = params.dataPolicyModule.provideInteractor(),
                   ),
+                  disabled = options.disableDataPolicy,
               ),
-          showUpdateChangeLog = ShowUpdateChangeLog.create(activity),
-          versionUpgrader = VersionUpgradeAvailable.create(activity),
-          versionUpdateProgress = VersionUpdateProgress.create(activity),
+          showUpdateChangeLog =
+              ShowUpdateChangeLog.create(
+                  activity,
+                  disabled = options.disableChangeLog,
+              ),
+          versionUpgrader =
+              VersionUpgradeAvailable.create(
+                  activity,
+                  disabled = options.disableVersionCheck,
+              ),
+          versionUpdateProgress =
+              VersionUpdateProgress.create(
+                  activity,
+                  disabled = options.disableVersionCheck,
+              ),
       )
     }
 

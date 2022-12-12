@@ -18,8 +18,10 @@ package com.pyamsoft.pydroid.ui.version
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
@@ -45,20 +47,24 @@ public typealias VersionUpgradeWidget =
 public class VersionUpgradeAvailable
 internal constructor(
     activity: FragmentActivity,
+    private val disabled: Boolean,
 ) {
   private var hostingActivity: FragmentActivity? = activity
-
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
-    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
-    // correctly set up otherwise we crash.
-    activity.doOnCreate {
-      ObjectGraph.ActivityScope.retrieve(activity)
-          .injector()
-          .plusVersionCheck()
-          .create()
-          .inject(this)
+    if (disabled) {
+      Logger.w("Application has disabled the VersionCheck component")
+    } else {
+      // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
+      // correctly set up otherwise we crash.
+      activity.doOnCreate {
+        ObjectGraph.ActivityScope.retrieve(activity)
+            .injector()
+            .plusVersionCheck()
+            .create()
+            .inject(this)
+      }
     }
 
     activity.doOnDestroy {
@@ -84,6 +90,12 @@ internal constructor(
    */
   @Composable
   public fun Render(content: @Composable VersionUpgradeWidget) {
+    if (disabled) {
+      // Log in a LE so that we only log once per lifecycle instead of per-render
+      LaunchedEffect(Unit) { Logger.w("Application has disabled the VersionCheck component") }
+      return
+    }
+
     val state = viewModel.requireNotNull().state()
     content(state) {
       handleUpgrade(
@@ -111,10 +123,12 @@ internal constructor(
     /** Create a new version upgrade available UI component */
     @JvmStatic
     @CheckResult
+    @JvmOverloads
     public fun create(
         activity: FragmentActivity,
+        disabled: Boolean = false,
     ): VersionUpgradeAvailable {
-      return VersionUpgradeAvailable(activity)
+      return VersionUpgradeAvailable(activity, disabled)
     }
   }
 }

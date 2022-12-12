@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.icons.Download
 import com.pyamsoft.pydroid.ui.icons.LibraryBooks
 import com.pyamsoft.pydroid.ui.icons.Visibility
@@ -38,6 +39,7 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 @Composable
 @CheckResult
 internal fun createApplicationPreferencesGroup(
+    options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
@@ -48,9 +50,18 @@ internal fun createApplicationPreferencesGroup(
     onShowChangeLogClicked: () -> Unit,
     onResetClicked: () -> Unit,
 ): Preferences.Group {
+  val darkName = stringResource(R.string.dark_mode_title)
+  val darkSummary = stringResource(R.string.dark_mode_summary)
+  val darkNames = stringArrayResource(R.array.dark_mode_names_v1)
+  val darkValues = stringArrayResource(R.array.dark_mode_values_v1)
+
   val preferences =
       listOf(
           darkThemePreference(
+              name = darkName,
+              summary = darkSummary,
+              names = darkNames,
+              values = darkValues,
               darkMode = darkMode,
               onDarkModeChanged = onDarkModeChanged,
           ),
@@ -112,19 +123,22 @@ private fun decideResetPreference(
 @Composable
 @CheckResult
 private fun darkThemePreference(
+    name: String,
+    summary: String,
+    names: Array<String>,
+    values: Array<String>,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
 ): Preferences.Item {
-  val names = stringArrayResource(R.array.dark_mode_names_v1)
-  val values = stringArrayResource(R.array.dark_mode_values_v1)
 
   return listPreference(
-      name = stringResource(R.string.dark_mode_title),
-      summary = stringResource(R.string.dark_mode_summary),
+      name = name,
+      summary = summary,
       icon = Icons.Outlined.Visibility,
       value = darkMode.toRawString(),
-      entries = names.mapIndexed { index, name -> name to values[index] }.toMap(),
-      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toThemingMode()) })
+      entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
+      onPreferenceSelected = { _, value -> onDarkModeChanged(value.toThemingMode()) },
+  )
 }
 
 @Composable

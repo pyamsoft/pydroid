@@ -28,10 +28,24 @@ import kotlinx.coroutines.launch
 internal class RatingDelegate(
     activity: FragmentActivity,
     viewModel: RatingViewModeler,
+    private val disabled: Boolean,
 ) {
 
-  private var activity: FragmentActivity? = activity
-  private var viewModel: RatingViewModeler? = viewModel
+  private var hostingActivity: FragmentActivity? = activity
+  private var ratingViewModel: RatingViewModeler? = viewModel
+
+  init {
+    if (disabled) {
+      Logger.w("Application has disabled the Rating component")
+    } else {
+      Logger.d("In-App Rating is enabled. Awaiting manual call")
+    }
+
+    activity.doOnDestroy {
+      ratingViewModel = null
+      hostingActivity = null
+    }
+  }
 
   private fun showRating(
       activity: FragmentActivity,
@@ -46,21 +60,18 @@ internal class RatingDelegate(
     }
   }
 
-  /** Bind Activity for related Rating events */
-  fun bindEvents() {
-    activity.requireNotNull().doOnDestroy {
-      viewModel = null
-      activity = null
-    }
-  }
-
   /**
    * Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that is up
    * to Google
    */
   fun loadInAppRating() {
-    val act = activity.requireNotNull()
-    viewModel
+    if (disabled) {
+      Logger.w("Application has disabled the Rating component")
+      return
+    }
+
+    val act = hostingActivity.requireNotNull()
+    ratingViewModel
         .requireNotNull()
         .loadInAppRating(
             scope = act.lifecycleScope,

@@ -19,46 +19,29 @@ package com.pyamsoft.pydroid.ui.internal.billing
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
-import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** Handles Billing related work in an Activity */
 internal class BillingDelegate(
     activity: FragmentActivity,
     connector: BillingConnector,
+    disabled: Boolean,
 ) {
 
-  private var activity: FragmentActivity? = activity
-  private var connector: BillingConnector? = connector
-
-  /** Attempts to connect to in-app billing */
-  private fun connectBilling(activity: FragmentActivity) {
-    Logger.d("Prepare application billing connection on create callback")
-    activity.doOnCreate {
-      Logger.d("Attempt Connect Billing")
-      val billing = connector
-      if (billing == null) {
-        val msg = "In-App Billing is not initialized!"
-        val error = IllegalStateException(msg)
-        Logger.e(error, msg)
-        throw error
-      } else {
-        Logger.d("In-App billing is created, connect")
-        billing.start(activity)
-      }
+  init {
+    if (disabled) {
+      Logger.w("Application has disabled the billing component")
+    } else {
+      activity.doOnCreate { connectBilling(activity, connector) }
     }
   }
 
-  /** Connect to the billing service */
-  fun connect() {
-    val act = activity.requireNotNull()
-
-    connectBilling(act)
-
-    act.doOnDestroy {
-      connector = null
-      activity = null
-    }
+  /** Attempts to connect to in-app billing */
+  private fun connectBilling(
+      activity: FragmentActivity,
+      connector: BillingConnector,
+  ) {
+    Logger.d("In-App billing is created, connect")
+    connector.start(activity)
   }
 }

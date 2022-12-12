@@ -29,4 +29,7 @@ public data class PYDroidActivityOptions(
 
     /** Disable the data policy component */
     internal val disableDataPolicy: Boolean = false,
+
+    /** Disable the change log component */
+    internal val disableChangeLog: Boolean = false,
 )

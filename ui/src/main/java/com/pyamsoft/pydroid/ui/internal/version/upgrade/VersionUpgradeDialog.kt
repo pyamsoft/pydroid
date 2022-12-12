@@ -81,11 +81,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
   ): View {
     val act = requireActivity()
 
-    ObjectGraph.ActivityScope.retrieve(act)
-        .injector()
-        .plusVersionUpgrade()
-        .create()
-        .inject(this)
+    ObjectGraph.ActivityScope.retrieve(act).injector().plusVersionUpgrade().create().inject(this)
 
     val newVersionCode = getNewVersionCode()
 

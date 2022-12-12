@@ -55,11 +55,7 @@ internal constructor(
     // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
     // correctly set up otherwise we crash.
     activity.doOnCreate {
-      ObjectGraph.ActivityScope.retrieve(activity)
-          .injector()
-          .plusChangeLog()
-          .create()
-          .inject(this)
+      ObjectGraph.ActivityScope.retrieve(activity).injector().plusChangeLog().create().inject(this)
     }
 
     activity.doOnDestroy {

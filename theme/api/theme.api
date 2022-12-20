@@ -35,7 +35,9 @@ public final class com/pyamsoft/pydroid/theme/MaterialThemeKt {
 	public static final fun PYDroidTheme (Landroidx/compose/material/Colors;Landroidx/compose/material/Typography;Landroidx/compose/material/Shapes;Lcom/pyamsoft/pydroid/theme/Keylines;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getKeylines (Landroidx/compose/material/MaterialTheme;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/theme/Keylines;
 	public static final fun getOnSuccess (Landroidx/compose/material/Colors;)J
+	public static final fun getOnWarning (Landroidx/compose/material/Colors;)J
 	public static final fun getSuccess (Landroidx/compose/material/Colors;)J
+	public static final fun getWarning (Landroidx/compose/material/Colors;)J
 }
 
 public final class com/pyamsoft/pydroid/theme/SizesKt {

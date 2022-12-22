@@ -14,63 +14,55 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.changelog
+package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewState
-import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
-import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
+import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
-/** Handles Change Log display in app */
-public typealias OnShowChangeLog = () -> Unit
+/** Handles Billing display in app */
+public typealias OnShowBilling = () -> Unit
 
-/** Dismiss the change log display in app */
-public typealias OnDismissChangeLog = () -> Unit
+/** Dismiss the Billnig display in app */
+public typealias OnDismissBilling = () -> Unit
 
-/** Handles Change Log display in app */
-public typealias ShowUpdateChangeLogWidget =
+/** Handles Billing display in app */
+public typealias ShowBillingWidget =
     (
-        state: ChangeLogViewState,
-        onShow: OnShowChangeLog,
-        onDismiss: OnDismissChangeLog,
+        state: BillingViewState,
+        onShow: OnShowBilling,
+        onDismiss: OnDismissBilling,
     ) -> Unit
 
-/**
- * A self contained class which is able to check for updates and prompt the user to install them
- * in-app. Adopts the theme from whichever composable it is rendered into
- */
-public class ShowUpdateChangeLog
+/** Handles Billing related work in an Activity */
+public class BillingUpsell
 internal constructor(
     activity: FragmentActivity,
     private val disabled: Boolean,
 ) {
 
   private var hostingActivity: FragmentActivity? = activity
-  internal var viewModel: ChangeLogViewModeler? = null
+  internal var viewModel: BillingViewModeler? = null
 
   init {
     if (disabled) {
-      Logger.w("Application has disabled the ChangeLog component")
+      Logger.w("Application has disabled the billing component")
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
       // correctly set up otherwise we crash.
       activity.doOnCreate {
-        ObjectGraph.ActivityScope.retrieve(activity)
-            .injector()
-            .plusChangeLog()
-            .create()
-            .inject(this)
+        ObjectGraph.ActivityScope.retrieve(activity).injector().plusBilling().create().inject(this)
 
         viewModel
             .requireNotNull()
@@ -80,10 +72,37 @@ internal constructor(
       }
     }
 
+    val repeatedActions =
+        object : DefaultLifecycleObserver {
+
+          // Do on each start
+          override fun onStart(owner: LifecycleOwner) {
+            super.onStart(owner)
+            viewModel
+                .requireNotNull()
+                .handleMaybeShowUpsell(
+                    scope = activity.lifecycleScope,
+                )
+          }
+        }
+
+    activity.lifecycle.addObserver(repeatedActions)
     activity.doOnDestroy {
+      activity.lifecycle.removeObserver(repeatedActions)
+
       hostingActivity = null
       viewModel = null
     }
+  }
+
+  /** Dismiss an upsell that is shown */
+  public fun dismissUpsell() {
+    if (disabled) {
+      Logger.w("Application has disabled the Billing component")
+      return
+    }
+
+    viewModel.requireNotNull().handleDismissUpsell()
   }
 
   /**
@@ -92,10 +111,10 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(content: @Composable ShowUpdateChangeLogWidget) {
+  public fun Render(content: @Composable ShowBillingWidget) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w("Application has disabled the ChangeLog component") }
+      LaunchedEffect(Unit) { Logger.w("Application has disabled the Billing component") }
       return
     }
 
@@ -104,23 +123,23 @@ internal constructor(
     content(
         state = state,
         onShow = {
-          vm.handleDismiss()
-          ChangeLogDialog.show(activity = hostingActivity.requireNotNull())
+          vm.handleDismissUpsell()
+          BillingDialog.show(hostingActivity.requireNotNull())
         },
-        onDismiss = { vm.handleDismiss() },
+        onDismiss = { vm.handleDismissUpsell() },
     )
   }
 
   /** Render into a composable the default version check screen upsell */
   @Composable
-  public fun RenderChangeLogWidget(
+  public fun RenderBillingUpsellWidget(
       modifier: Modifier = Modifier,
   ) {
     Render { state, onShow, onDismiss ->
-      ShowChangeLogScreen(
+      ShowBillingUpsell(
           modifier = modifier,
           state = state,
-          onShowChangeLog = onShow,
+          onShowBilling = onShow,
           onDismiss = onDismiss,
       )
     }
@@ -128,15 +147,15 @@ internal constructor(
 
   public companion object {
 
-    /** Create a new show update changelog UI component */
+    /** Create a new Billing upsell UI component */
     @JvmStatic
     @CheckResult
     @JvmOverloads
     public fun create(
         activity: FragmentActivity,
         disabled: Boolean = false,
-    ): ShowUpdateChangeLog {
-      return ShowUpdateChangeLog(activity, disabled)
+    ): BillingUpsell {
+      return BillingUpsell(activity, disabled)
     }
   }
 }

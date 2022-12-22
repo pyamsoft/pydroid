@@ -22,10 +22,12 @@ import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
+import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
-import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.util.booleanFlow
@@ -34,25 +36,73 @@ import com.pyamsoft.pydroid.util.stringFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 internal class PYDroidPreferencesImpl
 internal constructor(
     context: Context,
     private val versionCode: Int,
-) : ThemingPreferences, ChangeLogPreferences, DataPolicyPreferences {
+) : ThemingPreferences, BillingPreferences, ChangeLogPreferences, DataPolicyPreferences {
 
   private val darkModeKey = context.getString(R.string.dark_mode_key)
+
   private val prefs by lazy {
     Enforcer.assertOffMainThread()
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
+  override suspend fun listenForUpsellChanges(): Flow<Boolean> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        val countFlow =
+            prefs.intFlow(
+                KEY_BILLING_SHOW_UPSELL_COUNT,
+                DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+            )
+
+        return@withContext countFlow
+            .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
+            .onEach { show ->
+              // Once the threshold has been tripped, set it back
+              if (show) {
+                Logger.d("Reset billing show count!")
+                prefs.edit {
+                  putInt(
+                      KEY_BILLING_SHOW_UPSELL_COUNT,
+                      DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+                  )
+                }
+              }
+            }
+      }
+
+  override suspend fun maybeShowUpsell() =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        val currentCount =
+            prefs.getInt(
+                KEY_BILLING_SHOW_UPSELL_COUNT,
+                DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+            )
+
+        if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
+          prefs.edit { putInt(KEY_BILLING_SHOW_UPSELL_COUNT, currentCount + 1) }
+        }
+      }
+
   override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext prefs.intFlow(LAST_SHOWN_CHANGELOG, -1).map { it < versionCode }
+        return@withContext prefs
+            .intFlow(
+                LAST_SHOWN_CHANGELOG,
+                DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
+            )
+            .map { it < versionCode }
       }
 
   override suspend fun markChangeLogShown() =
@@ -60,7 +110,7 @@ internal constructor(
         Enforcer.assertOffMainThread()
 
         // Mark the changelog as shown for this version
-        return@withContext prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
+        prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
       }
 
   override suspend fun listenForDarkModeChanges(): Flow<Mode> =
@@ -81,7 +131,7 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext prefs.edit(commit = true) { putString(darkModeKey, mode.toRawString()) }
+        prefs.edit { putString(darkModeKey, mode.toRawString()) }
       }
 
   override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
@@ -98,17 +148,21 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        return@withContext prefs.edit(commit = true) {
-          putBoolean(KEY_DATA_POLICY_CONSENTED, accepted)
-        }
+        prefs.edit { putBoolean(KEY_DATA_POLICY_CONSENTED, accepted) }
       }
 
   companion object {
 
     private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
+
+    private const val DEFAULT_LAST_SHOWN_CHANGELOG_CODE = -1
     private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"
 
     private const val DEFAULT_DATA_POLICY_CONSENTED = false
     private const val KEY_DATA_POLICY_CONSENTED = "data_policy_consented_v1"
+
+    private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
+    private const val KEY_BILLING_SHOW_UPSELL_COUNT = "billing_show_upsell_v1"
+    private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 10
   }
 }

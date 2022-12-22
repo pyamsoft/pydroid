@@ -28,6 +28,6 @@ internal interface DataPolicyViewState : UiViewState {
 }
 
 @Stable
-internal class MutableDataPolicyViewState : DataPolicyViewState {
+internal class MutableDataPolicyViewState internal constructor() : DataPolicyViewState {
   override var isAccepted by mutableStateOf<Boolean?>(null)
 }

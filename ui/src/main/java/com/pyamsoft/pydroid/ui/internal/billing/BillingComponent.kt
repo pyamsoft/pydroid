@@ -17,45 +17,32 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
-import com.pyamsoft.pydroid.billing.BillingModule
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface BillingComponent {
 
-  fun inject(dialog: BillingDialog)
+  fun inject(component: BillingUpsell)
 
   interface Factory {
 
-    @CheckResult fun create(provider: AppProvider): BillingComponent
+    @CheckResult fun create(): BillingComponent
 
     data class Parameters
     internal constructor(
-        internal val changeLogModule: ChangeLogModule,
-        internal val billingModule: BillingModule,
-        internal val composeTheme: ComposeThemeFactory,
-        internal val imageLoader: ImageLoader,
+        internal val preferences: BillingPreferences,
+        internal val state: MutableBillingViewState,
     )
   }
 
   class Impl
   private constructor(
       private val params: Factory.Parameters,
-      private val provider: AppProvider,
   ) : BillingComponent {
 
-    override fun inject(dialog: BillingDialog) {
-      dialog.imageLoader = params.imageLoader
-      dialog.composeTheme = params.composeTheme
-      dialog.purchaseClient = params.billingModule.provideLauncher()
-      dialog.viewModel =
+    override fun inject(component: BillingUpsell) {
+      component.viewModel =
           BillingViewModeler(
-              state = MutableBillingViewState(),
-              changeLogInteractor = params.changeLogModule.provideInteractor(),
-              interactor = params.billingModule.provideInteractor(),
-              provider = provider,
+              preferences = params.preferences,
+              state = params.state,
           )
     }
 
@@ -64,8 +51,8 @@ internal interface BillingComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(provider: AppProvider): BillingComponent {
-        return Impl(params, provider)
+      override fun create(): BillingComponent {
+        return Impl(params)
       }
     }
   }

@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

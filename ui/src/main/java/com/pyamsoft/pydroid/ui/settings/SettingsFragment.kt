@@ -40,7 +40,7 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
-import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
+import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
@@ -272,7 +272,7 @@ public abstract class SettingsFragment : Fragment() {
               onCheckUpdateClicked = { handleCheckForUpdates() },
               onShowChangeLogClicked = { handleShowChangeLog() },
               onResetClicked = { ResetDialog.open(act) },
-              onDonateClicked = { BillingDialog.open(act) },
+              onDonateClicked = { BillingDialog.show(act) },
               onBugReportClicked = { handleReportBug(handler) },
               onViewSourceClicked = { handleViewSourceCode(handler) },
               onViewDataPolicyClicked = { handleShowDisclosure() },

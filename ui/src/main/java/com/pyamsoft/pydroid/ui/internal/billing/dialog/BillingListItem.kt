@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box

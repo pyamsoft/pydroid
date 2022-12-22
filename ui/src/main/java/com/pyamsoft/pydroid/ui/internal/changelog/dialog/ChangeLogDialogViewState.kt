@@ -29,7 +29,7 @@ internal interface ChangeLogDialogViewState : AppViewState {
 }
 
 @Stable
-internal class MutableChangeLogDialogViewState : ChangeLogDialogViewState {
+internal class MutableChangeLogDialogViewState internal constructor() : ChangeLogDialogViewState {
   override var changeLog by mutableStateOf(emptyList<ChangeLogLine>())
   override var icon by mutableStateOf(0)
   override var applicationVersionCode by mutableStateOf(0)

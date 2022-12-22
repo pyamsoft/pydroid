@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -47,7 +47,7 @@ import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 @Composable
 internal fun BillingScreen(
     modifier: Modifier = Modifier,
-    state: BillingViewState,
+    state: BillingDialogViewState,
     imageLoader: ImageLoader,
     onPurchase: (BillingSku) -> Unit,
     onBillingErrorDismissed: () -> Unit,
@@ -207,7 +207,7 @@ private fun PreviewBillingScreen(
 ) {
   BillingScreen(
       state =
-          MutableBillingViewState().apply {
+          MutableBillingDialogViewState().apply {
             this.name = "TEST APPLICATION"
             this.connected = connected
             this.skuList = skuList

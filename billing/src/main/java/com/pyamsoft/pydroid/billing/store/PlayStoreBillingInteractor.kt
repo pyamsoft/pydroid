@@ -147,7 +147,7 @@ internal constructor(
     }
   }
 
-  override fun start(activity: FragmentActivity) {
+  override fun bind(activity: FragmentActivity) {
     activity.lifecycle.doOnCreate {
       Logger.d("Attempt to connect Billing on Activity create")
       connect()

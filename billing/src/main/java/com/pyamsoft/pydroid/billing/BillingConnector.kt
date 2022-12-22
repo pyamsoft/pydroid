@@ -22,9 +22,9 @@ import androidx.fragment.app.FragmentActivity
 public interface BillingConnector {
 
   /**
-   * Start the billing client
+   * Bind to the billing client
    *
    * Will automatically manage connections
    */
-  public fun start(activity: FragmentActivity)
+  public fun bind(activity: FragmentActivity)
 }

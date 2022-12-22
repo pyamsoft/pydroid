@@ -31,7 +31,7 @@ internal interface SettingsViewState : UiViewState {
 }
 
 @Stable
-internal class MutableSettingsViewState : SettingsViewState {
+internal class MutableSettingsViewState internal constructor() : SettingsViewState {
   override var applicationName by mutableStateOf("")
   override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
   override var isLoading by mutableStateOf(false)

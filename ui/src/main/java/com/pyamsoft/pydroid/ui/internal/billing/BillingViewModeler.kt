@@ -16,63 +16,37 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.ui.app.AppProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class BillingViewModeler
 internal constructor(
+    private val preferences: BillingPreferences,
     private val state: MutableBillingViewState,
-    private val changeLogInteractor: ChangeLogInteractor,
-    private val interactor: BillingInteractor,
-    private val provider: AppProvider,
 ) : AbstractViewModeler<BillingViewState>(state) {
 
-  private val refreshRunner =
-      highlander<Unit>(
-          context = Dispatchers.IO,
-      ) {
-        interactor.refresh()
-      }
-
   internal fun bind(scope: CoroutineScope) {
+    val s = state
     scope.launch(context = Dispatchers.Main) {
-      val displayName = changeLogInteractor.getDisplayName()
-      state.apply {
-        name = displayName
-        icon = provider.applicationIcon
-      }
-    }
-
-    scope.launch(context = Dispatchers.Main) {
-      interactor.watchSkuList { status, list ->
-        Logger.d("SKU list updated: $status $list")
-        state.apply {
-          connected = status
-          skuList = list.sortedBy { it.price }
+      preferences.listenForUpsellChanges().collectLatest { show ->
+        if (show) {
+          Logger.d("Showing Billing upsell")
+          s.showUpsell = true
         }
       }
     }
-
-    scope.launch(context = Dispatchers.Main) {
-      interactor.watchErrors { error ->
-        Logger.e(error, "Billing error received")
-        state.error = error
-      }
-    }
   }
 
-  internal fun handleClearError() {
-    state.error = null
+  internal fun handleDismissUpsell() {
+    Logger.d("Temporary dismissing Billing upsell")
+    state.showUpsell = false
   }
 
-  internal fun handleRefresh(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) { refreshRunner.call() }
+  internal fun handleMaybeShowUpsell(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) { preferences.maybeShowUpsell() }
   }
 }

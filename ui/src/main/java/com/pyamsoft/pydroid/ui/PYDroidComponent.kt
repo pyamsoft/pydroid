@@ -135,6 +135,7 @@ internal interface PYDroidComponent {
               privacyPolicyUrl = params.privacyPolicyUrl,
               viewSourceUrl = params.viewSourceUrl,
               debug = params.debug,
+              billingPreferences = preferences,
           )
         }
 

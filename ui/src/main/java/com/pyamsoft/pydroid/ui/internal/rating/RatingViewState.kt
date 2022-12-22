@@ -28,6 +28,6 @@ internal interface RatingViewState : UiViewState {
 }
 
 @Stable
-internal class MutableRatingViewState : RatingViewState {
+internal class MutableRatingViewState internal constructor() : RatingViewState {
   override var isRatingAlreadyShown by mutableStateOf(false)
 }

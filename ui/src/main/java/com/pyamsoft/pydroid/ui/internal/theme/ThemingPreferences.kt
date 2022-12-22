@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.theme
+package com.pyamsoft.pydroid.ui.internal.theme
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import kotlinx.coroutines.flow.Flow
 
 /** Preferences for dark mode */
-public interface ThemingPreferences {
+internal interface ThemingPreferences {
 
   /** Is application in dark mode */
-  @CheckResult public suspend fun listenForDarkModeChanges(): Flow<Mode>
+  @CheckResult suspend fun listenForDarkModeChanges(): Flow<Mode>
 
   /** Set application dark mode preference */
-  public suspend fun setDarkMode(mode: Mode)
+  suspend fun setDarkMode(mode: Mode)
 }

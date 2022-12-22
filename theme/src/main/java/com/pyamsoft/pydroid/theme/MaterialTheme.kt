@@ -41,12 +41,12 @@ public val Colors.onSuccess: Color
 /** Provide a Theme color for Warning */
 @Suppress("unused")
 public val Colors.warning: Color
-    get() = AMBER
+  get() = AMBER
 
 /** Provide a Theme color for OnWarning */
 @Suppress("unused")
 public val Colors.onWarning: Color
-    get() = this.onError
+  get() = this.onError
 
 /** A Spacing extension on the Material theme */
 @Suppress("unused")

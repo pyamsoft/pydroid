@@ -51,4 +51,8 @@ internal constructor(
       onShowChangeLog()
     }
   }
+
+  internal fun handleDismiss() {
+    state.canShow = false
+  }
 }

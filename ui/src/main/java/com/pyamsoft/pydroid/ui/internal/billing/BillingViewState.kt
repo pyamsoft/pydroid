@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.reset
+package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -22,12 +22,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
-@Stable
-internal interface ResetViewState : UiViewState {
-  val reset: Boolean
+public interface BillingViewState : UiViewState {
+
+  /** Show a billing upsell in the app */
+  public val showUpsell: Boolean
 }
 
 @Stable
-internal class MutableResetViewState internal constructor() : ResetViewState {
-  override var reset by mutableStateOf(false)
+internal class MutableBillingViewState internal constructor() : BillingViewState {
+  override var showUpsell by mutableStateOf(false)
 }

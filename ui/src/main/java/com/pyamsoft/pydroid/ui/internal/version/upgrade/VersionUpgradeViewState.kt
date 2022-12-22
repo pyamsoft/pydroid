@@ -29,7 +29,8 @@ internal interface VersionUpgradeViewState : UiViewState {
 }
 
 @Stable
-internal class MutableVersionUpgradeViewState(
+internal data class MutableVersionUpgradeViewState
+internal constructor(
     override val oldVersionCode: Int,
 ) : VersionUpgradeViewState {
   override var upgraded by mutableStateOf(false)

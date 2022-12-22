@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 
-internal interface BillingViewState : AppViewState {
+internal interface BillingDialogViewState : AppViewState {
   override val icon: Int
   override val name: String
   val connected: BillingState
@@ -33,7 +33,7 @@ internal interface BillingViewState : AppViewState {
 }
 
 @Stable
-internal class MutableBillingViewState : BillingViewState {
+internal class MutableBillingDialogViewState internal constructor() : BillingDialogViewState {
   override var skuList by mutableStateOf(emptyList<BillingSku>())
   override var connected by mutableStateOf(BillingState.LOADING)
   override var error by mutableStateOf<Throwable?>(null)

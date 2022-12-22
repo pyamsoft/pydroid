@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Stable
-internal class MutableVersionCheckViewState : VersionCheckViewState {
+internal class MutableVersionCheckViewState internal constructor() : VersionCheckViewState {
   override var isCheckingForUpdate by mutableStateOf(false)
   override var isUpdateReadyToInstall by mutableStateOf(false)
   override var availableUpdateVersionCode by

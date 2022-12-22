@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
@@ -47,6 +48,7 @@ internal constructor(
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
   private var versionUpdateProgress: VersionUpdateProgress?
   private var showUpdateChangeLog: ShowUpdateChangeLog?
+  private var billingUpsell: BillingUpsell?
 
   init {
     val components = component.create(activity)
@@ -60,6 +62,7 @@ internal constructor(
     versionUpgradeAvailable = components.versionUpgrader
     versionUpdateProgress = components.versionUpdateProgress
     showUpdateChangeLog = components.showUpdateChangeLog
+    billingUpsell = components.billingUpsell
 
     val repeatedActions =
         object : DefaultLifecycleObserver {
@@ -88,6 +91,7 @@ internal constructor(
       versionCheckDelegate = null
       versionUpgradeAvailable = null
       versionUpdateProgress = null
+      billingUpsell = null
     }
   }
 
@@ -123,6 +127,12 @@ internal constructor(
   @CheckResult
   internal fun changeLog(): ShowUpdateChangeLog {
     return showUpdateChangeLog.requireNotNull { "ShowUpdateChangeLog is NULL, was this destroyed?" }
+  }
+
+  /** Used in BillingUpsellWidget */
+  @CheckResult
+  internal fun billingUpsell(): BillingUpsell {
+    return billingUpsell.requireNotNull { "BillingUpsell is NULL, was this destroyed?" }
   }
 
   /**

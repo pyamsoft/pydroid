@@ -31,6 +31,7 @@ internal interface ChangeLogComponent {
     data class Parameters
     internal constructor(
         internal val changeLogModule: ChangeLogModule,
+        internal val state: MutableChangeLogViewState,
     )
   }
 
@@ -42,8 +43,8 @@ internal interface ChangeLogComponent {
     override fun inject(component: ShowUpdateChangeLog) {
       component.viewModel =
           ChangeLogViewModeler(
-              state = MutableChangeLogViewState(),
               interactor = params.changeLogModule.provideInteractor(),
+              state = params.state,
           )
     }
 

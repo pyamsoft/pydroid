@@ -27,11 +27,15 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
-import com.pyamsoft.pydroid.ui.internal.billing.BillingDelegate
+import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
+import com.pyamsoft.pydroid.ui.internal.billing.BillingUpsell
+import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
+import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
@@ -52,10 +56,13 @@ import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.util.doOnCreate
 
 internal interface AppComponent {
 
   @CheckResult fun create(activity: FragmentActivity): PYDroidActivityComponents
+
+  @CheckResult fun plusBillingDialog(): BillingDialogComponent.Factory
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
@@ -75,6 +82,7 @@ internal interface AppComponent {
 
     data class Parameters
     internal constructor(
+        val billingPreferences: BillingPreferences,
         internal val context: Context,
         internal val theming: Theming,
         internal val bugReportUrl: String,
@@ -98,9 +106,7 @@ internal interface AppComponent {
   ) : AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
-    private val ratingViewState = MutableRatingViewState()
     private val versionCheckState = MutableVersionCheckViewState()
-    private val versionUpgradeState = MutableVersionUpgradeViewState(params.version)
     private val dataPolicyState = MutableDataPolicyViewState()
     private val changeLogState = MutableChangeLogViewState()
 
@@ -134,12 +140,18 @@ internal interface AppComponent {
             ),
         )
 
-    private val billingParams =
-        BillingComponent.Factory.Parameters(
+    private val billingDialogParams =
+        BillingDialogComponent.Factory.Parameters(
             billingModule = billingModule,
             changeLogModule = params.changeLogModule,
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
+        )
+
+    private val billingParams =
+        BillingComponent.Factory.Parameters(
+            preferences = params.billingPreferences,
+            state = MutableBillingViewState(),
         )
 
     private val settingsParams =
@@ -162,6 +174,7 @@ internal interface AppComponent {
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
+            state = changeLogState,
         )
 
     private val changeLogDialogParams =
@@ -172,46 +185,73 @@ internal interface AppComponent {
             version = params.version,
         )
 
+    private val versionUpgradeParams =
+        VersionUpgradeComponent.Factory.Parameters(
+            module = versionModule,
+            composeTheme = params.composeTheme,
+            state = MutableVersionUpgradeViewState(params.version),
+        )
+
+    private val versionCheckParams =
+        VersionCheckComponent.Factory.Parameters(
+            module = versionModule,
+            composeTheme = params.composeTheme,
+            state = versionCheckState,
+        )
+
+    private fun connectBilling(activity: FragmentActivity) {
+      if (options.disableBilling) {
+        Logger.w("Application has disabled the billing component")
+      } else {
+        billingModule.provideConnector().bind(activity)
+      }
+    }
+
     override fun create(activity: FragmentActivity): PYDroidActivityComponents {
+      // Connect the In-App Billing
+      activity.doOnCreate { connectBilling(activity) }
+
       return PYDroidActivityComponents(
-          billing =
-              BillingDelegate(
-                  activity,
-                  connector = billingModule.provideConnector(),
-                  disabled = options.disableBilling,
-              ),
           rating =
               RatingDelegate(
                   activity,
-                  RatingViewModeler(
-                      state = ratingViewState,
-                      interactor = ratingModule.provideInteractor(),
-                  ),
+                  viewModel =
+                      RatingViewModeler(
+                          state = MutableRatingViewState(),
+                          interactor = ratingModule.provideInteractor(),
+                      ),
                   disabled = options.disableRating,
               ),
           versionCheck =
               VersionCheckDelegate(
                   activity,
-                  VersionCheckViewModeler(
-                      state = versionCheckState,
-                      interactor = versionModule.provideInteractor(),
-                      interactorCache = versionModule.provideInteractorCache(),
-                  ),
+                  viewModel =
+                      VersionCheckViewModeler(
+                          state = versionCheckState,
+                          interactor = versionModule.provideInteractor(),
+                          interactorCache = versionModule.provideInteractorCache(),
+                      ),
                   disabled = options.disableVersionCheck,
               ),
           dataPolicy =
               DataPolicyDelegate(
                   activity,
-                  DataPolicyViewModeler(
-                      state = dataPolicyState,
-                      interactor = params.dataPolicyModule.provideInteractor(),
-                  ),
+                  viewModel =
+                      DataPolicyViewModeler(
+                          state = dataPolicyState,
+                          interactor = params.dataPolicyModule.provideInteractor(),
+                      ),
                   disabled = options.disableDataPolicy,
               ),
           showUpdateChangeLog =
               ShowUpdateChangeLog.create(
                   activity,
                   disabled = options.disableChangeLog,
+              ),
+          billingUpsell =
+              BillingUpsell.create(
+                  activity,
+                  disabled = options.disableBilling,
               ),
           versionUpgrader =
               VersionUpgradeAvailable.create(
@@ -227,13 +267,11 @@ internal interface AppComponent {
     }
 
     override fun plusVersionUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(
-          VersionUpgradeComponent.Factory.Parameters(
-              module = versionModule,
-              composeTheme = params.composeTheme,
-              state = versionUpgradeState,
-          ),
-      )
+      return VersionUpgradeComponent.Impl.FactoryImpl(versionUpgradeParams)
+    }
+
+    override fun plusBillingDialog(): BillingDialogComponent.Factory {
+      return BillingDialogComponent.Impl.FactoryImpl(billingDialogParams)
     }
 
     override fun plusBilling(): BillingComponent.Factory {
@@ -241,13 +279,7 @@ internal interface AppComponent {
     }
 
     override fun plusVersionCheck(): VersionCheckComponent.Factory {
-      return VersionCheckComponent.Impl.FactoryImpl(
-          VersionCheckComponent.Factory.Parameters(
-              module = versionModule,
-              composeTheme = params.composeTheme,
-              state = versionCheckState,
-          ),
-      )
+      return VersionCheckComponent.Impl.FactoryImpl(versionCheckParams)
     }
 
     override fun plusSettings(): SettingsComponent.Factory {

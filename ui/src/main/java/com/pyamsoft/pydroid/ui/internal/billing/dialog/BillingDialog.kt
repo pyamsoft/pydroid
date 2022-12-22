@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -51,7 +51,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
 
   internal var purchaseClient: BillingLauncher? = null
 
-  internal var viewModel: BillingViewModeler? = null
+  internal var viewModel: BillingDialogViewModeler? = null
 
   internal var imageLoader: ImageLoader? = null
 
@@ -83,7 +83,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
     val act = requireActivity()
     ObjectGraph.ActivityScope.retrieve(act)
         .injector()
-        .plusBilling()
+        .plusBillingDialog()
         .create(getApplicationProvider())
         .inject(this)
 
@@ -148,7 +148,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
     private const val TAG = "BillingDialog"
 
     @JvmStatic
-    internal fun open(activity: FragmentActivity) {
+    internal fun show(activity: FragmentActivity) {
       BillingDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
   }

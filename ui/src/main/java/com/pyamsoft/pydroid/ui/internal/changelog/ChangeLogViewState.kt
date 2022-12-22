@@ -31,6 +31,6 @@ public interface ChangeLogViewState : UiViewState {
 }
 
 @Stable
-internal class MutableChangeLogViewState : ChangeLogViewState {
-  override var canShow by mutableStateOf<Boolean>(false)
+internal class MutableChangeLogViewState internal constructor() : ChangeLogViewState {
+  override var canShow by mutableStateOf(false)
 }

@@ -140,7 +140,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/changelog/ChangeLogProvi
 public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;
-	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
+	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
@@ -255,15 +255,42 @@ public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$Dia
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingListItemKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingListItemKt;
+public final class com/pyamsoft/pydroid/ui/internal/billing/BillingUpsell {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell$Companion;
+	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
+	public final fun RenderBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell;
+	public final fun dismissUpsell ()V
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/billing/BillingUpsell$Companion {
+	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/internal/billing/BillingUpsell;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/internal/billing/BillingViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun getShowUpsell ()Z
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$ShowBillingUpsellKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$ShowBillingUpsellKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingScreenKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$BillingScreenKt;
+public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -513,11 +540,6 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 	public static fun values ()[Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
 }
 
-public abstract interface class com/pyamsoft/pydroid/ui/theme/ThemingPreferences {
-	public abstract fun listenForDarkModeChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun setDarkMode (Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
 	public static final fun dispose (Landroidx/compose/ui/platform/ComposeView;)V
 	public static final fun dispose (Landroidx/fragment/app/Fragment;)V
@@ -577,6 +599,10 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Compa
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/BillingUpsellWidgetKt {
+	public static final fun ShowBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {

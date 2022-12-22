@@ -31,7 +31,7 @@ internal interface AboutViewState : UiViewState {
 }
 
 @Stable
-internal class MutableAboutViewState : AboutViewState {
+internal class MutableAboutViewState internal constructor() : AboutViewState {
   override var isLoading by mutableStateOf(false)
   override var navigationError by mutableStateOf<Throwable?>(null)
   override var licenses by mutableStateOf<List<OssLibrary>>(emptyList())

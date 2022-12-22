@@ -30,7 +30,7 @@ internal interface DataPolicyDialogViewState : UiViewState {
 }
 
 @Stable
-internal class MutableDataPolicyDialogViewState : DataPolicyDialogViewState {
+internal class MutableDataPolicyDialogViewState internal constructor() : DataPolicyDialogViewState {
   override var name by mutableStateOf("")
   override var icon by mutableStateOf(0)
   override var navigationError by mutableStateOf<Throwable?>(null)

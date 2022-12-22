@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.reset
+package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.arch.UiViewState
+import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
-@Stable
-internal interface ResetViewState : UiViewState {
-  val reset: Boolean
-}
+/** Preferences for billing */
+internal interface BillingPreferences {
 
-@Stable
-internal class MutableResetViewState internal constructor() : ResetViewState {
-  override var reset by mutableStateOf(false)
+  /** Should we show a Billing upsell */
+  @CheckResult suspend fun listenForUpsellChanges(): Flow<Boolean>
+
+  /** Show the upsell if we have hit the "minimum" shown count */
+  suspend fun maybeShowUpsell()
 }

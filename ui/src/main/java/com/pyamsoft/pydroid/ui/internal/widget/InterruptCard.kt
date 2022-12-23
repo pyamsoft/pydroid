@@ -38,12 +38,12 @@ internal fun InterruptCard(
     content: @Composable () -> Unit,
 ) {
   AnimatedVisibility(
-      modifier = modifier,
       visible = visible,
       enter = fadeIn() + scaleIn(),
       exit = scaleOut() + fadeOut(),
   ) {
     Surface(
+        modifier = modifier,
         border =
             BorderStroke(
                 width = HairlineSize,

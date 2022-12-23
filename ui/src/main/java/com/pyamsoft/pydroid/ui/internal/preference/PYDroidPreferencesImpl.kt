@@ -102,7 +102,13 @@ internal constructor(
                 LAST_SHOWN_CHANGELOG,
                 DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
             )
-            .map { it < versionCode }
+            .onEach { lastShown ->
+              // Upon the first time seeing it, update to our current version code
+              if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
+                markChangeLogShown()
+              }
+            }
+            .map { it in 1 until versionCode }
       }
 
   override suspend fun markChangeLogShown() =

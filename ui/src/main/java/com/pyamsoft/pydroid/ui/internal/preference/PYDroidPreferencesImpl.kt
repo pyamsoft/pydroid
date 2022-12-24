@@ -105,6 +105,7 @@ internal constructor(
             .onEach { lastShown ->
               // Upon the first time seeing it, update to our current version code
               if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
+                Logger.d("Initialize changelog for a newly installed app!")
                 markChangeLogShown()
               }
             }
@@ -123,9 +124,12 @@ internal constructor(
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        // Initialize this key here so the preference screen can be populated
         if (!prefs.contains(darkModeKey)) {
-          prefs.edit(commit = true) { putString(darkModeKey, DEFAULT_DARK_MODE) }
+          // Initialize this key here so the preference screen can be populated
+          prefs.edit {
+            Logger.d("Initialize dark mode with defaults")
+            putString(darkModeKey, DEFAULT_DARK_MODE)
+          }
         }
 
         return@withContext prefs.stringFlow(darkModeKey, DEFAULT_DARK_MODE).map {

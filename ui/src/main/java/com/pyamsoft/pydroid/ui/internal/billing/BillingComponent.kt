@@ -30,6 +30,7 @@ internal interface BillingComponent {
     internal constructor(
         internal val preferences: BillingPreferences,
         internal val state: MutableBillingViewState,
+        internal val isFakeBillingUpsell: Boolean,
     )
   }
 
@@ -43,6 +44,7 @@ internal interface BillingComponent {
           BillingViewModeler(
               preferences = params.preferences,
               state = params.state,
+              isFakeUpsell = params.isFakeBillingUpsell,
           )
     }
 

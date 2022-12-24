@@ -27,6 +27,7 @@ internal class BillingViewModeler
 internal constructor(
     private val preferences: BillingPreferences,
     private val state: MutableBillingViewState,
+    private val isFakeUpsell: Boolean,
 ) : AbstractViewModeler<BillingViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
@@ -37,6 +38,13 @@ internal constructor(
           Logger.d("Showing Billing upsell")
           s.showUpsell = true
         }
+      }
+    }
+
+    if (isFakeUpsell) {
+      scope.launch(context = Dispatchers.Main) {
+        Logger.d("Fake a billing upsell, force show")
+        s.showUpsell = true
       }
     }
   }

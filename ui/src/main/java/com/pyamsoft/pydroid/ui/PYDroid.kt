@@ -128,6 +128,12 @@ including outside of an Application class.
 
       /** Should the user be shown the changelog? */
       internal val changeLogAvailable: Boolean = false,
+
+      /** Should the user be shown a billing upsell ? */
+      internal val showBillingUpsell: Boolean = false,
+
+      /** Should we try to show the rating dialog? (Not always guaranteed) */
+      internal val tryShowInAppRating: Boolean = false,
   )
 
   /** Base parameters for PYDroid */

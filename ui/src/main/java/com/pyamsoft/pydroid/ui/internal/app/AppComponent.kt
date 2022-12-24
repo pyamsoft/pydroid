@@ -152,6 +152,7 @@ internal interface AppComponent {
         BillingComponent.Factory.Parameters(
             preferences = params.billingPreferences,
             state = MutableBillingViewState(),
+            isFakeBillingUpsell = params.debug.showBillingUpsell,
         )
 
     private val settingsParams =
@@ -203,25 +204,36 @@ internal interface AppComponent {
       if (options.disableBilling) {
         Logger.w("Application has disabled the billing component")
       } else {
+        Logger.d("Attempt Billing Connection")
         billingModule.provideConnector().bind(activity)
       }
     }
 
     override fun create(activity: FragmentActivity): PYDroidActivityComponents {
+      // Create rating here since we may use it to try force show an in-app rating
+      val rating =
+          RatingDelegate(
+              activity,
+              viewModel =
+                  RatingViewModeler(
+                      state = MutableRatingViewState(),
+                      interactor = ratingModule.provideInteractor(),
+                  ),
+              disabled = options.disableRating,
+          )
+
       // Connect the In-App Billing
       activity.doOnCreate { connectBilling(activity) }
 
+      if (params.debug.tryShowInAppRating) {
+        activity.doOnCreate {
+          Logger.d("Try to force-show an In-App Rating")
+          rating.loadInAppRating()
+        }
+      }
+
       return PYDroidActivityComponents(
-          rating =
-              RatingDelegate(
-                  activity,
-                  viewModel =
-                      RatingViewModeler(
-                          state = MutableRatingViewState(),
-                          interactor = ratingModule.provideInteractor(),
-                      ),
-                  disabled = options.disableRating,
-              ),
+          rating = rating,
           versionCheck =
               VersionCheckDelegate(
                   activity,

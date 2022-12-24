@@ -16,19 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
+import com.pyamsoft.pydroid.ui.internal.widget.DismissableInterruptCard
 
 @Composable
 internal fun ShowBillingUpsell(
@@ -37,31 +30,14 @@ internal fun ShowBillingUpsell(
     onShowBilling: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-  InterruptCard(
+  DismissableInterruptCard(
       modifier = modifier,
-      visible = state.showUpsell,
-  ) {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-    ) {
-      Text(
-          text = stringResource(R.string.donate_summary),
-          style =
-              MaterialTheme.typography.body2.copy(
-                  color = MaterialTheme.colors.primary,
-              ),
-      )
-
-      OutlinedButton(
-          modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-          onClick = onShowBilling,
-      ) {
-        Text(
-            text = stringResource(R.string.donate_title),
-        )
-      }
-    }
-  }
+      show = state.showUpsell,
+      text = stringResource(R.string.donate_summary),
+      buttonText = stringResource(R.string.donate_title),
+      onDismiss = onDismiss,
+      onButtonClicked = onShowBilling,
+  )
 }
 
 @Preview

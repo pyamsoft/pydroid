@@ -275,13 +275,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/internal/billing/Billing
 	public abstract fun getShowUpsell ()Z
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$ShowBillingUpsellKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/ComposableSingletons$ShowBillingUpsellKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-}
-
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
@@ -298,13 +291,6 @@ public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSin
 
 public abstract interface class com/pyamsoft/pydroid/ui/internal/changelog/ChangeLogViewState : com/pyamsoft/pydroid/arch/UiViewState {
 	public abstract fun getCanShow ()Z
-}
-
-public final class com/pyamsoft/pydroid/ui/internal/changelog/ComposableSingletons$ShowChangeLogScreenKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/ComposableSingletons$ShowChangeLogScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogListItemKt {
@@ -361,6 +347,13 @@ public final class com/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSi
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$DismissableInterruptCardKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$DismissableInterruptCardKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function2;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
@@ -602,7 +595,7 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Compa
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/BillingUpsellWidgetKt {
-	public static final fun ShowBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {

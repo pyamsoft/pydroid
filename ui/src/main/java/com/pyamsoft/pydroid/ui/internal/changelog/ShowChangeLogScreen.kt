@@ -16,17 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
+import com.pyamsoft.pydroid.ui.internal.widget.DismissableInterruptCard
 
 @Composable
 internal fun ShowChangeLogScreen(
@@ -35,31 +28,14 @@ internal fun ShowChangeLogScreen(
     onShowChangeLog: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-  InterruptCard(
+  DismissableInterruptCard(
       modifier = modifier,
-      visible = state.canShow,
-  ) {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-    ) {
-      Text(
-          text = "You've recently updated! Congratulations!",
-          style =
-              MaterialTheme.typography.body2.copy(
-                  color = MaterialTheme.colors.primary,
-              ),
-      )
-
-      OutlinedButton(
-          modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-          onClick = onShowChangeLog,
-      ) {
-        Text(
-            text = "View Changes",
-        )
-      }
-    }
-  }
+      show = state.canShow,
+      text = "You've updated to the latest version! Thanks!",
+      buttonText = "View Changes",
+      onButtonClicked = onShowChangeLog,
+      onDismiss = onDismiss,
+  )
 }
 
 @Preview

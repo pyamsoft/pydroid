@@ -107,8 +107,6 @@ internal interface AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
-    private val dataPolicyState = MutableDataPolicyViewState()
-    private val changeLogState = MutableChangeLogViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
@@ -164,18 +162,15 @@ internal interface AppComponent {
             privacyPolicyUrl = params.privacyPolicyUrl,
             viewSourceUrl = params.viewSourceUrl,
             changeLogModule = params.changeLogModule,
-            dataPolicyModule = params.dataPolicyModule,
             composeTheme = params.composeTheme,
             theming = params.theming,
             versionCheckState = versionCheckState,
-            dataPolicyState = dataPolicyState,
-            changeLogState = changeLogState,
         )
 
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
-            state = changeLogState,
+            state = MutableChangeLogViewState(),
         )
 
     private val changeLogDialogParams =
@@ -250,7 +245,7 @@ internal interface AppComponent {
                   activity,
                   viewModel =
                       DataPolicyViewModeler(
-                          state = dataPolicyState,
+                          state = MutableDataPolicyViewState(),
                           interactor = params.dataPolicyModule.provideInteractor(),
                       ),
                   disabled = options.disableDataPolicy,

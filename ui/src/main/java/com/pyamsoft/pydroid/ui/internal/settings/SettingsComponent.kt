@@ -18,14 +18,9 @@ package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
-import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
-import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
-import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
@@ -41,8 +36,6 @@ internal interface SettingsComponent {
 
     data class Parameters
     internal constructor(
-        internal val changeLogState: MutableChangeLogViewState,
-        internal val dataPolicyState: MutableDataPolicyViewState,
         internal val versionCheckState: MutableVersionCheckViewState,
         internal val bugReportUrl: String,
         internal val viewSourceUrl: String,
@@ -51,7 +44,6 @@ internal interface SettingsComponent {
         internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val versionModule: VersionModule,
-        internal val dataPolicyModule: DataPolicyModule,
         internal val changeLogModule: ChangeLogModule,
         internal val options: PYDroidActivityOptions,
     )
@@ -74,16 +66,6 @@ internal interface SettingsComponent {
               viewSourceUrl = params.viewSourceUrl,
               theming = params.theming,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
-          )
-      fragment.dataPolicyViewModel =
-          DataPolicyViewModeler(
-              state = params.dataPolicyState,
-              interactor = params.dataPolicyModule.provideInteractor(),
-          )
-      fragment.changeLogViewModel =
-          ChangeLogViewModeler(
-              state = params.changeLogState,
-              interactor = params.changeLogModule.provideInteractor(),
           )
       fragment.versionViewModel =
           VersionCheckViewModeler(

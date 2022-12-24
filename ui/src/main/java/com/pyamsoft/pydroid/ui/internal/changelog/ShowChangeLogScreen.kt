@@ -24,6 +24,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 
@@ -59,4 +60,14 @@ internal fun ShowChangeLogScreen(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun PreviewShowChangeLogScreen() {
+  ShowChangeLogScreen(
+      state = MutableChangeLogViewState().apply { canShow = true },
+      onDismiss = {},
+      onShowChangeLog = {},
+  )
 }

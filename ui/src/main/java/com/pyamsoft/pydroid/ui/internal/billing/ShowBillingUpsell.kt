@@ -25,6 +25,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
@@ -61,4 +62,14 @@ internal fun ShowBillingUpsell(
       }
     }
   }
+}
+
+@Preview
+@Composable
+private fun PreviewShowBillingUpsell() {
+  ShowBillingUpsell(
+      state = MutableBillingViewState().apply { showUpsell = true },
+      onDismiss = {},
+      onShowBilling = {},
+  )
 }

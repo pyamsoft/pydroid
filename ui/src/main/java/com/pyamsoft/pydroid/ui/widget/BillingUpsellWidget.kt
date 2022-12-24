@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.internal.widget.rememberPYDroidDelegate
  * Must be hosted in a PYDroidActivity
  */
 @Composable
-public fun ShowBillingUpsellWidget(
+public fun BillingUpsellWidget(
     modifier: Modifier = Modifier,
 ) {
   // If isEditMode, we don't render nothing

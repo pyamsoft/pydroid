@@ -24,6 +24,8 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -41,9 +43,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
 import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
@@ -69,14 +69,12 @@ public abstract class SettingsFragment : Fragment() {
 
   internal var viewModel: SettingsViewModeler? = null
   internal var versionViewModel: VersionCheckViewModeler? = null
-  internal var changeLogViewModel: ChangeLogViewModeler? = null
-  internal var dataPolicyViewModel: DataPolicyViewModeler? = null
 
   private fun openPage(handler: UriHandler, url: String) {
     handler.openUri(url)
   }
 
-  private fun handleChangeDarkMode(mode: Theming.Mode) {
+  private fun onChangeDarkMode(mode: Theming.Mode) {
     val act = requireActivity()
     viewModel
         .requireNotNull()
@@ -86,7 +84,7 @@ public abstract class SettingsFragment : Fragment() {
         )
   }
 
-  private fun handleViewBlog(handler: UriHandler) {
+  private fun onViewBlog(handler: UriHandler) {
     viewModel.requireNotNull().handleViewBlog { url ->
       openPage(
           handler = handler,
@@ -95,7 +93,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleViewSocialMedia(handler: UriHandler) {
+  private fun onViewSocialMedia(handler: UriHandler) {
     viewModel.requireNotNull().handleViewSocialMedia { url ->
       openPage(
           handler = handler,
@@ -104,7 +102,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleViewTermsOfService(handler: UriHandler) {
+  private fun onViewTermsOfService(handler: UriHandler) {
     viewModel.requireNotNull().handleViewTermsOfService { url ->
       openPage(
           handler = handler,
@@ -113,7 +111,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleViewPrivacyPolicy(handler: UriHandler) {
+  private fun onViewPrivacyPolicy(handler: UriHandler) {
     viewModel.requireNotNull().handleViewPrivacyPolicy { url ->
       openPage(
           handler = handler,
@@ -122,7 +120,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleViewSourceCode(handler: UriHandler) {
+  private fun onViewSourceCode(handler: UriHandler) {
     viewModel.requireNotNull().handleViewSourceCode { url ->
       openPage(
           handler = handler,
@@ -131,7 +129,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleReportBug(handler: UriHandler) {
+  private fun onReportBug(handler: UriHandler) {
     viewModel.requireNotNull().handleReportBug { url ->
       openPage(
           handler = handler,
@@ -140,35 +138,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleShowDisclosure() {
-    if (options.requireNotNull().disableDataPolicy) {
-      Logger.w("Application has disabled the Data Policy component")
-      return
-    }
-
-    dataPolicyViewModel
-        .requireNotNull()
-        .handleShowDataPolicyDialogIfPossible(
-            scope = viewLifecycleOwner.lifecycleScope,
-            onNeedsToShow = { DataPolicyDisclosureDialog.show(requireActivity()) },
-        )
-  }
-
-  private fun handleShowChangeLog() {
-    if (options.requireNotNull().disableChangeLog) {
-      Logger.w("Application has disabled the ChangeLog component")
-      return
-    }
-
-    changeLogViewModel
-        .requireNotNull()
-        .handleShow(
-            scope = viewLifecycleOwner.lifecycleScope,
-            onShowChangeLog = { ChangeLogDialog.show(requireActivity()) },
-        )
-  }
-
-  private fun handleCheckForUpdates() {
+  private fun onCheckForUpdates() {
     if (options.requireNotNull().disableVersionCheck) {
       Logger.w("Application has disabled the VersionCheck component")
       return
@@ -206,7 +176,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleOpenMarketPage(uriHandler: UriHandler) {
+  private fun onOpenMarketPage(uriHandler: UriHandler) {
     uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
@@ -256,6 +226,36 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
+        val handleChangeDarkMode by rememberUpdatedState { mode: Theming.Mode ->
+          onChangeDarkMode(mode)
+        }
+
+        val handleLicensesClicked by rememberUpdatedState { AboutDialog.show(act) }
+
+        val handleCheckUpdates by rememberUpdatedState { onCheckForUpdates() }
+
+        val handleShowChangelog by rememberUpdatedState { ChangeLogDialog.show(act) }
+
+        val handleViewPrivacyPolicy by rememberUpdatedState { onViewPrivacyPolicy(handler) }
+
+        val handleViewTermsOfService by rememberUpdatedState { onViewTermsOfService(handler) }
+
+        val handleReportBug by rememberUpdatedState { onReportBug(handler) }
+
+        val handleResetClicked by rememberUpdatedState { ResetDialog.show(act) }
+
+        val handleDonateClicked by rememberUpdatedState { BillingDialog.show(act) }
+
+        val handleViewSourceCode by rememberUpdatedState { onViewSourceCode(handler) }
+
+        val handleViewSocialMedia by rememberUpdatedState { onViewSocialMedia(handler) }
+
+        val handleViewBlog by rememberUpdatedState { onViewBlog(handler) }
+
+        val handleViewMarketPage by rememberUpdatedState { onOpenMarketPage(handler) }
+
+        val handleViewDataPolicy by rememberUpdatedState { DataPolicyDisclosureDialog.show(act) }
+
         composeTheme(act) {
           SettingsScreen(
               elevation = customElevation(),
@@ -267,20 +267,20 @@ public abstract class SettingsFragment : Fragment() {
               bottomItemMargin = customBottomItemMargin(),
               customPreContent = customPrePreferences(),
               customPostContent = customPostPreferences(),
-              onDarkModeChanged = { handleChangeDarkMode(it) },
-              onLicensesClicked = { AboutDialog.show(act) },
-              onCheckUpdateClicked = { handleCheckForUpdates() },
-              onShowChangeLogClicked = { handleShowChangeLog() },
-              onResetClicked = { ResetDialog.open(act) },
-              onDonateClicked = { BillingDialog.show(act) },
-              onBugReportClicked = { handleReportBug(handler) },
-              onViewSourceClicked = { handleViewSourceCode(handler) },
-              onViewDataPolicyClicked = { handleShowDisclosure() },
-              onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
-              onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
-              onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
-              onViewBlogClicked = { handleViewBlog(handler) },
-              onOpenMarketPage = { handleOpenMarketPage(it) },
+              onDarkModeChanged = handleChangeDarkMode,
+              onLicensesClicked = handleLicensesClicked,
+              onCheckUpdateClicked = handleCheckUpdates,
+              onShowChangeLogClicked = handleShowChangelog,
+              onResetClicked = handleResetClicked,
+              onDonateClicked = handleDonateClicked,
+              onBugReportClicked = handleReportBug,
+              onViewSourceClicked = handleViewSourceCode,
+              onViewDataPolicyClicked = handleViewDataPolicy,
+              onViewPrivacyPolicyClicked = handleViewPrivacyPolicy,
+              onViewTermsOfServiceClicked = handleViewTermsOfService,
+              onViewSocialMediaClicked = handleViewSocialMedia,
+              onViewBlogClicked = handleViewBlog,
+              onOpenMarketPage = handleViewMarketPage,
           )
         }
       }
@@ -297,26 +297,12 @@ public abstract class SettingsFragment : Fragment() {
       vm.bind(scope = viewLifecycleOwner.lifecycleScope)
       vm.handleLoadPreferences(scope = viewLifecycleOwner.lifecycleScope)
     }
-
-    dataPolicyViewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.bind(
-          scope = viewLifecycleOwner.lifecycleScope,
-          onShowPolicy = { DataPolicyDisclosureDialog.show(requireActivity()) },
-      )
-    }
-    changeLogViewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
-    }
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     viewModel?.saveState(outState)
-    dataPolicyViewModel?.saveState(outState)
-    changeLogViewModel?.saveState(outState)
     versionViewModel?.saveState(outState)
   }
 
@@ -332,8 +318,6 @@ public abstract class SettingsFragment : Fragment() {
     dispose()
 
     viewModel = null
-    changeLogViewModel = null
-    dataPolicyViewModel = null
     versionViewModel = null
     options = null
   }

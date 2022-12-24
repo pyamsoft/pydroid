@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -38,22 +36,12 @@ internal fun rememberSupportPreferencesGroup(
     options: PYDroidActivityOptions,
     applicationName: CharSequence,
     onDonateClicked: () -> Unit,
-    onOpenMarketPage: (UriHandler) -> Unit,
+    onOpenMarketPage: () -> Unit,
 ): Preferences.Group {
-  val uriHandler = LocalUriHandler.current
-
-  val onRateClicked =
-      remember(
-          uriHandler,
-          onOpenMarketPage,
-      ) {
-        { onOpenMarketPage(uriHandler) }
-      }
-
   val ratePreference =
       rememberRatePreference(
           applicationName = applicationName,
-          onClick = onRateClicked,
+          onClick = onOpenMarketPage,
       )
 
   val donatePreference =

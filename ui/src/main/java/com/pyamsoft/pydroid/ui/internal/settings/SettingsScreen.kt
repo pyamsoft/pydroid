@@ -65,7 +65,7 @@ internal fun SettingsScreen(
     onViewTermsOfServiceClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
-    onOpenMarketPage: (UriHandler) -> Unit,
+    onOpenMarketPage: () -> Unit,
 ) {
   val isLoading = state.isLoading
   val applicationName = state.applicationName
@@ -151,7 +151,7 @@ private fun SettingsList(
     onViewTermsOfServiceClicked: () -> Unit,
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
-    onOpenMarketPage: (UriHandler) -> Unit,
+    onOpenMarketPage: () -> Unit,
 ) {
   val applicationPrefs =
       rememberApplicationPreferencesGroup(

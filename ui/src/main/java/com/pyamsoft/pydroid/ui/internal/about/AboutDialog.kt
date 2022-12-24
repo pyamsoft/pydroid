@@ -22,6 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -97,13 +99,27 @@ internal class AboutDialog : AppCompatDialogFragment() {
       setContent {
         val handler = LocalUriHandler.current
 
+        val handleViewHomePage by rememberUpdatedState { library: OssLibrary ->
+          openLibrary(handler, library)
+        }
+
+        val handleViewLicense by rememberUpdatedState { library: OssLibrary ->
+          openLicense(handler, library)
+        }
+
+        val handleDismissNavigationError by rememberUpdatedState {
+          vm.handleDismissFailedNavigation()
+        }
+
+        val handleDismiss by rememberUpdatedState { dismiss() }
+
         composeTheme(act) {
           AboutScreen(
               state = vm.state(),
-              onViewHomePage = { openLibrary(handler, it) },
-              onViewLicense = { openLicense(handler, it) },
-              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
-              onClose = { dismiss() },
+              onViewHomePage = handleViewHomePage,
+              onViewLicense = handleViewLicense,
+              onNavigationErrorDismissed = handleDismissNavigationError,
+              onClose = handleDismiss,
           )
         }
       }

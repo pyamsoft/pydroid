@@ -24,6 +24,8 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
@@ -49,7 +51,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
   internal var viewModel: VersionUpgradeViewModeler? = null
 
-  private fun handleCompleteUpgrade() {
+  private fun onCompleteUpgrade() {
     val act = requireActivity()
     viewModel
         .requireNotNull()
@@ -90,13 +92,17 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
 
       val vm = viewModel.requireNotNull()
       setContent {
+        val handleUpgraded by rememberUpdatedState { onCompleteUpgrade() }
+
+        val handleDismiss by rememberUpdatedState { dismiss() }
+
         composeTheme(act) {
           VersionUpgradeScreen(
               modifier = Modifier.fillMaxWidth(),
               state = vm.state(),
               newVersionCode = newVersionCode,
-              onUpgrade = { handleCompleteUpgrade() },
-              onClose = { dismiss() },
+              onUpgrade = handleUpgraded,
+              onClose = handleDismiss,
           )
         }
       }

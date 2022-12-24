@@ -23,6 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -67,7 +69,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
     }
   }
 
-  private fun handleAcceptDataPolicy() {
+  private fun onAcceptDataPolicy() {
     viewModel
         .requireNotNull()
         .handleAccept(
@@ -76,7 +78,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
         )
   }
 
-  private fun handleRejectDataPolicy() {
+  private fun onRejectDataPolicy() {
     viewModel
         .requireNotNull()
         .handleReject(
@@ -85,7 +87,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
         )
   }
 
-  private fun handleViewPrivacy(handler: UriHandler) {
+  private fun onViewPrivacy(handler: UriHandler) {
     viewModel.requireNotNull().handleViewPrivacyPolicy { url ->
       openPage(
           handler = handler,
@@ -94,7 +96,7 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
     }
   }
 
-  private fun handleViewTos(handler: UriHandler) {
+  private fun onViewTos(handler: UriHandler) {
     viewModel.requireNotNull().handleViewTermsOfService { url ->
       openPage(
           handler = handler,
@@ -131,19 +133,29 @@ internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
       id = R.id.dialog_dpd
 
       val vm = viewModel.requireNotNull()
-      val imageLoader = imageLoader.requireNotNull()
+      val loader = imageLoader.requireNotNull()
       setContent {
         val handler = LocalUriHandler.current
+
+        val handleDismissNavigationError by rememberUpdatedState { vm.handleHideNavigationError() }
+
+        val handleAccept by rememberUpdatedState { onAcceptDataPolicy() }
+
+        val handleReject by rememberUpdatedState { onRejectDataPolicy() }
+
+        val handleViewPrivacyPolicy by rememberUpdatedState { onViewPrivacy(handler) }
+
+        val handleViewTermsOfService by rememberUpdatedState { onViewTos(handler) }
 
         composeTheme(act) {
           DataPolicyDisclosureScreen(
               state = vm.state(),
-              imageLoader = imageLoader.requireNotNull(),
-              onNavigationErrorDismissed = { vm.handleHideNavigationError() },
-              onAccept = { handleAcceptDataPolicy() },
-              onReject = { handleRejectDataPolicy() },
-              onPrivacyPolicyClicked = { handleViewPrivacy(handler) },
-              onTermsOfServiceClicked = { handleViewTos(handler) },
+              imageLoader = loader,
+              onNavigationErrorDismissed = handleDismissNavigationError,
+              onAccept = handleAccept,
+              onReject = handleReject,
+              onPrivacyPolicyClicked = handleViewPrivacyPolicy,
+              onTermsOfServiceClicked = handleViewTermsOfService,
           )
         }
       }

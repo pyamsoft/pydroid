@@ -24,8 +24,6 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -74,7 +72,7 @@ public abstract class SettingsFragment : Fragment() {
     handler.openUri(url)
   }
 
-  private fun onChangeDarkMode(mode: Theming.Mode) {
+  private fun handleChangeDarkMode(mode: Theming.Mode) {
     val act = requireActivity()
     viewModel
         .requireNotNull()
@@ -84,7 +82,7 @@ public abstract class SettingsFragment : Fragment() {
         )
   }
 
-  private fun onViewBlog(handler: UriHandler) {
+  private fun handleViewBlog(handler: UriHandler) {
     viewModel.requireNotNull().handleViewBlog { url ->
       openPage(
           handler = handler,
@@ -93,7 +91,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onViewSocialMedia(handler: UriHandler) {
+  private fun handleViewSocialMedia(handler: UriHandler) {
     viewModel.requireNotNull().handleViewSocialMedia { url ->
       openPage(
           handler = handler,
@@ -102,7 +100,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onViewTermsOfService(handler: UriHandler) {
+  private fun handleViewTermsOfService(handler: UriHandler) {
     viewModel.requireNotNull().handleViewTermsOfService { url ->
       openPage(
           handler = handler,
@@ -111,7 +109,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onViewPrivacyPolicy(handler: UriHandler) {
+  private fun handleViewPrivacyPolicy(handler: UriHandler) {
     viewModel.requireNotNull().handleViewPrivacyPolicy { url ->
       openPage(
           handler = handler,
@@ -120,7 +118,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onViewSourceCode(handler: UriHandler) {
+  private fun handleViewSourceCode(handler: UriHandler) {
     viewModel.requireNotNull().handleViewSourceCode { url ->
       openPage(
           handler = handler,
@@ -129,7 +127,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onReportBug(handler: UriHandler) {
+  private fun handleReportBug(handler: UriHandler) {
     viewModel.requireNotNull().handleReportBug { url ->
       openPage(
           handler = handler,
@@ -138,7 +136,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onCheckForUpdates() {
+  private fun handleCheckForUpdates() {
     if (options.requireNotNull().disableVersionCheck) {
       Logger.w("Application has disabled the VersionCheck component")
       return
@@ -176,7 +174,7 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun onOpenMarketPage(uriHandler: UriHandler) {
+  private fun handleOpenMarketPage(uriHandler: UriHandler) {
     uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
@@ -226,36 +224,6 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        val handleChangeDarkMode by rememberUpdatedState { mode: Theming.Mode ->
-          onChangeDarkMode(mode)
-        }
-
-        val handleLicensesClicked by rememberUpdatedState { AboutDialog.show(act) }
-
-        val handleCheckUpdates by rememberUpdatedState { onCheckForUpdates() }
-
-        val handleShowChangelog by rememberUpdatedState { ChangeLogDialog.show(act) }
-
-        val handleViewPrivacyPolicy by rememberUpdatedState { onViewPrivacyPolicy(handler) }
-
-        val handleViewTermsOfService by rememberUpdatedState { onViewTermsOfService(handler) }
-
-        val handleReportBug by rememberUpdatedState { onReportBug(handler) }
-
-        val handleResetClicked by rememberUpdatedState { ResetDialog.show(act) }
-
-        val handleDonateClicked by rememberUpdatedState { BillingDialog.show(act) }
-
-        val handleViewSourceCode by rememberUpdatedState { onViewSourceCode(handler) }
-
-        val handleViewSocialMedia by rememberUpdatedState { onViewSocialMedia(handler) }
-
-        val handleViewBlog by rememberUpdatedState { onViewBlog(handler) }
-
-        val handleViewMarketPage by rememberUpdatedState { onOpenMarketPage(handler) }
-
-        val handleViewDataPolicy by rememberUpdatedState { DataPolicyDisclosureDialog.show(act) }
-
         composeTheme(act) {
           SettingsScreen(
               elevation = customElevation(),
@@ -267,20 +235,20 @@ public abstract class SettingsFragment : Fragment() {
               bottomItemMargin = customBottomItemMargin(),
               customPreContent = customPrePreferences(),
               customPostContent = customPostPreferences(),
-              onDarkModeChanged = handleChangeDarkMode,
-              onLicensesClicked = handleLicensesClicked,
-              onCheckUpdateClicked = handleCheckUpdates,
-              onShowChangeLogClicked = handleShowChangelog,
-              onResetClicked = handleResetClicked,
-              onDonateClicked = handleDonateClicked,
-              onBugReportClicked = handleReportBug,
-              onViewSourceClicked = handleViewSourceCode,
-              onViewDataPolicyClicked = handleViewDataPolicy,
-              onViewPrivacyPolicyClicked = handleViewPrivacyPolicy,
-              onViewTermsOfServiceClicked = handleViewTermsOfService,
-              onViewSocialMediaClicked = handleViewSocialMedia,
-              onViewBlogClicked = handleViewBlog,
-              onOpenMarketPage = handleViewMarketPage,
+              onDarkModeChanged = { handleChangeDarkMode(it) },
+              onLicensesClicked = { AboutDialog.show(act) },
+              onCheckUpdateClicked = { handleCheckForUpdates() },
+              onShowChangeLogClicked = { ChangeLogDialog.show(act) },
+              onResetClicked = { ResetDialog.show(act) },
+              onDonateClicked = { BillingDialog.show(act) },
+              onBugReportClicked = { handleReportBug(handler) },
+              onViewSourceClicked = { handleViewSourceCode(handler) },
+              onViewDataPolicyClicked = { DataPolicyDisclosureDialog.show(act) },
+              onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
+              onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
+              onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
+              onViewBlogClicked = { handleViewBlog(handler) },
+              onOpenMarketPage = { handleOpenMarketPage(handler) },
           )
         }
       }

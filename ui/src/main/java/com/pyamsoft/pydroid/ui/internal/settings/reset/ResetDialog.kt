@@ -24,8 +24,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.DialogFragment
@@ -50,7 +48,7 @@ internal class ResetDialog : AppCompatDialogFragment() {
 
   internal var viewModel: ResetViewModeler? = null
 
-  private fun onFullReset() {
+  private fun handleFullReset() {
     viewModel
         .requireNotNull()
         .handleFullReset(
@@ -85,16 +83,12 @@ internal class ResetDialog : AppCompatDialogFragment() {
 
       val vm = viewModel.requireNotNull()
       setContent {
-        val handleFullReset by rememberUpdatedState { onFullReset() }
-
-        val handleDismiss by rememberUpdatedState { dismiss() }
-
         composeTheme(act) {
           ResetScreen(
               modifier = Modifier.fillMaxWidth(),
               state = vm.state(),
-              onReset = handleFullReset,
-              onClose = handleDismiss,
+              onReset = { handleFullReset() },
+              onClose = { dismiss() },
           )
         }
       }

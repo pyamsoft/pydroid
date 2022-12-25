@@ -23,8 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -62,7 +60,7 @@ internal class BillingDialog : AppCompatDialogFragment() {
     return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
   }
 
-  private fun onLaunchPurchase(sku: BillingSku) {
+  private fun handleLaunchPurchase(sku: BillingSku) {
     requireActivity().also { a ->
       // Enforce on main thread
       a.lifecycleScope.launch(context = Dispatchers.Main) {
@@ -95,19 +93,13 @@ internal class BillingDialog : AppCompatDialogFragment() {
       val vm = viewModel.requireNotNull()
       val loader = imageLoader.requireNotNull()
       setContent {
-        val handlePurchase by rememberUpdatedState { sku: BillingSku -> onLaunchPurchase(sku) }
-
-        val handleDismissBillingError by rememberUpdatedState { vm.handleClearError() }
-
-        val handleDismiss by rememberUpdatedState { dismiss() }
-
         composeTheme(act) {
           BillingScreen(
               state = vm.state(),
               imageLoader = loader,
-              onPurchase = handlePurchase,
-              onBillingErrorDismissed = handleDismissBillingError,
-              onClose = handleDismiss,
+              onPurchase = { handleLaunchPurchase(it) },
+              onBillingErrorDismissed = { vm.handleClearError() },
+              onClose = { dismiss() },
           )
         }
       }

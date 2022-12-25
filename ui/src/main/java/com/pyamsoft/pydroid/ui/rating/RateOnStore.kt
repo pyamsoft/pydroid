@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.rating
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.fragment.app.FragmentActivity
@@ -127,17 +125,13 @@ internal constructor(
     val vm = viewModel.requireNotNull()
     val state = vm.state()
 
-    val handleShow by rememberUpdatedState {
-      vm.handleDismissUpsell()
-      uriHandler.openUri(MarketLinker.getStorePageLink(hostingActivity.requireNotNull()))
-    }
-
-    val handleDismiss by rememberUpdatedState { vm.handleDismissUpsell() }
-
     content(
         state = state,
-        onRate = handleShow,
-        onDismiss = handleDismiss,
+        onRate = {
+          vm.handleDismissUpsell()
+          uriHandler.openUri(MarketLinker.getStorePageLink(hostingActivity.requireNotNull()))
+        },
+        onDismiss = { vm.handleDismissUpsell() },
     )
   }
 

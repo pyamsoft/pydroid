@@ -119,9 +119,7 @@ private fun rememberDarkThemePreference(
   val rawValue = remember(darkMode) { darkMode.toRawString() }
 
   // Don't use by so we can memoize
-  val handlePreferencesSelected = rememberUpdatedState { _: String, value: String ->
-    onChange(value.toThemingMode())
-  }
+  val handleChange = rememberUpdatedState(onChange)
 
   return remember(
       name,
@@ -129,7 +127,7 @@ private fun rememberDarkThemePreference(
       names,
       values,
       rawValue,
-      handlePreferencesSelected,
+      handleChange,
   ) {
     listPreference(
         name = name,
@@ -137,7 +135,7 @@ private fun rememberDarkThemePreference(
         icon = Icons.Outlined.Visibility,
         value = rawValue,
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
-        onPreferenceSelected = handlePreferencesSelected.value,
+        onPreferenceSelected = { _, value -> handleChange.value.invoke(value.toThemingMode()) },
     )
   }
 }

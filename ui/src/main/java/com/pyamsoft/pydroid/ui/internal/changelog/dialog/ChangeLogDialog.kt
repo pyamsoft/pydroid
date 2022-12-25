@@ -23,8 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -58,7 +56,7 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
     return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
   }
 
-  private fun onRateApp(uriHandler: UriHandler) {
+  private fun handleRateApp(uriHandler: UriHandler) {
     uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
   }
 
@@ -88,16 +86,12 @@ internal class ChangeLogDialog : AppCompatDialogFragment() {
       setContent {
         val uriHandler = LocalUriHandler.current
 
-        val handleRateApp by rememberUpdatedState { onRateApp(uriHandler) }
-
-        val handleDismiss by rememberUpdatedState { dismiss() }
-
         composeTheme(act) {
           ChangeLogScreen(
               state = vm.state(),
               imageLoader = loader,
-              onRateApp = handleRateApp,
-              onClose = handleDismiss,
+              onRateApp = { handleRateApp(uriHandler) },
+              onClose = { dismiss() },
           )
         }
       }

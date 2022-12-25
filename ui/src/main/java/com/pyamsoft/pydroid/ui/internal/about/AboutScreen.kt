@@ -34,9 +34,7 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -125,15 +123,11 @@ private fun AboutList(
         items = list,
         key = { "${it.name}:${it.libraryUrl}" },
     ) { item ->
-      val handleViewHomePage by rememberUpdatedState { onViewHomePage(item) }
-
-      val handleViewLicense by rememberUpdatedState { onViewLicense(item) }
-
       AboutListItem(
           modifier = Modifier.fillMaxWidth(),
           library = item,
-          onViewHomePage = handleViewHomePage,
-          onViewLicense = handleViewLicense,
+          onViewHomePage = { onViewHomePage(item) },
+          onViewLicense = { onViewLicense(item) },
       )
     }
   }

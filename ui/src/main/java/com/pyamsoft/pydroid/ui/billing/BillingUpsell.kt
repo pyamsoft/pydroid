@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.billing
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -125,17 +123,13 @@ internal constructor(
     val vm = viewModel.requireNotNull()
     val state = vm.state()
 
-    val handleShow by rememberUpdatedState {
-      vm.handleDismissUpsell()
-      BillingDialog.show(hostingActivity.requireNotNull())
-    }
-
-    val handleDismiss by rememberUpdatedState { vm.handleDismissUpsell() }
-
     content(
         state = state,
-        onShow = handleShow,
-        onDismiss = handleDismiss,
+        onShow = {
+          vm.handleDismissUpsell()
+          BillingDialog.show(hostingActivity.requireNotNull())
+        },
+        onDismiss = { vm.handleDismissUpsell() },
     )
   }
 

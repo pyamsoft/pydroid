@@ -22,8 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -49,14 +47,14 @@ internal class AboutDialog : AppCompatDialogFragment() {
   /** Provided by PYDroid */
   internal var viewModel: AboutViewModeler? = null
 
-  private fun openLicense(handler: UriHandler, library: OssLibrary) {
+  private fun handleViewLicense(handler: UriHandler, library: OssLibrary) {
     openPage(
         handler = handler,
         url = library.libraryUrl,
     )
   }
 
-  private fun openLibrary(handler: UriHandler, library: OssLibrary) {
+  private fun handleViewHomePage(handler: UriHandler, library: OssLibrary) {
     openPage(
         handler = handler,
         url = library.libraryUrl,
@@ -99,27 +97,13 @@ internal class AboutDialog : AppCompatDialogFragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        val handleViewHomePage by rememberUpdatedState { library: OssLibrary ->
-          openLibrary(handler, library)
-        }
-
-        val handleViewLicense by rememberUpdatedState { library: OssLibrary ->
-          openLicense(handler, library)
-        }
-
-        val handleDismissNavigationError by rememberUpdatedState {
-          vm.handleDismissFailedNavigation()
-        }
-
-        val handleDismiss by rememberUpdatedState { dismiss() }
-
         composeTheme(act) {
           AboutScreen(
               state = vm.state(),
-              onViewHomePage = handleViewHomePage,
-              onViewLicense = handleViewLicense,
-              onNavigationErrorDismissed = handleDismissNavigationError,
-              onClose = handleDismiss,
+              onViewHomePage = { handleViewHomePage(handler, it) },
+              onViewLicense = { handleViewLicense(handler, it) },
+              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
+              onClose = { dismiss() },
           )
         }
       }

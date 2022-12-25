@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.ui.billing.BillingViewState
+import com.pyamsoft.pydroid.arch.UiViewState
 
+/** Change Log UI state */
 @Stable
-internal class MutableBillingViewState internal constructor() : BillingViewState {
-  override var showUpsell by mutableStateOf(false)
+public interface ChangeLogViewState : UiViewState {
+
+  /** Can we show the changelog */
+  public val canShow: Boolean
 }

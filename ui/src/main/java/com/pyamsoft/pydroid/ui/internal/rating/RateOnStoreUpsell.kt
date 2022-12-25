@@ -14,37 +14,37 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog
+package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.widget.DismissableInterruptCard
+import com.pyamsoft.pydroid.ui.rating.RatingViewState
 
 @Composable
-internal fun ShowChangeLogScreen(
+internal fun RateOnStoreUpsell(
     modifier: Modifier = Modifier,
-    state: ChangeLogViewState,
-    onShowChangeLog: () -> Unit,
+    state: RatingViewState,
+    onOpenStore: () -> Unit,
     onDismiss: () -> Unit,
 ) {
   DismissableInterruptCard(
       modifier = modifier,
-      show = state.canShow,
-      text = "You've updated to the latest version! Thanks!",
-      buttonText = "View Changes",
-      onButtonClicked = onShowChangeLog,
+      show = state.showUpsell,
+      text = "Rate Application",
+      buttonText = "Rate on Store",
       onDismiss = onDismiss,
+      onButtonClicked = onOpenStore,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewShowChangeLogScreen() {
-  ShowChangeLogScreen(
-      state = MutableChangeLogViewState().apply { canShow = true },
+private fun PreviewRateOnStoreUpsell() {
+  RateOnStoreUpsell(
+      state = MutableRatingViewState().apply { showUpsell = true },
       onDismiss = {},
-      onShowChangeLog = {},
+      onOpenStore = {},
   )
 }

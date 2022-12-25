@@ -134,6 +134,9 @@ including outside of an Application class.
 
       /** Should we try to show the rating dialog? (Not always guaranteed) */
       internal val tryShowInAppRating: Boolean = false,
+
+      /** Should we try to show the rate on store upsell */
+      internal val showRatingUpsell: Boolean = false,
   )
 
   /** Base parameters for PYDroid */

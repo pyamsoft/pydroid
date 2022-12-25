@@ -14,38 +14,41 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.billing.BillingUpsell
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.ui.rating.RateOnStore
 
-internal interface BillingComponent {
+internal interface RatingComponent {
 
-  fun inject(component: BillingUpsell)
+  fun inject(component: RateOnStore)
 
   interface Factory {
 
-    @CheckResult fun create(): BillingComponent
+    @CheckResult fun create(): RatingComponent
 
     data class Parameters
     internal constructor(
-        internal val preferences: BillingPreferences,
-        internal val state: MutableBillingViewState,
-        internal val isFakeBillingUpsell: Boolean,
+        internal val preferences: RatingPreferences,
+        internal val state: MutableRatingViewState,
+        internal val ratingModule: RatingModule,
+        internal val isFakeRatingUpsell: Boolean,
     )
   }
 
   class Impl
   private constructor(
       private val params: Factory.Parameters,
-  ) : BillingComponent {
+  ) : RatingComponent {
 
-    override fun inject(component: BillingUpsell) {
+    override fun inject(component: RateOnStore) {
       component.viewModel =
-          BillingViewModeler(
+          RatingViewModeler(
               preferences = params.preferences,
               state = params.state,
-              isFakeUpsell = params.isFakeBillingUpsell,
+              isFakeUpsell = params.isFakeRatingUpsell,
+              interactor = params.ratingModule.provideInteractor(),
           )
     }
 
@@ -54,7 +57,7 @@ internal interface BillingComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(): BillingComponent {
+      override fun create(): RatingComponent {
         return Impl(params)
       }
     }

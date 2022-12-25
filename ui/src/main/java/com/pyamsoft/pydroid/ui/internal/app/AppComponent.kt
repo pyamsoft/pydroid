@@ -30,10 +30,10 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
-import com.pyamsoft.pydroid.ui.internal.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
@@ -44,7 +44,9 @@ import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityComponents
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
+import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
+import com.pyamsoft.pydroid.ui.internal.rating.RatingPreferences
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
@@ -66,6 +68,8 @@ internal interface AppComponent {
 
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
+  @CheckResult fun plusRating(): RatingComponent.Factory
+
   @CheckResult fun plusChangeLog(): ChangeLogComponent.Factory
 
   @CheckResult fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
@@ -82,7 +86,8 @@ internal interface AppComponent {
 
     data class Parameters
     internal constructor(
-        val billingPreferences: BillingPreferences,
+        internal val billingPreferences: BillingPreferences,
+        internal val ratingPreferences: RatingPreferences,
         internal val context: Context,
         internal val theming: Theming,
         internal val bugReportUrl: String,
@@ -107,6 +112,7 @@ internal interface AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
+    private val ratingState = MutableRatingViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
@@ -195,6 +201,14 @@ internal interface AppComponent {
             state = versionCheckState,
         )
 
+    private val ratingParams =
+        RatingComponent.Factory.Parameters(
+            preferences = params.ratingPreferences,
+            state = ratingState,
+            isFakeRatingUpsell = params.debug.showRatingUpsell,
+            ratingModule = ratingModule,
+        )
+
     private fun connectBilling(activity: FragmentActivity) {
       if (options.disableBilling) {
         Logger.w("Application has disabled the billing component")
@@ -211,8 +225,10 @@ internal interface AppComponent {
               activity,
               viewModel =
                   RatingViewModeler(
-                      state = MutableRatingViewState(),
+                      state = ratingState,
                       interactor = ratingModule.provideInteractor(),
+                      preferences = params.ratingPreferences,
+                      isFakeUpsell = params.debug.showRatingUpsell,
                   ),
               disabled = options.disableRating,
           )
@@ -299,6 +315,10 @@ internal interface AppComponent {
 
     override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
+    }
+
+    override fun plusRating(): RatingComponent.Factory {
+      return RatingComponent.Impl.FactoryImpl(ratingParams)
     }
 
     class FactoryImpl

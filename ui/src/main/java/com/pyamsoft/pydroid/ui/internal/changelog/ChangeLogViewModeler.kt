@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

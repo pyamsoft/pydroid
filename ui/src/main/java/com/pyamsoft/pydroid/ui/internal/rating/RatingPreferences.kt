@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.ui.billing.BillingViewState
+import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
-@Stable
-internal class MutableBillingViewState internal constructor() : BillingViewState {
-  override var showUpsell by mutableStateOf(false)
+/** Preferences for rating */
+internal interface RatingPreferences {
+
+  /** Should we show a Rating upsell */
+  @CheckResult suspend fun listenForUpsellChanges(): Flow<Boolean>
+
+  /** Show the upsell if we have hit the "minimum" shown count */
+  suspend fun maybeShowUpsell()
 }

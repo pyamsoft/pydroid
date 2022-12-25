@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.billing
+package com.pyamsoft.pydroid.ui.billing
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
@@ -28,6 +28,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
+import com.pyamsoft.pydroid.ui.internal.billing.ShowBillingUpsell
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.doOnCreate

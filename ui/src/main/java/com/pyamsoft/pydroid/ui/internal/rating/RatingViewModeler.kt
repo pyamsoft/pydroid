@@ -22,25 +22,57 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.ui.rating.RatingViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class RatingViewModeler
 internal constructor(
     private val state: MutableRatingViewState,
+    private val preferences: RatingPreferences,
     interactor: RatingInteractor,
+    private val isFakeUpsell: Boolean,
 ) : AbstractViewModeler<RatingViewState>(state) {
 
   private val loadRunner =
       highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
+
+  internal fun bind(scope: CoroutineScope) {
+    val s = state
+    scope.launch(context = Dispatchers.Main) {
+      preferences.listenForUpsellChanges().collectLatest { show ->
+        if (show) {
+          Logger.d("Showing Rating upsell")
+          s.showUpsell = true
+        }
+      }
+    }
+
+    if (isFakeUpsell) {
+      scope.launch(context = Dispatchers.Main) {
+        Logger.d("Fake a Rating upsell, force show")
+        s.showUpsell = true
+      }
+    }
+  }
+
+  internal fun handleDismissUpsell() {
+    Logger.d("Temporary dismissing Rating upsell")
+    state.showUpsell = false
+  }
+
+  internal fun handleMaybeShowUpsell(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) { preferences.maybeShowUpsell() }
+  }
 
   internal fun loadInAppRating(
       scope: CoroutineScope,
       onLaunchInAppRating: (AppRatingLauncher) -> Unit
   ) {
     val s = state
-    if (s.isRatingAlreadyShown) {
+    if (s.isInAppRatingShown) {
       return
     }
 
@@ -48,7 +80,7 @@ internal constructor(
       loadRunner
           .call()
           .onSuccess { Logger.d("Launch in-app rating: $it") }
-          .onSuccess { s.isRatingAlreadyShown = true }
+          .onSuccess { s.isInAppRatingShown = true }
           .onSuccess { onLaunchInAppRating(it) }
           .onFailure { Logger.e(it, "Unable to launch in-app rating") }
     }

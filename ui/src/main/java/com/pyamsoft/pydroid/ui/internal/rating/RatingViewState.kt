@@ -20,14 +20,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.arch.UiViewState
-
-@Stable
-internal interface RatingViewState : UiViewState {
-  val isRatingAlreadyShown: Boolean
-}
+import com.pyamsoft.pydroid.ui.rating.RatingViewState
 
 @Stable
 internal class MutableRatingViewState internal constructor() : RatingViewState {
-  override var isRatingAlreadyShown by mutableStateOf(false)
+  override var isInAppRatingShown by mutableStateOf(false)
+  override var showUpsell by mutableStateOf(false)
 }

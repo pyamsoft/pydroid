@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
@@ -117,13 +118,18 @@ private fun rememberDarkThemePreference(
   val values = stringArrayResource(R.array.dark_mode_values_v1)
   val rawValue = remember(darkMode) { darkMode.toRawString() }
 
+  // Don't use by so we can memoize
+  val handlePreferencesSelected = rememberUpdatedState { _: String, value: String ->
+    onChange(value.toThemingMode())
+  }
+
   return remember(
       name,
       summary,
       names,
       values,
       rawValue,
-      onChange,
+      handlePreferencesSelected,
   ) {
     listPreference(
         name = name,
@@ -131,7 +137,7 @@ private fun rememberDarkThemePreference(
         icon = Icons.Outlined.Visibility,
         value = rawValue,
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
-        onPreferenceSelected = { _, value -> onChange(value.toThemingMode()) },
+        onPreferenceSelected = handlePreferencesSelected.value,
     )
   }
 }

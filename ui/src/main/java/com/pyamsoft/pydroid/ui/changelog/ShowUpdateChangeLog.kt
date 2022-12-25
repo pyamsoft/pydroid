@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.ui.changelog
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -101,13 +103,18 @@ internal constructor(
 
     val vm = viewModel.requireNotNull()
     val state = vm.state()
+
+    val handleShow by rememberUpdatedState {
+      vm.handleDismiss()
+      ChangeLogDialog.show(hostingActivity.requireNotNull())
+    }
+
+    val handleDismiss by rememberUpdatedState { vm.handleDismiss() }
+
     content(
         state = state,
-        onShow = {
-          vm.handleDismiss()
-          ChangeLogDialog.show(activity = hostingActivity.requireNotNull())
-        },
-        onDismiss = { vm.handleDismiss() },
+        onShow = handleShow,
+        onDismiss = handleDismiss,
     )
   }
 

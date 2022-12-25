@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.pydroid
 
+import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
-import com.pyamsoft.pydroid.ui.internal.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate

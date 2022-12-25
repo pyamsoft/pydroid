@@ -25,5 +25,4 @@ import com.pyamsoft.pydroid.ui.rating.RatingViewState
 @Stable
 internal class MutableRatingViewState internal constructor() : RatingViewState {
   override var isInAppRatingShown by mutableStateOf(false)
-  override var showUpsell by mutableStateOf(false)
 }

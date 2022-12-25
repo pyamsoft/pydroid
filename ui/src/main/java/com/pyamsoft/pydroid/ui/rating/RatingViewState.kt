@@ -24,7 +24,4 @@ public interface RatingViewState : UiViewState {
 
   /** Have we already attempted to show in-app rating */
   public val isInAppRatingShown: Boolean
-
-  /** Showing upsell */
-  public val showUpsell: Boolean
 }

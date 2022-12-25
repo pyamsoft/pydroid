@@ -34,7 +34,7 @@ internal constructor(
   internal fun bind(scope: CoroutineScope) {
     val s = state
     scope.launch(context = Dispatchers.Main) {
-      preferences.listenForUpsellChanges().collectLatest { show ->
+      preferences.listenForBillingUpsellChanges().collectLatest { show ->
         if (show) {
           Logger.d("Showing Billing upsell")
           s.showUpsell = true
@@ -56,6 +56,6 @@ internal constructor(
   }
 
   internal fun handleMaybeShowUpsell(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) { preferences.maybeShowUpsell() }
+    scope.launch(context = Dispatchers.Main) { preferences.maybeShowBillingUpsell() }
   }
 }

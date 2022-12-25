@@ -52,45 +52,60 @@ internal constructor(
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
-  override suspend fun listenForUpsellChanges(): Flow<Boolean> =
+  private suspend fun listenForThreshold(
+      key: String,
+      defaultValue: Int,
+      threshold: Int,
+  ): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        val countFlow =
-            prefs.intFlow(
-                KEY_BILLING_SHOW_UPSELL_COUNT,
-                DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-            )
+        val countFlow = prefs.intFlow(key, defaultValue)
 
         return@withContext countFlow
-            .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
+            .map { it >= threshold }
             .onEach { show ->
               // Once the threshold has been tripped, set it back
               if (show) {
-                Logger.d("Reset billing show count!")
-                prefs.edit {
-                  putInt(
-                      KEY_BILLING_SHOW_UPSELL_COUNT,
-                      DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-                  )
-                }
+                prefs.edit { putInt(key, defaultValue) }
               }
             }
       }
 
-  override suspend fun maybeShowUpsell() =
+  private suspend fun incrementToThreshold(
+      key: String,
+      defaultValue: Int,
+      threshold: Int,
+  ) =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        val currentCount =
-            prefs.getInt(
-                KEY_BILLING_SHOW_UPSELL_COUNT,
-                DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-            )
-
-        if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
-          prefs.edit { putInt(KEY_BILLING_SHOW_UPSELL_COUNT, currentCount + 1) }
+        val currentCount = prefs.getInt(key, defaultValue)
+        if (currentCount < threshold) {
+          prefs.edit { putInt(key, currentCount + 1) }
         }
+      }
+
+  override suspend fun listenForBillingUpsellChanges(): Flow<Boolean> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext listenForThreshold(
+            KEY_BILLING_SHOW_UPSELL_COUNT,
+            DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+            VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
+        )
+      }
+
+  override suspend fun maybeShowBillingUpsell() =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        incrementToThreshold(
+            KEY_BILLING_SHOW_UPSELL_COUNT,
+            DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+            VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
+        )
       }
 
   override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =
@@ -174,5 +189,9 @@ internal constructor(
     private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
     private const val KEY_BILLING_SHOW_UPSELL_COUNT = "billing_show_upsell_v1"
     private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 10
+
+    private const val DEFAULT_RATING_SHOW_UPSELL_COUNT = 0
+    private const val KEY_RATING_SHOW_UPSELL_COUNT = "rating_show_upsell_v1"
+    private const val VALUE_RATING_SHOW_UPSELL_THRESHOLD = 7
   }
 }

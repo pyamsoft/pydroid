@@ -22,10 +22,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
+import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress

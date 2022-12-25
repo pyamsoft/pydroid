@@ -42,7 +42,10 @@ internal fun VersionUpdateProgressScreen(
   val validProgress = remember(progress) { if (progress.isNaN()) 0F else progress }
 
   val isVisible =
-      remember(isUpgradeReady, validProgress) {
+      remember(
+          isUpgradeReady,
+          validProgress,
+      ) {
         !isUpgradeReady && validProgress > 0 && validProgress <= 1
       }
 

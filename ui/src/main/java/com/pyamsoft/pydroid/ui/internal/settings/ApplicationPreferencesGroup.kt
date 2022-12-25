@@ -148,16 +148,19 @@ private fun rememberLicensesPreference(
   val name = stringResource(R.string.about_license_title)
   val summary = stringResource(R.string.about_license_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.LibraryBooks,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }
@@ -170,16 +173,19 @@ private fun rememberUpdatePreference(
   val name = stringResource(R.string.check_version_title)
   val summary = stringResource(R.string.check_version_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Download,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }
@@ -192,16 +198,19 @@ private fun rememberChangeLogPreference(
   val name = stringResource(R.string.upgrade_info_title)
   val summary = stringResource(R.string.upgrade_info_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Whatshot,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }

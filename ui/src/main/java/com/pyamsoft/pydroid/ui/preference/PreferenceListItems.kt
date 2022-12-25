@@ -225,7 +225,13 @@ internal fun ListPreferenceItem(
                 val name = current.first
                 val value = current.second
 
-                val isSelected = remember(value, currentValue) { value == currentValue }
+                val isSelected =
+                    remember(
+                        value,
+                        currentValue,
+                    ) {
+                      value == currentValue
+                    }
 
                 val onEntrySelected by rememberUpdatedState {
                   onPreferenceSelected(name, value)

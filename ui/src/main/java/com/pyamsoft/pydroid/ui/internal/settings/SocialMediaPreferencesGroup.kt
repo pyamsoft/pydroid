@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.preference.Preferences
@@ -52,7 +53,10 @@ internal fun rememberSocialMediaPreferencesGroup(
       }
 
   val title = stringResource(R.string.follow_pyamsoft_around_the_web)
-  return remember(title, preferences) {
+  return remember(
+      title,
+      preferences,
+  ) {
     preferenceGroup(
         name = title,
         preferences = preferences,
@@ -68,15 +72,18 @@ private fun rememberSocialMediaPreference(
   val name = stringResource(R.string.social_media_f_title)
   val summary = stringResource(R.string.social_media_f_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }
@@ -89,15 +96,18 @@ private fun rememberBlogPreference(
   val name = stringResource(R.string.social_media_b_title)
   val summary = stringResource(R.string.social_media_b_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }

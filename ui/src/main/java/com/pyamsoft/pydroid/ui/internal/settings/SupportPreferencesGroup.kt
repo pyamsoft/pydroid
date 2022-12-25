@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -86,16 +87,20 @@ private fun rememberRatePreference(
     onClick: () -> Unit
 ): Preferences.Item {
   val summary = stringResource(R.string.rating_summary)
+
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       applicationName,
       summary,
-      onClick,
+      handleClick,
   ) {
     preference(
         name = "Rate $applicationName",
         summary = summary,
         icon = Icons.Outlined.Star,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }
@@ -108,16 +113,19 @@ private fun rememberDonatePreference(
   val name = stringResource(R.string.donate_title)
   val summary = stringResource(R.string.donate_summary)
 
+  // Don't use by so we can memoize
+  val handleClick = rememberUpdatedState(onClick)
+
   return remember(
       name,
       summary,
-      onClick,
+      handleClick,
   ) {
     inAppPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Redeem,
-        onClick = onClick,
+        onClick = handleClick.value,
     )
   }
 }

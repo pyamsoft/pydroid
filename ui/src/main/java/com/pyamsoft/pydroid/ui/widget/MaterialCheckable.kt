@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +50,9 @@ import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMateria
 public fun <T : Any> rememberMaterialCheckableHeightMatcherGenerator(): HeightMatcherGenerator<T> {
   val (heights, setHeights) = remember { mutableStateOf(emptyMap<T, Int>()) }
 
+  // Don't use by so we can memoize
+  val handleSetHeight = rememberUpdatedState(setHeights)
+
   // Figure out which is the largest and size all other to match
   val largest =
       remember(heights) {
@@ -75,11 +79,12 @@ public fun <T : Any> rememberMaterialCheckableHeightMatcherGenerator(): HeightMa
       density,
       largest,
       heights,
-      setHeights,
+      handleSetHeight,
   ) {
     HeightMatcherGeneratorImpl(
         gapHeightGenerator = createGapHeightGenerator(density, largest, heights),
-        onSizeChangedModifierGenerator = createOnSizeChangedModifierGenerator(heights, setHeights),
+        onSizeChangedModifierGenerator =
+            createOnSizeChangedModifierGenerator(heights, handleSetHeight.value),
     )
   }
 }

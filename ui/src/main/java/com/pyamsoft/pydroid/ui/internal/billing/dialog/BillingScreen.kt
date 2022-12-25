@@ -61,7 +61,13 @@ internal fun BillingScreen(
   // Remember computed value
   val isLoading = remember(connected) { connected == BillingState.LOADING }
   val isConnected = remember(connected) { connected == BillingState.CONNECTED }
-  val isError = remember(isConnected, skuList) { skuList.isEmpty() || !isConnected }
+  val isError =
+      remember(
+          isConnected,
+          skuList,
+      ) {
+        skuList.isEmpty() || !isConnected
+      }
 
   AppHeaderDialog(
       modifier = modifier.fillMaxWidth(),

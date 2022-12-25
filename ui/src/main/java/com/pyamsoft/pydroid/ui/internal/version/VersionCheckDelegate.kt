@@ -70,13 +70,6 @@ internal class VersionCheckDelegate(
     }
   }
 
-  /** Returns the view state to be rendered */
-  @Composable
-  @CheckResult
-  internal fun state(): VersionCheckViewState {
-    return versionViewModel.requireNotNull().state()
-  }
-
   private fun handleConfirmUpgrade(
       vm: VersionCheckViewModeler,
       act: FragmentActivity,
@@ -91,26 +84,11 @@ internal class VersionCheckDelegate(
     }
   }
 
-  /** Attempt to confirm an upgrade if one is possible */
-  fun handleConfirmUpgrade() {
-    if (disabled) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    val vm = versionViewModel
-    if (vm == null) {
-      Logger.w("Cannot confirm upgrade with null ViewModel")
-      return
-    }
-
-    val act = hostingActivity
-    if (act == null) {
-      Logger.w("Cannot confirm upgrade with null Activity")
-      return
-    }
-
-    handleConfirmUpgrade(vm, act)
+  /** Returns the view state to be rendered */
+  @Composable
+  @CheckResult
+  internal fun state(): VersionCheckViewState {
+    return versionViewModel.requireNotNull().state()
   }
 
   /** Check for in-app updates */

@@ -145,13 +145,6 @@ internal constructor(
         .loadInAppRating()
   }
 
-  /** Confirm the potential version upgrade */
-  override fun confirmUpgrade() {
-    versionCheckDelegate
-        .requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
-        .handleConfirmUpgrade()
-  }
-
   /** Check for in-app updates */
   override fun checkUpdates() {
     versionCheckDelegate

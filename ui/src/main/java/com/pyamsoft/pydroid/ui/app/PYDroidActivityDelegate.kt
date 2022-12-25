@@ -24,9 +24,6 @@ public interface PYDroidActivityDelegate {
    */
   public fun loadInAppRating()
 
-  /** Confirm the potential version upgrade */
-  public fun confirmUpgrade()
-
   /** Check for in-app updates */
   public fun checkUpdates()
 }

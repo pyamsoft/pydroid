@@ -50,9 +50,10 @@ internal constructor(
     }
   }
 
-  internal fun handleDismissUpsell() {
-    Logger.d("Temporary dismissing Billing upsell")
+  internal fun handleDismissUpsell(scope: CoroutineScope) {
+    Logger.d("Dismissing Billing upsell")
     state.showUpsell = false
+    scope.launch(context = Dispatchers.Main) { preferences.resetBillingShown() }
   }
 
   internal fun handleMaybeShowUpsell(scope: CoroutineScope) {

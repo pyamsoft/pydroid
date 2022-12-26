@@ -27,4 +27,7 @@ internal interface BillingPreferences {
 
   /** Show the upsell if we have hit the "minimum" shown count */
   suspend fun maybeShowBillingUpsell()
+
+  /** Reset the billing upsell once it is shown */
+  suspend fun resetBillingShown()
 }

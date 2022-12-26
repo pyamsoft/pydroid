@@ -104,7 +104,11 @@ internal constructor(
       return
     }
 
-    viewModel.requireNotNull().handleDismissUpsell()
+    viewModel
+        .requireNotNull()
+        .handleDismissUpsell(
+            scope = hostingActivity.requireNotNull().lifecycleScope,
+        )
   }
 
   /**
@@ -126,10 +130,10 @@ internal constructor(
     content(
         state = state,
         onShow = {
-          vm.handleDismissUpsell()
+          dismissUpsell()
           BillingDialog.show(hostingActivity.requireNotNull())
         },
-        onDismiss = { vm.handleDismissUpsell() },
+        onDismiss = { dismissUpsell() },
     )
   }
 

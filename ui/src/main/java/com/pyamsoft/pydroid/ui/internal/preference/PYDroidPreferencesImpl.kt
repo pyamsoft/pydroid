@@ -62,14 +62,7 @@ internal constructor(
 
         val countFlow = prefs.intFlow(key, defaultValue)
 
-        return@withContext countFlow
-            .map { it >= threshold }
-            .onEach { show ->
-              // Once the threshold has been tripped, set it back
-              if (show) {
-                prefs.edit { putInt(key, defaultValue) }
-              }
-            }
+        return@withContext countFlow.map { it >= threshold }
       }
 
   private suspend fun incrementToThreshold(
@@ -106,6 +99,18 @@ internal constructor(
             DEFAULT_BILLING_SHOW_UPSELL_COUNT,
             VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
         )
+      }
+
+  override suspend fun resetBillingShown() =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        prefs.edit {
+          putInt(
+              KEY_BILLING_SHOW_UPSELL_COUNT,
+              DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+          )
+        }
       }
 
   override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =

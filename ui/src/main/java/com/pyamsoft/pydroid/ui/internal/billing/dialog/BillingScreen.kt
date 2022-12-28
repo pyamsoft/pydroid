@@ -126,7 +126,9 @@ internal fun BillingScreen(
       }
     }
 
-    item {
+    dialogItem(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       BillingError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,

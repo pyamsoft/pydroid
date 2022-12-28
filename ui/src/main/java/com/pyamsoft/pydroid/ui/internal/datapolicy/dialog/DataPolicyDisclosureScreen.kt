@@ -97,7 +97,9 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    item {
+    dialogItem(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       NavigationError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,

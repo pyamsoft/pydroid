@@ -87,11 +87,6 @@ public abstract class PYDroidActivity :
     delegate.requireNotNull().loadInAppRating()
   }
 
-  /** Confirm the potential version upgrade */
-  override fun confirmUpgrade() {
-    delegate.requireNotNull().confirmUpgrade()
-  }
-
   /** Check for in-app updates */
   override fun checkUpdates() {
     delegate.requireNotNull().checkUpdates()

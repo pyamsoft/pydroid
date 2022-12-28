@@ -161,7 +161,7 @@ private fun Actions(
           colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.error),
       ) {
         Text(
-            text = "Restart",
+            text = "Upgrade",
         )
       }
     }

@@ -90,21 +90,21 @@ internal fun DataPolicyDisclosureScreen(
     dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
-      Actions(
+      NavigationError(
           modifier = Modifier.fillMaxWidth(),
-          onAccept = onAccept,
-          onReject = onReject,
+          snackbarHostState = snackbarHostState,
+          error = state.navigationError,
+          onSnackbarDismissed = onNavigationErrorDismissed,
       )
     }
 
     dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
-      NavigationError(
+      Actions(
           modifier = Modifier.fillMaxWidth(),
-          snackbarHostState = snackbarHostState,
-          error = state.navigationError,
-          onSnackbarDismissed = onNavigationErrorDismissed,
+          onAccept = onAccept,
+          onReject = onReject,
       )
     }
   }

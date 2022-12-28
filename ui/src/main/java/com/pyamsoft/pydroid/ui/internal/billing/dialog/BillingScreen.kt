@@ -108,6 +108,17 @@ internal fun BillingScreen(
     dialogItem(
         modifier = Modifier.fillMaxWidth(),
     ) {
+      BillingError(
+          modifier = Modifier.fillMaxWidth(),
+          snackbarHostState = snackbarHostState,
+          error = state.error,
+          onSnackbarDismissed = onBillingErrorDismissed,
+      )
+    }
+
+    dialogItem(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
       Row(
           modifier =
               Modifier.padding(horizontal = MaterialTheme.keylines.content)
@@ -124,17 +135,6 @@ internal fun BillingScreen(
           )
         }
       }
-    }
-
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-      BillingError(
-          modifier = Modifier.fillMaxWidth(),
-          snackbarHostState = snackbarHostState,
-          error = state.error,
-          onSnackbarDismissed = onBillingErrorDismissed,
-      )
     }
   }
 }

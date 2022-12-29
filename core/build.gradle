@@ -26,9 +26,9 @@ dependencies {
   // Expose annotations
   api "androidx.annotation:annotation:$annotation"
 
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
   // Expose coroutines
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+
+  // Kotlin
+  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

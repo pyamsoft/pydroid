@@ -223,8 +223,7 @@ internal fun ListPreferenceItem(
               modifier =
                   Modifier.fillMaxWidth()
                       .heightIn(
-                          min = screenHeight / 4,
-                          max = screenHeight,
+                          min = screenHeight / 3,
                       ),
               elevation = DialogDefaults.Elevation,
               shape = MaterialTheme.shapes.medium,
@@ -232,14 +231,20 @@ internal fun ListPreferenceItem(
             val items = remember(entries) { entries.toList() }
 
             LazyColumn {
-              dialogItem {
+              dialogItem(
+                  modifier = Modifier.fillMaxWidth(),
+              ) {
                 Text(
+                    modifier = Modifier.padding(MaterialTheme.keylines.content),
                     text = title,
                     style = MaterialTheme.typography.h6,
                 )
               }
+
               for (item in items) {
-                dialogItem {
+                dialogItem(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
                   val name = item.first
                   val value = item.second
 
@@ -271,7 +276,9 @@ internal fun ListPreferenceItem(
                       verticalAlignment = Alignment.CenterVertically,
                   ) {
                     RadioButton(
-                        modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+                        modifier =
+                            Modifier.padding(start = MaterialTheme.keylines.content)
+                                .padding(end = MaterialTheme.keylines.baseline),
                         selected = isSelected,
                         onClick = {
                           if (!isSelected) {
@@ -280,6 +287,7 @@ internal fun ListPreferenceItem(
                         },
                     )
                     Text(
+                        modifier = Modifier.padding(end = MaterialTheme.keylines.content),
                         text = name,
                         style = MaterialTheme.typography.body1,
                     )
@@ -289,13 +297,14 @@ internal fun ListPreferenceItem(
 
               dialogItem {
                 Row(
-                    modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                   Spacer(
                       modifier = Modifier.weight(1F),
                   )
 
                   TextButton(
+                      modifier = Modifier.padding(MaterialTheme.keylines.content),
                       onClick = onDismiss,
                   ) {
                     Text(

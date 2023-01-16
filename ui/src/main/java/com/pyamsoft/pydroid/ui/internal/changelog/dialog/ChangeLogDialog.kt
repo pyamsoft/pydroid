@@ -117,8 +117,7 @@ internal fun ChangeLogDialog(
           modifier =
               Modifier.fillMaxWidth()
                   .heightIn(
-                      min = screenHeight / 4,
-                      max = screenHeight,
+                      min = screenHeight / 2,
                   ),
           state = viewModel.state(),
           imageLoader = imageLoader,

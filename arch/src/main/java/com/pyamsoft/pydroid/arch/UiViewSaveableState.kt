@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.arch
 
 /** A Saveable ViewState */
+@Deprecated("Start migrating over to StateSaver.registerSaveState")
 public interface UiViewSaveableState {
 
   /** Save state into a writer */

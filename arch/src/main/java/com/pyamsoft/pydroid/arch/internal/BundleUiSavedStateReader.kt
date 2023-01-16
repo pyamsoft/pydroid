@@ -20,6 +20,7 @@ import android.os.Bundle
 import com.pyamsoft.pydroid.arch.UiSavedStateReader
 
 /** Bundle backed implementation of a UiSavedStateReader */
+@Deprecated("Start migrating over to consumeRestoredState")
 @PublishedApi
 internal class BundleUiSavedStateReader
 @PublishedApi

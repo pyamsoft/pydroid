@@ -21,6 +21,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
 
 /** Abstraction over restoring data from save-restore lifecycle */
+@Deprecated("Start migrating over to consumeRestoredState")
 public interface UiSavedStateReader {
 
   /** Get a saved value at key, null if not present */
@@ -32,6 +33,7 @@ public interface UiSavedStateReader {
 
 /** Convenience function for converting a nullable Bundle into a SavedStateReader */
 @CheckResult
+@Deprecated("Start migrating over to consumeRestoredState")
 public fun Bundle?.toReader(): UiSavedStateReader {
   return BundleUiSavedStateReader(this)
 }

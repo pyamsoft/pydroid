@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import java.io.Serializable
 
 /** Bundle backed implementation of a UiSavedStateReader */
+@Deprecated("Start migrating over to registerSaveState")
 @PublishedApi
 internal class BundleUiSavedStateWriter
 @PublishedApi

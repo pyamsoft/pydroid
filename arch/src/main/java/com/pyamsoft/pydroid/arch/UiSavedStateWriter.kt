@@ -21,6 +21,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 
 /** Abstraction over saving data into the save-restore lifecycle */
+@Deprecated("Start migrating over to registerSaveState")
 public interface UiSavedStateWriter {
 
   /** Save a value at key */
@@ -32,6 +33,7 @@ public interface UiSavedStateWriter {
 
 /** Convenience function for converting a Bundle into a SavedStateWriter */
 @CheckResult
+@Deprecated("Start migrating over to registerSaveState")
 public fun Bundle.toWriter(): UiSavedStateWriter {
   return BundleUiSavedStateWriter(this)
 }

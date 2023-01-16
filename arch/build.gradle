@@ -34,6 +34,7 @@ dependencies {
   // Compose
   implementation "androidx.compose.compiler:compiler:$compose_compiler_version"
   implementation "androidx.compose.runtime:runtime:$compose_version"
+  implementation "androidx.compose.runtime:runtime-saveable:$compose_version"
 
   api project(':bus')
   api project(':util')

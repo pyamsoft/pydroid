@@ -17,13 +17,20 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.annotation.CheckResult
+import androidx.compose.runtime.saveable.SaveableStateRegistry
 
 /** An interface which can save the state of an object into a Bundle */
 public interface StateSaver {
 
   /** Save the state of the object into the given Bundle */
-  public fun saveState(outState: Bundle)
+  @Deprecated("Start migrating over to registerSaveState") public fun saveState(outState: Bundle)
 
   /** Save the state of the object into the given UiSavedStateWriter */
+  @Deprecated("Start migrating over to registerSaveState")
   public fun saveState(outState: UiSavedStateWriter)
+
+  /** Given a registry, we register key value providers for various entries to be saved */
+  @CheckResult
+  public fun registerSaveState(registry: SaveableStateRegistry): List<SaveableStateRegistry.Entry>
 }

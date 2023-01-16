@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.arch
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
+import com.pyamsoft.pydroid.arch.ViewModeler
 
-/** Connect a [ComposableViewModeler] to the local saved state registry for save/restore hooks */
+/** Connect a [ViewModeler] to the local saved state registry for save/restore hooks */
 @Composable
-public fun SaveStateDisposableEffect(viewModeler: ComposableViewModeler) {
+public fun SaveStateDisposableEffect(viewModeler: ViewModeler<*>) {
   // Attach to save state registry
   val registry = LocalSaveableStateRegistry.current
   if (registry != null) {
-    DisposableEffect(registry) {
+    DisposableEffect(
+        viewModeler,
+        registry,
+    ) {
       viewModeler.consumeRestoredState(registry)
 
       val entries = viewModeler.registerSaveState(registry)

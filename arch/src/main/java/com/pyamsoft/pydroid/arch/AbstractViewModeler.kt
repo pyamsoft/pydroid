@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.SaveableStateRegistry
 
 /**
  * A base class ViewModeler which implements a simple Render function and can handle saving state
@@ -40,15 +41,31 @@ protected constructor(
     content(state)
   }
 
+  @Deprecated("Start migrating over to registerSaveState")
   final override fun saveState(outState: Bundle) {
     super.saveState(outState)
   }
 
+  @Deprecated("Start migrating over to registerSaveState")
   override fun saveState(outState: UiSavedStateWriter) {}
 
+  @Deprecated("Start migrating over to consumeRestoredState")
   final override fun restoreState(savedInstanceState: Bundle?) {
     super.restoreState(savedInstanceState)
   }
 
+  @Deprecated("Start migrating over to consumeRestoredState")
   override fun restoreState(savedInstanceState: UiSavedStateReader) {}
+
+  override fun consumeRestoredState(registry: SaveableStateRegistry) {}
+
+  override fun registerSaveState(
+      registry: SaveableStateRegistry
+  ): List<SaveableStateRegistry.Entry> {
+    return DEFAULT_EMPTY_REGISTRY_ENTRIES
+  }
+
+  public companion object {
+    private val DEFAULT_EMPTY_REGISTRY_ENTRIES = emptyList<SaveableStateRegistry.Entry>()
+  }
 }

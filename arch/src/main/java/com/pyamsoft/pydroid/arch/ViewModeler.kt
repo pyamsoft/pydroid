@@ -60,12 +60,14 @@ public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
   /** Get the current state */
   @Composable @CheckResult public fun state(): S
 
-  /** Save state to a bunudle */
+  /** Save state to a bundle */
+  @Deprecated("Start migrating over to registerSaveState")
   override fun saveState(outState: Bundle) {
     saveState(outState = outState.toWriter())
   }
 
   /** Restore state from a bundle */
+  @Deprecated("Start migrating over to consumeRestoredState")
   override fun restoreState(savedInstanceState: Bundle?) {
     restoreState(savedInstanceState = savedInstanceState.toReader())
   }

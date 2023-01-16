@@ -17,13 +17,19 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.compose.runtime.saveable.SaveableStateRegistry
 
 /** An interface which can restore the state of an object from a Bundle */
 public interface StateRestorer {
 
   /** Restore the state of the object from the given Bundle */
+  @Deprecated("Start migrating over to consumeRestoredState")
   public fun restoreState(savedInstanceState: Bundle?)
 
   /** Restore the state of the object from the given UiSavedStateReader */
+  @Deprecated("Start migrating over to consumeRestoredState")
   public fun restoreState(savedInstanceState: UiSavedStateReader)
+
+  /** Given a registry, we restore values from our saved keys */
+  public fun consumeRestoredState(registry: SaveableStateRegistry)
 }

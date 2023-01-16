@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.widget
+package com.pyamsoft.pydroid.ui.internal.util
 
 import android.app.Activity
 import android.content.Context
@@ -22,6 +22,7 @@ import android.content.ContextWrapper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
@@ -42,9 +43,14 @@ private fun resolveActivity(context: Context): FragmentActivity {
 
 @Composable
 @CheckResult
-internal fun rememberPYDroidDelegate(context: Context): PYDroidActivityDelegateInternal {
-  return remember(context) {
-    val act = resolveActivity(context)
-    return@remember ObjectGraph.ActivityScope.retrieve(act)
-  }
+internal fun rememberActivity(): FragmentActivity {
+  val context = LocalContext.current
+  return remember(context) { resolveActivity(context) }
+}
+
+@Composable
+@CheckResult
+internal fun rememberPYDroidDelegate(): PYDroidActivityDelegateInternal {
+  val activity = rememberActivity()
+  return remember(activity) { ObjectGraph.ActivityScope.retrieve(activity) }
 }

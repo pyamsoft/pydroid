@@ -18,10 +18,9 @@ package com.pyamsoft.pydroid.ui.rating
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.internal.widget.rememberPYDroidDelegate
+import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
 /**
  * Attempts to show the Google In-App Rating Flow
@@ -41,7 +40,6 @@ public fun showInAppRatingFlow(activity: FragmentActivity) {
  */
 @Composable
 public fun LaunchShowInAppRatingFlow() {
-  val context = LocalContext.current
-  val pydroid = rememberPYDroidDelegate(context)
+  val pydroid = rememberPYDroidDelegate()
   LaunchedEffect(pydroid) { pydroid.loadInAppRating() }
 }

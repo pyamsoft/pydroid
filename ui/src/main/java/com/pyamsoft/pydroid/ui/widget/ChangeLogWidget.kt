@@ -19,9 +19,8 @@ package com.pyamsoft.pydroid.ui.widget
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import com.pyamsoft.pydroid.ui.internal.widget.rememberPYDroidDelegate
+import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
 /**
  * Shows the default UI for when an app has updated and has a changelog
@@ -39,8 +38,7 @@ public fun ShowChangeLogWidget(
     return
   }
 
-  val context = LocalContext.current
-  val delegate = rememberPYDroidDelegate(context)
+  val delegate = rememberPYDroidDelegate()
   val changeLog = remember(delegate) { delegate.changeLog() }
 
   changeLog.RenderChangeLogWidget(

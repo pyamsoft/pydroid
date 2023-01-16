@@ -22,8 +22,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -46,17 +46,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
-import com.pyamsoft.pydroid.ui.internal.app.AppDialog
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
-import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 
 @Composable
 internal fun SimplePreferenceItem(
@@ -208,108 +204,99 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = remember(configuration) { configuration.screenHeightDp.dp }
-
     Dialog(
         onDismissRequest = onDismiss,
     ) {
       Box(
-          modifier = modifier.padding(MaterialTheme.keylines.content).systemBarsPadding(),
+          modifier =
+              Modifier.fillMaxSize().padding(MaterialTheme.keylines.content).systemBarsPadding(),
           contentAlignment = Alignment.Center,
       ) {
-        AppDialog {
-          Surface(
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .heightIn(
-                          min = screenHeight / 3,
-                      ),
-              shape = MaterialTheme.shapes.medium,
-          ) {
-            val items = remember(entries) { entries.toList() }
+        Surface(
+            modifier = modifier.fillMaxWidth(),
+            elevation = DialogDefaults.Elevation,
+            shape = MaterialTheme.shapes.medium,
+        ) {
+          val items = remember(entries) { entries.toList() }
 
-            LazyColumn {
-              dialogItem(
-                  modifier = Modifier.fillMaxWidth(),
-              ) {
-                Text(
-                    modifier = Modifier.padding(MaterialTheme.keylines.content),
-                    text = title,
-                    style = MaterialTheme.typography.h6,
-                )
-              }
+          LazyColumn {
+            item {
+              Text(
+                  modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+                  text = title,
+                  style = MaterialTheme.typography.h6,
+              )
+            }
 
-              for (item in items) {
-                dialogItem(
-                    modifier = Modifier.fillMaxWidth(),
+            for (item in items) {
+              item {
+                val name = item.first
+                val value = item.second
+
+                val isSelected =
+                    remember(
+                        value,
+                        currentValue,
+                    ) {
+                      value == currentValue
+                    }
+
+                val onEntrySelected by rememberUpdatedState {
+                  onPreferenceSelected(name, value)
+                  onDismiss()
+                }
+
+                Row(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .selectable(
+                                selected = isSelected,
+                                onClick = {
+                                  if (!isSelected) {
+                                    onEntrySelected()
+                                  }
+                                },
+                            )
+                            .padding(
+                                horizontal = MaterialTheme.keylines.content,
+                                vertical = MaterialTheme.keylines.typography,
+                            ),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                  val name = item.first
-                  val value = item.second
-
-                  val isSelected =
-                      remember(
-                          value,
-                          currentValue,
-                      ) {
-                        value == currentValue
-                      }
-
-                  val onEntrySelected by rememberUpdatedState {
-                    onPreferenceSelected(name, value)
-                    onDismiss()
-                  }
-
-                  Row(
-                      modifier =
-                          Modifier.fillMaxWidth()
-                              .selectable(
-                                  selected = isSelected,
-                                  onClick = {
-                                    if (!isSelected) {
-                                      onEntrySelected()
-                                    }
-                                  },
-                              )
-                              .padding(vertical = MaterialTheme.keylines.typography),
-                      verticalAlignment = Alignment.CenterVertically,
-                  ) {
-                    RadioButton(
-                        modifier =
-                            Modifier.padding(start = MaterialTheme.keylines.content)
-                                .padding(end = MaterialTheme.keylines.baseline),
-                        selected = isSelected,
-                        onClick = {
-                          if (!isSelected) {
-                            onEntrySelected()
-                          }
-                        },
-                    )
-                    Text(
-                        modifier = Modifier.padding(end = MaterialTheme.keylines.content),
-                        text = name,
-                        style = MaterialTheme.typography.body1,
-                    )
-                  }
+                  RadioButton(
+                      modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+                      selected = isSelected,
+                      onClick = {
+                        if (!isSelected) {
+                          onEntrySelected()
+                        }
+                      },
+                  )
+                  Text(
+                      text = name,
+                      style = MaterialTheme.typography.body1,
+                  )
                 }
               }
+            }
 
-              dialogItem {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
+            item {
+              Row(
+                  modifier =
+                      Modifier.fillMaxWidth()
+                          .padding(horizontal = MaterialTheme.keylines.baseline)
+                          .padding(bottom = MaterialTheme.keylines.baseline),
+              ) {
+                Spacer(
+                    modifier = Modifier.weight(1F),
+                )
+
+                TextButton(
+                    onClick = onDismiss,
                 ) {
-                  Spacer(
-                      modifier = Modifier.weight(1F),
+                  Text(
+                      text = stringResource(R.string.close),
                   )
-
-                  TextButton(
-                      modifier = Modifier.padding(MaterialTheme.keylines.content),
-                      onClick = onDismiss,
-                  ) {
-                    Text(
-                        text = stringResource(R.string.close),
-                    )
-                  }
                 }
               }
             }

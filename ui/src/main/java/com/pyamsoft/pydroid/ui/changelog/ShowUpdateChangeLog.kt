@@ -105,7 +105,7 @@ internal constructor(
     val vm = viewModel.requireNotNull()
     val state = vm.state()
 
-    val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
 

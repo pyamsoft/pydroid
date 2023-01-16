@@ -1,7 +1,10 @@
 public abstract class com/pyamsoft/pydroid/arch/AbstractViewModeler : com/pyamsoft/pydroid/arch/ViewModeler {
 	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/arch/AbstractViewModeler$Companion;
 	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
 	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
+	public fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
 	public final fun restoreState (Landroid/os/Bundle;)V
 	public fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
 	public final fun saveState (Landroid/os/Bundle;)V
@@ -9,12 +12,21 @@ public abstract class com/pyamsoft/pydroid/arch/AbstractViewModeler : com/pyamso
 	public final fun state (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/arch/UiViewState;
 }
 
+public final class com/pyamsoft/pydroid/arch/AbstractViewModeler$Companion {
+}
+
+public final class com/pyamsoft/pydroid/arch/EffectsKt {
+	public static final fun SaveStateDisposableEffect (Lcom/pyamsoft/pydroid/arch/ViewModeler;Landroidx/compose/runtime/Composer;I)V
+}
+
 public abstract interface class com/pyamsoft/pydroid/arch/StateRestorer {
+	public abstract fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
 	public abstract fun restoreState (Landroid/os/Bundle;)V
 	public abstract fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
 }
 
 public abstract interface class com/pyamsoft/pydroid/arch/StateSaver {
+	public abstract fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
 	public abstract fun saveState (Landroid/os/Bundle;)V
 	public abstract fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
 }

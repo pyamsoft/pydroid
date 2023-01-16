@@ -228,7 +228,7 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+        val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
         val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
 

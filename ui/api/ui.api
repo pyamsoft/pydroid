@@ -119,15 +119,6 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class com/pyamsoft/pydroid/ui/arch/ComposableViewModeler {
-	public abstract fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
-	public abstract fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
-}
-
-public final class com/pyamsoft/pydroid/ui/arch/EffectsKt {
-	public static final fun SaveStateDisposableEffect (Lcom/pyamsoft/pydroid/ui/arch/ComposableViewModeler;Landroidx/compose/runtime/Composer;I)V
-}
-
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;
@@ -566,6 +557,10 @@ public final class com/pyamsoft/pydroid/ui/util/DialogFragmentKt {
 	public static final fun show (Landroidx/fragment/app/DialogFragment;Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)V
 }
 
+public final class com/pyamsoft/pydroid/ui/util/EffectsKt {
+	public static final fun LifecycleEffect (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
+}
+
 public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
 	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
 	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;ZLkotlin/jvm/functions/Function1;)V
@@ -582,6 +577,7 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
+	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/fragment/app/FragmentActivity;
 	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 }

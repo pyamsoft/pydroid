@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface ChangeLogDialogComponent {
 
-  fun inject(dialog: ChangeLogDialog)
+  fun inject(injector: ChangeLogDialogInjector)
 
   interface Factory {
 
@@ -45,10 +45,9 @@ internal interface ChangeLogDialogComponent {
       private val params: Factory.Parameters,
   ) : ChangeLogDialogComponent {
 
-    override fun inject(dialog: ChangeLogDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.imageLoader = params.imageLoader
-      dialog.viewModel =
+    override fun inject(injector: ChangeLogDialogInjector) {
+      injector.imageLoader = params.imageLoader
+      injector.viewModel =
           ChangeLogDialogViewModeler(
               state = MutableChangeLogDialogViewState(),
               interactor = params.changeLogModule.provideInteractor(),

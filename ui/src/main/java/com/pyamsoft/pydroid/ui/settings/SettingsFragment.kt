@@ -24,6 +24,10 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
@@ -224,6 +228,12 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
+        val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+
+        val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
+
+        val handleShowDialog by rememberUpdatedState { setShowDialog(true) }
+
         composeTheme(act) {
           SettingsScreen(
               elevation = customElevation(),
@@ -238,7 +248,7 @@ public abstract class SettingsFragment : Fragment() {
               onDarkModeChanged = { handleChangeDarkMode(it) },
               onLicensesClicked = { AboutDialog.show(act) },
               onCheckUpdateClicked = { handleCheckForUpdates() },
-              onShowChangeLogClicked = { ChangeLogDialog.show(act) },
+              onShowChangeLogClicked = handleShowDialog,
               onResetClicked = { ResetDialog.show(act) },
               onDonateClicked = { BillingDialog.show(act) },
               onBugReportClicked = { handleReportBug(handler) },
@@ -250,6 +260,12 @@ public abstract class SettingsFragment : Fragment() {
               onViewBlogClicked = { handleViewBlog(handler) },
               onOpenMarketPage = { handleOpenMarketPage(handler) },
           )
+
+          if (showDialog) {
+            ChangeLogDialog(
+                onDismiss = handleDismissDialog,
+            )
+          }
         }
       }
     }

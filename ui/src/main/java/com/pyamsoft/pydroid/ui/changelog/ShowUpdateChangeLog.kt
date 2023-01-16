@@ -19,6 +19,10 @@ package com.pyamsoft.pydroid.ui.changelog
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -101,14 +105,34 @@ internal constructor(
     val vm = viewModel.requireNotNull()
     val state = vm.state()
 
+    val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+
+    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
+
+    val handleDismissPopup by rememberUpdatedState {
+      // Dismiss popup
+      vm.handleDismiss()
+    }
+
+    val handleShowDialog by rememberUpdatedState {
+      // Dismiss popup
+      vm.handleDismiss()
+
+      // Show dialog
+      setShowDialog(true)
+    }
+
     content(
         state = state,
-        onShow = {
-          vm.handleDismiss()
-          ChangeLogDialog.show(hostingActivity.requireNotNull())
-        },
-        onDismiss = { vm.handleDismiss() },
+        onShow = handleShowDialog,
+        onDismiss = handleDismissPopup,
     )
+
+    if (showDialog) {
+      ChangeLogDialog(
+          onDismiss = handleDismissDialog,
+      )
+    }
   }
 
   /** Render into a composable the default version check screen upsell */

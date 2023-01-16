@@ -16,123 +16,99 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
+import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.dispose
-import com.pyamsoft.pydroid.ui.util.recompose
-import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.util.MarketLinker
 
-internal class ChangeLogDialog : AppCompatDialogFragment() {
-
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
+internal class ChangeLogDialogInjector() : ComposableInjector() {
 
   internal var viewModel: ChangeLogDialogViewModeler? = null
-
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getChangelogProvider(): ChangeLogProvider {
-    return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
+  private fun getChangelogProvider(activity: FragmentActivity): ChangeLogProvider {
+    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
   }
 
-  private fun handleRateApp(uriHandler: UriHandler) {
-    uriHandler.openUri(MarketLinker.getStorePageLink(requireActivity()))
-  }
-
-  private fun handleConfigurationChanged() {
-    makeFullWidth()
-    recompose()
-  }
-
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-
-    ObjectGraph.ActivityScope.retrieve(act)
+  override fun onInject(activity: FragmentActivity) {
+    ObjectGraph.ActivityScope.retrieve(activity)
         .injector()
         .plusChangeLogDialog()
-        .create(getChangelogProvider())
+        .create(getChangelogProvider(activity))
         .inject(this)
-
-    return ComposeView(act).apply {
-      id = R.id.dialog_changelog
-
-      val vm = viewModel.requireNotNull()
-      val loader = imageLoader.requireNotNull()
-      setContent {
-        val uriHandler = LocalUriHandler.current
-
-        composeTheme(act) {
-          ChangeLogScreen(
-              state = vm.state(),
-              imageLoader = loader,
-              onRateApp = { handleRateApp(uriHandler) },
-              onClose = { dismiss() },
-          )
-        }
-      }
-    }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    makeFullWidth()
-
-    viewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
-    }
-  }
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    handleConfigurationChanged()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dispose()
-
+  override fun onDispose() {
     viewModel = null
     imageLoader = null
   }
+}
 
-  companion object {
-
-    private const val TAG = "ChangeLogDialog"
-
-    @JvmStatic
-    internal fun show(activity: FragmentActivity) {
-      ChangeLogDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
-    }
+@Composable
+private fun MountHooks(
+    viewModel: ChangeLogDialogViewModeler,
+) {
+  LaunchedEffect(
+      viewModel,
+  ) {
+    viewModel.bind(scope = this)
   }
+}
+
+@Composable
+internal fun ChangeLogDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  val component = rememberComposableInjector { ChangeLogDialogInjector() }
+
+  val activity = rememberActivity()
+  val viewModel = requireNotNull(component.viewModel)
+  val imageLoader = requireNotNull(component.imageLoader)
+
+  val uriHandler = LocalUriHandler.current
+
+  val handleRateApp by rememberUpdatedState {
+    uriHandler.openUri(MarketLinker.getStorePageLink(activity))
+  }
+
+  MountHooks(
+      viewModel = viewModel,
+  )
+
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    ChangeLogScreen(
+        modifier = modifier,
+        state = viewModel.state(),
+        imageLoader = imageLoader,
+        onRateApp = handleRateApp,
+        onClose = onDismiss,
+    )
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewChangeLogDialog() {
+  ChangeLogDialog(
+      onDismiss = {},
+  )
 }

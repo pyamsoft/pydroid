@@ -16,38 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.internal.util
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 
-@CheckResult
-private fun resolveActivity(context: Context): FragmentActivity {
-  return when (context) {
-    is Activity -> context as? FragmentActivity
-    is ContextWrapper -> resolveActivity(context.baseContext)
-    else -> {
-      Logger.w("Provided Context is not an Activity or a ContextWrapper: $context")
-      null
-    }
-  }
-      ?: throw IllegalStateException("Could not resolve FragmentActivity from Context: $context")
-}
-
-@Composable
-@CheckResult
-internal fun rememberActivity(): FragmentActivity {
-  val context = LocalContext.current
-  return remember(context) { resolveActivity(context) }
-}
-
+/** Grab the PYDroidActivity delegate from the current activity */
 @Composable
 @CheckResult
 internal fun rememberPYDroidDelegate(): PYDroidActivityDelegateInternal {

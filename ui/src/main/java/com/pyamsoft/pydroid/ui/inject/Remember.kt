@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import com.pyamsoft.pydroid.ui.internal.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 
 /** Gets the provided ComposableInjector in the current Composable scope and holds it around */
 @Composable

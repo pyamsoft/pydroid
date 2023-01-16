@@ -119,6 +119,15 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class com/pyamsoft/pydroid/ui/arch/ComposableViewModeler {
+	public abstract fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
+	public abstract fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
+}
+
+public final class com/pyamsoft/pydroid/ui/arch/EffectsKt {
+	public static final fun SaveStateDisposableEffect (Lcom/pyamsoft/pydroid/ui/arch/ComposableViewModeler;Landroidx/compose/runtime/Composer;I)V
+}
+
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;

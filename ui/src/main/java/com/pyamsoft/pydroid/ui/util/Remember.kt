@@ -16,10 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.util
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 
 /** Assume not null and remember the result */
@@ -40,4 +46,31 @@ public fun <T : Any> rememberNotNull(anything: T?, lazyMessage: () -> String): T
   ) {
     anything.requireNotNull(handleLazyMessage.value)
   }
+}
+
+@CheckResult
+private fun resolveActivity(context: Context): FragmentActivity {
+  return when (context) {
+    is Activity -> context as? FragmentActivity
+    is ContextWrapper -> resolveActivity(context.baseContext)
+    else -> {
+      Logger.w("Provided Context is not an Activity or a ContextWrapper: $context")
+      null
+    }
+  }
+      ?: throw IllegalStateException("Could not resolve FragmentActivity from Context: $context")
+}
+
+/**
+ * Resolve the LocalContext as an Activity
+ *
+ * This should basically always work, given that all ComposeViews are held inside of Activities
+ *
+ * In the future, if we use Compose in a RemoteView context, this will not work.
+ */
+@Composable
+@CheckResult
+public fun rememberActivity(): FragmentActivity {
+  val context = LocalContext.current
+  return remember(context) { resolveActivity(context) }
 }

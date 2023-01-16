@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -116,7 +116,7 @@ internal fun ChangeLogDialog(
       ChangeLogScreen(
           modifier =
               Modifier.fillMaxWidth()
-                  .requiredHeightIn(
+                  .heightIn(
                       min = screenHeight / 4,
                       max = screenHeight,
                   ),

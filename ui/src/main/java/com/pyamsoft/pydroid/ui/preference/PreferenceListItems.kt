@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +33,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -51,7 +52,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
+import com.pyamsoft.pydroid.ui.internal.app.AppDialog
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 
@@ -211,88 +214,95 @@ internal fun ListPreferenceItem(
     Dialog(
         onDismissRequest = onDismiss,
     ) {
-      val items = remember(entries) { entries.toList() }
       Box(
           modifier = modifier.padding(MaterialTheme.keylines.content).systemBarsPadding(),
           contentAlignment = Alignment.Center,
       ) {
-        LazyColumn(
-            modifier =
-                Modifier.fillMaxWidth()
-                    .requiredHeightIn(
-                        min = screenHeight / 4,
-                        max = screenHeight,
-                    ),
-        ) {
-          dialogItem {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.h6,
-            )
-          }
-          for (item in items) {
-            dialogItem {
-              val name = item.first
-              val value = item.second
+        AppDialog {
+          Surface(
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .heightIn(
+                          min = screenHeight / 4,
+                          max = screenHeight,
+                      ),
+              elevation = DialogDefaults.Elevation,
+              shape = MaterialTheme.shapes.medium,
+          ) {
+            val items = remember(entries) { entries.toList() }
 
-              val isSelected =
-                  remember(
-                      value,
-                      currentValue,
-                  ) {
-                    value == currentValue
+            LazyColumn {
+              dialogItem {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.h6,
+                )
+              }
+              for (item in items) {
+                dialogItem {
+                  val name = item.first
+                  val value = item.second
+
+                  val isSelected =
+                      remember(
+                          value,
+                          currentValue,
+                      ) {
+                        value == currentValue
+                      }
+
+                  val onEntrySelected by rememberUpdatedState {
+                    onPreferenceSelected(name, value)
+                    onDismiss()
                   }
 
-              val onEntrySelected by rememberUpdatedState {
-                onPreferenceSelected(name, value)
-                onDismiss()
+                  Row(
+                      modifier =
+                          Modifier.fillMaxWidth()
+                              .selectable(
+                                  selected = isSelected,
+                                  onClick = {
+                                    if (!isSelected) {
+                                      onEntrySelected()
+                                    }
+                                  },
+                              )
+                              .padding(vertical = MaterialTheme.keylines.typography),
+                      verticalAlignment = Alignment.CenterVertically,
+                  ) {
+                    RadioButton(
+                        modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+                        selected = isSelected,
+                        onClick = {
+                          if (!isSelected) {
+                            onEntrySelected()
+                          }
+                        },
+                    )
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.body1,
+                    )
+                  }
+                }
               }
 
-              Row(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .selectable(
-                              selected = isSelected,
-                              onClick = {
-                                if (!isSelected) {
-                                  onEntrySelected()
-                                }
-                              },
-                          )
-                          .padding(vertical = MaterialTheme.keylines.typography),
-                  verticalAlignment = Alignment.CenterVertically,
-              ) {
-                RadioButton(
-                    modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-                    selected = isSelected,
-                    onClick = {
-                      if (!isSelected) {
-                        onEntrySelected()
-                      }
-                    },
-                )
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.body1,
-                )
-              }
-            }
-          }
+              dialogItem {
+                Row(
+                    modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
+                ) {
+                  Spacer(
+                      modifier = Modifier.weight(1F),
+                  )
 
-          dialogItem {
-            Row(
-                modifier = Modifier.padding(MaterialTheme.keylines.baseline).fillMaxWidth(),
-            ) {
-              Spacer(
-                  modifier = Modifier.weight(1F),
-              )
-
-              TextButton(
-                  onClick = onDismiss,
-              ) {
-                Text(
-                    text = stringResource(R.string.close),
-                )
+                  TextButton(
+                      onClick = onDismiss,
+                  ) {
+                    Text(
+                        text = stringResource(R.string.close),
+                    )
+                  }
+                }
               }
             }
           }

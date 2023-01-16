@@ -96,6 +96,19 @@ private val LocalDialogElevation =
 /** Dialog color */
 private val LocalDialogColor = compositionLocalOf<Color> { noLocalProvidedFor("LocalDialogColor") }
 
+/** An AppDialog providing Dialog locals */
+@Composable
+public fun AppDialog(
+    color: Color = MaterialTheme.colors.surface,
+    content: @Composable () -> Unit,
+) {
+  CompositionLocalProvider(
+      LocalDialogElevation provides DialogDefaults.Elevation,
+      LocalDialogColor provides color,
+      content = content,
+  )
+}
+
 @Composable
 internal fun AppHeaderDialog(
     modifier: Modifier = Modifier,
@@ -105,9 +118,8 @@ internal fun AppHeaderDialog(
     color: Color = MaterialTheme.colors.surface,
     content: LazyListScope.() -> Unit,
 ) {
-  CompositionLocalProvider(
-      LocalDialogElevation provides DialogDefaults.Elevation,
-      LocalDialogColor provides color,
+  AppDialog(
+      color = color,
   ) {
     LazyColumn(
         modifier = modifier,

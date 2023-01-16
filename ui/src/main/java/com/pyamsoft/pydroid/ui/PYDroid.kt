@@ -156,7 +156,6 @@ including outside of an Application class.
      * Initialize the library
      *
      * Track the Instance at the application level, such as:
-     *
      * ```
      * Application.kt
      *
@@ -230,7 +229,6 @@ private fun Application.internalInstallPYDroid(
  * Initialize the library
  *
  * Track the Instance at the application level, such as:
- *
  * ```
  * Application.kt
  *

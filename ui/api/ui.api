@@ -89,7 +89,6 @@ public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/app
 	public static final field $stable I
 	public fun <init> ()V
 	public fun checkUpdates ()V
-	public fun confirmUpgrade ()V
 	protected fun getDisableBilling ()Z
 	protected fun getDisableDataPolicy ()Z
 	protected fun getDisableRating ()Z
@@ -99,7 +98,6 @@ public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/app
 
 public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate {
 	public abstract fun checkUpdates ()V
-	public abstract fun confirmUpgrade ()V
 	public abstract fun loadInAppRating ()V
 }
 
@@ -246,6 +244,17 @@ public final class com/pyamsoft/pydroid/ui/icons/VisibilityKt {
 
 public final class com/pyamsoft/pydroid/ui/icons/WhatshotKt {
 	public static final fun getWhatshot (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public abstract class com/pyamsoft/pydroid/ui/inject/ComposableInjector {
+	public static final field $stable I
+	public fun <init> ()V
+	protected abstract fun onDispose ()V
+	protected abstract fun onInject (Landroidx/fragment/app/FragmentActivity;)V
+}
+
+public final class com/pyamsoft/pydroid/ui/inject/RememberKt {
+	public static final fun rememberComposableInjector (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/inject/ComposableInjector;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt {
@@ -561,6 +570,11 @@ public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
 
 public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 	public static final fun getDefaultSharedPreferencesName (Landroid/content/Context;)Ljava/lang/String;
+}
+
+public final class com/pyamsoft/pydroid/ui/util/RememberKt {
+	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
+	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {

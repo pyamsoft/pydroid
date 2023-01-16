@@ -303,7 +303,6 @@ protected constructor(
    * itself so that you will not leak memory
    *
    * Example:
-   *
    * ```
    * // Any generic typed class as a data holder
    * public interface MyScreen {

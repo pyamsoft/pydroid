@@ -225,7 +225,6 @@ internal fun ListPreferenceItem(
                       .heightIn(
                           min = screenHeight / 3,
                       ),
-              elevation = DialogDefaults.Elevation,
               shape = MaterialTheme.shapes.medium,
           ) {
             val items = remember(entries) { entries.toList() }

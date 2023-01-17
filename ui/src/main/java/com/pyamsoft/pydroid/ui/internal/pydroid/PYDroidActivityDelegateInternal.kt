@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
+import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
@@ -48,6 +49,7 @@ internal constructor(
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
   private var versionUpdateProgress: VersionUpdateProgress?
   private var showUpdateChangeLog: ShowUpdateChangeLog?
+  private var showDataPolicy: ShowDataPolicy?
   private var billingUpsell: BillingUpsell?
 
   init {
@@ -55,7 +57,6 @@ internal constructor(
 
     val rd = components.rating
     val vc = components.versionCheck
-    val dp = components.dataPolicy
 
     ratingDelegate = rd
     versionCheckDelegate = vc
@@ -63,20 +64,14 @@ internal constructor(
     versionUpdateProgress = components.versionUpdateProgress
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
+    showDataPolicy = components.dataPolicy
 
     val repeatedActions =
         object : DefaultLifecycleObserver {
 
           // Do on each start
           override fun onStart(owner: LifecycleOwner) {
-            super.onStart(owner)
             vc.checkUpdates()
-          }
-
-          // Do on each Resume
-          override fun onResume(owner: LifecycleOwner) {
-            super.onResume(owner)
-            dp.attemptReShowIfNeeded()
           }
         }
 
@@ -92,6 +87,7 @@ internal constructor(
       versionUpgradeAvailable = null
       versionUpdateProgress = null
       billingUpsell = null
+      showDataPolicy = null
     }
   }
 
@@ -121,6 +117,12 @@ internal constructor(
     return versionUpdateProgress.requireNotNull {
       "VersionUpdateProgress is NULL, was this destroyed?"
     }
+  }
+
+  /** Used in ShowDataPolicyDialog */
+  @CheckResult
+  internal fun dataPolicy(): ShowDataPolicy {
+    return showDataPolicy.requireNotNull { "ShowDataPolicy is NULL, was this destroyed?" }
   }
 
   /** Used in ChangeLogWidget */

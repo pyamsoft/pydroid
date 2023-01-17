@@ -25,11 +25,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.util.LifecycleEffect
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -95,11 +99,18 @@ internal constructor(
           scope = this,
           onShowPolicy = handleShowDialog,
       )
+    }
 
-      vm.handleShowDataPolicyDialogIfPossible(
-          scope = this,
-          onNeedsToShow = handleShowDialog,
-      )
+    LifecycleEffect {
+      object : DefaultLifecycleObserver {
+
+        override fun onResume(owner: LifecycleOwner) {
+          vm.handleShowDataPolicyDialogIfPossible(
+              scope = owner.lifecycleScope,
+              onNeedsToShow = handleShowDialog,
+          )
+        }
+      }
     }
 
     if (showDialog) {

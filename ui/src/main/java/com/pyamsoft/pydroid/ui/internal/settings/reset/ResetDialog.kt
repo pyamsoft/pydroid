@@ -16,28 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class ResetDialogInjector : ComposableInjector() {
 
@@ -63,7 +54,7 @@ internal fun ResetDialog(
 ) {
   val component = rememberComposableInjector { ResetDialogInjector() }
 
-  val viewModel = requireNotNull(component.viewModel)
+  val viewModel = rememberNotNull(component.viewModel)
 
   val scope = rememberCoroutineScope()
   val handleReset by rememberUpdatedState {
@@ -72,30 +63,15 @@ internal fun ResetDialog(
     )
   }
 
-  Dialog(
+  PaddedDialog(
       onDismissRequest = onDismiss,
   ) {
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                .clickable(
-                    // Remove the ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismiss()
-                }
-                .padding(MaterialTheme.keylines.content)
-                .systemBarsPadding(),
-        contentAlignment = Alignment.Center,
-    ) {
-      ResetScreen(
-          modifier = modifier.fillMaxWidth(),
-          state = viewModel.state(),
-          onReset = handleReset,
-          onClose = onDismiss,
-      )
-    }
+    ResetScreen(
+        modifier = modifier.fillMaxWidth(),
+        state = viewModel.state(),
+        onReset = handleReset,
+        onClose = onDismiss,
+    )
   }
 }
 

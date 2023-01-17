@@ -17,32 +17,23 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.annotation.CheckResult
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
-import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
 internal class ChangeLogDialogInjector : ComposableInjector() {
@@ -88,8 +79,8 @@ internal fun ChangeLogDialog(
   val component = rememberComposableInjector { ChangeLogDialogInjector() }
 
   val activity = rememberActivity()
-  val viewModel = requireNotNull(component.viewModel)
-  val imageLoader = requireNotNull(component.imageLoader)
+  val viewModel = rememberNotNull(component.viewModel)
+  val imageLoader = rememberNotNull(component.imageLoader)
 
   val uriHandler = LocalUriHandler.current
 
@@ -101,31 +92,16 @@ internal fun ChangeLogDialog(
       viewModel = viewModel,
   )
 
-  Dialog(
+  PaddedDialog(
       onDismissRequest = onDismiss,
   ) {
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                .clickable(
-                    // Remove the ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismiss()
-                }
-                .padding(MaterialTheme.keylines.content)
-                .systemBarsPadding(),
-        contentAlignment = Alignment.Center,
-    ) {
-      ChangeLogScreen(
-          modifier = modifier.fillMaxWidth(),
-          state = viewModel.state(),
-          imageLoader = imageLoader,
-          onRateApp = handleRateApp,
-          onClose = onDismiss,
-      )
-    }
+    ChangeLogScreen(
+        modifier = modifier.fillMaxWidth(),
+        state = viewModel.state(),
+        imageLoader = imageLoader,
+        onRateApp = handleRateApp,
+        onClose = onDismiss,
+    )
   }
 }
 

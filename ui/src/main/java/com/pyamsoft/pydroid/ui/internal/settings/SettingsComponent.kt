@@ -30,6 +30,8 @@ internal interface SettingsComponent {
 
   fun inject(fragment: SettingsFragment)
 
+    fun inject(injector: SettingsInjector)
+
   interface Factory {
 
     @CheckResult fun create(): SettingsComponent
@@ -54,6 +56,26 @@ internal interface SettingsComponent {
   private constructor(
       private val params: Factory.Parameters,
   ) : SettingsComponent {
+
+      override fun inject(injector: SettingsInjector) {
+          injector.options = params.options
+          injector.viewModel =
+              SettingsViewModeler(
+                  state = params.state,
+                  bugReportUrl = params.bugReportUrl,
+                  privacyPolicyUrl = params.privacyPolicyUrl,
+                  termsConditionsUrl = params.termsConditionsUrl,
+                  viewSourceUrl = params.viewSourceUrl,
+                  theming = params.theming,
+                  changeLogInteractor = params.changeLogModule.provideInteractor(),
+              )
+          injector.versionViewModel =
+              VersionCheckViewModeler(
+                  state = params.versionCheckState,
+                  interactor = params.versionModule.provideInteractor(),
+                  interactorCache = params.versionModule.provideInteractorCache(),
+              )
+      }
 
     override fun inject(fragment: SettingsFragment) {
       fragment.composeTheme = params.composeTheme

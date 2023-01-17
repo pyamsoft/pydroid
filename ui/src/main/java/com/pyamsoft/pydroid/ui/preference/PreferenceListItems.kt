@@ -17,17 +17,14 @@
 package com.pyamsoft.pydroid.ui.preference
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.Checkbox
@@ -48,9 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
@@ -205,107 +202,92 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-    Dialog(
+    PaddedDialog(
         onDismissRequest = onDismiss,
     ) {
-      Box(
-          modifier =
-              Modifier.fillMaxSize()
-                  .clickable(
-                      // Remove the ripple
-                      interactionSource = remember { MutableInteractionSource() },
-                      indication = null,
-                  ) {
-                    onDismiss()
-                  }
-                  .padding(MaterialTheme.keylines.content)
-                  .systemBarsPadding(),
-          contentAlignment = Alignment.Center,
+      Surface(
+          modifier = modifier.fillMaxWidth(),
+          elevation = DialogDefaults.Elevation,
+          shape = MaterialTheme.shapes.medium,
       ) {
-        Surface(
-            modifier = modifier.fillMaxWidth(),
-            elevation = DialogDefaults.Elevation,
-            shape = MaterialTheme.shapes.medium,
-        ) {
-          val items = remember(entries) { entries.toList() }
+        val items = remember(entries) { entries.toList() }
 
-          LazyColumn {
+        LazyColumn {
+          item {
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+                text = title,
+                style = MaterialTheme.typography.h6,
+            )
+          }
+
+          for (item in items) {
             item {
-              Text(
-                  modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-                  text = title,
-                  style = MaterialTheme.typography.h6,
-              )
-            }
+              val name = item.first
+              val value = item.second
 
-            for (item in items) {
-              item {
-                val name = item.first
-                val value = item.second
+              val isSelected =
+                  remember(
+                      value,
+                      currentValue,
+                  ) {
+                    value == currentValue
+                  }
 
-                val isSelected =
-                    remember(
-                        value,
-                        currentValue,
-                    ) {
-                      value == currentValue
-                    }
-
-                val onEntrySelected by rememberUpdatedState {
-                  onPreferenceSelected(name, value)
-                  onDismiss()
-                }
-
-                Row(
-                    modifier =
-                        Modifier.fillMaxWidth()
-                            .selectable(
-                                selected = isSelected,
-                                onClick = {
-                                  if (!isSelected) {
-                                    onEntrySelected()
-                                  }
-                                },
-                            )
-                            .padding(
-                                horizontal = MaterialTheme.keylines.content,
-                                vertical = MaterialTheme.keylines.typography,
-                            ),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                  RadioButton(
-                      modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-                      selected = isSelected,
-                      onClick = {
-                        if (!isSelected) {
-                          onEntrySelected()
-                        }
-                      },
-                  )
-                  Text(
-                      text = name,
-                      style = MaterialTheme.typography.body1,
-                  )
-                }
+              val onEntrySelected by rememberUpdatedState {
+                onPreferenceSelected(name, value)
+                onDismiss()
               }
-            }
 
-            item {
               Row(
                   modifier =
-                      Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
+                      Modifier.fillMaxWidth()
+                          .selectable(
+                              selected = isSelected,
+                              onClick = {
+                                if (!isSelected) {
+                                  onEntrySelected()
+                                }
+                              },
+                          )
+                          .padding(
+                              horizontal = MaterialTheme.keylines.content,
+                              vertical = MaterialTheme.keylines.typography,
+                          ),
+                  verticalAlignment = Alignment.CenterVertically,
               ) {
-                Spacer(
-                    modifier = Modifier.weight(1F),
+                RadioButton(
+                    modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+                    selected = isSelected,
+                    onClick = {
+                      if (!isSelected) {
+                        onEntrySelected()
+                      }
+                    },
                 )
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.body1,
+                )
+              }
+            }
+          }
 
-                TextButton(
-                    onClick = onDismiss,
-                ) {
-                  Text(
-                      text = stringResource(R.string.close),
-                  )
-                }
+          item {
+            Row(
+                modifier =
+                    Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
+            ) {
+              Spacer(
+                  modifier = Modifier.weight(1F),
+              )
+
+              TextButton(
+                  onClick = onDismiss,
+              ) {
+                Text(
+                    text = stringResource(R.string.close),
+                )
               }
             }
           }

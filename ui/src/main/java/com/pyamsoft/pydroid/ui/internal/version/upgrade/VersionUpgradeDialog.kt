@@ -16,30 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class VersionUpgradeDialogInjector : ComposableInjector() {
 
@@ -66,13 +57,13 @@ internal fun VersionUpgradeDialog(
 ) {
   val component = rememberComposableInjector { VersionUpgradeDialogInjector() }
 
-  val viewModel = requireNotNull(component.viewModel)
+  val viewModel = rememberNotNull(component.viewModel)
 
   val activity = rememberActivity()
-  val scope = rememberCoroutineScope()
   val handleCompleteUpgrade by rememberUpdatedState {
     viewModel.completeUpgrade(
-        scope = scope,
+        // Don't use scope since if this leaves Composition it would die
+        scope = activity.lifecycleScope,
         onUpgradeComplete = {
           Logger.d("Upgrade complete, dismiss")
           activity.finish()
@@ -80,31 +71,16 @@ internal fun VersionUpgradeDialog(
     )
   }
 
-  Dialog(
+  PaddedDialog(
       onDismissRequest = onDismiss,
   ) {
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                .clickable(
-                    // Remove the ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismiss()
-                }
-                .padding(MaterialTheme.keylines.content)
-                .systemBarsPadding(),
-        contentAlignment = Alignment.Center,
-    ) {
-      VersionUpgradeScreen(
-          modifier = modifier.fillMaxWidth(),
-          state = viewModel.state(),
-          newVersionCode = newVersionCode,
-          onUpgrade = handleCompleteUpgrade,
-          onClose = onDismiss,
-      )
-    }
+    VersionUpgradeScreen(
+        modifier = modifier.fillMaxWidth(),
+        state = viewModel.state(),
+        newVersionCode = newVersionCode,
+        onUpgrade = handleCompleteUpgrade,
+        onClose = onDismiss,
+    )
   }
 }
 

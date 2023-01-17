@@ -17,21 +17,11 @@
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.annotation.CheckResult
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -42,13 +32,14 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.LifecycleEffect
 import com.pyamsoft.pydroid.ui.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -106,9 +97,9 @@ internal fun BillingDialog(
   val component = rememberComposableInjector { BillingDialogInjector() }
 
   val activity = rememberActivity()
-  val viewModel = requireNotNull(component.viewModel)
-  val imageLoader = requireNotNull(component.imageLoader)
-  val purchaseClient = requireNotNull(component.purchaseClient)
+  val viewModel = rememberNotNull(component.viewModel)
+  val imageLoader = rememberNotNull(component.imageLoader)
+  val purchaseClient = rememberNotNull(component.purchaseClient)
 
   val handleLaunchPurchase by rememberUpdatedState { sku: BillingSku ->
     // Enforce on main thread since billing is Google
@@ -128,31 +119,16 @@ internal fun BillingDialog(
       viewModel = viewModel,
   )
 
-  Dialog(
+  PaddedDialog(
       onDismissRequest = onDismiss,
   ) {
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                .clickable(
-                    // Remove the ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismiss()
-                }
-                .padding(MaterialTheme.keylines.content)
-                .systemBarsPadding(),
-        contentAlignment = Alignment.Center,
-    ) {
-      BillingScreen(
-          modifier = modifier,
-          state = viewModel.state(),
-          imageLoader = imageLoader,
-          onPurchase = handleLaunchPurchase,
-          onBillingErrorDismissed = handleClearBillingError,
-          onClose = onDismiss,
-      )
-    }
+    BillingScreen(
+        modifier = modifier,
+        state = viewModel.state(),
+        imageLoader = imageLoader,
+        onPurchase = handleLaunchPurchase,
+        onBillingErrorDismissed = handleClearBillingError,
+        onClose = onDismiss,
+    )
   }
 }

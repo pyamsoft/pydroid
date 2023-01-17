@@ -17,31 +17,22 @@
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import androidx.annotation.CheckResult
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
-import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class DataPolicyInjector : ComposableInjector() {
 
@@ -86,8 +77,8 @@ internal fun DataPolicyDisclosureDialog(
   val component = rememberComposableInjector { DataPolicyInjector() }
 
   val activity = rememberActivity()
-  val viewModel = requireNotNull(component.viewModel)
-  val imageLoader = requireNotNull(component.imageLoader)
+  val viewModel = rememberNotNull(component.viewModel)
+  val imageLoader = rememberNotNull(component.imageLoader)
 
   val scope = rememberCoroutineScope()
   val uriHandler = LocalUriHandler.current
@@ -126,33 +117,18 @@ internal fun DataPolicyDisclosureDialog(
       viewModel = viewModel,
   )
 
-  Dialog(
+  PaddedDialog(
       onDismissRequest = onDismiss,
   ) {
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                .clickable(
-                    // Remove the ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismiss()
-                }
-                .padding(MaterialTheme.keylines.content)
-                .systemBarsPadding(),
-        contentAlignment = Alignment.Center,
-    ) {
-      DataPolicyDisclosureScreen(
-          modifier = modifier,
-          state = viewModel.state(),
-          imageLoader = imageLoader,
-          onNavigationErrorDismissed = handleHideNavigationError,
-          onAccept = handleAcceptDataPolicy,
-          onReject = handleRejectDataPolicy,
-          onPrivacyPolicyClicked = handleViewPrivacy,
-          onTermsOfServiceClicked = handleViewTos,
-      )
-    }
+    DataPolicyDisclosureScreen(
+        modifier = modifier,
+        state = viewModel.state(),
+        imageLoader = imageLoader,
+        onNavigationErrorDismissed = handleHideNavigationError,
+        onAccept = handleAcceptDataPolicy,
+        onReject = handleRejectDataPolicy,
+        onPrivacyPolicyClicked = handleViewPrivacy,
+        onTermsOfServiceClicked = handleViewTos,
+    )
   }
 }

@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -89,27 +90,28 @@ public fun SettingsPage(
 
   val versionState = versionViewModel.state()
 
-  val (showChangeLogDialog, setShowChangeLogDialog) = remember { mutableStateOf(false) }
+  val (showChangeLogDialog, setShowChangeLogDialog) = rememberSaveable { mutableStateOf(false) }
   val handleDismissChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(false) }
   val handleShowChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(true) }
 
-  val (showBillingDialog, setShowBillingDialog) = remember { mutableStateOf(false) }
+  val (showBillingDialog, setShowBillingDialog) = rememberSaveable { mutableStateOf(false) }
   val handleDismissBillingDialog by rememberUpdatedState { setShowBillingDialog(false) }
   val handleShowBillingDialog by rememberUpdatedState { setShowBillingDialog(true) }
 
-  val (showResetDialog, setShowResetDialog) = remember { mutableStateOf(false) }
+  val (showResetDialog, setShowResetDialog) = rememberSaveable { mutableStateOf(false) }
   val handleDismissResetDialog by rememberUpdatedState { setShowResetDialog(false) }
   val handleShowResetDialog by rememberUpdatedState { setShowResetDialog(true) }
 
-  val (showVersionDialog, setShowVersionDialog) = remember { mutableStateOf(false) }
+  val (showVersionDialog, setShowVersionDialog) = rememberSaveable { mutableStateOf(false) }
   val handleDismissVersionDialog by rememberUpdatedState { setShowVersionDialog(false) }
   val handleShowVersionDialog by rememberUpdatedState { setShowVersionDialog(true) }
 
-  val (showAboutDialog, setShowAboutDialog) = remember { mutableStateOf(false) }
+  val (showAboutDialog, setShowAboutDialog) = rememberSaveable { mutableStateOf(false) }
   val handleDismissAboutDialog by rememberUpdatedState { setShowAboutDialog(false) }
   val handleShowAboutDialog by rememberUpdatedState { setShowAboutDialog(true) }
 
-  val (showDataDisclosureDialog, setShowDataDisclosureDialog) = remember { mutableStateOf(false) }
+  val (showDataDisclosureDialog, setShowDataDisclosureDialog) =
+      rememberSaveable { mutableStateOf(false) }
   val handleDismissDataDisclosureDialog by rememberUpdatedState {
     setShowDataDisclosureDialog(false)
   }

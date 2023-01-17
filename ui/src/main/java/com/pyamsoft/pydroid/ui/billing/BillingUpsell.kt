@@ -21,9 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -119,7 +119,7 @@ internal constructor(
     val state = vm.state()
     val scope = rememberCoroutineScope()
 
-    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
     val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
     val handleDismissPopup by rememberUpdatedState {
       // Dismiss popup

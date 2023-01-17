@@ -231,6 +231,10 @@ public abstract class SettingsFragment : Fragment() {
         val handleDismissVersionDialog by rememberUpdatedState { setShowVersionDialog(false) }
         val handleShowVersionDialog by rememberUpdatedState { setShowVersionDialog(true) }
 
+        val (showAboutDialog, setShowAboutDialog) = remember { mutableStateOf(false) }
+        val handleDismissAboutDialog by rememberUpdatedState { setShowAboutDialog(false) }
+        val handleShowAboutDialog by rememberUpdatedState { setShowAboutDialog(true) }
+
         val (showDataDisclosureDialog, setShowDataDisclosureDialog) =
             remember { mutableStateOf(false) }
         val handleDismissDataDisclosureDialog by rememberUpdatedState {
@@ -271,7 +275,7 @@ public abstract class SettingsFragment : Fragment() {
               customPreContent = customPrePreferences(),
               customPostContent = customPostPreferences(),
               onDarkModeChanged = { handleChangeDarkMode(it) },
-              onLicensesClicked = { AboutDialog.show(act) },
+              onLicensesClicked = handleShowAboutDialog,
               onCheckUpdateClicked = { handleCheckForUpdates() },
               onShowChangeLogClicked = handleShowChangeLogDialog,
               onResetClicked = handleShowResetDialog,
@@ -307,6 +311,12 @@ public abstract class SettingsFragment : Fragment() {
           if (showResetDialog) {
             ResetDialog(
                 onDismiss = handleDismissResetDialog,
+            )
+          }
+
+          if (showAboutDialog) {
+            AboutDialog(
+                onDismiss = handleDismissAboutDialog,
             )
           }
 

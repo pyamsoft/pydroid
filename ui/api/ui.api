@@ -126,7 +126,6 @@ public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public final fun RenderBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
-	public final fun dismissUpsell ()V
 }
 
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion {
@@ -172,6 +171,20 @@ public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Compani
 	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+}
+
+public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy {
+	public static final field $stable I
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;
+	public final fun Render (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+}
+
+public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion {
+	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
@@ -316,6 +329,10 @@ public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableS
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState : com/pyamsoft/pydroid/arch/UiViewState {
+	public abstract fun isAccepted ()Ljava/lang/Boolean;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt {
@@ -640,6 +657,10 @@ public final class com/pyamsoft/pydroid/ui/widget/MaterialCheckableKt {
 
 public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
 	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/pyamsoft/pydroid/ui/widget/ShowDataPolicyDialogKt {
+	public static final fun ShowDataPolicyDialog (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {

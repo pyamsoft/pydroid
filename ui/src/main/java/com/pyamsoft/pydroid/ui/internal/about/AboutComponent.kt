@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface AboutComponent {
 
-  fun inject(dialog: AboutDialog)
+  fun inject(injector: AboutDialogInjector)
 
   interface Factory {
 
@@ -41,9 +41,8 @@ internal interface AboutComponent {
       private val params: Factory.Parameters,
   ) : AboutComponent {
 
-    override fun inject(dialog: AboutDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.viewModel =
+    override fun inject(injector: AboutDialogInjector) {
+      injector.viewModel =
           AboutViewModeler(
               state = MutableAboutViewState(),
               interactor = params.module.provideInteractor(),

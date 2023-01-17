@@ -37,12 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
-import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.util.MarketLinker

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
-import com.pyamsoft.pydroid.arch.ViewModeler
 
 /** Connect a [ViewModeler] to the local saved state registry for save/restore hooks */
 @Composable

@@ -16,134 +16,128 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.makeFullscreen
-import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.dispose
-import com.pyamsoft.pydroid.ui.util.recompose
-import com.pyamsoft.pydroid.ui.util.show
 
-internal class AboutDialog : AppCompatDialogFragment() {
+internal class AboutDialogInjector : ComposableInjector() {
 
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
-
-  /** Provided by PYDroid */
   internal var viewModel: AboutViewModeler? = null
 
-  private fun handleViewLicense(handler: UriHandler, library: OssLibrary) {
-    openPage(
-        handler = handler,
-        url = library.libraryUrl,
-    )
-  }
-
-  private fun handleViewHomePage(handler: UriHandler, library: OssLibrary) {
-    openPage(
-        handler = handler,
-        url = library.libraryUrl,
-    )
-  }
-
-  private fun handleConfigurationChanged() {
-    makeFullscreen()
-    recompose()
-  }
-
-  private fun openPage(handler: UriHandler, url: String) {
-    val vm = viewModel.requireNotNull()
-
-    try {
-      vm.handleDismissFailedNavigation()
-      handler.openUri(url)
-    } catch (e: Throwable) {
-      vm.handleFailedNavigation(e)
-    }
-  }
-
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-
-    ObjectGraph.ApplicationScope.retrieve(act.application)
+  override fun onInject(activity: FragmentActivity) {
+    ObjectGraph.ApplicationScope.retrieve(activity.application)
         .injector()
         .plusAbout()
         .create()
         .inject(this)
-    val vm = viewModel.requireNotNull()
-
-    return ComposeView(act).apply {
-      id = R.id.dialog_about
-
-      setContent {
-        val handler = LocalUriHandler.current
-
-        composeTheme(act) {
-          AboutScreen(
-              state = vm.state(),
-              onViewHomePage = { handleViewHomePage(handler, it) },
-              onViewLicense = { handleViewLicense(handler, it) },
-              onNavigationErrorDismissed = { vm.handleDismissFailedNavigation() },
-              onClose = { dismiss() },
-          )
-        }
-      }
-    }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    makeFullscreen()
-
-    viewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.handleLoadLicenses(scope = viewLifecycleOwner.lifecycleScope)
-    }
-  }
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    handleConfigurationChanged()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dispose()
-
+  override fun onDispose() {
     viewModel = null
   }
+}
 
-  companion object {
+@Composable
+private fun MountHooks(
+    viewModel: AboutViewModeler,
+) {
+  LaunchedEffect(
+      viewModel,
+  ) {
+    viewModel.handleLoadLicenses(scope = this)
+  }
+}
 
-    private const val TAG = "AboutDialog"
+@Composable
+internal fun AboutDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  val component = rememberComposableInjector { AboutDialogInjector() }
 
-    @JvmStatic
-    internal fun show(activity: FragmentActivity) {
-      AboutDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
+  val viewModel = requireNotNull(component.viewModel)
+
+  val uriHandler = LocalUriHandler.current
+
+  val handleDismissFailedNavigation by rememberUpdatedState {
+    viewModel.handleDismissFailedNavigation()
+  }
+
+  val handleOpenPage by rememberUpdatedState { url: String ->
+    handleDismissFailedNavigation()
+
+    try {
+      uriHandler.openUri(url)
+    } catch (e: Throwable) {
+      viewModel.handleFailedNavigation(e)
     }
   }
+
+  val handleViewLicense by rememberUpdatedState { library: OssLibrary ->
+    handleOpenPage(library.licenseUrl)
+  }
+
+  val handleViewHomePage by rememberUpdatedState { library: OssLibrary ->
+    handleOpenPage(library.libraryUrl)
+  }
+
+  MountHooks(
+      viewModel = viewModel,
+  )
+
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    Box(
+        modifier =
+            Modifier.fillMaxSize()
+                .clickable(
+                    // Remove the ripple
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                  onDismiss()
+                }
+                .padding(MaterialTheme.keylines.content)
+                .systemBarsPadding(),
+        contentAlignment = Alignment.Center,
+    ) {
+      AboutScreen(
+          modifier = modifier,
+          state = viewModel.state(),
+          onViewHomePage = handleViewHomePage,
+          onViewLicense = handleViewLicense,
+          onNavigationErrorDismissed = handleDismissFailedNavigation,
+          onClose = onDismiss,
+      )
+    }
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewAboutDialog() {
+  AboutDialog(
+      onDismiss = {},
+  )
 }

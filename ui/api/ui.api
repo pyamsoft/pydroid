@@ -119,6 +119,10 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/pyamsoft/pydroid/ui/app/PaddedDialogKt {
+	public static final fun PaddedDialog (Landroidx/compose/ui/window/DialogProperties;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;
@@ -516,7 +520,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/rating/RatingViewState :
 
 public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androidx/fragment/app/Fragment {
 	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/settings/SettingsFragment$Companion;
 	public fun <init> ()V
 	protected abstract fun customBottomItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
 	protected fun customElevation-chRvn1I (Landroidx/compose/runtime/Composer;I)F
@@ -528,11 +531,10 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 	public fun onConfigurationChanged (Landroid/content/res/Configuration;)V
 	public final fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
 	public fun onDestroyView ()V
-	public fun onSaveInstanceState (Landroid/os/Bundle;)V
-	public fun onViewCreated (Landroid/view/View;Landroid/os/Bundle;)V
 }
 
-public final class com/pyamsoft/pydroid/ui/settings/SettingsFragment$Companion {
+public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
+	public static final fun SettingsPage-XTfNENU (Landroidx/compose/ui/Modifier;ZZLjava/util/List;Ljava/util/List;FFFLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {
@@ -564,8 +566,10 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
+	public static final fun dispose (Landroid/app/Activity;)V
 	public static final fun dispose (Landroidx/compose/ui/platform/ComposeView;)V
 	public static final fun dispose (Landroidx/fragment/app/Fragment;)V
+	public static final fun recompose (Landroid/app/Activity;)V
 	public static final fun recompose (Landroidx/compose/ui/platform/ComposeView;)V
 	public static final fun recompose (Landroidx/fragment/app/Fragment;)V
 }

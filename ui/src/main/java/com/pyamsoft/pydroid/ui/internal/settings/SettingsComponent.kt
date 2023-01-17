@@ -30,7 +30,7 @@ internal interface SettingsComponent {
 
   fun inject(fragment: SettingsFragment)
 
-    fun inject(injector: SettingsInjector)
+  fun inject(injector: SettingsInjector)
 
   interface Factory {
 
@@ -57,30 +57,9 @@ internal interface SettingsComponent {
       private val params: Factory.Parameters,
   ) : SettingsComponent {
 
-      override fun inject(injector: SettingsInjector) {
-          injector.options = params.options
-          injector.viewModel =
-              SettingsViewModeler(
-                  state = params.state,
-                  bugReportUrl = params.bugReportUrl,
-                  privacyPolicyUrl = params.privacyPolicyUrl,
-                  termsConditionsUrl = params.termsConditionsUrl,
-                  viewSourceUrl = params.viewSourceUrl,
-                  theming = params.theming,
-                  changeLogInteractor = params.changeLogModule.provideInteractor(),
-              )
-          injector.versionViewModel =
-              VersionCheckViewModeler(
-                  state = params.versionCheckState,
-                  interactor = params.versionModule.provideInteractor(),
-                  interactorCache = params.versionModule.provideInteractorCache(),
-              )
-      }
-
-    override fun inject(fragment: SettingsFragment) {
-      fragment.composeTheme = params.composeTheme
-      fragment.options = params.options
-      fragment.viewModel =
+    override fun inject(injector: SettingsInjector) {
+      injector.options = params.options
+      injector.viewModel =
           SettingsViewModeler(
               state = params.state,
               bugReportUrl = params.bugReportUrl,
@@ -90,12 +69,16 @@ internal interface SettingsComponent {
               theming = params.theming,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
           )
-      fragment.versionViewModel =
+      injector.versionViewModel =
           VersionCheckViewModeler(
               state = params.versionCheckState,
               interactor = params.versionModule.provideInteractor(),
               interactorCache = params.versionModule.provideInteractorCache(),
           )
+    }
+
+    override fun inject(fragment: SettingsFragment) {
+      fragment.composeTheme = params.composeTheme
     }
 
     internal class FactoryImpl

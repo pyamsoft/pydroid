@@ -16,6 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.util
 
+import android.app.Activity
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 
@@ -45,4 +48,20 @@ public fun Fragment.recompose() {
 /** Force a view to recompose by disposing and re-creating a Composition */
 public fun Fragment.dispose() {
   (view as? ComposeView)?.dispose()
+}
+
+@CheckResult
+private fun Activity.getExistingActivityComposeView(): ComposeView? {
+  return this.window.decorView.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
+      as? ComposeView
+}
+
+/** Force a view to recompose by disposing and re-creating a Composition */
+public fun Activity.recompose() {
+  getExistingActivityComposeView()?.recompose()
+}
+
+/** Force a view to recompose by disposing and re-creating a Composition */
+public fun Activity.dispose() {
+  getExistingActivityComposeView()?.dispose()
 }

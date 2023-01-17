@@ -36,6 +36,7 @@ internal interface SettingsComponent {
 
     data class Parameters
     internal constructor(
+        internal val state: MutableSettingsViewState,
         internal val versionCheckState: MutableVersionCheckViewState,
         internal val bugReportUrl: String,
         internal val viewSourceUrl: String,
@@ -59,7 +60,7 @@ internal interface SettingsComponent {
       fragment.options = params.options
       fragment.viewModel =
           SettingsViewModeler(
-              state = MutableSettingsViewState(),
+              state = params.state,
               bugReportUrl = params.bugReportUrl,
               privacyPolicyUrl = params.privacyPolicyUrl,
               termsConditionsUrl = params.termsConditionsUrl,

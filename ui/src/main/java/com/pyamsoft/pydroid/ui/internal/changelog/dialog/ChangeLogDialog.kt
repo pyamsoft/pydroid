@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +45,7 @@ import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.util.MarketLinker
 
-internal class ChangeLogDialogInjector() : ComposableInjector() {
+internal class ChangeLogDialogInjector : ComposableInjector() {
 
   internal var viewModel: ChangeLogDialogViewModeler? = null
   internal var imageLoader: ImageLoader? = null
@@ -105,7 +106,10 @@ internal fun ChangeLogDialog(
   ) {
     Box(
         modifier =
-            Modifier.fillMaxSize().padding(MaterialTheme.keylines.content).systemBarsPadding(),
+            Modifier.fillMaxSize()
+                .clickable { onDismiss() }
+                .padding(MaterialTheme.keylines.content)
+                .systemBarsPadding(),
         contentAlignment = Alignment.Center,
     ) {
       ChangeLogScreen(

@@ -16,179 +16,135 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.platform.UriHandler
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.app.makeFullWidth
-import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.dispose
-import com.pyamsoft.pydroid.ui.util.recompose
-import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 
-internal class DataPolicyDisclosureDialog : AppCompatDialogFragment() {
-
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
+internal class DataPolicyInjector : ComposableInjector() {
 
   internal var viewModel: DataPolicyDialogViewModeler? = null
-
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getAppProvider(): AppProvider {
-    return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
+  private fun getChangelogProvider(activity: FragmentActivity): ChangeLogProvider {
+    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
   }
 
-  private fun openPage(handler: UriHandler, url: String) {
-    val vm = viewModel.requireNotNull()
-
-    try {
-      vm.handleHideNavigationError()
-      handler.openUri(url)
-    } catch (e: Throwable) {
-      vm.handleNavigationFailed(e)
-    }
-  }
-
-  private fun handleAcceptDataPolicy() {
-    viewModel
-        .requireNotNull()
-        .handleAccept(
-            scope = viewLifecycleOwner.lifecycleScope,
-            onAccepted = { dismiss() },
-        )
-  }
-
-  private fun handleRejectDataPolicy() {
-    viewModel
-        .requireNotNull()
-        .handleReject(
-            scope = viewLifecycleOwner.lifecycleScope,
-            onRejected = { requireActivity().finishAndRemoveTask() },
-        )
-  }
-
-  private fun handleViewPrivacy(handler: UriHandler) {
-    viewModel.requireNotNull().handleViewPrivacyPolicy { url ->
-      openPage(
-          handler = handler,
-          url = url,
-      )
-    }
-  }
-
-  private fun handleViewTos(handler: UriHandler) {
-    viewModel.requireNotNull().handleViewTermsOfService { url ->
-      openPage(
-          handler = handler,
-          url = url,
-      )
-    }
-  }
-
-  private fun handleConfigurationChanged() {
-    makeFullWidth()
-    recompose()
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    // The DPD is not cancellable except by the button interaction
-    isCancelable = false
-  }
-
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-    ObjectGraph.ApplicationScope.retrieve(act.application)
+  override fun onInject(activity: FragmentActivity) {
+    ObjectGraph.ApplicationScope.retrieve(activity.application)
         .injector()
         .plusDataPolicyDialog()
-        .create(getAppProvider())
+        .create(getChangelogProvider(activity))
         .inject(this)
-
-    return ComposeView(act).apply {
-      id = R.id.dialog_dpd
-
-      val vm = viewModel.requireNotNull()
-      val loader = imageLoader.requireNotNull()
-      setContent {
-        val uriHandler = LocalUriHandler.current
-
-        composeTheme(act) {
-          DataPolicyDisclosureScreen(
-              state = vm.state(),
-              imageLoader = loader,
-              onNavigationErrorDismissed = { vm.handleHideNavigationError() },
-              onAccept = { handleAcceptDataPolicy() },
-              onReject = { handleRejectDataPolicy() },
-              onPrivacyPolicyClicked = { handleViewPrivacy(uriHandler) },
-              onTermsOfServiceClicked = { handleViewTos(uriHandler) },
-          )
-        }
-      }
-    }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    makeFullWidth()
-
-    viewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
-    }
-  }
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    handleConfigurationChanged()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dispose()
-
+  override fun onDispose() {
     viewModel = null
     imageLoader = null
   }
+}
 
-  companion object {
+@Composable
+private fun MountHooks(
+    viewModel: DataPolicyDialogViewModeler,
+) {
+  LaunchedEffect(
+      viewModel,
+  ) {
+    viewModel.bind(scope = this)
+  }
+}
 
-    private const val TAG = "DataPolicyDisclosureDialog"
+@Composable
+internal fun DataPolicyDisclosureDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  val component = rememberComposableInjector { DataPolicyInjector() }
 
-    @JvmStatic
-    internal fun show(activity: FragmentActivity) {
-      if (activity.supportFragmentManager.findFragmentByTag(TAG) == null) {
-        DataPolicyDisclosureDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
-      } else {
-        Logger.w("DPD Dialog already shown")
-      }
+  val activity = rememberActivity()
+  val viewModel = requireNotNull(component.viewModel)
+  val imageLoader = requireNotNull(component.imageLoader)
+
+  val scope = rememberCoroutineScope()
+  val uriHandler = LocalUriHandler.current
+
+  val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
+
+  val openPage by rememberUpdatedState { url: String ->
+    handleHideNavigationError()
+
+    try {
+      uriHandler.openUri(url)
+    } catch (e: Throwable) {
+      viewModel.handleNavigationFailed(e)
+    }
+  }
+
+  val handleAcceptDataPolicy by rememberUpdatedState {
+    viewModel.handleAccept(
+        scope = scope,
+        onAccepted = onDismiss,
+    )
+  }
+
+  val handleRejectDataPolicy by rememberUpdatedState {
+    viewModel.handleReject(
+        scope = scope,
+        onRejected = { activity.finishAndRemoveTask() },
+    )
+  }
+
+  val handleViewPrivacy by rememberUpdatedState { viewModel.handleViewPrivacyPolicy(openPage) }
+
+  val handleViewTos by rememberUpdatedState { viewModel.handleViewTermsOfService(openPage) }
+
+  MountHooks(
+      viewModel = viewModel,
+  )
+
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    Box(
+        modifier =
+            Modifier.fillMaxSize()
+                .clickable { onDismiss() }
+                .padding(MaterialTheme.keylines.content)
+                .systemBarsPadding(),
+        contentAlignment = Alignment.Center,
+    ) {
+      DataPolicyDisclosureScreen(
+          modifier = modifier,
+          state = viewModel.state(),
+          imageLoader = imageLoader,
+          onNavigationErrorDismissed = handleHideNavigationError,
+          onAccept = handleAcceptDataPolicy,
+          onReject = handleRejectDataPolicy,
+          onPrivacyPolicyClicked = handleViewPrivacy,
+          onTermsOfServiceClicked = handleViewTos,
+      )
     }
   }
 }

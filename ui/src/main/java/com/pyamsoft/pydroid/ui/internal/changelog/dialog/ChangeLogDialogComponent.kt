@@ -32,6 +32,7 @@ internal interface ChangeLogDialogComponent {
 
     data class Parameters
     internal constructor(
+        internal val state: MutableChangeLogDialogViewState,
         internal val changeLogModule: ChangeLogModule,
         internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
@@ -49,7 +50,7 @@ internal interface ChangeLogDialogComponent {
       injector.imageLoader = params.imageLoader
       injector.viewModel =
           ChangeLogDialogViewModeler(
-              state = MutableChangeLogDialogViewState(),
+              state = params.state,
               interactor = params.changeLogModule.provideInteractor(),
               provider = provider,
               version = params.version,

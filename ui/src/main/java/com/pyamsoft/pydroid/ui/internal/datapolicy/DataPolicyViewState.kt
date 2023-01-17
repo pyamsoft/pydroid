@@ -22,9 +22,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 
+/**
+ * State for showing the required data policy disclosure
+ */
 @Stable
-internal interface DataPolicyViewState : UiViewState {
-  val isAccepted: Boolean?
+public interface DataPolicyViewState : UiViewState {
+  /**
+   * Have we accepted the data policy?
+   */
+  public val isAccepted: Boolean?
 }
 
 @Stable

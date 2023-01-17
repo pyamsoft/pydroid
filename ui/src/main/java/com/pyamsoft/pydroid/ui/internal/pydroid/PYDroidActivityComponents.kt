@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
+import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
@@ -29,7 +29,7 @@ internal constructor(
     internal val billingUpsell: BillingUpsell,
     internal val rating: RatingDelegate,
     internal val versionCheck: VersionCheckDelegate,
-    internal val dataPolicy: DataPolicyDelegate,
+    internal val dataPolicy: ShowDataPolicy,
     internal val versionUpgrader: VersionUpgradeAvailable,
     internal val versionUpdateProgress: VersionUpdateProgress,
     internal val showUpdateChangeLog: ShowUpdateChangeLog,

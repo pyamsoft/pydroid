@@ -32,20 +32,23 @@ import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
+import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialogComponent
+import com.pyamsoft.pydroid.ui.internal.billing.dialog.MutableBillingDialogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyDelegate
-import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.MutableChangeLogDialogViewState
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityComponents
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
@@ -67,6 +70,8 @@ internal interface AppComponent {
   @CheckResult fun plusBilling(): BillingComponent.Factory
 
   @CheckResult fun plusChangeLog(): ChangeLogComponent.Factory
+
+  @CheckResult fun plusDataPolicy(): DataPolicyComponent.Factory
 
   @CheckResult fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
 
@@ -144,6 +149,7 @@ internal interface AppComponent {
             changeLogModule = params.changeLogModule,
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
+            state = MutableBillingDialogViewState(),
         )
 
     private val billingParams =
@@ -165,6 +171,7 @@ internal interface AppComponent {
             composeTheme = params.composeTheme,
             theming = params.theming,
             versionCheckState = versionCheckState,
+            state = MutableSettingsViewState(),
         )
 
     private val changeLogParams =
@@ -179,6 +186,7 @@ internal interface AppComponent {
             composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
             version = params.version,
+            state = MutableChangeLogDialogViewState(),
         )
 
     private val versionUpgradeParams =
@@ -193,6 +201,12 @@ internal interface AppComponent {
             module = versionModule,
             composeTheme = params.composeTheme,
             state = versionCheckState,
+        )
+
+    private val dataPolicyParams =
+        DataPolicyComponent.Factory.Parameters(
+            state = MutableDataPolicyViewState(),
+            module = params.dataPolicyModule,
         )
 
     private fun connectBilling(activity: FragmentActivity) {
@@ -241,13 +255,8 @@ internal interface AppComponent {
                   disabled = options.disableVersionCheck,
               ),
           dataPolicy =
-              DataPolicyDelegate(
+              ShowDataPolicy(
                   activity,
-                  viewModel =
-                      DataPolicyViewModeler(
-                          state = MutableDataPolicyViewState(),
-                          interactor = params.dataPolicyModule.provideInteractor(),
-                      ),
                   disabled = options.disableDataPolicy,
               ),
           showUpdateChangeLog =
@@ -283,6 +292,10 @@ internal interface AppComponent {
 
     override fun plusBilling(): BillingComponent.Factory {
       return BillingComponent.Impl.FactoryImpl(billingParams)
+    }
+
+    override fun plusDataPolicy(): DataPolicyComponent.Factory {
+      return DataPolicyComponent.Impl.FactoryImpl(dataPolicyParams)
     }
 
     override fun plusVersionCheck(): VersionCheckComponent.Factory {

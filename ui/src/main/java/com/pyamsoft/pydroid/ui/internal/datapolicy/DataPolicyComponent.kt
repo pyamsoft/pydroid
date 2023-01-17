@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
+package com.pyamsoft.pydroid.ui.internal.datapolicy
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
-import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 
-internal interface DataPolicyDialogComponent {
+internal interface DataPolicyComponent {
 
-  fun inject(injector: DataPolicyInjector)
+  fun inject(delegate: ShowDataPolicy)
 
   interface Factory {
 
-    @CheckResult
-    fun create(
-        provider: AppProvider,
-    ): DataPolicyDialogComponent
+    @CheckResult fun create(): DataPolicyComponent
 
     data class Parameters
     internal constructor(
-        internal val privacyPolicyUrl: String,
-        internal val termsConditionsUrl: String,
-        internal val composeTheme: ComposeThemeFactory,
-        internal val imageLoader: ImageLoader,
+        internal val state: MutableDataPolicyViewState,
         internal val module: DataPolicyModule,
     )
   }
 
   class Impl
   private constructor(
-      private val provider: AppProvider,
       private val params: Factory.Parameters,
-  ) : DataPolicyDialogComponent {
+  ) : DataPolicyComponent {
 
-    override fun inject(injector: DataPolicyInjector) {
-      injector.imageLoader = params.imageLoader
-      injector.viewModel =
-          DataPolicyDialogViewModeler(
-              state = MutableDataPolicyDialogViewState(),
+    override fun inject(delegate: ShowDataPolicy) {
+      delegate.viewModel =
+          DataPolicyViewModeler(
+              state = params.state,
               interactor = params.module.provideInteractor(),
-              provider = provider,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
           )
     }
 
@@ -66,8 +53,8 @@ internal interface DataPolicyDialogComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(provider: AppProvider): DataPolicyDialogComponent {
-        return Impl(provider, params)
+      override fun create(): DataPolicyComponent {
+        return Impl(params)
       }
     }
   }

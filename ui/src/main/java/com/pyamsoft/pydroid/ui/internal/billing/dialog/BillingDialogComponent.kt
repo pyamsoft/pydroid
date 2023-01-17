@@ -33,6 +33,7 @@ internal interface BillingDialogComponent {
 
     data class Parameters
     internal constructor(
+        internal val state: MutableBillingDialogViewState,
         internal val changeLogModule: ChangeLogModule,
         internal val billingModule: BillingModule,
         internal val composeTheme: ComposeThemeFactory,
@@ -51,7 +52,7 @@ internal interface BillingDialogComponent {
       injector.purchaseClient = params.billingModule.provideLauncher()
       injector.viewModel =
           BillingDialogViewModeler(
-              state = MutableBillingDialogViewState(),
+              state = params.state,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
               interactor = params.billingModule.provideInteractor(),
               provider = provider,

@@ -236,6 +236,15 @@ public abstract class SettingsFragment : Fragment() {
         val handleDismissBillingDialog by rememberUpdatedState { setShowBillingDialog(false) }
         val handleShowBillingDialog by rememberUpdatedState { setShowBillingDialog(true) }
 
+        val (showDataDisclosureDialog, setShowDataDisclosureDialog) =
+            remember { mutableStateOf(false) }
+        val handleDismissDataDisclosureDialog by rememberUpdatedState {
+          setShowDataDisclosureDialog(false)
+        }
+        val handleShowDataDisclosureDialog by rememberUpdatedState {
+          setShowDataDisclosureDialog(true)
+        }
+
         composeTheme(act) {
           SettingsScreen(
               elevation = customElevation(),
@@ -255,7 +264,7 @@ public abstract class SettingsFragment : Fragment() {
               onDonateClicked = handleShowBillingDialog,
               onBugReportClicked = { handleReportBug(handler) },
               onViewSourceClicked = { handleViewSourceCode(handler) },
-              onViewDataPolicyClicked = { DataPolicyDisclosureDialog.show(act) },
+              onViewDataPolicyClicked = handleShowDataDisclosureDialog,
               onViewPrivacyPolicyClicked = { handleViewPrivacyPolicy(handler) },
               onViewTermsOfServiceClicked = { handleViewTermsOfService(handler) },
               onViewSocialMediaClicked = { handleViewSocialMedia(handler) },
@@ -272,6 +281,12 @@ public abstract class SettingsFragment : Fragment() {
           if (showBillingDialog) {
             BillingDialog(
                 onDismiss = handleDismissBillingDialog,
+            )
+          }
+
+          if (showDataDisclosureDialog) {
+            DataPolicyDisclosureDialog(
+                onDismiss = handleDismissDataDisclosureDialog,
             )
           }
         }

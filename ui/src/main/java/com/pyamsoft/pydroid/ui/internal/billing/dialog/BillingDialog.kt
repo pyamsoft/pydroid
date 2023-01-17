@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -130,7 +131,9 @@ internal fun BillingDialog(
   ) {
     Box(
         modifier =
-            Modifier.fillMaxSize().padding(MaterialTheme.keylines.content).systemBarsPadding(),
+            Modifier.fillMaxSize()
+                .clickable { onDismiss() }
+                .padding(MaterialTheme.keylines.content).systemBarsPadding(),
         contentAlignment = Alignment.Center,
     ) {
       BillingScreen(

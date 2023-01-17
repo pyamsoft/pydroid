@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.theme.keylines
 /** A compose dialog, but hosted inside of a Box so we can pad and scrim it */
 @Composable
 public fun PaddedDialog(
-    properties: DialogProperties = remember { DialogProperties() },
+    properties: DialogProperties = DialogProperties(),
     onDismissRequest: () -> Unit,
     content: @Composable BoxScope.() -> Unit,
 ) {

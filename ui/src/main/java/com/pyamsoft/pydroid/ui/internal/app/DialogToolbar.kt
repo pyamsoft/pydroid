@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
 internal fun DialogToolbar(
@@ -44,6 +45,7 @@ internal fun DialogToolbar(
       modifier = modifier,
       color = MaterialTheme.colors.primary,
       contentColor = MaterialTheme.colors.onPrimary,
+      elevation = ZeroElevation,
       shape =
           MaterialTheme.shapes.medium.copy(
               bottomEnd = ZeroCornerSize,
@@ -54,6 +56,7 @@ internal fun DialogToolbar(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = Color.Transparent,
         contentColor = LocalContentColor.current,
+        elevation = ZeroElevation,
         title = {
           Text(
               text = title,

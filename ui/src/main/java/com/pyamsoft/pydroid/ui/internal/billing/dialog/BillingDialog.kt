@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -132,8 +134,15 @@ internal fun BillingDialog(
     Box(
         modifier =
             Modifier.fillMaxSize()
-                .clickable { onDismiss() }
-                .padding(MaterialTheme.keylines.content).systemBarsPadding(),
+                .clickable(
+                    // Remove the ripple
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                  onDismiss()
+                }
+                .padding(MaterialTheme.keylines.content)
+                .systemBarsPadding(),
         contentAlignment = Alignment.Center,
     ) {
       BillingScreen(

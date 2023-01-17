@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.preference
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -209,7 +210,16 @@ internal fun ListPreferenceItem(
     ) {
       Box(
           modifier =
-              Modifier.fillMaxSize().padding(MaterialTheme.keylines.content).systemBarsPadding(),
+              Modifier.fillMaxSize()
+                  .clickable(
+                      // Remove the ripple
+                      interactionSource = remember { MutableInteractionSource() },
+                      indication = null,
+                  ) {
+                    onDismiss()
+                  }
+                  .padding(MaterialTheme.keylines.content)
+                  .systemBarsPadding(),
           contentAlignment = Alignment.Center,
       ) {
         Surface(

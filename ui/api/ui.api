@@ -534,7 +534,7 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 }
 
 public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
-	public static final fun SettingsPage-XTfNENU (Landroidx/compose/ui/Modifier;ZZLjava/util/List;Ljava/util/List;FFFLandroidx/compose/runtime/Composer;II)V
+	public static final fun SettingsPage-7LSsfP0 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLjava/util/List;Ljava/util/List;FFFLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {

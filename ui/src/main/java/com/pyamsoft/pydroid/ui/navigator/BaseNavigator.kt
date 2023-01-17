@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.toReader
 import com.pyamsoft.pydroid.arch.toWriter
 
 /** A base class navigator, not backed by any specific system */
+@Deprecated("Start migrating over to Compose and a different Navigation method")
 public abstract class BaseNavigator<S : Any> : Navigator<S> {
 
   final override fun navigateTo(screen: S) {

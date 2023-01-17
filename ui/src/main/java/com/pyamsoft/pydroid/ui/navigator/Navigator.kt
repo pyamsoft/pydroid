@@ -30,6 +30,7 @@ import androidx.compose.runtime.State
  *
  * Applications that will need a backstack will want to extend from [BackstackNavigator]
  */
+@Deprecated("Start migrating over to Compose and a different Navigation method")
 public interface Navigator<S : Any> {
 
   /** Get the current screen */

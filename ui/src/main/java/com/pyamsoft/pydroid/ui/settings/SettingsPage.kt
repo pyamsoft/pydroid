@@ -24,6 +24,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.lifecycleScope
@@ -67,6 +69,7 @@ private fun MountHooks(
 @Composable
 public fun SettingsPage(
     modifier: Modifier = Modifier,
+    shape: Shape = RectangleShape,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
     customPrePreferences: List<Preferences> = remember { emptyList() },
@@ -178,6 +181,7 @@ public fun SettingsPage(
 
   SettingsScreen(
       modifier = modifier,
+      shape = shape,
       elevation = customElevation,
       state = viewModel.state(),
       options = options,

@@ -40,6 +40,7 @@ import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 /** A navigator backed by AndroidX Fragment transactions */
+@Deprecated("Start migrating over to Compose and a different Navigation method")
 public abstract class FragmentNavigator<S : Any>
 protected constructor(
     lifecycleOwner: LifecycleOwner,

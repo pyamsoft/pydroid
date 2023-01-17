@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
@@ -42,6 +43,7 @@ import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    shape: Shape,
     elevation: Dp = ZeroElevation,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
@@ -73,6 +75,7 @@ internal fun SettingsScreen(
   Surface(
       modifier = modifier,
       elevation = elevation,
+      shape = shape,
   ) {
     Crossfade(
         targetState = isLoading,
@@ -227,6 +230,7 @@ private fun SettingsList(
 private fun PreviewSettingsScreen(isLoading: Boolean) {
   SettingsScreen(
       options = PYDroidActivityOptions(),
+      shape = MaterialTheme.shapes.medium,
       state =
           MutableSettingsViewState().apply {
             this.isLoading = isLoading

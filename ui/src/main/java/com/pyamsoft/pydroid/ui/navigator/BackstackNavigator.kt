@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.navigator
 import androidx.annotation.CheckResult
 
 /** A navigator which understands backstacks */
+@Deprecated("Start migrating over to Compose and a different Navigation method")
 public interface BackstackNavigator<S : Any> : Navigator<S> {
 
   /** Go back a page */

@@ -16,9 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.app.Activity
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 
@@ -26,6 +23,7 @@ import androidx.fragment.app.Fragment
  * Force a view to recompose by disposing and re-creating a Composition only if it is attached to a
  * window
  */
+@Deprecated("Using this function is an anti-pattern.")
 public fun ComposeView.recompose() {
   if (this.isAttachedToWindow) {
     this.disposeComposition()
@@ -34,6 +32,7 @@ public fun ComposeView.recompose() {
 }
 
 /** Dispose a ComposeView only if it is attached to a window */
+@Deprecated("Using this function is an anti-pattern.")
 public fun ComposeView.dispose() {
   if (this.isAttachedToWindow) {
     this.disposeComposition()
@@ -41,27 +40,13 @@ public fun ComposeView.dispose() {
 }
 
 /** Force a view to recompose by disposing and re-creating a Composition */
+@Deprecated("Using this function is an anti-pattern.")
 public fun Fragment.recompose() {
   (view as? ComposeView)?.recompose()
 }
 
 /** Force a view to recompose by disposing and re-creating a Composition */
+@Deprecated("Using this function is an anti-pattern.")
 public fun Fragment.dispose() {
   (view as? ComposeView)?.dispose()
-}
-
-@CheckResult
-private fun Activity.getExistingActivityComposeView(): ComposeView? {
-  return this.window.decorView.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
-      as? ComposeView
-}
-
-/** Force a view to recompose by disposing and re-creating a Composition */
-public fun Activity.recompose() {
-  getExistingActivityComposeView()?.recompose()
-}
-
-/** Force a view to recompose by disposing and re-creating a Composition */
-public fun Activity.dispose() {
-  getExistingActivityComposeView()?.dispose()
 }

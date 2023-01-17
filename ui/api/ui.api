@@ -566,10 +566,8 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
-	public static final fun dispose (Landroid/app/Activity;)V
 	public static final fun dispose (Landroidx/compose/ui/platform/ComposeView;)V
 	public static final fun dispose (Landroidx/fragment/app/Fragment;)V
-	public static final fun recompose (Landroid/app/Activity;)V
 	public static final fun recompose (Landroidx/compose/ui/platform/ComposeView;)V
 	public static final fun recompose (Landroidx/fragment/app/Fragment;)V
 }

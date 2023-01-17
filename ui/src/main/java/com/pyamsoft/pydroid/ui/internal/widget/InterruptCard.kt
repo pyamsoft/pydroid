@@ -28,7 +28,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.pyamsoft.pydroid.theme.HairlineSize
-import com.pyamsoft.pydroid.ui.defaults.CardDefaults
+import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
 @OptIn(ExperimentalAnimationApi::class)
@@ -49,7 +49,7 @@ internal fun InterruptCard(
                 width = HairlineSize,
                 color = MaterialTheme.colors.primary,
             ),
-        elevation = CardDefaults.Elevation,
+        elevation = ZeroElevation,
         color =
             MaterialTheme.colors.primary.copy(
                 alpha = 0.10F,

@@ -27,12 +27,18 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 internal interface SettingsViewState : UiViewState {
   val applicationName: CharSequence
   val darkMode: Theming.Mode
-  val isLoading: Boolean
+  val loadingState: LoadingState
+
+  enum class LoadingState {
+    NONE,
+    LOADING,
+    DONE
+  }
 }
 
 @Stable
 internal class MutableSettingsViewState internal constructor() : SettingsViewState {
   override var applicationName by mutableStateOf("")
   override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
-  override var isLoading by mutableStateOf(false)
+  override var loadingState by mutableStateOf(SettingsViewState.LoadingState.NONE)
 }

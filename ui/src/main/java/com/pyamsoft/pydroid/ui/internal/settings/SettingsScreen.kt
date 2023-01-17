@@ -68,46 +68,48 @@ internal fun SettingsScreen(
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
 ) {
-  val isLoading = state.isLoading
-  val applicationName = state.applicationName
-  val darkMode = state.darkMode
-
   Surface(
       modifier = modifier,
       elevation = elevation,
       shape = shape,
   ) {
     Crossfade(
-        targetState = isLoading,
+        targetState = state.loadingState,
     ) { loading ->
-      if (loading) {
-        Loading()
-      } else {
-        SettingsList(
-            options = options,
-            topItemMargin = topItemMargin,
-            bottomItemMargin = bottomItemMargin,
-            customPreContent = customPreContent,
-            customPostContent = customPostContent,
-            hideClearAll = hideClearAll,
-            hideUpgradeInformation = hideUpgradeInformation,
-            applicationName = applicationName,
-            darkMode = darkMode,
-            onDarkModeChanged = onDarkModeChanged,
-            onLicensesClicked = onLicensesClicked,
-            onCheckUpdateClicked = onCheckUpdateClicked,
-            onShowChangeLogClicked = onShowChangeLogClicked,
-            onResetClicked = onResetClicked,
-            onDonateClicked = onDonateClicked,
-            onBugReportClicked = onBugReportClicked,
-            onViewSourceClicked = onViewSourceClicked,
-            onViewDataPolicyClicked = onViewDataPolicyClicked,
-            onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-            onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-            onViewSocialMediaClicked = onViewSocialMediaClicked,
-            onViewBlogClicked = onViewBlogClicked,
-            onOpenMarketPage = onOpenMarketPage,
-        )
+      when (loading) {
+        SettingsViewState.LoadingState.NONE -> {
+          // Nothing has happened yet, render nothing, intentionally blank
+        }
+        SettingsViewState.LoadingState.LOADING -> {
+          Loading()
+        }
+        SettingsViewState.LoadingState.DONE -> {
+          SettingsList(
+              applicationName = state.applicationName,
+              darkMode = state.darkMode,
+              options = options,
+              topItemMargin = topItemMargin,
+              bottomItemMargin = bottomItemMargin,
+              customPreContent = customPreContent,
+              customPostContent = customPostContent,
+              hideClearAll = hideClearAll,
+              hideUpgradeInformation = hideUpgradeInformation,
+              onDarkModeChanged = onDarkModeChanged,
+              onLicensesClicked = onLicensesClicked,
+              onCheckUpdateClicked = onCheckUpdateClicked,
+              onShowChangeLogClicked = onShowChangeLogClicked,
+              onResetClicked = onResetClicked,
+              onDonateClicked = onDonateClicked,
+              onBugReportClicked = onBugReportClicked,
+              onViewSourceClicked = onViewSourceClicked,
+              onViewDataPolicyClicked = onViewDataPolicyClicked,
+              onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+              onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+              onViewSocialMediaClicked = onViewSocialMediaClicked,
+              onViewBlogClicked = onViewBlogClicked,
+              onOpenMarketPage = onOpenMarketPage,
+          )
+        }
       }
     }
   }
@@ -227,13 +229,13 @@ private fun SettingsList(
 }
 
 @Composable
-private fun PreviewSettingsScreen(isLoading: Boolean) {
+private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) {
   SettingsScreen(
       options = PYDroidActivityOptions(),
       shape = MaterialTheme.shapes.medium,
       state =
           MutableSettingsViewState().apply {
-            this.isLoading = isLoading
+            this.loadingState = loadingState
             applicationName = "TEST"
             darkMode = Theming.Mode.LIGHT
           },
@@ -262,12 +264,18 @@ private fun PreviewSettingsScreen(isLoading: Boolean) {
 
 @Preview
 @Composable
+private fun PreviewSettingsScreenDefault() {
+  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.NONE)
+}
+
+@Preview
+@Composable
 private fun PreviewSettingsScreenLoading() {
-  PreviewSettingsScreen(isLoading = true)
+  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.LOADING)
 }
 
 @Preview
 @Composable
 private fun PreviewSettingsScreenLoaded() {
-  PreviewSettingsScreen(isLoading = false)
+  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.DONE)
 }

@@ -44,15 +44,15 @@ internal constructor(
 
   internal fun handleLoadPreferences(scope: CoroutineScope) {
     val s = state
-    s.isLoading = true
+    s.loadingState = SettingsViewState.LoadingState.LOADING
 
     scope.launch(context = Dispatchers.Main) {
       theming.listenForModeChanges().collectLatest {
         s.darkMode = it
 
         // Upon sync, mark loaded
-        if (s.isLoading) {
-          s.isLoading = false
+        if (s.loadingState == SettingsViewState.LoadingState.LOADING) {
+          s.loadingState = SettingsViewState.LoadingState.DONE
         }
       }
     }

@@ -54,8 +54,6 @@ internal fun AboutScreen(
     onViewLicense: (library: OssLibrary) -> Unit,
     onClose: () -> Unit,
 ) {
-  val isLoading = state.isLoading
-  val navigationError = state.navigationError
   val snackbarHostState = remember { SnackbarHostState() }
 
   Column(
@@ -79,23 +77,29 @@ internal fun AboutScreen(
           modifier = Modifier.fillMaxWidth(),
       ) {
         Crossfade(
-            targetState = isLoading,
+            targetState = state.loadingState,
         ) { loading ->
-          if (loading) {
-            Loading()
-          } else {
-            AboutList(
-                modifier = Modifier.fillMaxSize(),
-                state = state,
-                onViewHomePage = onViewHomePage,
-                onViewLicense = onViewLicense,
-            )
+          when (loading) {
+            AboutViewState.LoadingState.NONE -> {
+              // Nothing has happened yet, render nothing, intentionally blank
+            }
+            AboutViewState.LoadingState.LOADING -> {
+              Loading()
+            }
+            AboutViewState.LoadingState.DONE -> {
+              AboutList(
+                  modifier = Modifier.fillMaxSize(),
+                  state = state,
+                  onViewHomePage = onViewHomePage,
+                  onViewLicense = onViewLicense,
+              )
+            }
           }
         }
 
         NavigationError(
             snackbarHost = snackbarHostState,
-            error = navigationError,
+            error = state.navigationError,
             onSnackbarDismissed = onNavigationErrorDismissed,
         )
       }
@@ -166,19 +170,17 @@ private fun NavigationError(
 
 @Composable
 private fun PreviewAboutScreen(
-    isLoading: Boolean,
+    loading: AboutViewState.LoadingState,
     error: Throwable?,
 ) {
 
-  val state =
-      object : AboutViewState {
-        override val isLoading: Boolean = isLoading
-        override val licenses: List<OssLibrary> = OssLibraries.libraries().sortedBy { it.name }
-        override val navigationError: Throwable? = error
-      }
-
   AboutScreen(
-      state = state,
+      state =
+          MutableAboutViewState().apply {
+            loadingState = loading
+            licenses = OssLibraries.libraries().sortedBy { it.name }
+            navigationError = error
+          },
       onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},
@@ -188,9 +190,18 @@ private fun PreviewAboutScreen(
 
 @Preview
 @Composable
+private fun PreviewAboutScreenDefault() {
+  PreviewAboutScreen(
+      loading = AboutViewState.LoadingState.NONE,
+      error = null,
+  )
+}
+
+@Preview
+@Composable
 private fun PreviewAboutScreenLoading() {
   PreviewAboutScreen(
-      isLoading = true,
+      loading = AboutViewState.LoadingState.LOADING,
       error = null,
   )
 }
@@ -199,8 +210,17 @@ private fun PreviewAboutScreenLoading() {
 @Composable
 private fun PreviewAboutScreenLoaded() {
   PreviewAboutScreen(
-      isLoading = false,
+      loading = AboutViewState.LoadingState.DONE,
       error = null,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewAboutScreenDefaultWithError() {
+  PreviewAboutScreen(
+      loading = AboutViewState.LoadingState.NONE,
+      error = RuntimeException("TEST ERROR"),
   )
 }
 
@@ -208,8 +228,8 @@ private fun PreviewAboutScreenLoaded() {
 @Composable
 private fun PreviewAboutScreenLoadingWithError() {
   PreviewAboutScreen(
-      isLoading = true,
-      error = Throwable("TEST ERROR"),
+      loading = AboutViewState.LoadingState.LOADING,
+      error = RuntimeException("TEST ERROR"),
   )
 }
 
@@ -217,7 +237,7 @@ private fun PreviewAboutScreenLoadingWithError() {
 @Composable
 private fun PreviewAboutScreenLoadedWithError() {
   PreviewAboutScreen(
-      isLoading = false,
-      error = Throwable("TEST ERROR"),
+      loading = AboutViewState.LoadingState.DONE,
+      error = RuntimeException("TEST ERROR"),
   )
 }

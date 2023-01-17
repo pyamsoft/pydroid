@@ -19,8 +19,15 @@ package com.pyamsoft.pydroid.ui.version
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
@@ -64,6 +71,25 @@ internal constructor(
             .plusVersionCheck()
             .create()
             .inject(this)
+
+        val observer =
+            object : DefaultLifecycleObserver {
+
+              override fun onStart(owner: LifecycleOwner) {
+                viewModel
+                    .requireNotNull()
+                    .handleCheckForUpdates(
+                        scope = owner.lifecycleScope,
+                        force = false,
+                        onLaunchUpdate = {
+                          Logger.d("AppUpdateLauncher has been found for update! $it")
+                        },
+                    )
+              }
+            }
+        val lifecycle = activity.lifecycle
+        lifecycle.addObserver(observer)
+        activity.doOnDestroy { lifecycle.removeObserver(observer) }
       }
     }
 
@@ -71,16 +97,6 @@ internal constructor(
       hostingActivity = null
       viewModel = null
     }
-  }
-
-  private fun handleUpgrade(
-      newVersionCode: Int,
-  ) {
-    val act = hostingActivity.requireNotNull()
-    VersionUpgradeDialog.show(
-        activity = act,
-        newVersionCode = newVersionCode,
-    )
   }
 
   /**
@@ -96,10 +112,19 @@ internal constructor(
       return
     }
 
-    val state = viewModel.requireNotNull().state()
-    content(state) {
-      handleUpgrade(
+    val vm = viewModel.requireNotNull()
+    val state = vm.state()
+
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
+    val handleShowDialog by rememberUpdatedState { setShowDialog(true) }
+
+    content(state) { handleShowDialog() }
+
+    if (showDialog && state.isUpdateReadyToInstall) {
+      VersionUpgradeDialog(
           newVersionCode = state.availableUpdateVersionCode,
+          onDismiss = handleDismissDialog,
       )
     }
   }

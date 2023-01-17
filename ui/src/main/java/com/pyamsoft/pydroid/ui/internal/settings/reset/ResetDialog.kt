@@ -16,121 +16,93 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.fragment.app.DialogFragment
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.makeFullWidth
-import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.dispose
-import com.pyamsoft.pydroid.ui.util.recompose
-import com.pyamsoft.pydroid.ui.util.show
 
-internal class ResetDialog : AppCompatDialogFragment() {
-
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
+internal class ResetDialogInjector : ComposableInjector() {
 
   internal var viewModel: ResetViewModeler? = null
 
-  private fun handleFullReset() {
-    viewModel
-        .requireNotNull()
-        .handleFullReset(
-            scope = requireActivity().lifecycleScope,
-            onResetComplete = {
-              Logger.d("Reset complete, dismiss")
-              dismiss()
-            },
-        )
-  }
-
-  private fun handleConfigurationChanged() {
-    makeFullWidth()
-    recompose()
-  }
-
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-
-    ObjectGraph.ApplicationScope.retrieve(act.application)
+  override fun onInject(activity: FragmentActivity) {
+    ObjectGraph.ApplicationScope.retrieve(activity.application)
         .injector()
         .plusReset()
         .create()
         .inject(this)
-
-    return ComposeView(act).apply {
-      id = R.id.dialog_reset
-
-      val vm = viewModel.requireNotNull()
-      setContent {
-        composeTheme(act) {
-          ResetScreen(
-              modifier = Modifier.fillMaxWidth(),
-              state = vm.state(),
-              onReset = { handleFullReset() },
-              onClose = { dismiss() },
-          )
-        }
-      }
-    }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    makeFullWidth()
-
-    viewModel.requireNotNull().restoreState(savedInstanceState)
-  }
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    handleConfigurationChanged()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dispose()
+  override fun onDispose() {
     viewModel = null
   }
+}
 
-  companion object {
+@Composable
+internal fun ResetDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  val component = rememberComposableInjector { ResetDialogInjector() }
 
-    private const val TAG = "ResetDialog"
+  val viewModel = requireNotNull(component.viewModel)
 
-    @JvmStatic
-    @CheckResult
-    private fun newInstance(): DialogFragment {
-      return ResetDialog().apply { arguments = Bundle().apply {} }
-    }
+  val scope = rememberCoroutineScope()
+  val handleReset by rememberUpdatedState {
+    viewModel.handleFullReset(
+        scope = scope,
+    )
+  }
 
-    @JvmStatic
-    internal fun show(activity: FragmentActivity) {
-      newInstance().show(activity, TAG)
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    Box(
+        modifier =
+            Modifier.fillMaxSize()
+                .clickable(
+                    // Remove the ripple
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                  onDismiss()
+                }
+                .padding(MaterialTheme.keylines.content)
+                .systemBarsPadding(),
+        contentAlignment = Alignment.Center,
+    ) {
+      ResetScreen(
+          modifier = modifier.fillMaxWidth(),
+          state = viewModel.state(),
+          onReset = handleReset,
+          onClose = onDismiss,
+      )
     }
   }
+}
+
+@Preview
+@Composable
+private fun PreviewResetDialog() {
+  ResetDialog(
+      onDismiss = {},
+  )
 }

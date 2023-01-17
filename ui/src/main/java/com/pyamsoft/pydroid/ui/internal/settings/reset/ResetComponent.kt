@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface ResetComponent {
 
-  fun inject(dialog: ResetDialog)
+  fun inject(injector: ResetDialogInjector)
 
   interface Factory {
 
@@ -40,9 +40,8 @@ internal interface ResetComponent {
       private val params: Factory.Parameters,
   ) : ResetComponent {
 
-    override fun inject(dialog: ResetDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.viewModel =
+    override fun inject(injector: ResetDialogInjector) {
+      injector.viewModel =
           ResetViewModeler(
               state = MutableResetViewState(),
               interactor = params.module.provideInteractor(),

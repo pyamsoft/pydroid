@@ -18,8 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
@@ -28,7 +26,6 @@ import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -45,7 +42,6 @@ internal constructor(
 
   // Copy these out of PYDroidActivityComponents so we can null them out onDestroy
   private var ratingDelegate: RatingDelegate?
-  private var versionCheckDelegate: VersionCheckDelegate?
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
   private var versionUpdateProgress: VersionUpdateProgress?
   private var showUpdateChangeLog: ShowUpdateChangeLog?
@@ -56,34 +52,19 @@ internal constructor(
     val components = component.create(activity)
 
     val rd = components.rating
-    val vc = components.versionCheck
 
     ratingDelegate = rd
-    versionCheckDelegate = vc
     versionUpgradeAvailable = components.versionUpgrader
     versionUpdateProgress = components.versionUpdateProgress
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
     showDataPolicy = components.dataPolicy
 
-    val repeatedActions =
-        object : DefaultLifecycleObserver {
-
-          // Do on each start
-          override fun onStart(owner: LifecycleOwner) {
-            vc.checkUpdates()
-          }
-        }
-
-    activity.lifecycle.addObserver(repeatedActions)
     activity.doOnDestroy {
-      activity.lifecycle.removeObserver(repeatedActions)
-
       appComponent = null
       appProvider = null
 
       ratingDelegate = null
-      versionCheckDelegate = null
       versionUpgradeAvailable = null
       versionUpdateProgress = null
       billingUpsell = null
@@ -149,8 +130,6 @@ internal constructor(
 
   /** Check for in-app updates */
   override fun checkUpdates() {
-    versionCheckDelegate
-        .requireNotNull { "VersionCheckDelegate is NULL, was this destroyed?" }
-        .checkUpdates()
+    // TODO left blank
   }
 }

@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface VersionUpgradeComponent {
 
-  fun inject(dialog: VersionUpgradeDialog)
+  fun inject(injector: VersionUpgradeDialogInjector)
 
   interface Factory {
 
@@ -41,9 +41,8 @@ internal interface VersionUpgradeComponent {
       private val params: Factory.Parameters,
   ) : VersionUpgradeComponent {
 
-    override fun inject(dialog: VersionUpgradeDialog) {
-      dialog.composeTheme = params.composeTheme
-      dialog.viewModel =
+    override fun inject(injector: VersionUpgradeDialogInjector) {
+      injector.viewModel =
           VersionUpgradeViewModeler(
               state = params.state,
               interactor = params.module.provideInteractor(),

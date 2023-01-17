@@ -52,8 +52,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckDelegate
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -243,17 +241,6 @@ internal interface AppComponent {
 
       return PYDroidActivityComponents(
           rating = rating,
-          versionCheck =
-              VersionCheckDelegate(
-                  activity,
-                  viewModel =
-                      VersionCheckViewModeler(
-                          state = versionCheckState,
-                          interactor = versionModule.provideInteractor(),
-                          interactorCache = versionModule.provideInteractorCache(),
-                      ),
-                  disabled = options.disableVersionCheck,
-              ),
           dataPolicy =
               ShowDataPolicy(
                   activity,

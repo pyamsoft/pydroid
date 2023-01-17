@@ -29,23 +29,16 @@ internal constructor(
     private val interactor: SettingsInteractor,
 ) : AbstractViewModeler<ResetViewState>(state) {
 
-  internal fun handleFullReset(
-      scope: CoroutineScope,
-      onResetComplete: () -> Unit,
-  ) {
+  internal fun handleFullReset(scope: CoroutineScope) {
     if (state.reset) {
       Logger.w("Already reset, do nothing")
       return
     }
 
+    state.reset = true
     scope.launch(context = Dispatchers.Main) {
-      state.reset = true
-
       Logger.d("Completely reset application")
       interactor.wipeData()
-
-      Logger.d("Reset completed, broadcast!")
-      onResetComplete()
     }
   }
 }

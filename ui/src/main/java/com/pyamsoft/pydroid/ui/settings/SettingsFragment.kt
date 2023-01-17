@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalUriHandler
@@ -52,11 +53,13 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -140,26 +143,6 @@ public abstract class SettingsFragment : Fragment() {
     }
   }
 
-  private fun handleCheckForUpdates() {
-    if (options.requireNotNull().disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return
-    }
-
-    versionViewModel
-        .requireNotNull()
-        .handleCheckForUpdates(
-            scope = viewLifecycleOwner.lifecycleScope,
-            force = true,
-            onLaunchUpdate = {
-              showVersionUpgrade(
-                  activity = requireActivity(),
-                  launcher = it,
-              )
-            },
-        )
-  }
-
   private fun showVersionUpgrade(
       activity: FragmentActivity,
       launcher: AppUpdateLauncher,
@@ -224,8 +207,12 @@ public abstract class SettingsFragment : Fragment() {
       id = R.id.fragment_settings
 
       val vm = viewModel.requireNotNull()
+      val versionVm = versionViewModel.requireNotNull()
       val opts = options.requireNotNull()
       setContent {
+        val versionState = versionVm.state()
+        val activity = rememberActivity()
+        val scope = rememberCoroutineScope()
         val handler = LocalUriHandler.current
 
         val (showChangeLogDialog, setShowChangeLogDialog) = remember { mutableStateOf(false) }
@@ -236,6 +223,14 @@ public abstract class SettingsFragment : Fragment() {
         val handleDismissBillingDialog by rememberUpdatedState { setShowBillingDialog(false) }
         val handleShowBillingDialog by rememberUpdatedState { setShowBillingDialog(true) }
 
+        val (showResetDialog, setShowResetDialog) = remember { mutableStateOf(false) }
+        val handleDismissResetDialog by rememberUpdatedState { setShowResetDialog(false) }
+        val handleShowResetDialog by rememberUpdatedState { setShowResetDialog(true) }
+
+        val (showVersionDialog, setShowVersionDialog) = remember { mutableStateOf(false) }
+        val handleDismissVersionDialog by rememberUpdatedState { setShowVersionDialog(false) }
+        val handleShowVersionDialog by rememberUpdatedState { setShowVersionDialog(true) }
+
         val (showDataDisclosureDialog, setShowDataDisclosureDialog) =
             remember { mutableStateOf(false) }
         val handleDismissDataDisclosureDialog by rememberUpdatedState {
@@ -243,6 +238,25 @@ public abstract class SettingsFragment : Fragment() {
         }
         val handleShowDataDisclosureDialog by rememberUpdatedState {
           setShowDataDisclosureDialog(true)
+        }
+
+        val handleCheckForUpdates by rememberUpdatedState {
+          if (opts.disableVersionCheck) {
+            Logger.w("Application has disabled the VersionCheck component")
+            return@rememberUpdatedState
+          }
+
+          versionVm.handleCheckForUpdates(
+              scope = scope,
+              force = true,
+              onLaunchUpdate = {
+                handleShowVersionDialog()
+                showVersionUpgrade(
+                    activity = activity,
+                    launcher = it,
+                )
+              },
+          )
         }
 
         composeTheme(act) {
@@ -260,7 +274,7 @@ public abstract class SettingsFragment : Fragment() {
               onLicensesClicked = { AboutDialog.show(act) },
               onCheckUpdateClicked = { handleCheckForUpdates() },
               onShowChangeLogClicked = handleShowChangeLogDialog,
-              onResetClicked = { ResetDialog.show(act) },
+              onResetClicked = handleShowResetDialog,
               onDonateClicked = handleShowBillingDialog,
               onBugReportClicked = { handleReportBug(handler) },
               onViewSourceClicked = { handleViewSourceCode(handler) },
@@ -287,6 +301,19 @@ public abstract class SettingsFragment : Fragment() {
           if (showDataDisclosureDialog) {
             DataPolicyDisclosureDialog(
                 onDismiss = handleDismissDataDisclosureDialog,
+            )
+          }
+
+          if (showResetDialog) {
+            ResetDialog(
+                onDismiss = handleDismissResetDialog,
+            )
+          }
+
+          if (showVersionDialog && versionState.isUpdateReadyToInstall) {
+            VersionUpgradeDialog(
+                newVersionCode = versionState.availableUpdateVersionCode,
+                onDismiss = handleDismissVersionDialog,
             )
           }
         }

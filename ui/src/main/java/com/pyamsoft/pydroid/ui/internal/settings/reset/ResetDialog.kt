@@ -16,14 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.ui.app.PaddedDialog
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
@@ -62,11 +64,11 @@ internal fun ResetDialog(
     )
   }
 
-  PaddedDialog(
+  Dialog(
       onDismissRequest = onDismiss,
   ) {
     ResetScreen(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state(),
         onReset = handleReset,
         onClose = onDismiss,

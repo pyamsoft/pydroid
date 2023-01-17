@@ -17,11 +17,14 @@
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -32,8 +35,8 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
@@ -119,11 +122,11 @@ internal fun BillingDialog(
       viewModel = viewModel,
   )
 
-  PaddedDialog(
+  Dialog(
       onDismissRequest = onDismiss,
   ) {
     BillingScreen(
-        modifier = modifier,
+        modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state(),
         imageLoader = imageLoader,
         onPurchase = handleLaunchPurchase,

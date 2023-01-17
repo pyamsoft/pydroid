@@ -45,9 +45,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PaddedDialog
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
@@ -202,11 +202,11 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-    PaddedDialog(
+    Dialog(
         onDismissRequest = onDismiss,
     ) {
       Surface(
-          modifier = modifier.fillMaxWidth(),
+          modifier = modifier.padding(MaterialTheme.keylines.content),
           elevation = DialogDefaults.Elevation,
           shape = MaterialTheme.shapes.medium,
       ) {

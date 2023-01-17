@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,9 +26,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
-import com.pyamsoft.pydroid.ui.app.PaddedDialog
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
@@ -117,11 +120,11 @@ internal fun DataPolicyDisclosureDialog(
       viewModel = viewModel,
   )
 
-  PaddedDialog(
+  Dialog(
       onDismissRequest = onDismiss,
   ) {
     DataPolicyDisclosureScreen(
-        modifier = modifier,
+        modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state(),
         imageLoader = imageLoader,
         onNavigationErrorDismissed = handleHideNavigationError,

@@ -119,10 +119,6 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/pyamsoft/pydroid/ui/app/PaddedDialogKt {
-	public static final fun PaddedDialog (Landroidx/compose/ui/window/DialogProperties;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;

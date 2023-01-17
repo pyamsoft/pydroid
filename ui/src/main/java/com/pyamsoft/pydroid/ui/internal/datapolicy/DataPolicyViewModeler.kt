@@ -31,26 +31,10 @@ internal constructor(
 
   internal fun bind(
       scope: CoroutineScope,
-      onShowPolicy: () -> Unit,
   ) {
     scope.launch(context = Dispatchers.Main) {
       interactor.listenForPolicyAcceptedChanges().collectLatest { accepted ->
         state.isAccepted = accepted
-        if (!accepted) {
-          onShowPolicy()
-        }
-      }
-    }
-  }
-
-  /** Used from DPD Delegate */
-  internal fun handleShowDataPolicyDialogIfPossible(
-      scope: CoroutineScope,
-      onNeedsToShow: () -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      if (state.isAccepted == false) {
-        onNeedsToShow()
       }
     }
   }

@@ -20,20 +20,13 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.LifecycleEffect
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -89,34 +82,22 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-
-    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
-    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
-    val handleShowDialog by rememberUpdatedState { setShowDialog(true) }
+    val state = vm.state()
 
     LaunchedEffect(vm) {
       vm.bind(
           scope = this,
-          onShowPolicy = handleShowDialog,
       )
     }
 
-    LifecycleEffect {
-      object : DefaultLifecycleObserver {
-
-        override fun onResume(owner: LifecycleOwner) {
-          vm.handleShowDataPolicyDialogIfPossible(
-              scope = owner.lifecycleScope,
-              onNeedsToShow = handleShowDialog,
-          )
-        }
-      }
-    }
-
-    if (showDialog) {
+    // This field can be null, so don't use falsey, explicitly check
+    val isAccepted = state.isAccepted
+    if (isAccepted != null && !isAccepted) {
       DataPolicyDisclosureDialog(
           modifier = modifier,
-          onDismiss = handleDismissDialog,
+          onDismiss = {
+            Logger.d("DPD accepted, this will be dismissed once the Preferences update")
+          },
       )
     }
   }

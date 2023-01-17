@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
 
 /** Fragment for displaying a settings page */
+@Deprecated("Start migrating to Compose and use SettingsPage")
 public abstract class SettingsFragment : Fragment() {
 
   /** May be provided by PYDroid, otherwise this is just a noop */

@@ -88,6 +88,7 @@ public abstract class PYDroidActivity :
   }
 
   /** Check for in-app updates */
+  @Deprecated("Don't use this function, use NewVersionWidget composable.")
   override fun checkUpdates() {
     delegate.requireNotNull().checkUpdates()
   }

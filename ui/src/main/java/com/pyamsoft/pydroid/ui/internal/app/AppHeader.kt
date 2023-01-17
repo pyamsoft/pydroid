@@ -130,7 +130,7 @@ internal fun AppHeaderDialog(
         val c = LocalDialogColor.current
 
         Surface(
-            modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
+            modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.content),
             elevation = elevation,
             color = c,
             shape =

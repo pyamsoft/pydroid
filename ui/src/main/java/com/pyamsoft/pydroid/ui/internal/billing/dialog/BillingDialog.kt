@@ -16,140 +16,131 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
-import android.content.res.Configuration
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.app.makeFullWidth
-import com.pyamsoft.pydroid.ui.internal.app.ComposeTheme
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.app.invoke
+import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.dispose
-import com.pyamsoft.pydroid.ui.util.recompose
-import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.util.LifecycleEffect
+import com.pyamsoft.pydroid.ui.util.rememberActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class BillingDialog : AppCompatDialogFragment() {
-
-  /** May be provided by PYDroid, otherwise this is just a noop */
-  internal var composeTheme: ComposeTheme = NoopTheme
+internal class BillingDialogInjector : ComposableInjector() {
 
   internal var purchaseClient: BillingLauncher? = null
-
   internal var viewModel: BillingDialogViewModeler? = null
-
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getApplicationProvider(): AppProvider {
-    return ObjectGraph.ActivityScope.retrieve(requireActivity()).changeLogProvider()
+  private fun getApplicationProvider(activity: FragmentActivity): AppProvider {
+    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
   }
 
-  private fun handleLaunchPurchase(sku: BillingSku) {
-    requireActivity().also { a ->
-      // Enforce on main thread
-      a.lifecycleScope.launch(context = Dispatchers.Main) {
-        Logger.d("Start purchase flow for $sku")
-        purchaseClient.requireNotNull().purchase(a, sku)
-      }
-    }
-  }
-
-  private fun handleConfigurationChanged() {
-    makeFullWidth()
-    recompose()
-  }
-
-  override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
-  ): View {
-    val act = requireActivity()
-    ObjectGraph.ActivityScope.retrieve(act)
+  override fun onInject(activity: FragmentActivity) {
+    ObjectGraph.ActivityScope.retrieve(activity)
         .injector()
         .plusBillingDialog()
-        .create(getApplicationProvider())
+        .create(getApplicationProvider(activity))
         .inject(this)
-
-    return ComposeView(act).apply {
-      id = R.id.dialog_billing
-
-      val vm = viewModel.requireNotNull()
-      val loader = imageLoader.requireNotNull()
-      setContent {
-        composeTheme(act) {
-          BillingScreen(
-              state = vm.state(),
-              imageLoader = loader,
-              onPurchase = { handleLaunchPurchase(it) },
-              onBillingErrorDismissed = { vm.handleClearError() },
-              onClose = { dismiss() },
-          )
-        }
-      }
-    }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    makeFullWidth()
-    viewModel.requireNotNull().also { vm ->
-      vm.restoreState(savedInstanceState)
-      vm.bind(scope = viewLifecycleOwner.lifecycleScope)
-    }
-  }
-
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-    handleConfigurationChanged()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    viewModel
-        .requireNotNull()
-        .handleRefresh(
-            scope = viewLifecycleOwner.lifecycleScope,
-        )
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    viewModel?.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dispose()
-
+  override fun onDispose() {
     viewModel = null
     imageLoader = null
     purchaseClient = null
   }
+}
 
-  companion object {
+@Composable
+private fun MountHooks(
+    viewModel: BillingDialogViewModeler,
+) {
+  LaunchedEffect(
+      viewModel,
+  ) {
+    viewModel.bind(scope = this)
+  }
 
-    private const val TAG = "BillingDialog"
+  LifecycleEffect {
+    object : DefaultLifecycleObserver {
 
-    @JvmStatic
-    internal fun show(activity: FragmentActivity) {
-      BillingDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
+      override fun onResume(owner: LifecycleOwner) {
+        viewModel.handleRefresh(owner.lifecycleScope)
+      }
+    }
+  }
+}
+
+@Composable
+internal fun BillingDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  val component = rememberComposableInjector { BillingDialogInjector() }
+
+  val activity = rememberActivity()
+  val viewModel = requireNotNull(component.viewModel)
+  val imageLoader = requireNotNull(component.imageLoader)
+  val purchaseClient = requireNotNull(component.purchaseClient)
+
+  val handleLaunchPurchase by rememberUpdatedState { sku: BillingSku ->
+    // Enforce on main thread since billing is Google
+    activity.lifecycleScope.launch(context = Dispatchers.Main) {
+      Enforcer.assertOnMainThread()
+
+      Logger.d("Start purchase flow for $sku")
+      purchaseClient.requireNotNull().purchase(activity, sku)
+    }
+
+    return@rememberUpdatedState
+  }
+
+  val handleClearBillingError by rememberUpdatedState { viewModel.handleClearError() }
+
+  MountHooks(
+      viewModel = viewModel,
+  )
+
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    Box(
+        modifier =
+            Modifier.fillMaxSize().padding(MaterialTheme.keylines.content).systemBarsPadding(),
+        contentAlignment = Alignment.Center,
+    ) {
+      BillingScreen(
+          modifier = modifier,
+          state = viewModel.state(),
+          imageLoader = imageLoader,
+          onPurchase = handleLaunchPurchase,
+          onBillingErrorDismissed = handleClearBillingError,
+          onClose = onDismiss,
+      )
     }
   }
 }

@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface BillingDialogComponent {
 
-  fun inject(dialog: BillingDialog)
+  fun inject(injector: BillingDialogInjector)
 
   interface Factory {
 
@@ -46,11 +46,10 @@ internal interface BillingDialogComponent {
       private val provider: AppProvider,
   ) : BillingDialogComponent {
 
-    override fun inject(dialog: BillingDialog) {
-      dialog.imageLoader = params.imageLoader
-      dialog.composeTheme = params.composeTheme
-      dialog.purchaseClient = params.billingModule.provideLauncher()
-      dialog.viewModel =
+    override fun inject(injector: BillingDialogInjector) {
+      injector.imageLoader = params.imageLoader
+      injector.purchaseClient = params.billingModule.provideLauncher()
+      injector.viewModel =
           BillingDialogViewModeler(
               state = MutableBillingDialogViewState(),
               changeLogInteractor = params.changeLogModule.provideInteractor(),

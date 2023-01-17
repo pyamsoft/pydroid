@@ -283,9 +283,7 @@ internal fun ListPreferenceItem(
             item {
               Row(
                   modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(horizontal = MaterialTheme.keylines.baseline)
-                          .padding(bottom = MaterialTheme.keylines.baseline),
+                      Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
               ) {
                 Spacer(
                     modifier = Modifier.weight(1F),

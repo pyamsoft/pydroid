@@ -106,14 +106,11 @@ internal constructor(
     val state = vm.state()
 
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
-
     val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
-
     val handleDismissPopup by rememberUpdatedState {
       // Dismiss popup
       vm.handleDismiss()
     }
-
     val handleShowDialog by rememberUpdatedState {
       // Dismiss popup
       vm.handleDismiss()

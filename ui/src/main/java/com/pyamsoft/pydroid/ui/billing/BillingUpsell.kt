@@ -19,6 +19,11 @@ package com.pyamsoft.pydroid.ui.billing
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -97,20 +102,6 @@ internal constructor(
     }
   }
 
-  /** Dismiss an upsell that is shown */
-  public fun dismissUpsell() {
-    if (disabled) {
-      Logger.w("Application has disabled the Billing component")
-      return
-    }
-
-    viewModel
-        .requireNotNull()
-        .handleDismissUpsell(
-            scope = hostingActivity.requireNotNull().lifecycleScope,
-        )
-  }
-
   /**
    * Render into a composable the version check screen upsell
    *
@@ -126,15 +117,33 @@ internal constructor(
 
     val vm = viewModel.requireNotNull()
     val state = vm.state()
+    val scope = rememberCoroutineScope()
+
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
+    val handleDismissPopup by rememberUpdatedState {
+      // Dismiss popup
+      vm.handleDismissUpsell(scope = scope)
+    }
+    val handleShowDialog by rememberUpdatedState {
+      // Dismiss popup
+      vm.handleDismissUpsell(scope = scope)
+
+      // Show dialog
+      setShowDialog(true)
+    }
 
     content(
         state = state,
-        onShow = {
-          dismissUpsell()
-          BillingDialog.show(hostingActivity.requireNotNull())
-        },
-        onDismiss = { dismissUpsell() },
+        onShow = handleShowDialog,
+        onDismiss = handleDismissPopup,
     )
+
+    if (showDialog) {
+      BillingDialog(
+          onDismiss = handleDismissDialog,
+      )
+    }
   }
 
   /** Render into a composable the default version check screen upsell */

@@ -228,11 +228,13 @@ public abstract class SettingsFragment : Fragment() {
       setContent {
         val handler = LocalUriHandler.current
 
-        val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+        val (showChangeLogDialog, setShowChangeLogDialog) = remember { mutableStateOf(false) }
+        val handleDismissChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(false) }
+        val handleShowChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(true) }
 
-        val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
-
-        val handleShowDialog by rememberUpdatedState { setShowDialog(true) }
+        val (showBillingDialog, setShowBillingDialog) = remember { mutableStateOf(false) }
+        val handleDismissBillingDialog by rememberUpdatedState { setShowBillingDialog(false) }
+        val handleShowBillingDialog by rememberUpdatedState { setShowBillingDialog(true) }
 
         composeTheme(act) {
           SettingsScreen(
@@ -248,9 +250,9 @@ public abstract class SettingsFragment : Fragment() {
               onDarkModeChanged = { handleChangeDarkMode(it) },
               onLicensesClicked = { AboutDialog.show(act) },
               onCheckUpdateClicked = { handleCheckForUpdates() },
-              onShowChangeLogClicked = handleShowDialog,
+              onShowChangeLogClicked = handleShowChangeLogDialog,
               onResetClicked = { ResetDialog.show(act) },
-              onDonateClicked = { BillingDialog.show(act) },
+              onDonateClicked = handleShowBillingDialog,
               onBugReportClicked = { handleReportBug(handler) },
               onViewSourceClicked = { handleViewSourceCode(handler) },
               onViewDataPolicyClicked = { DataPolicyDisclosureDialog.show(act) },
@@ -261,9 +263,15 @@ public abstract class SettingsFragment : Fragment() {
               onOpenMarketPage = { handleOpenMarketPage(handler) },
           )
 
-          if (showDialog) {
+          if (showChangeLogDialog) {
             ChangeLogDialog(
-                onDismiss = handleDismissDialog,
+                onDismiss = handleDismissChangeLogDialog,
+            )
+          }
+
+          if (showBillingDialog) {
+            BillingDialog(
+                onDismiss = handleDismissBillingDialog,
             )
           }
         }

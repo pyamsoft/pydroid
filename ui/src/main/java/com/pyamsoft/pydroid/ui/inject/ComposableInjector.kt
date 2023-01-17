@@ -31,7 +31,6 @@ public abstract class ComposableInjector {
       return
     }
 
-    Logger.d("$this Inject DI objects")
     isInjected = true
     onInject(activity)
   }
@@ -43,7 +42,6 @@ public abstract class ComposableInjector {
       return
     }
 
-    Logger.d("$this Dispose injected objects")
     isInjected = false
     onDispose()
   }

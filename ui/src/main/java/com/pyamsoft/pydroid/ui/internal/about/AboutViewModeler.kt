@@ -33,9 +33,10 @@ internal constructor(
   private val licenseRunner = highlander<List<OssLibrary>> { interactor.loadLicenses() }
 
   internal fun handleLoadLicenses(scope: CoroutineScope) {
-    state.loadingState = AboutViewState.LoadingState.LOADING
+    val s = state
+    s.loadingState = AboutViewState.LoadingState.LOADING
     scope.launch(context = Dispatchers.Main) {
-      state.apply {
+      s.apply {
         licenses = licenseRunner.call()
         loadingState = AboutViewState.LoadingState.DONE
       }

@@ -80,9 +80,7 @@ internal fun AboutScreen(
             targetState = state.loadingState,
         ) { loading ->
           when (loading) {
-            AboutViewState.LoadingState.NONE -> {
-              // Nothing has happened yet, render nothing, intentionally blank
-            }
+            AboutViewState.LoadingState.NONE,
             AboutViewState.LoadingState.LOADING -> {
               Loading()
             }

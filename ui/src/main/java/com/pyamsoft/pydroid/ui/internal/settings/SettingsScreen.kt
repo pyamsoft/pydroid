@@ -77,9 +77,7 @@ internal fun SettingsScreen(
         targetState = state.loadingState,
     ) { loading ->
       when (loading) {
-        SettingsViewState.LoadingState.NONE -> {
-          // Nothing has happened yet, render nothing, intentionally blank
-        }
+        SettingsViewState.LoadingState.NONE,
         SettingsViewState.LoadingState.LOADING -> {
           Loading()
         }

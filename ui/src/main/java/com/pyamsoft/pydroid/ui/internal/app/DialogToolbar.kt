@@ -16,15 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.R
@@ -35,26 +40,37 @@ internal fun DialogToolbar(
     title: String,
     onClose: () -> Unit,
 ) {
-  TopAppBar(
+  Surface(
       modifier = modifier,
-      backgroundColor = MaterialTheme.colors.primary,
+      color = MaterialTheme.colors.primary,
       contentColor = MaterialTheme.colors.onPrimary,
-      title = {
-        Text(
-            text = title,
-        )
-      },
-      navigationIcon = {
-        IconButton(
-            onClick = onClose,
-        ) {
-          Icon(
-              imageVector = Icons.Filled.Close,
-              contentDescription = stringResource(R.string.close),
+      shape =
+          MaterialTheme.shapes.medium.copy(
+              bottomEnd = ZeroCornerSize,
+              bottomStart = ZeroCornerSize,
+          ),
+  ) {
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = Color.Transparent,
+        contentColor = LocalContentColor.current,
+        title = {
+          Text(
+              text = title,
           )
-        }
-      },
-  )
+        },
+        navigationIcon = {
+          IconButton(
+              onClick = onClose,
+          ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = stringResource(R.string.close),
+            )
+          }
+        },
+    )
+  }
 }
 
 @Preview

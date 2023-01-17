@@ -22,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.app.PaddedDialog
@@ -108,12 +107,4 @@ internal fun AboutDialog(
         onClose = onDismiss,
     )
   }
-}
-
-@Preview
-@Composable
-private fun PreviewAboutDialog() {
-  AboutDialog(
-      onDismiss = {},
-  )
 }

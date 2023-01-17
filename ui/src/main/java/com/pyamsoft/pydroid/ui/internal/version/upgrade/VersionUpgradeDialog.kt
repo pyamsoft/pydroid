@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.core.Logger
@@ -82,13 +81,4 @@ internal fun VersionUpgradeDialog(
         onClose = onDismiss,
     )
   }
-}
-
-@Preview
-@Composable
-private fun PreviewVersionUpgradeDialog() {
-  VersionUpgradeDialog(
-      newVersionCode = 0,
-      onDismiss = {},
-  )
 }

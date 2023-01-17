@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarDuration
@@ -57,18 +58,25 @@ internal fun AboutScreen(
   val navigationError = state.navigationError
   val snackbarHostState = remember { SnackbarHostState() }
 
-  Surface(
+  Column(
       modifier = modifier,
-      elevation = DialogDefaults.Elevation,
   ) {
-    Column {
-      DialogToolbar(
+    DialogToolbar(
+        modifier = Modifier.fillMaxWidth(),
+        title = "Open Source Licenses",
+        onClose = onClose,
+    )
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = DialogDefaults.Elevation,
+        shape =
+            MaterialTheme.shapes.medium.copy(
+                topEnd = ZeroCornerSize,
+                topStart = ZeroCornerSize,
+            ),
+    ) {
+      Column(
           modifier = Modifier.fillMaxWidth(),
-          title = "Open Source Licenses",
-          onClose = onClose,
-      )
-      Box(
-          contentAlignment = Alignment.BottomCenter,
       ) {
         Crossfade(
             targetState = isLoading,

@@ -74,11 +74,3 @@ internal fun ResetDialog(
     )
   }
 }
-
-@Preview
-@Composable
-private fun PreviewResetDialog() {
-  ResetDialog(
-      onDismiss = {},
-  )
-}

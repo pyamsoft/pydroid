@@ -108,7 +108,6 @@ public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
-	public static final field $stable I
 	public fun <init> ()V
 	public fun <init> (ZZZZZ)V
 	public synthetic fun <init> (ZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -458,20 +457,8 @@ public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$Prefe
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
-public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenData {
-	public fun <init> (Ljava/util/List;)V
-	public final fun component1 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;Ljava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getPreferences ()Ljava/util/List;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
-	public static final fun PreferenceScreen-djqs-MU (Landroidx/compose/ui/Modifier;FFLcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;Landroidx/compose/runtime/Composer;II)V
-	public static final fun asScreenData (Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
+	public static final fun PreferenceScreen-djqs-MU (Landroidx/compose/ui/Modifier;FFLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
@@ -550,7 +537,7 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 }
 
 public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
-	public static final fun SettingsPage-7LSsfP0 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLjava/util/List;Ljava/util/List;FFFLandroidx/compose/runtime/Composer;II)V
+	public static final fun SettingsPage-7LSsfP0 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/snapshots/SnapshotStateList;FFFLandroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {
@@ -612,11 +599,23 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
+	public static final fun collectAsStateList (Lkotlinx/coroutines/flow/StateFlow;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/fragment/app/FragmentActivity;
 	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public static final fun rememberAsStateMap (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/util/Stabilized {
+	public abstract fun getData ()Ljava/lang/Object;
+}
+
+public final class com/pyamsoft/pydroid/ui/util/StabilizedKt {
+	public static final fun rememberStable (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
+	public static final fun stabilize (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {

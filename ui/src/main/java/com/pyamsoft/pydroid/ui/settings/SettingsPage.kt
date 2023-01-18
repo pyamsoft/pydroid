@@ -136,7 +136,7 @@ public fun SettingsPage(
   val handleChangeDarkMode by rememberUpdatedState { mode: Theming.Mode ->
     viewModel.handleChangeDarkMode(
         // Don't use scope since if this leaves Composition it would die
-        scope = activity.lifecycleScope,
+        scope = scope,
         mode = mode,
     )
   }

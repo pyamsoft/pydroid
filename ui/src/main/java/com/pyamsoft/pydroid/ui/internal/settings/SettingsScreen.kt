@@ -26,6 +26,8 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,13 +71,17 @@ internal fun SettingsScreen(
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
 ) {
+  val loadingState by state.loadingState.collectAsState()
+  val applicationName by state.applicationName.collectAsState()
+  val darkMode by state.darkMode.collectAsState()
+
   Surface(
       modifier = modifier,
       elevation = elevation,
       shape = shape,
   ) {
     Crossfade(
-        targetState = state.loadingState,
+        targetState = loadingState,
     ) { loading ->
       when (loading) {
         SettingsViewState.LoadingState.NONE,
@@ -84,8 +90,8 @@ internal fun SettingsScreen(
         }
         SettingsViewState.LoadingState.DONE -> {
           SettingsList(
-              applicationName = state.applicationName,
-              darkMode = state.darkMode,
+              applicationName = applicationName,
+              darkMode = darkMode,
               options = options,
               topItemMargin = topItemMargin,
               bottomItemMargin = bottomItemMargin,
@@ -210,13 +216,13 @@ private fun SettingsList(
           dangerZonePreferences,
       ) {
         mutableListOf<Preferences>().apply {
-          //          addAll(customPreContent)
+          addAll(customPreContent)
           add(applicationPrefs)
           add(supportPrefs)
           add(infoPreferences)
           add(socialMediaPreferences)
           add(dangerZonePreferences)
-          //          addAll(customPostContent)
+          addAll(customPostContent)
         }
       }
 
@@ -236,9 +242,9 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       shape = MaterialTheme.shapes.medium,
       state =
           MutableSettingsViewState().apply {
-            this.loadingState = loadingState
-            applicationName = "TEST"
-            darkMode = Theming.Mode.LIGHT
+            this.loadingState.value = loadingState
+            applicationName.value = "TEST"
+            darkMode.value = Theming.Mode.LIGHT
           },
       hideClearAll = false,
       hideUpgradeInformation = false,

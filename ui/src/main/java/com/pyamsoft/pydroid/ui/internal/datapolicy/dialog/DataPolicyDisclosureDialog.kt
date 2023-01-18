@@ -123,15 +123,15 @@ internal fun DataPolicyDisclosureDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-    DataPolicyDisclosureScreen(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state(),
-        imageLoader = imageLoader,
-        onNavigationErrorDismissed = handleHideNavigationError,
-        onAccept = handleAcceptDataPolicy,
-        onReject = handleRejectDataPolicy,
-        onPrivacyPolicyClicked = handleViewPrivacy,
-        onTermsOfServiceClicked = handleViewTos,
-    )
+      DataPolicyDisclosureScreen(
+          modifier = modifier.padding(MaterialTheme.keylines.content),
+          state = viewModel.state,
+          imageLoader = imageLoader,
+          onNavigationErrorDismissed = handleHideNavigationError,
+          onAccept = handleAcceptDataPolicy,
+          onReject = handleRejectDataPolicy,
+          onPrivacyPolicyClicked = handleViewPrivacy,
+          onTermsOfServiceClicked = handleViewTos,
+      )
   }
 }

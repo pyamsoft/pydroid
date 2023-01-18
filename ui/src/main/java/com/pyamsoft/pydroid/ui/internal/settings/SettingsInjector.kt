@@ -19,22 +19,28 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
+import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 
 internal class SettingsInjector internal constructor() : ComposableInjector() {
 
   internal var options: PYDroidActivityOptions? = null
-  internal var versionViewModel: VersionCheckViewModeler? = null
   internal var viewModel: SettingsViewModeler? = null
+  internal var versionViewModel: VersionCheckViewModeler? = null
+  internal var changeLogViewModel: ChangeLogViewModeler? = null
+  internal var billingViewModel: BillingViewModeler? = null
 
   override fun onInject(activity: FragmentActivity) {
     ObjectGraph.ActivityScope.retrieve(activity).injector().plusSettings().create().inject(this)
   }
 
   override fun onDispose() {
+    options = null
     viewModel = null
     versionViewModel = null
-    options = null
+    changeLogViewModel = null
+    billingViewModel = null
   }
 }

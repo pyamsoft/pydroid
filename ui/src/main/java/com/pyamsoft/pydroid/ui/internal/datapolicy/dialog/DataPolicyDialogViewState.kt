@@ -18,20 +18,19 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.ui.internal.app.AppViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
-internal interface DataPolicyDialogViewState : UiViewState {
-  val name: String
-  val icon: Int
-  val navigationError: Throwable?
+internal interface DataPolicyDialogViewState : AppViewState {
+  val navigationError: StateFlow<Throwable?>
 }
 
 @Stable
 internal class MutableDataPolicyDialogViewState internal constructor() : DataPolicyDialogViewState {
-  override var name by mutableStateOf("")
-  override var icon by mutableStateOf(0)
-  override var navigationError by mutableStateOf<Throwable?>(null)
+  override val name = MutableStateFlow("")
+  override val icon = MutableStateFlow(0)
+  override val navigationError = MutableStateFlow<Throwable?>(null)
 }

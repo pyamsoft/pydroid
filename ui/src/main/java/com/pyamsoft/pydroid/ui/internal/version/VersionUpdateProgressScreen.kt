@@ -25,6 +25,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +39,9 @@ internal fun VersionUpdateProgressScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
 ) {
-  val isUpgradeReady = state.isUpdateReadyToInstall
-  val progress = state.updateProgressPercent
+  val isUpgradeReady by state.isUpdateReadyToInstall.collectAsState()
+  val progress by state.updateProgressPercent.collectAsState()
+
   val validProgress = remember(progress) { if (progress.isNaN()) 0F else progress }
 
   val isVisible =
@@ -91,7 +94,7 @@ private fun PreviewVersionUpdateProgress(
 @Composable
 private fun PreviewVersionCheckScreenNone() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent = 0F },
+      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 0F },
   )
 }
 
@@ -99,7 +102,7 @@ private fun PreviewVersionCheckScreenNone() {
 @Composable
 private fun PreviewVersionCheckScreenGuarded() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent = Float.NaN },
+      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = Float.NaN },
   )
 }
 
@@ -107,7 +110,7 @@ private fun PreviewVersionCheckScreenGuarded() {
 @Composable
 private fun PreviewVersionCheckScreenHalf() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent = 0.50F },
+      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 0.50F },
   )
 }
 
@@ -115,7 +118,7 @@ private fun PreviewVersionCheckScreenHalf() {
 @Composable
 private fun PreviewVersionCheckFull() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent = 1.00F },
+      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 1.00F },
   )
 }
 
@@ -125,8 +128,8 @@ private fun PreviewVersionCheckReady() {
   PreviewVersionUpdateProgress(
       state =
           MutableVersionCheckViewState().apply {
-            updateProgressPercent = 0.50F
-            isUpdateReadyToInstall = true
+            updateProgressPercent.value = 0.50F
+            isUpdateReadyToInstall.value = true
           },
   )
 }

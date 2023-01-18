@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,12 +96,12 @@ internal fun ChangeLogDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-    ChangeLogScreen(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state(),
-        imageLoader = imageLoader,
-        onRateApp = handleRateApp,
-        onClose = onDismiss,
-    )
+      ChangeLogScreen(
+          modifier = modifier.padding(MaterialTheme.keylines.content),
+          state = viewModel.state,
+          imageLoader = imageLoader,
+          onRateApp = handleRateApp,
+          onClose = onDismiss,
+      )
   }
 }

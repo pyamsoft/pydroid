@@ -135,7 +135,8 @@ public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/billing/BillingViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun getShowUpsell ()Z
+	public abstract fun isShowingDialog ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isShowingUpsell ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/pyamsoft/pydroid/ui/changelog/ChangeLogBuilder {
@@ -155,7 +156,8 @@ public abstract interface class com/pyamsoft/pydroid/ui/changelog/ChangeLogProvi
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/changelog/ChangeLogViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun getCanShow ()Z
+	public abstract fun isShowUpsell ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isShowingDialog ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
@@ -176,7 +178,7 @@ public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Compani
 public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;
-	public final fun Render (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public final fun Render (Landroidx/compose/runtime/Composer;I)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 }
@@ -332,7 +334,15 @@ public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableS
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun isAccepted ()Ljava/lang/Boolean;
+	public abstract fun isAccepted ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState : java/lang/Enum {
+	public static final field ACCEPTED Lcom/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState;
+	public static final field NONE Lcom/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState;
+	public static final field REJECTED Lcom/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState;
+	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState;
+	public static fun values ()[Lcom/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState$AcceptedState;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt {
@@ -448,8 +458,20 @@ public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$Prefe
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
+public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenData {
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;Ljava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPreferences ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
-	public static final fun PreferenceScreen-z_eaty8 (Landroidx/compose/ui/Modifier;FFFLjava/util/List;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PreferenceScreen-djqs-MU (Landroidx/compose/ui/Modifier;FFLcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;Landroidx/compose/runtime/Composer;II)V
+	public static final fun asScreenData (Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/PreferenceScreenData;
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
@@ -457,7 +479,6 @@ public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/Preferences$Group : com/pyamsoft/pydroid/ui/preference/Preferences {
-	public static final field $stable I
 	public final fun copy (Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public fun equals (Ljava/lang/Object;)Z
@@ -466,7 +487,6 @@ public final class com/pyamsoft/pydroid/ui/preference/Preferences$Group : com/py
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences$Item : com/pyamsoft/pydroid/ui/preference/Preferences {
-	public static final field $stable I
 	protected fun <init> ()V
 }
 
@@ -511,7 +531,7 @@ public final class com/pyamsoft/pydroid/ui/rating/RatingLauncherKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/rating/RatingViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun isInAppRatingShown ()Z
+	public abstract fun isInAppRatingShown ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androidx/fragment/app/Fragment {
@@ -593,15 +613,26 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
 	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/fragment/app/FragmentActivity;
+	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun getAvailableUpdateVersionCode ()I
-	public abstract fun getUpdateProgressPercent ()F
-	public abstract fun isCheckingForUpdate ()Z
-	public abstract fun isUpdateReadyToInstall ()Z
+	public abstract fun getAvailableUpdateVersionCode ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getUpdateProgressPercent ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isCheckingForUpdate ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isUpdateReadyToInstall ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isUpgradeDialogShowing ()Lkotlinx/coroutines/flow/StateFlow;
+}
+
+public final class com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState : java/lang/Enum {
+	public static final field CHECKING Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState;
+	public static final field DONE Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState;
+	public static final field NONE Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState;
+	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState;
+	public static fun values ()[Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress {
@@ -658,7 +689,7 @@ public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ShowDataPolicyDialogKt {
-	public static final fun ShowDataPolicyDialog (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ShowDataPolicyDialog (Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {

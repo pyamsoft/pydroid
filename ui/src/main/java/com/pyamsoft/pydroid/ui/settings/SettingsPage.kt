@@ -18,32 +18,29 @@ package com.pyamsoft.pydroid.ui.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
-import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
-import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInjector
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
@@ -85,37 +82,11 @@ public fun SettingsPage(
 
   val component = rememberComposableInjector { SettingsInjector() }
   val options = rememberNotNull(component.options)
+
   val viewModel = rememberNotNull(component.viewModel)
   val versionViewModel = rememberNotNull(component.versionViewModel)
-
-  val versionState = versionViewModel.state()
-
-  val (showChangeLogDialog, setShowChangeLogDialog) = rememberSaveable { mutableStateOf(false) }
-  val handleDismissChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(false) }
-  val handleShowChangeLogDialog by rememberUpdatedState { setShowChangeLogDialog(true) }
-
-  val (showBillingDialog, setShowBillingDialog) = rememberSaveable { mutableStateOf(false) }
-  val handleDismissBillingDialog by rememberUpdatedState { setShowBillingDialog(false) }
-  val handleShowBillingDialog by rememberUpdatedState { setShowBillingDialog(true) }
-
-  val (showResetDialog, setShowResetDialog) = rememberSaveable { mutableStateOf(false) }
-  val handleDismissResetDialog by rememberUpdatedState { setShowResetDialog(false) }
-  val handleShowResetDialog by rememberUpdatedState { setShowResetDialog(true) }
-
-  val (showVersionDialog, setShowVersionDialog) = rememberSaveable { mutableStateOf(false) }
-  val handleDismissVersionDialog by rememberUpdatedState { setShowVersionDialog(false) }
-  val handleShowVersionDialog by rememberUpdatedState { setShowVersionDialog(true) }
-
-  val (showAboutDialog, setShowAboutDialog) = rememberSaveable { mutableStateOf(false) }
-  val handleDismissAboutDialog by rememberUpdatedState { setShowAboutDialog(false) }
-  val handleShowAboutDialog by rememberUpdatedState { setShowAboutDialog(true) }
-
-  val (showDataDisclosureDialog, setShowDataDisclosureDialog) =
-      rememberSaveable { mutableStateOf(false) }
-  val handleDismissDataDisclosureDialog by rememberUpdatedState {
-    setShowDataDisclosureDialog(false)
-  }
-  val handleShowDataDisclosureDialog by rememberUpdatedState { setShowDataDisclosureDialog(true) }
+  val changeLogViewModel = rememberNotNull(component.changeLogViewModel)
+  val billingViewModel = rememberNotNull(component.billingViewModel)
 
   val handleShowVersionUpgrade by rememberUpdatedState { launcher: AppUpdateLauncher ->
     if (options.requireNotNull().disableVersionCheck) {
@@ -151,7 +122,7 @@ public fun SettingsPage(
         scope = scope,
         force = true,
         onLaunchUpdate = {
-          handleShowVersionDialog()
+          versionViewModel.handleOpenDialog()
           handleShowVersionUpgrade(it)
         },
     )
@@ -177,15 +148,23 @@ public fun SettingsPage(
     handleOpenPage(MarketLinker.getStorePageLink(activity))
   }
 
+  val showResetDialog by viewModel.state.isShowingResetDialog.collectAsState()
+  val showDataPolicyDialog by viewModel.state.isShowingDataPolicyDialog.collectAsState()
+  val showAboutDialog by viewModel.state.isShowingAboutDialog.collectAsState()
+
   MountHooks(
       viewModel = viewModel,
   )
+
+  SaveStateDisposableEffect(billingViewModel)
+  SaveStateDisposableEffect(changeLogViewModel)
+  SaveStateDisposableEffect(viewModel)
 
   SettingsScreen(
       modifier = modifier,
       shape = shape,
       elevation = customElevation,
-      state = viewModel.state(),
+      state = viewModel.state,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,
@@ -194,14 +173,14 @@ public fun SettingsPage(
       customPreContent = customPrePreferences,
       customPostContent = customPostPreferences,
       onDarkModeChanged = handleChangeDarkMode,
-      onLicensesClicked = handleShowAboutDialog,
+      onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = handleCheckForUpdates,
-      onShowChangeLogClicked = handleShowChangeLogDialog,
-      onResetClicked = handleShowResetDialog,
-      onDonateClicked = handleShowBillingDialog,
+      onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
+      onResetClicked = { viewModel.handleOpenResetDialog() },
+      onDonateClicked = { billingViewModel.handleOpenDialog() },
       onBugReportClicked = handleReportBug,
       onViewSourceClicked = handleViewSource,
-      onViewDataPolicyClicked = handleShowDataDisclosureDialog,
+      onViewDataPolicyClicked = { viewModel.handleOpenDataPolicyDialog() },
       onViewPrivacyPolicyClicked = handleViewPrivacy,
       onViewTermsOfServiceClicked = handleViewTos,
       onViewSocialMediaClicked = handleViewSocials,
@@ -209,40 +188,21 @@ public fun SettingsPage(
       onOpenMarketPage = handleOpenMarket,
   )
 
-  if (showChangeLogDialog) {
-    ChangeLogDialog(
-        onDismiss = handleDismissChangeLogDialog,
-    )
-  }
-
-  if (showBillingDialog) {
-    BillingDialog(
-        onDismiss = handleDismissBillingDialog,
-    )
-  }
-
-  if (showDataDisclosureDialog) {
+  if (showDataPolicyDialog) {
     DataPolicyDisclosureDialog(
-        onDismiss = handleDismissDataDisclosureDialog,
+        onDismiss = { viewModel.handleCloseDataPolicyDialog() },
     )
   }
 
   if (showResetDialog) {
     ResetDialog(
-        onDismiss = handleDismissResetDialog,
+        onDismiss = { viewModel.handleCloseResetDialog() },
     )
   }
 
   if (showAboutDialog) {
     AboutDialog(
-        onDismiss = handleDismissAboutDialog,
-    )
-  }
-
-  if (showVersionDialog && versionState.isUpdateReadyToInstall) {
-    VersionUpgradeDialog(
-        newVersionCode = versionState.availableUpdateVersionCode,
-        onDismiss = handleDismissVersionDialog,
+        onDismiss = { viewModel.handleCloseAboutDialog() },
     )
   }
 }

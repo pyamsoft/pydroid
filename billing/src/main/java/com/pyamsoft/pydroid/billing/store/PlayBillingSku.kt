@@ -16,12 +16,18 @@
 
 package com.pyamsoft.pydroid.billing.store
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.android.billingclient.api.ProductDetails
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.requireNotNull
 
-internal data class PlayBillingSku internal constructor(internal val sku: ProductDetails) :
-    BillingSku {
+@Stable
+@Immutable
+internal data class PlayBillingSku
+internal constructor(
+    internal val sku: ProductDetails,
+) : BillingSku {
 
   private val product = sku.oneTimePurchaseOfferDetails.requireNotNull()
 

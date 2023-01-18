@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import androidx.annotation.CheckResult
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
@@ -40,6 +42,8 @@ public interface Theming {
   public suspend fun setDarkTheme(mode: Mode)
 
   /** Dark mode enum */
+  @Stable
+  @Immutable
   public enum class Mode {
     /** Light mode */
     LIGHT,

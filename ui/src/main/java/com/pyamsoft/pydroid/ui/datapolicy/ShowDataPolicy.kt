@@ -19,12 +19,14 @@ package com.pyamsoft.pydroid.ui.datapolicy
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
+import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -70,11 +72,24 @@ internal constructor(
     }
   }
 
+  @Composable
+  private fun RenderContent(
+      state: DataPolicyViewState,
+      onDismissDialog: () -> Unit,
+  ) {
+    val acceptedState by state.isAccepted.collectAsState()
+
+    if (acceptedState != DataPolicyViewState.AcceptedState.NONE &&
+        acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED) {
+      DataPolicyDisclosureDialog(
+          onDismiss = onDismissDialog,
+      )
+    }
+  }
+
   /** Render into a composable the data policy dialog */
   @Composable
-  public fun Render(
-      modifier: Modifier = Modifier,
-  ) {
+  public fun Render() {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w("Application has disabled the DataPolicy component") }
@@ -82,24 +97,17 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state()
+    val state = vm.state
 
-    LaunchedEffect(vm) {
-      vm.bind(
-          scope = this,
-      )
-    }
+    LaunchedEffect(vm) { vm.bind(scope = this) }
+    SaveStateDisposableEffect(vm)
 
-    // This field can be null, so don't use falsey, explicitly check
-    val isAccepted = state.isAccepted
-    if (isAccepted != null && !isAccepted) {
-      DataPolicyDisclosureDialog(
-          modifier = modifier,
-          onDismiss = {
-            Logger.d("DPD accepted, this will be dismissed once the Preferences update")
-          },
-      )
-    }
+    RenderContent(
+        state = state,
+        onDismissDialog = {
+          Logger.d("DPD accepted, this will be dismissed once the Preferences update")
+        },
+    )
   }
 
   public companion object {

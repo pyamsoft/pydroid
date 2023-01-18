@@ -28,4 +28,5 @@ dependencies {
 
   implementation "androidx.appcompat:appcompat:$appCompat"
   implementation "com.android.billingclient:billing:$billing"
+  implementation "androidx.compose.runtime:runtime:$compose_version"
 }

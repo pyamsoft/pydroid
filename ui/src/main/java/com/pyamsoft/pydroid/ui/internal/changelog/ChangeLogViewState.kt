@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,12 @@ package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Stable
 internal class MutableChangeLogViewState internal constructor() : ChangeLogViewState {
-  override var canShow by mutableStateOf(false)
+  override val isShowingDialog = MutableStateFlow(false)
+  override val isShowUpsell = MutableStateFlow(false)
 }

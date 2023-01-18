@@ -18,25 +18,25 @@ package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
+@Stable
 internal interface BillingDialogViewState : AppViewState {
-  override val icon: Int
-  override val name: String
-  val connected: BillingState
-  val skuList: List<BillingSku>
-  val error: Throwable?
+  val connected: StateFlow<BillingState>
+  val skuList: StateFlow<List<BillingSku>>
+  val error: StateFlow<Throwable?>
 }
 
 @Stable
 internal class MutableBillingDialogViewState internal constructor() : BillingDialogViewState {
-  override var skuList by mutableStateOf(emptyList<BillingSku>())
-  override var connected by mutableStateOf(BillingState.LOADING)
-  override var error by mutableStateOf<Throwable?>(null)
-  override var icon by mutableStateOf(0)
-  override var name by mutableStateOf("")
+  override val skuList = MutableStateFlow(emptyList<BillingSku>())
+  override val connected = MutableStateFlow(BillingState.LOADING)
+  override val error = MutableStateFlow<Throwable?>(null)
+  override val icon = MutableStateFlow(0)
+  override val name = MutableStateFlow("")
 }

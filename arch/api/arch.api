@@ -4,6 +4,7 @@ public abstract class com/pyamsoft/pydroid/arch/AbstractViewModeler : com/pyamso
 	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
 	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 	public fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
+	public fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
 	public fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
 	public final fun restoreState (Landroid/os/Bundle;)V
 	public fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
@@ -65,6 +66,7 @@ public final class com/pyamsoft/pydroid/arch/UnitViewState : com/pyamsoft/pydroi
 
 public abstract interface class com/pyamsoft/pydroid/arch/ViewModeler : com/pyamsoft/pydroid/arch/StateRestorer, com/pyamsoft/pydroid/arch/StateSaver {
 	public abstract fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
+	public abstract fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
 	public abstract fun restoreState (Landroid/os/Bundle;)V
 	public abstract fun saveState (Landroid/os/Bundle;)V
 	public abstract fun state (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/arch/UiViewState;

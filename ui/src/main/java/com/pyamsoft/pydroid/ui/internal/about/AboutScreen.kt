@@ -35,9 +35,9 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +58,8 @@ internal fun AboutScreen(
     onClose: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
+  val loadingState by state.loadingState.collectAsState()
+  val navigationError by state.navigationError.collectAsState()
 
   Column(
       modifier = modifier,
@@ -80,7 +82,7 @@ internal fun AboutScreen(
           modifier = Modifier.fillMaxWidth(),
       ) {
         Crossfade(
-            targetState = state.loadingState,
+            targetState = loadingState,
         ) { loading ->
           when (loading) {
             AboutViewState.LoadingState.NONE,
@@ -100,7 +102,7 @@ internal fun AboutScreen(
 
         NavigationError(
             snackbarHost = snackbarHostState,
-            error = state.navigationError,
+            error = navigationError,
             onSnackbarDismissed = onNavigationErrorDismissed,
         )
       }
@@ -125,9 +127,8 @@ private fun AboutList(
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
 ) {
-  val list = state.licenses.rememberAsStateList()
-  val handleViewHomePage by rememberUpdatedState { item: OssLibrary -> onViewHomePage(item) }
-  val handleViewLicense by rememberUpdatedState { item: OssLibrary -> onViewLicense(item) }
+  val licenses by state.licenses.collectAsState()
+  val list = licenses.rememberAsStateList()
 
   LazyColumn(
       modifier = modifier,
@@ -141,8 +142,8 @@ private fun AboutList(
       AboutListItem(
           modifier = Modifier.fillMaxWidth(),
           library = item,
-          onViewHomePage = handleViewHomePage,
-          onViewLicense = handleViewLicense,
+          onViewHomePage = { onViewHomePage(item) },
+          onViewLicense = { onViewLicense(item) },
       )
     }
   }
@@ -180,9 +181,9 @@ private fun PreviewAboutScreen(
   AboutScreen(
       state =
           MutableAboutViewState().apply {
-            loadingState = loading
-            licenses = OssLibraries.libraries().sortedBy { it.name }
-            navigationError = error
+            loadingState.value = loading
+            licenses.value = OssLibraries.libraries().sortedBy { it.name }
+            navigationError.value = error
           },
       onNavigationErrorDismissed = {},
       onViewLicense = {},

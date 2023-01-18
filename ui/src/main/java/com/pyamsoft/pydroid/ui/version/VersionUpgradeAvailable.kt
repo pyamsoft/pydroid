@@ -19,10 +19,8 @@ package com.pyamsoft.pydroid.ui.version
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -99,6 +97,26 @@ internal constructor(
     }
   }
 
+  @Composable
+  private fun RenderContent(
+      state: VersionCheckViewState,
+      onDismissDialog: () -> Unit,
+      content: @Composable () -> Unit,
+  ) {
+    val showDialog by state.isUpgradeDialogShowing.collectAsState()
+    val isUpdateReady by state.isUpdateReadyToInstall.collectAsState()
+
+    content()
+
+    if (showDialog && isUpdateReady) {
+      val newVersionCode by state.availableUpdateVersionCode.collectAsState()
+      VersionUpgradeDialog(
+          newVersionCode = newVersionCode,
+          onDismiss = onDismissDialog,
+      )
+    }
+  }
+
   /**
    * Render into a composable the version check screen upsell
    *
@@ -113,19 +131,13 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state()
+    val state = vm.state
 
-    val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
-    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
-    val handleShowDialog by rememberUpdatedState { setShowDialog(true) }
-
-    content(state) { handleShowDialog() }
-
-    if (showDialog && state.isUpdateReadyToInstall) {
-      VersionUpgradeDialog(
-          newVersionCode = state.availableUpdateVersionCode,
-          onDismiss = handleDismissDialog,
-      )
+    RenderContent(
+        state = state,
+        onDismissDialog = { vm.handleCloseDialog() },
+    ) {
+      content(state) { vm.handleOpenDialog() }
     }
   }
 

@@ -31,5 +31,7 @@ dependencies {
   implementation "com.github.pyamsoft:cachify:$cachify"
   implementation "com.github.pyamsoft:highlander:$highlander"
 
+  implementation "androidx.compose.runtime:runtime:$compose_version"
+
   api project(':util')
 }

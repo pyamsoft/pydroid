@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 internal class VersionCheckViewModeler
 internal constructor(
-    private val state: MutableVersionCheckViewState,
+    override val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
     private val interactorCache: VersionInteractor.Cache,
 ) : AbstractViewModeler<VersionCheckViewState>(state) {
@@ -51,17 +51,17 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
-            if (!s.isUpdateReadyToInstall) {
+            if (!s.isUpdateReadyToInstall.value) {
               Logger.d("Update progress: $percent")
-              s.updateProgressPercent = percent
+              s.updateProgressPercent.value = percent
             } else {
               Logger.w("Download marks progress, but update is ready to install: $percent")
             }
           },
           onDownloadCompleted = {
             Logger.d("App update download ready!")
-            s.isUpdateReadyToInstall = true
-            s.updateProgressPercent = 0F
+            s.isUpdateReadyToInstall.value = true
+            s.updateProgressPercent.value = 0F
             onUpgradeReady()
           },
       )
@@ -75,48 +75,38 @@ internal constructor(
   ) {
     val s = state
 
-    if (s.isUpdateReadyToInstall) {
+    if (s.isUpdateReadyToInstall.value) {
       Logger.d("Update is already ready to install, do not check for update again")
       return
     }
 
-    if (s.isCheckingForUpdate) {
+    if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
       Logger.d("We are already checking for an update.")
       return
     }
 
     Logger.d("Begin check for updates")
-    s.isCheckingForUpdate = true
+    s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
     scope.launch(context = Dispatchers.Main) {
       checkUpdateRunner
           .call(force)
           .onSuccess { Logger.d("Update data found as: $it") }
-          .onSuccess { s.availableUpdateVersionCode = it.availableUpdateVersion() }
+          .onSuccess { s.availableUpdateVersionCode.value = it.availableUpdateVersion() }
           .onSuccess(onLaunchUpdate)
           .onFailure { Logger.e(it, "Error checking for latest version") }
-          .onFailure { s.availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION }
+          .onFailure {
+            s.availableUpdateVersionCode.value = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
+          }
           .onFinally { Logger.d("Done checking for updates") }
-          .onFinally { s.isCheckingForUpdate = false }
+          .onFinally { s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.DONE }
     }
   }
 
-  internal fun handleConfirmUpgrade(
-      scope: CoroutineScope,
-      onConfirmed: (Int) -> Unit,
-  ) {
-    val s = state
+  internal fun handleOpenDialog() {
+    state.isUpgradeDialogShowing.value = true
+  }
 
-    val newVersionCode = s.availableUpdateVersionCode
-    if (newVersionCode == AppUpdateLauncher.NO_VALID_UPDATE_VERSION) {
-      Logger.w("No update version code is available, cannot confirm upgrade")
-      return
-    }
-
-    if (!s.isUpdateReadyToInstall) {
-      Logger.w("Update is not ready to install, cannot confirm upgrade!")
-      return
-    }
-
-    scope.launch(context = Dispatchers.Main) { onConfirmed(newVersionCode) }
+  internal fun handleCloseDialog() {
+    state.isUpgradeDialogShowing.value = false
   }
 }

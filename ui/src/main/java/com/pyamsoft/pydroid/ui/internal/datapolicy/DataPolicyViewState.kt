@@ -16,20 +16,32 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /** State for showing the required data policy disclosure */
 @Stable
 public interface DataPolicyViewState : UiViewState {
+
   /** Have we accepted the data policy? */
-  public val isAccepted: Boolean?
+  public val isAccepted: StateFlow<AcceptedState>
+
+  /** States of acceptance */
+  @Stable
+  @Immutable
+  public enum class AcceptedState {
+    NONE,
+    ACCEPTED,
+    REJECTED
+  }
 }
 
 @Stable
 internal class MutableDataPolicyViewState internal constructor() : DataPolicyViewState {
-  override var isAccepted by mutableStateOf<Boolean?>(null)
+  override val isAccepted = MutableStateFlow(DataPolicyViewState.AcceptedState.NONE)
 }

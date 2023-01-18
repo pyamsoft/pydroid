@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.ui.changelog
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
@@ -89,6 +89,23 @@ internal constructor(
     }
   }
 
+  @Composable
+  private fun RenderContent(
+      state: ChangeLogViewState,
+      onDismissDialog: () -> Unit,
+      content: @Composable () -> Unit,
+  ) {
+    val showDialog by state.isShowingDialog.collectAsState()
+
+    content()
+
+    if (showDialog) {
+      ChangeLogDialog(
+          onDismiss = onDismissDialog,
+      )
+    }
+  }
+
   /**
    * Render into a composable the version check screen upsell
    *
@@ -103,31 +120,23 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state()
+    val state = vm.state
 
-    val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
-    val handleDismissDialog by rememberUpdatedState { setShowDialog(false) }
-    val handleDismissPopup by rememberUpdatedState {
-      // Dismiss popup
-      vm.handleDismiss()
-    }
-    val handleShowDialog by rememberUpdatedState {
-      // Dismiss popup
-      vm.handleDismiss()
+    SaveStateDisposableEffect(vm)
 
-      // Show dialog
-      setShowDialog(true)
-    }
-
-    content(
+    RenderContent(
         state = state,
-        onShow = handleShowDialog,
-        onDismiss = handleDismissPopup,
-    )
+        onDismissDialog = { vm.handleCloseDialog() },
+    ) {
+      val scope = rememberCoroutineScope()
 
-    if (showDialog) {
-      ChangeLogDialog(
-          onDismiss = handleDismissDialog,
+      content(
+          state = state,
+          onShow = {
+            vm.handleDismissUpsell(scope = scope)
+            vm.handleShowDialog()
+          },
+          onDismiss = { vm.handleDismissUpsell(scope = scope) },
       )
     }
   }

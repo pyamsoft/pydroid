@@ -16,19 +16,23 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal interface AboutViewState : UiViewState {
-  val loadingState: LoadingState
-  val licenses: List<OssLibrary>
-  val navigationError: Throwable?
+  val loadingState: StateFlow<LoadingState>
+  val licenses: StateFlow<List<OssLibrary>>
+  val navigationError: StateFlow<Throwable?>
 
+  @Stable
+  @Immutable
   enum class LoadingState {
     NONE,
     LOADING,
@@ -38,7 +42,7 @@ internal interface AboutViewState : UiViewState {
 
 @Stable
 internal class MutableAboutViewState internal constructor() : AboutViewState {
-  override var loadingState by mutableStateOf(AboutViewState.LoadingState.NONE)
-  override var navigationError by mutableStateOf<Throwable?>(null)
-  override var licenses by mutableStateOf<List<OssLibrary>>(emptyList())
+  override val loadingState = MutableStateFlow(AboutViewState.LoadingState.NONE)
+  override val navigationError = MutableStateFlow<Throwable?>(null)
+  override val licenses = MutableStateFlow(emptyList<OssLibrary>())
 }

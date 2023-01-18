@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 internal class RatingViewModeler
 internal constructor(
-    private val state: MutableRatingViewState,
+    override val state: MutableRatingViewState,
     interactor: RatingInteractor,
 ) : AbstractViewModeler<RatingViewState>(state) {
 
@@ -41,7 +41,7 @@ internal constructor(
       onLaunchInAppRating: (AppRatingLauncher) -> Unit
   ) {
     val s = state
-    if (s.isInAppRatingShown) {
+    if (s.isInAppRatingShown.value) {
       return
     }
 
@@ -49,7 +49,7 @@ internal constructor(
       loadRunner
           .call()
           .onSuccess { Logger.d("Launch in-app rating: $it") }
-          .onSuccess { s.isInAppRatingShown = true }
+          .onSuccess { s.isInAppRatingShown.value = true }
           .onSuccess { onLaunchInAppRating(it) }
           .onFailure { Logger.e(it, "Unable to launch in-app rating") }
     }

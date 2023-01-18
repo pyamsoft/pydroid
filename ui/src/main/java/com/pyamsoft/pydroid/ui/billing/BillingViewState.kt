@@ -18,10 +18,14 @@ package com.pyamsoft.pydroid.ui.billing
 
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 public interface BillingViewState : UiViewState {
 
   /** Show a billing upsell in the app */
-  public val showUpsell: Boolean
+  public val isShowingUpsell: StateFlow<Boolean>
+
+  /** Show the billing dialog in the app */
+  public val isShowingDialog: StateFlow<Boolean>
 }

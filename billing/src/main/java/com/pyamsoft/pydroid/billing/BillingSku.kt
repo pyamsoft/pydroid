@@ -16,7 +16,12 @@
 
 package com.pyamsoft.pydroid.billing
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+
 /** Abstraction of billing SKU */
+@Stable
+@Immutable
 public interface BillingSku {
 
   /** SKU id */

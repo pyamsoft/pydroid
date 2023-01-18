@@ -30,6 +30,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
@@ -43,7 +45,8 @@ internal fun VersionUpgradeScreen(
     onUpgrade: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val isUpgraded = state.upgraded
+  val isUpgraded by state.upgraded.collectAsState()
+  val oldVersionCode by state.oldVersionCode.collectAsState()
 
   Surface(
       modifier = modifier,
@@ -65,7 +68,7 @@ internal fun VersionUpgradeScreen(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         ) {
           Message(
-              oldVersionCode = state.oldVersionCode,
+              oldVersionCode = oldVersionCode,
               newVersionCode = newVersionCode,
           )
         }
@@ -171,11 +174,7 @@ private fun Actions(
 @Composable
 private fun PreviewVersionUpgradeScreen(upgraded: Boolean) {
   VersionUpgradeScreen(
-      state =
-          MutableVersionUpgradeViewState(
-                  oldVersionCode = 1,
-              )
-              .apply { this.upgraded = upgraded },
+      state = MutableVersionUpgradeViewState(1).apply { this.upgraded.value = upgraded },
       newVersionCode = 2,
       onUpgrade = {},
       onClose = {},

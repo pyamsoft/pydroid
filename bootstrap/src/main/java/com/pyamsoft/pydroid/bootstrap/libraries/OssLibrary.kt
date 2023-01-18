@@ -16,7 +16,12 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+
 /** Representation of an open source library dependency */
+@Stable
+@Immutable
 public data class OssLibrary
 internal constructor(
     /** Library name */

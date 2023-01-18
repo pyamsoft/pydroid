@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogDialogViewModeler
 internal constructor(
-    private val state: MutableChangeLogDialogViewState,
+    override val state: MutableChangeLogDialogViewState,
     private val interactor: ChangeLogInteractor,
     private val provider: ChangeLogProvider,
     private val version: Int,
@@ -35,10 +35,10 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       val displayName = interactor.getDisplayName()
       state.apply {
-        name = displayName
-        icon = provider.applicationIcon
-        applicationVersionCode = version
-        changeLog = provider.changelog.build()
+        name.value = displayName
+        icon.value = provider.applicationIcon
+        applicationVersionCode.value = version
+        changeLog.value = provider.changelog.build()
       }
     }
   }

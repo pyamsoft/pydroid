@@ -22,10 +22,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpdateProgressScreen
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -82,7 +82,8 @@ internal constructor(
       return
     }
 
-    val state = viewModel.requireNotNull().state()
+    val viewModel = rememberNotNull(viewModel)
+    val state = viewModel.state
     content(state)
   }
 

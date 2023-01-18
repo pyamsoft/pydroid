@@ -32,6 +32,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,11 +62,13 @@ internal fun DataPolicyDisclosureScreen(
     onReject: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
-  val name = state.name
+  val icon by state.icon.collectAsState()
+  val name by state.name.collectAsState()
+  val navigationError by state.navigationError.collectAsState()
 
   AppHeaderDialog(
       modifier = modifier.fillMaxWidth(),
-      icon = state.icon,
+      icon = icon,
       name = name,
       imageLoader = imageLoader,
   ) {
@@ -93,7 +97,7 @@ internal fun DataPolicyDisclosureScreen(
       NavigationError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,
-          error = state.navigationError,
+          error = navigationError,
           onSnackbarDismissed = onNavigationErrorDismissed,
       )
     }
@@ -252,9 +256,9 @@ private fun PreviewDataPolicyDisclosureScreen() {
   DataPolicyDisclosureScreen(
       state =
           MutableDataPolicyDialogViewState().apply {
-            icon = 0
-            name = "TEST"
-            navigationError = null
+            icon.value = 0
+            name.value = "TEST"
+            navigationError.value = null
           },
       imageLoader = createNewTestImageLoader(),
       onPrivacyPolicyClicked = {},

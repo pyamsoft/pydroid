@@ -75,12 +75,12 @@ internal fun VersionUpgradeDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-    VersionUpgradeScreen(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state(),
-        newVersionCode = newVersionCode,
-        onUpgrade = handleCompleteUpgrade,
-        onClose = onDismiss,
-    )
+      VersionUpgradeScreen(
+          modifier = modifier.padding(MaterialTheme.keylines.content),
+          state = viewModel.state,
+          newVersionCode = newVersionCode,
+          onUpgrade = handleCompleteUpgrade,
+          onClose = onDismiss,
+      )
   }
 }

@@ -38,7 +38,6 @@ internal fun BillingListItem(
     sku: BillingSku,
     onPurchase: (BillingSku) -> Unit,
 ) {
-
   Row(
       modifier =
           modifier

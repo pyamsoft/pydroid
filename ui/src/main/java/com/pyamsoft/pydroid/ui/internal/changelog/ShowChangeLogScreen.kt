@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -29,9 +31,11 @@ internal fun ShowChangeLogScreen(
     onShowChangeLog: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+  val isShowingUpsell by state.isShowUpsell.collectAsState()
+
   DismissableInterruptCard(
       modifier = modifier,
-      show = state.canShow,
+      show = isShowingUpsell,
       text = "You've updated to the latest version! Thanks!",
       buttonText = "View Changes",
       onButtonClicked = onShowChangeLog,
@@ -43,7 +47,7 @@ internal fun ShowChangeLogScreen(
 @Composable
 private fun PreviewShowChangeLogScreen() {
   ShowChangeLogScreen(
-      state = MutableChangeLogViewState().apply { canShow = true },
+      state = MutableChangeLogViewState().apply { isShowUpsell.value = true },
       onDismiss = {},
       onShowChangeLog = {},
   )

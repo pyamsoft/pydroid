@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +39,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 @Composable
 @JvmOverloads
@@ -47,13 +50,19 @@ internal fun ChangeLogScreen(
     onRateApp: () -> Unit,
     onClose: () -> Unit
 ) {
+  val lines by state.changeLog.collectAsState()
+  val changeLog = lines.rememberAsStateList()
+  val icon by state.icon.collectAsState()
+  val name by state.name.collectAsState()
+  val versionCode by state.applicationVersionCode.collectAsState()
+
   AppHeaderDialog(
       modifier = modifier.fillMaxWidth(),
-      icon = state.icon,
-      name = state.name,
+      icon = icon,
+      name = name,
       imageLoader = imageLoader,
   ) {
-    state.changeLog.forEach { line ->
+    changeLog.forEach { line ->
       dialogItem(
           modifier = Modifier.fillMaxWidth(),
       ) {
@@ -69,7 +78,7 @@ internal fun ChangeLogScreen(
     ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),
-          applicationVersionCode = state.applicationVersionCode,
+          applicationVersionCode = versionCode,
           onRateApp = onRateApp,
           onClose = onClose,
       )
@@ -132,9 +141,9 @@ private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
   ChangeLogScreen(
       state =
           MutableChangeLogDialogViewState().apply {
-            icon = 0
-            name = "TEST"
-            this.changeLog = changeLog
+            this.icon.value = 0
+            this.name.value = "TEST"
+            this.changeLog.value = changeLog
           },
       imageLoader = createNewTestImageLoader(),
       onRateApp = {},

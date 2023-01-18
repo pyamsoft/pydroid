@@ -30,6 +30,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 @Composable
 internal fun BillingScreen(
@@ -53,8 +56,12 @@ internal fun BillingScreen(
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val skuList = state.skuList
-  val connected = state.connected
+  val skus by state.skuList.collectAsState()
+  val skuList = skus.rememberAsStateList()
+  val connected by state.connected.collectAsState()
+  val icon by state.icon.collectAsState()
+  val name by state.name.collectAsState()
+  val error by state.error.collectAsState()
 
   val snackbarHostState = remember { SnackbarHostState() }
 
@@ -71,8 +78,8 @@ internal fun BillingScreen(
 
   AppHeaderDialog(
       modifier = modifier.fillMaxWidth(),
-      icon = state.icon,
-      name = state.name,
+      icon = icon,
+      name = name,
       imageLoader = imageLoader,
   ) {
     if (isLoading) {
@@ -111,7 +118,7 @@ internal fun BillingScreen(
       BillingError(
           modifier = Modifier.fillMaxWidth(),
           snackbarHostState = snackbarHostState,
-          error = state.error,
+          error = error,
           onSnackbarDismissed = onBillingErrorDismissed,
       )
     }
@@ -216,10 +223,10 @@ private fun PreviewBillingScreen(
   BillingScreen(
       state =
           MutableBillingDialogViewState().apply {
-            this.name = "TEST APPLICATION"
-            this.connected = connected
-            this.skuList = skuList
-            this.error = error
+            this.name.value = "TEST APPLICATION"
+            this.connected.value = connected
+            this.skuList.value = skuList
+            this.error.value = error
           },
       imageLoader = createNewTestImageLoader(),
       onPurchase = {},

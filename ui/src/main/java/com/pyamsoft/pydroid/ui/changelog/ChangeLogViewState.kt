@@ -18,11 +18,15 @@ package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
 /** Change Log UI state */
 @Stable
 public interface ChangeLogViewState : UiViewState {
 
-  /** Can we show the changelog */
-  public val canShow: Boolean
+  /** Show the upsell to view? */
+  public val isShowUpsell: StateFlow<Boolean>
+
+  /** Is changelog showing */
+  public val isShowingDialog: StateFlow<Boolean>
 }

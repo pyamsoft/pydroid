@@ -18,16 +18,17 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Stable
 internal class MutableVersionCheckViewState internal constructor() : VersionCheckViewState {
-  override var isCheckingForUpdate by mutableStateOf(false)
-  override var isUpdateReadyToInstall by mutableStateOf(false)
-  override var availableUpdateVersionCode by
-      mutableStateOf(AppUpdateLauncher.NO_VALID_UPDATE_VERSION)
-  override var updateProgressPercent: Float by mutableStateOf(0F)
+  override val isCheckingForUpdate = MutableStateFlow(VersionCheckViewState.CheckingState.NONE)
+  override val isUpdateReadyToInstall = MutableStateFlow(false)
+  override val availableUpdateVersionCode =
+      MutableStateFlow(AppUpdateLauncher.NO_VALID_UPDATE_VERSION)
+  override val updateProgressPercent = MutableStateFlow(0F)
+  override val isUpgradeDialogShowing = MutableStateFlow(false)
 }

@@ -29,6 +29,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +44,7 @@ internal fun ResetScreen(
     onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val reset = state.reset
+  val reset by state.reset.collectAsState()
 
   Surface(
       modifier = modifier,
@@ -151,7 +153,7 @@ private fun Actions(
 @Composable
 private fun PreviewResetScreen(reset: Boolean) {
   ResetScreen(
-      state = MutableResetViewState().apply { this.reset = reset },
+      state = MutableResetViewState().apply { this.reset.value = reset },
       onReset = {},
       onClose = {},
   )

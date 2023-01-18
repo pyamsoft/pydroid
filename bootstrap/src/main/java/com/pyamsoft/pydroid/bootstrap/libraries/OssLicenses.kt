@@ -17,10 +17,16 @@
 package com.pyamsoft.pydroid.bootstrap.libraries
 
 import androidx.annotation.CheckResult
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 /** Enum about supported open source licenses */
-public enum class OssLicenses(override val license: String, override val location: String) :
-    LibraryLicense {
+@Stable
+@Immutable
+public enum class OssLicenses(
+    override val license: String,
+    override val location: String,
+) : LibraryLicense {
 
   /** The Apache v2.0 License */
   APACHE2("Apache v2", "https://www.apache.org/licenses/LICENSE-2.0.html"),

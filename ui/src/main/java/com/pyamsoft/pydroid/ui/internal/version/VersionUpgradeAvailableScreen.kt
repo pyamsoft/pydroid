@@ -24,6 +24,8 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
@@ -39,9 +41,11 @@ internal fun VersionUpgradeAvailableScreen(
     state: VersionCheckViewState,
     onUpgrade: () -> Unit,
 ) {
+  val isReady by state.isUpdateReadyToInstall.collectAsState()
+
   InterruptCard(
       modifier = modifier,
-      visible = state.isUpdateReadyToInstall,
+      visible = isReady,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -84,8 +88,8 @@ private fun PreviewVersionCheckScreenAvailable() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            availableUpdateVersionCode = Random.nextInt(1..100)
-            isUpdateReadyToInstall = false
+            availableUpdateVersionCode.value = Random.nextInt(1..100)
+            isUpdateReadyToInstall.value = false
           },
   )
 }
@@ -96,8 +100,8 @@ private fun PreviewVersionCheckScreenNotAvailable() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
-            isUpdateReadyToInstall = false
+            availableUpdateVersionCode.value = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
+            isUpdateReadyToInstall.value = false
           },
   )
 }
@@ -108,8 +112,8 @@ private fun PreviewVersionCheckScreenReady() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            availableUpdateVersionCode = Random.nextInt(1..100)
-            isUpdateReadyToInstall = true
+            availableUpdateVersionCode.value = Random.nextInt(1..100)
+            isUpdateReadyToInstall.value = true
           },
   )
 }
@@ -120,8 +124,8 @@ private fun PreviewVersionCheckScreenNotReady() {
   PreviewVersionCheckScreen(
       state =
           MutableVersionCheckViewState().apply {
-            availableUpdateVersionCode = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
-            isUpdateReadyToInstall = false
+            availableUpdateVersionCode.value = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
+            isUpdateReadyToInstall.value = false
           },
   )
 }

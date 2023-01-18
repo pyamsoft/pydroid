@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 internal class DataPolicyDialogViewModeler
 internal constructor(
-    private val state: MutableDataPolicyDialogViewState,
+    override val state: MutableDataPolicyDialogViewState,
     private val privacyPolicyUrl: String,
     private val termsConditionsUrl: String,
     private val provider: AppProvider,
@@ -36,8 +36,8 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       val displayName = interactor.getDisplayName()
       state.apply {
-        name = displayName
-        icon = provider.applicationIcon
+        name.value = displayName
+        icon.value = provider.applicationIcon
       }
     }
   }
@@ -63,11 +63,11 @@ internal constructor(
   }
 
   internal fun handleNavigationFailed(throwable: Throwable) {
-    state.navigationError = throwable
+    state.navigationError.value = throwable
   }
 
   internal fun handleHideNavigationError() {
-    state.navigationError = null
+    state.navigationError.value = null
   }
 
   internal fun handleViewTermsOfService(

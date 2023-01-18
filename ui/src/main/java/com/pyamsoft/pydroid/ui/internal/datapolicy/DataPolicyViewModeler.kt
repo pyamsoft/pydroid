@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy
 
+import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import kotlinx.coroutines.CoroutineScope
@@ -25,17 +26,39 @@ import kotlinx.coroutines.launch
 
 internal class DataPolicyViewModeler
 internal constructor(
-    private val state: MutableDataPolicyViewState,
+    override val state: MutableDataPolicyViewState,
     private val interactor: DataPolicyInteractor,
 ) : AbstractViewModeler<DataPolicyViewState>(state) {
+
+  override fun registerSaveState(
+      registry: SaveableStateRegistry
+  ): List<SaveableStateRegistry.Entry> =
+      mutableListOf<SaveableStateRegistry.Entry>().apply {
+        registry.registerProvider(KEY_SHOW_DIALOG) { state.isAccepted.value.name }.also { add(it) }
+      }
+
+  override fun consumeRestoredState(registry: SaveableStateRegistry) {
+    registry
+        .consumeRestored(KEY_SHOW_DIALOG)
+        ?.let { it as String }
+        ?.let { DataPolicyViewState.AcceptedState.valueOf(it) }
+        ?.also { state.isAccepted.value = it }
+  }
 
   internal fun bind(
       scope: CoroutineScope,
   ) {
     scope.launch(context = Dispatchers.Main) {
       interactor.listenForPolicyAcceptedChanges().collectLatest { accepted ->
-        state.isAccepted = accepted
+        state.isAccepted.value =
+            if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED
+            else DataPolicyViewState.AcceptedState.REJECTED
       }
     }
+  }
+
+  companion object {
+
+    private const val KEY_SHOW_DIALOG = "datapolicy_show_dialog"
   }
 }

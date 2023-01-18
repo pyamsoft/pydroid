@@ -26,11 +26,15 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
  */
 public abstract class AbstractViewModeler<S : UiViewState>
 protected constructor(
-    private val state: S,
+    override val state: S,
 ) : ViewModeler<S> {
 
   @Composable
   @CheckResult
+  @Deprecated(
+      "Use the state field instead",
+      replaceWith = ReplaceWith("state"),
+  )
   final override fun state(): S {
     return state
   }

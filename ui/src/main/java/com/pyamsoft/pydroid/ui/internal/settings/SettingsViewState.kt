@@ -16,19 +16,27 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.theme.Theming
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal interface SettingsViewState : UiViewState {
-  val applicationName: CharSequence
-  val darkMode: Theming.Mode
-  val loadingState: LoadingState
+  val applicationName: StateFlow<CharSequence>
+  val darkMode: StateFlow<Theming.Mode>
+  val loadingState: StateFlow<LoadingState>
 
+  val isShowingResetDialog: StateFlow<Boolean>
+  val isShowingAboutDialog: StateFlow<Boolean>
+  val isShowingDataPolicyDialog: StateFlow<Boolean>
+
+  @Stable
+  @Immutable
   enum class LoadingState {
     NONE,
     LOADING,
@@ -38,7 +46,10 @@ internal interface SettingsViewState : UiViewState {
 
 @Stable
 internal class MutableSettingsViewState internal constructor() : SettingsViewState {
-  override var applicationName by mutableStateOf("")
-  override var darkMode by mutableStateOf(Theming.Mode.SYSTEM)
-  override var loadingState by mutableStateOf(SettingsViewState.LoadingState.NONE)
+  override val applicationName = MutableStateFlow("")
+  override val darkMode = MutableStateFlow(Theming.Mode.SYSTEM)
+  override val loadingState = MutableStateFlow(SettingsViewState.LoadingState.NONE)
+  override val isShowingResetDialog = MutableStateFlow(false)
+  override val isShowingAboutDialog = MutableStateFlow(false)
+  override val isShowingDataPolicyDialog = MutableStateFlow(false)
 }

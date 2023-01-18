@@ -16,10 +16,13 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.compose.runtime.Stable
+
 /**
  * A representation of a view state.
  *
  * This can hold one or many different pieces of data which collectively make up the state of a
  * view. This is usually handled via a Renderable object.
  */
+@Stable
 public interface UiViewState

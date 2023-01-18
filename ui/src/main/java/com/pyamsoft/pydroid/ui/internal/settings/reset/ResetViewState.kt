@@ -18,16 +18,17 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal interface ResetViewState : UiViewState {
-  val reset: Boolean
+  val reset: StateFlow<Boolean>
 }
 
 @Stable
 internal class MutableResetViewState internal constructor() : ResetViewState {
-  override var reset by mutableStateOf(false)
+  override val reset = MutableStateFlow(false)
 }

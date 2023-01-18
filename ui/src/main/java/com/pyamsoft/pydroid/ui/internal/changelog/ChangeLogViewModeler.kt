@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
+import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -26,15 +27,33 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogViewModeler
 internal constructor(
-    private val state: MutableChangeLogViewState,
+    override val state: MutableChangeLogViewState,
     private val interactor: ChangeLogInteractor,
 ) : AbstractViewModeler<ChangeLogViewState>(state) {
+
+  override fun registerSaveState(
+      registry: SaveableStateRegistry
+  ): List<SaveableStateRegistry.Entry> =
+      mutableListOf<SaveableStateRegistry.Entry>().apply {
+        val s = state
+
+        registry.registerProvider(KEY_SHOW_DIALOG) { s.isShowingDialog.value }.also { add(it) }
+      }
+
+  override fun consumeRestoredState(registry: SaveableStateRegistry) {
+    val s = state
+
+    registry
+        .consumeRestored(KEY_SHOW_DIALOG)
+        ?.let { it as Boolean }
+        ?.also { s.isShowingDialog.value = it }
+  }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
       // Decide based on preference (have we seen the current version changelog)
       val show = interactor.listenShowChangeLogChanges().first()
-      state.canShow = show
+      state.isShowUpsell.value = show
 
       // If we can show, mark as shown so that in the future we do not show.
       if (show) {
@@ -43,17 +62,22 @@ internal constructor(
     }
   }
 
-  internal fun handleShow(
-      scope: CoroutineScope,
-      onShowChangeLog: () -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      interactor.markChangeLogShown()
-      onShowChangeLog()
-    }
+  internal fun handleShowDialog() {
+    state.isShowingDialog.value = true
   }
 
-  internal fun handleDismiss() {
-    state.canShow = false
+  internal fun handleCloseDialog() {
+    state.isShowingDialog.value = false
+  }
+
+  internal fun handleDismissUpsell(scope: CoroutineScope) {
+    state.isShowingDialog.value = false
+
+    // mark as shown so that in the future we do not show.
+    scope.launch(context = Dispatchers.Main) { interactor.markChangeLogShown() }
+  }
+
+  companion object {
+    private const val KEY_SHOW_DIALOG = "changelog_show_dialog"
   }
 }

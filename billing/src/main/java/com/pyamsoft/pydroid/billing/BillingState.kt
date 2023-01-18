@@ -16,7 +16,12 @@
 
 package com.pyamsoft.pydroid.billing
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+
 /** State of the billing client */
+@Stable
+@Immutable
 public enum class BillingState {
   /** Billing client is still loading, state unknown */
   LOADING,

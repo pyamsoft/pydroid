@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 internal class AboutViewModeler
 internal constructor(
-    private val state: MutableAboutViewState,
+    override val state: MutableAboutViewState,
     interactor: AboutInteractor,
 ) : AbstractViewModeler<AboutViewState>(state) {
 
@@ -34,20 +34,25 @@ internal constructor(
 
   internal fun handleLoadLicenses(scope: CoroutineScope) {
     val s = state
-    s.loadingState = AboutViewState.LoadingState.LOADING
+
+    if (s.loadingState.value != AboutViewState.LoadingState.NONE) {
+      return
+    }
+
+    s.loadingState.value = AboutViewState.LoadingState.LOADING
     scope.launch(context = Dispatchers.Main) {
       s.apply {
-        licenses = licenseRunner.call()
-        loadingState = AboutViewState.LoadingState.DONE
+        licenses.value = licenseRunner.call()
+        loadingState.value = AboutViewState.LoadingState.DONE
       }
     }
   }
 
   internal fun handleFailedNavigation(e: Throwable) {
-    state.navigationError = e
+    state.navigationError.value = e
   }
 
   internal fun handleDismissFailedNavigation() {
-    state.navigationError = null
+    state.navigationError.value = null
   }
 }

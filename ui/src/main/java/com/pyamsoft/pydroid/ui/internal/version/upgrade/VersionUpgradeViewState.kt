@@ -18,20 +18,22 @@ package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal interface VersionUpgradeViewState : UiViewState {
-  val oldVersionCode: Int
-  val upgraded: Boolean
+  val oldVersionCode: StateFlow<Int>
+  val upgraded: StateFlow<Boolean>
 }
 
 @Stable
-internal data class MutableVersionUpgradeViewState
+internal class MutableVersionUpgradeViewState
 internal constructor(
-    override val oldVersionCode: Int,
+    versionCode: Int,
 ) : VersionUpgradeViewState {
-  override var upgraded by mutableStateOf(false)
+  override val oldVersionCode = MutableStateFlow(versionCode)
+  override val upgraded = MutableStateFlow(false)
 }

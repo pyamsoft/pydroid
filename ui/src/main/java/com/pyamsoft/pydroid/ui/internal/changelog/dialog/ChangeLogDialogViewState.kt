@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,22 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
+@Stable
 internal interface ChangeLogDialogViewState : AppViewState {
-  val changeLog: List<ChangeLogLine>
-  val applicationVersionCode: Int
+  val changeLog: StateFlow<List<ChangeLogLine>>
+  val applicationVersionCode: StateFlow<Int>
 }
 
 @Stable
 internal class MutableChangeLogDialogViewState internal constructor() : ChangeLogDialogViewState {
-  override var changeLog by mutableStateOf(emptyList<ChangeLogLine>())
-  override var icon by mutableStateOf(0)
-  override var applicationVersionCode by mutableStateOf(0)
-  override var name by mutableStateOf("")
+  override val changeLog = MutableStateFlow(emptyList<ChangeLogLine>())
+  override val icon = MutableStateFlow(0)
+  override val applicationVersionCode = MutableStateFlow(0)
+  override val name = MutableStateFlow("")
 }

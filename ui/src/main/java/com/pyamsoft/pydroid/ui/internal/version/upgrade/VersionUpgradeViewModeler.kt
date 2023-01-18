@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 internal class VersionUpgradeViewModeler
 internal constructor(
-    private val state: MutableVersionUpgradeViewState,
+    override val state: MutableVersionUpgradeViewState,
     private val interactor: VersionInteractor,
 ) : AbstractViewModeler<VersionUpgradeViewState>(state) {
 
@@ -33,12 +33,12 @@ internal constructor(
       scope: CoroutineScope,
       onUpgradeComplete: () -> Unit,
   ) {
-    if (state.upgraded) {
+    if (state.upgraded.value) {
       Logger.w("Already upgraded, do nothing")
       return
     }
 
-    state.upgraded = true
+    state.upgraded.value = true
     scope.launch(context = Dispatchers.Main) {
       Logger.d("Updating app, restart via update manager!")
       interactor.completeUpdate()

@@ -18,11 +18,12 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Stable
 internal class MutableBillingViewState internal constructor() : BillingViewState {
-  override var showUpsell by mutableStateOf(false)
+  override val isShowingUpsell = MutableStateFlow(false)
+  override val isShowingDialog = MutableStateFlow(false)
 }

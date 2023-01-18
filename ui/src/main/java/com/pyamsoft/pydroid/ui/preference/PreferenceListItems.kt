@@ -69,11 +69,11 @@ internal fun SimplePreferenceItem(
   val onClick = preference.onClick
 
   PreferenceItem(
+      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
       isEnabled = isEnabled,
       text = name,
       summary = summary,
       icon = icon,
-      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 
@@ -89,11 +89,11 @@ internal fun CustomPreferenceItem(
   val content = preference.content
 
   PreferenceItem(
+      modifier = modifier,
       isEnabled = isEnabled,
       text = name,
       summary = summary,
       icon = icon,
-      modifier = { modifier },
       customContent = content,
   )
 }
@@ -110,12 +110,12 @@ internal fun InAppPreferenceItem(
   val onClick = preference.onClick
 
   PreferenceItem(
+      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
       isEnabled = isEnabled,
       text = name,
       summary = summary,
       icon = icon,
       badge = { InAppBadge() },
-      modifier = { enabled -> modifier.clickable(enabled = enabled) { onClick?.invoke() } },
   )
 }
 
@@ -132,6 +132,7 @@ internal fun CheckBoxPreferenceItem(
   val checked = preference.checked
 
   PreferenceItem(
+      modifier = modifier.clickable(enabled = isEnabled) { onCheckedChanged(!checked) },
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -142,9 +143,6 @@ internal fun CheckBoxPreferenceItem(
             enabled = enabled,
             onCheckedChange = onCheckedChanged,
         )
-      },
-      modifier = { enabled ->
-        modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
       },
   )
 }
@@ -162,6 +160,7 @@ internal fun SwitchPreferenceItem(
   val onCheckedChanged = preference.onCheckedChanged
 
   PreferenceItem(
+      modifier = modifier.clickable(enabled = isEnabled) { onCheckedChanged(!checked) },
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -172,9 +171,6 @@ internal fun SwitchPreferenceItem(
             enabled = enabled,
             onCheckedChange = onCheckedChanged,
         )
-      },
-      modifier = { enabled ->
-        modifier.clickable(enabled = enabled) { onCheckedChanged(!checked) }
       },
   )
 }
@@ -202,13 +198,11 @@ internal fun ListPreferenceItem(
   }
 
   PreferenceItem(
+      modifier = modifier.clickable(enabled = isEnabled) { setShowDialog(!showDialog) },
       isEnabled = isEnabled,
       text = title,
       summary = summary,
       icon = icon,
-      modifier = { enabled ->
-        modifier.clickable(enabled = enabled) { setShowDialog(!showDialog) }
-      },
   )
 
   if (showDialog) {
@@ -341,11 +335,11 @@ private fun PreferenceDialogActions(
 
 @Composable
 private fun PreferenceItem(
+    modifier: Modifier = Modifier,
     isEnabled: Boolean,
     text: String,
     summary: String,
     icon: ImageVector?,
-    modifier: (isEnabled: Boolean) -> Modifier,
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
     customContent: (@Composable (isEnabled: Boolean) -> Unit)? = null,
@@ -373,18 +367,18 @@ private fun PreferenceItem(
 
 @Composable
 private fun DefaultPreferenceItem(
+    modifier: Modifier = Modifier,
     enabled: Boolean,
     text: String,
     summary: String,
     icon: ImageVector?,
-    modifier: (isEnabled: Boolean) -> Modifier,
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
 ) {
   val textColor = LocalContentColor.current
 
   Row(
-      modifier = modifier(enabled).padding(all = MaterialTheme.keylines.baseline),
+      modifier = modifier.padding(all = MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {

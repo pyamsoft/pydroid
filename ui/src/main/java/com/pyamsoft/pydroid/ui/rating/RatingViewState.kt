@@ -18,10 +18,11 @@ package com.pyamsoft.pydroid.ui.rating
 
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 public interface RatingViewState : UiViewState {
 
   /** Have we already attempted to show in-app rating */
-  public val isInAppRatingShown: Boolean
+  public val isInAppRatingShown: StateFlow<Boolean>
 }

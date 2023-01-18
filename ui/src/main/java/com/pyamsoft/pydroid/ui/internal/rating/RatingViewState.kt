@@ -18,11 +18,11 @@ package com.pyamsoft.pydroid.ui.internal.rating
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.rating.RatingViewState
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Stable
 internal class MutableRatingViewState internal constructor() : RatingViewState {
-  override var isInAppRatingShown by mutableStateOf(false)
+  override val isInAppRatingShown = MutableStateFlow(false)
 }

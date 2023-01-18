@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,19 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.annotation.CheckResult
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
-internal data class ChangeLogLine internal constructor(val type: Type, val line: String) {
+@Stable
+@Immutable
+internal data class ChangeLogLine
+internal constructor(
+  val type: Type,
+  val line: String,
+) {
 
+  @Stable
+  @Immutable
   internal enum class Type {
     BUGFIX,
     CHANGE,

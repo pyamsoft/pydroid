@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 
 internal class BillingDialogViewModeler
 internal constructor(
-    private val state: MutableBillingDialogViewState,
+    override val state: MutableBillingDialogViewState,
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     private val provider: AppProvider,
@@ -45,8 +45,8 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       val displayName = changeLogInteractor.getDisplayName()
       state.apply {
-        name = displayName
-        icon = provider.applicationIcon
+        name.value = displayName
+        icon.value = provider.applicationIcon
       }
     }
 
@@ -54,8 +54,8 @@ internal constructor(
       interactor.watchSkuList { status, list ->
         Logger.d("SKU list updated: $status $list")
         state.apply {
-          connected = status
-          skuList = list.sortedBy { it.price }
+          connected.value = status
+          skuList.value = list.sortedBy { it.price }
         }
       }
     }
@@ -63,13 +63,13 @@ internal constructor(
     scope.launch(context = Dispatchers.Main) {
       interactor.watchErrors { error ->
         Logger.e(error, "Billing error received")
-        state.error = error
+        state.error.value = error
       }
     }
   }
 
   internal fun handleClearError() {
-    state.error = null
+    state.error.value = null
   }
 
   internal fun handleRefresh(scope: CoroutineScope) {

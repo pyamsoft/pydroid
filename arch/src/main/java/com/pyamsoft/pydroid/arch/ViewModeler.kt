@@ -58,7 +58,16 @@ public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
   public fun Render(content: @Composable (state: S) -> Unit)
 
   /** Get the current state */
-  @Composable @CheckResult public fun state(): S
+  @Composable
+  @CheckResult
+  @Deprecated(
+      "Use the state field instead",
+      replaceWith = ReplaceWith("state"),
+  )
+  public fun state(): S
+
+  /** Get the current state */
+  @get:CheckResult public val state: S
 
   /** Save state to a bundle */
   @Deprecated("Start migrating over to registerSaveState")

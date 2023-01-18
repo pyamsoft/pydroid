@@ -16,22 +16,35 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
 /** Version Checking UI state */
 @Stable
 public interface VersionCheckViewState : UiViewState {
 
   /** Are we currently checking for an update? */
-  public val isCheckingForUpdate: Boolean
+  public val isCheckingForUpdate: StateFlow<CheckingState>
 
   /** Is there an update available for this application? */
-  public val availableUpdateVersionCode: Int
+  public val availableUpdateVersionCode: StateFlow<Int>
 
   /** Is the update downloaded and ready to install? */
-  public val isUpdateReadyToInstall: Boolean
+  public val isUpdateReadyToInstall: StateFlow<Boolean>
 
   /** If an upload is downloading, how close are we to done? */
-  public val updateProgressPercent: Float
+  public val updateProgressPercent: StateFlow<Float>
+
+  /** Is the dialog showing to complete the upgrade */
+  public val isUpgradeDialogShowing: StateFlow<Boolean>
+
+  @Stable
+  @Immutable
+  public enum class CheckingState {
+    NONE,
+    CHECKING,
+    DONE
+  }
 }

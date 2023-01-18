@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.inject
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import com.pyamsoft.pydroid.ui.util.rememberActivity
@@ -28,14 +29,14 @@ import com.pyamsoft.pydroid.ui.util.rememberActivity
 @CheckResult
 public fun <I : ComposableInjector> rememberComposableInjector(create: () -> I): I {
   val activity = rememberActivity()
-  val handleCreate = rememberUpdatedState(create)
+  val handleCreate by rememberUpdatedState(create)
 
   // Don't use any keys because we want this evaluated only once and then never again
   // for any reason.
   //
   // Make sure your DI graph is resolved before calling create()
   val injector = remember {
-    handleCreate.value.invoke().apply {
+    handleCreate().apply {
       // We inject immediately because a composable may expect the Injector data to be present
       inject(activity)
     }

@@ -148,22 +148,13 @@ private fun Disclosure(
     modifier: Modifier = Modifier,
     name: String,
 ) {
-  val typography = MaterialTheme.typography
-  val colors = MaterialTheme.colors
-  val alpha = ContentAlpha.medium
   val disclosureStyle =
-      remember(
-          typography,
-          colors,
-          alpha,
-      ) {
-        typography.body2.copy(
-            color =
-                colors.onSurface.copy(
-                    alpha = alpha,
-                ),
-        )
-      }
+      MaterialTheme.typography.body2.copy(
+          color =
+              MaterialTheme.colors.onSurface.copy(
+                  alpha = ContentAlpha.medium,
+              ),
+      )
 
   Column(
       modifier = modifier.padding(MaterialTheme.keylines.content),

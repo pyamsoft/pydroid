@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
@@ -107,20 +108,17 @@ private fun rememberBugReportPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.bugreport_title)
   val summary = stringResource(R.string.bugreport_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.BugReport,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -132,20 +130,17 @@ private fun rememberViewSourceCodePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_source_title)
   val summary = stringResource(R.string.view_source_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Code,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -157,20 +152,17 @@ private fun rememberDataPolicyPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_data_policy_title)
   val summary = stringResource(R.string.view_data_policy_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -182,20 +174,17 @@ private fun rememberPrivacyPolicyPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_privacy_title)
   val summary = stringResource(R.string.view_privacy_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -207,20 +196,17 @@ private fun rememberTermsOfServicePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_terms_title)
   val summary = stringResource(R.string.view_terms_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Business,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }

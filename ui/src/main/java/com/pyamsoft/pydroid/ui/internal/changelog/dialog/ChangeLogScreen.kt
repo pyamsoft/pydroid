@@ -26,7 +26,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -85,22 +84,13 @@ private fun Actions(
     onRateApp: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val typography = MaterialTheme.typography
-  val colors = MaterialTheme.colors
-  val alpha = ContentAlpha.disabled
   val versionStyle =
-      remember(
-          typography,
-          colors,
-          alpha,
-      ) {
-        typography.overline.copy(
-            color =
-                colors.onSurface.copy(
-                    alpha = alpha,
-                ),
-        )
-      }
+      MaterialTheme.typography.overline.copy(
+          color =
+              MaterialTheme.colors.onSurface.copy(
+                  alpha = ContentAlpha.disabled,
+              ),
+      )
 
   Row(
       modifier =

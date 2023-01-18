@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
@@ -88,19 +89,17 @@ private fun rememberRatePreference(
 ): Preferences.Item {
   val summary = stringResource(R.string.rating_summary)
 
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       applicationName,
       summary,
-      handleClick,
   ) {
     preference(
         name = "Rate $applicationName",
         summary = summary,
         icon = Icons.Outlined.Star,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -112,20 +111,17 @@ private fun rememberDonatePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.donate_title)
   val summary = stringResource(R.string.donate_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     inAppPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Redeem,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }

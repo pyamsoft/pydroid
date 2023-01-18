@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
@@ -39,13 +40,8 @@ public fun <T : Any> rememberNotNull(anything: T?): T {
 @Composable
 @CheckResult
 public fun <T : Any> rememberNotNull(anything: T?, lazyMessage: () -> String): T {
-  val handleLazyMessage = rememberUpdatedState(lazyMessage)
-  return remember(
-      anything,
-      handleLazyMessage,
-  ) {
-    anything.requireNotNull(handleLazyMessage.value)
-  }
+  val handleLazyMessage by rememberUpdatedState(lazyMessage)
+  return remember(anything) { anything.requireNotNull(handleLazyMessage) }
 }
 
 @CheckResult

@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.Checkbox
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Surface
@@ -316,11 +318,11 @@ private fun PreferenceItem(
   ) {
     if (customContent == null) {
       DefaultPreferenceItem(
+          modifier = modifier,
           enabled = enabled,
           text = text,
           summary = summary,
           icon = icon,
-          modifier = modifier,
           trailing = trailing,
           badge = badge,
       )
@@ -340,6 +342,8 @@ private fun DefaultPreferenceItem(
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
 ) {
+  val textColor = LocalContentColor.current
+
   Row(
       modifier = modifier(enabled).padding(all = MaterialTheme.keylines.baseline),
       verticalAlignment = Alignment.CenterVertically,
@@ -369,7 +373,13 @@ private fun DefaultPreferenceItem(
       ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.body1,
+            style =
+                MaterialTheme.typography.body1.copy(
+                    color =
+                        textColor.copy(
+                            alpha = if (enabled) ContentAlpha.high else ContentAlpha.medium,
+                        ),
+                ),
         )
         badge?.let { compose ->
           Box(
@@ -390,7 +400,13 @@ private fun DefaultPreferenceItem(
         ) {
           Text(
               text = summary,
-              style = MaterialTheme.typography.caption,
+              style =
+                  MaterialTheme.typography.caption.copy(
+                      color =
+                          textColor.copy(
+                              alpha = if (enabled) ContentAlpha.medium else ContentAlpha.disabled,
+                          ),
+                  ),
           )
         }
       }

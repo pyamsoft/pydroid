@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
@@ -72,18 +73,16 @@ private fun rememberSocialMediaPreference(
   val name = stringResource(R.string.social_media_f_title)
   val summary = stringResource(R.string.social_media_f_summary)
 
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -96,18 +95,16 @@ private fun rememberBlogPreference(
   val name = stringResource(R.string.social_media_b_title)
   val summary = stringResource(R.string.social_media_b_summary)
 
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }

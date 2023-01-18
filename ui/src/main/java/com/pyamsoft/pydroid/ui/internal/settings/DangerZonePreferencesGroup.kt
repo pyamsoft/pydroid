@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
@@ -71,20 +72,17 @@ private fun rememberResetPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.clear_all_title)
   val summary = stringResource(R.string.clear_all_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Warning,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }

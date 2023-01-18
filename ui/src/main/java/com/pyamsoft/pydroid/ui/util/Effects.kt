@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleObserver
@@ -25,13 +26,11 @@ import androidx.lifecycle.LifecycleObserver
 /** Add an observer to the Local Lifecycle Owner */
 @Composable
 public fun LifecycleEffect(observer: () -> LifecycleObserver) {
-  val createObserver = rememberUpdatedState(observer)
+  val createObserver by rememberUpdatedState(observer)
   val lifecycleOwner = LocalLifecycleOwner.current
-  DisposableEffect(
-      lifecycleOwner,
-      createObserver,
-  ) {
-    val obs = createObserver.value.invoke()
+
+  DisposableEffect(lifecycleOwner) {
+    val obs = createObserver()
     val lifecycle = lifecycleOwner.lifecycle
     lifecycle.addObserver(obs)
     onDispose { lifecycle.removeObserver(obs) }

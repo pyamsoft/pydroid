@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringArrayResource
@@ -119,7 +120,7 @@ private fun rememberDarkThemePreference(
   val rawValue = remember(darkMode) { darkMode.toRawString() }
 
   // Don't use by so we can memoize
-  val handleChange = rememberUpdatedState(onChange)
+  val handleChange by rememberUpdatedState(onChange)
 
   return remember(
       name,
@@ -127,7 +128,6 @@ private fun rememberDarkThemePreference(
       names,
       values,
       rawValue,
-      handleChange,
   ) {
     listPreference(
         name = name,
@@ -135,7 +135,7 @@ private fun rememberDarkThemePreference(
         icon = Icons.Outlined.Visibility,
         value = rawValue,
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
-        onPreferenceSelected = { _, value -> handleChange.value.invoke(value.toThemingMode()) },
+        onPreferenceSelected = { _, value -> handleChange(value.toThemingMode()) },
     )
   }
 }
@@ -147,20 +147,17 @@ private fun rememberLicensesPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.about_license_title)
   val summary = stringResource(R.string.about_license_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.LibraryBooks,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -172,20 +169,17 @@ private fun rememberUpdatePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.check_version_title)
   val summary = stringResource(R.string.check_version_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Download,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }
@@ -197,20 +191,17 @@ private fun rememberChangeLogPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.upgrade_info_title)
   val summary = stringResource(R.string.upgrade_info_summary)
-
-  // Don't use by so we can memoize
-  val handleClick = rememberUpdatedState(onClick)
+  val handleClick by rememberUpdatedState(onClick)
 
   return remember(
       name,
       summary,
-      handleClick,
   ) {
     preference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Whatshot,
-        onClick = handleClick.value,
+        onClick = handleClick,
     )
   }
 }

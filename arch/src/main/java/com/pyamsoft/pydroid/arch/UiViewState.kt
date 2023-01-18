@@ -24,5 +24,4 @@ import androidx.compose.runtime.Stable
  * This can hold one or many different pieces of data which collectively make up the state of a
  * view. This is usually handled via a Renderable object.
  */
-@Stable
-public interface UiViewState
+@Stable public interface UiViewState

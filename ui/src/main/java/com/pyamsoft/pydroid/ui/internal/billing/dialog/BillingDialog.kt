@@ -125,13 +125,13 @@ internal fun BillingDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-      BillingScreen(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
-          state = viewModel.state,
-          imageLoader = imageLoader,
-          onPurchase = handleLaunchPurchase,
-          onBillingErrorDismissed = handleClearBillingError,
-          onClose = onDismiss,
-      )
+    BillingScreen(
+        modifier = modifier.padding(MaterialTheme.keylines.content),
+        state = viewModel.state,
+        imageLoader = imageLoader,
+        onPurchase = handleLaunchPurchase,
+        onBillingErrorDismissed = handleClearBillingError,
+        onClose = onDismiss,
+    )
   }
 }

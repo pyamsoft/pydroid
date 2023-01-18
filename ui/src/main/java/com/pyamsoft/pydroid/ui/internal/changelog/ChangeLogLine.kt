@@ -24,8 +24,8 @@ import androidx.compose.runtime.Stable
 @Immutable
 internal data class ChangeLogLine
 internal constructor(
-  val type: Type,
-  val line: String,
+    val type: Type,
+    val line: String,
 ) {
 
   @Stable

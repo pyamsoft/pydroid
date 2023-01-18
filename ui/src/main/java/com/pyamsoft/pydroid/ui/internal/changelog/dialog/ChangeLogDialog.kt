@@ -96,12 +96,12 @@ internal fun ChangeLogDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-      ChangeLogScreen(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
-          state = viewModel.state,
-          imageLoader = imageLoader,
-          onRateApp = handleRateApp,
-          onClose = onDismiss,
-      )
+    ChangeLogScreen(
+        modifier = modifier.padding(MaterialTheme.keylines.content),
+        state = viewModel.state,
+        imageLoader = imageLoader,
+        onRateApp = handleRateApp,
+        onClose = onDismiss,
+    )
   }
 }

@@ -101,13 +101,13 @@ internal fun AboutDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-      AboutScreen(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
-          state = viewModel.state,
-          onViewHomePage = handleViewHomePage,
-          onViewLicense = handleViewLicense,
-          onNavigationErrorDismissed = handleDismissFailedNavigation,
-          onClose = onDismiss,
-      )
+    AboutScreen(
+        modifier = modifier.padding(MaterialTheme.keylines.content),
+        state = viewModel.state,
+        onViewHomePage = handleViewHomePage,
+        onViewLicense = handleViewLicense,
+        onNavigationErrorDismissed = handleDismissFailedNavigation,
+        onClose = onDismiss,
+    )
   }
 }

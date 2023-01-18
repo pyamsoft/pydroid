@@ -67,11 +67,11 @@ internal fun ResetDialog(
   Dialog(
       onDismissRequest = onDismiss,
   ) {
-      ResetScreen(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
-          state = viewModel.state,
-          onReset = handleReset,
-          onClose = onDismiss,
-      )
+    ResetScreen(
+        modifier = modifier.padding(MaterialTheme.keylines.content),
+        state = viewModel.state,
+        onReset = handleReset,
+        onClose = onDismiss,
+    )
   }
 }

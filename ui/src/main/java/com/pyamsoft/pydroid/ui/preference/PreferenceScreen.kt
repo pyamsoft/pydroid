@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
-import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,26 +24,13 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.ui.util.SafeList
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
-
-/** This stable class must be used to avoid Recompositions */
-@Stable
-public data class PreferenceScreenData(
-    /** The list of preferences */
-    public val preferences: List<Preferences>
-)
-
-/** Extension function for easy usage */
-@CheckResult
-public fun List<Preferences>.asScreenData(): PreferenceScreenData {
-  return PreferenceScreenData(this)
-}
+import com.pyamsoft.pydroid.ui.util.safe
 
 /** Create a screen that hosts Preference Composables */
 @Composable
@@ -52,9 +38,9 @@ public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
-    preferences: PreferenceScreenData,
+    preferences: SafeList<Preferences>,
 ) {
-  val data = preferences.preferences.rememberAsStateList()
+  val data = preferences.list.rememberAsStateList()
 
   LazyColumn(
       modifier = modifier,
@@ -180,49 +166,46 @@ private fun RenderItem(
 private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   PreferenceScreen(
       preferences =
-          remember {
-            listOf(
-                    preferenceGroup(
-                        name = "TEST",
-                        isEnabled = isEnabled,
-                        preferences =
-                            listOf(
-                                preference(
-                                    name = "TEST ITEM 1",
-                                ),
-                                preference(
-                                    name = "TEST ITEM 2",
-                                    summary = "TESTING 123",
-                                ),
-                                inAppPreference(
-                                    name = "TEST IN-APP",
-                                ),
-                                checkBoxPreference(
-                                    name = "TEST CHECKBOX 1",
-                                    checked = false,
-                                    onCheckedChanged = {},
-                                ),
-                                checkBoxPreference(
-                                    name = "TEST CHECKBOX 2",
-                                    checked = true,
-                                    onCheckedChanged = {},
-                                ),
-                                switchPreference(
-                                    name = "TEST SWITCH 1",
-                                    checked = false,
-                                    onCheckedChanged = {},
-                                ),
-                                switchPreference(
-                                    name = "TEST SWITCH 2",
-                                    checked = true,
-                                    onCheckedChanged = {},
-                                ),
-                            ),
-                    ),
-                )
-                .asScreenData()
-          },
-  )
+          listOf(
+                  preferenceGroup(
+                      name = "TEST",
+                      isEnabled = isEnabled,
+                      preferences =
+                          listOf(
+                              preference(
+                                  name = "TEST ITEM 1",
+                              ),
+                              preference(
+                                  name = "TEST ITEM 2",
+                                  summary = "TESTING 123",
+                              ),
+                              inAppPreference(
+                                  name = "TEST IN-APP",
+                              ),
+                              checkBoxPreference(
+                                  name = "TEST CHECKBOX 1",
+                                  checked = false,
+                                  onCheckedChanged = {},
+                              ),
+                              checkBoxPreference(
+                                  name = "TEST CHECKBOX 2",
+                                  checked = true,
+                                  onCheckedChanged = {},
+                              ),
+                              switchPreference(
+                                  name = "TEST SWITCH 1",
+                                  checked = false,
+                                  onCheckedChanged = {},
+                              ),
+                              switchPreference(
+                                  name = "TEST SWITCH 2",
+                                  checked = true,
+                                  onCheckedChanged = {},
+                              ),
+                          ),
+                  ),
+              )
+              .safe())
 }
 
 @Preview

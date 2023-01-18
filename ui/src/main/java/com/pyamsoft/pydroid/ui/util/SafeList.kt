@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Peter Kenji Yamanaka
+ * Copyright 2023 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.app
+package com.pyamsoft.pydroid.ui.util
 
+import androidx.annotation.CheckResult
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 
-/** Various options for PYDroidActivity */
+/** A list that is safe for Compose */
 @Stable
 @Immutable
-public data class PYDroidActivityOptions(
-    /** Disable the billing component */
-    internal val disableBilling: Boolean = false,
-
-    /** Disable the rating component */
-    internal val disableRating: Boolean = false,
-
-    /** Disable the version check component */
-    internal val disableVersionCheck: Boolean = false,
-
-    /** Disable the data policy component */
-    internal val disableDataPolicy: Boolean = false,
-
-    /** Disable the change log component */
-    internal val disableChangeLog: Boolean = false,
+public data class SafeList<T : Any>(
+    val list: List<T>,
 )
+
+/** Create a safe list */
+@CheckResult
+public fun <T : Any> List<T>.safe(): SafeList<T> {
+  return SafeList(this)
+}
+
+/** Remember a list safely */
+@Composable
+@CheckResult
+public fun <T : Any> List<T>.rememberSafe(): SafeList<T> {
+  return remember(this) { this.safe() }
+}

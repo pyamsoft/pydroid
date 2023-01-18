@@ -34,17 +34,27 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.billing.BillingViewState
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
+import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInjector
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
+import com.pyamsoft.pydroid.ui.util.SafeList
 import com.pyamsoft.pydroid.ui.util.rememberActivity
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import com.pyamsoft.pydroid.ui.util.rememberSafe
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -127,10 +137,6 @@ public fun SettingsPage(
     }
   }
 
-  val showResetDialog by viewModel.state.isShowingResetDialog.collectAsState()
-  val showDataPolicyDialog by viewModel.state.isShowingDataPolicyDialog.collectAsState()
-  val showAboutDialog by viewModel.state.isShowingAboutDialog.collectAsState()
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -139,18 +145,20 @@ public fun SettingsPage(
   SaveStateDisposableEffect(changeLogViewModel)
   SaveStateDisposableEffect(viewModel)
 
-  SettingsScreen(
+  SettingsContent(
       modifier = modifier,
       shape = shape,
-      elevation = customElevation,
       state = viewModel.state,
+      billingState = billingViewModel.state,
+      changeLogState = changeLogViewModel.state,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,
-      topItemMargin = customTopItemMargin,
-      bottomItemMargin = customBottomItemMargin,
-      customPreContent = customPrePreferences,
-      customPostContent = customPostPreferences,
+      customElevation = customElevation,
+      customTopItemMargin = customTopItemMargin,
+      customBottomItemMargin = customBottomItemMargin,
+      customPrePreferences = customPrePreferences.rememberSafe(),
+      customPostPreferences = customPostPreferences.rememberSafe(),
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = handleCheckForUpdates,
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
@@ -170,23 +178,111 @@ public fun SettingsPage(
             mode = it,
         )
       },
+      onDismissDataPolicyDialog = { viewModel.handleCloseDataPolicyDialog() },
+      onDismissResetDialog = { viewModel.handleCloseResetDialog() },
+      onDismissAboutDialog = { viewModel.handleCloseAboutDialog() },
+      onDismissBillingDialog = { billingViewModel.handleCloseDialog() },
+      onDismissChangeLogDialog = { changeLogViewModel.handleCloseDialog() },
+  )
+}
+
+/** Composable for displaying a settings page */
+@Composable
+private fun SettingsContent(
+    modifier: Modifier = Modifier,
+    state: SettingsViewState,
+    billingState: BillingViewState,
+    changeLogState: ChangeLogViewState,
+    options: PYDroidActivityOptions,
+    shape: Shape,
+    hideUpgradeInformation: Boolean,
+    hideClearAll: Boolean,
+    customPrePreferences: SafeList<Preferences>,
+    customPostPreferences: SafeList<Preferences>,
+    customTopItemMargin: Dp,
+    customBottomItemMargin: Dp,
+    customElevation: Dp,
+    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onLicensesClicked: () -> Unit,
+    onCheckUpdateClicked: () -> Unit,
+    onShowChangeLogClicked: () -> Unit,
+    onResetClicked: () -> Unit,
+    onDonateClicked: () -> Unit,
+    onBugReportClicked: () -> Unit,
+    onViewSourceClicked: () -> Unit,
+    onViewDataPolicyClicked: () -> Unit,
+    onViewPrivacyPolicyClicked: () -> Unit,
+    onViewTermsOfServiceClicked: () -> Unit,
+    onViewSocialMediaClicked: () -> Unit,
+    onViewBlogClicked: () -> Unit,
+    onOpenMarketPage: () -> Unit,
+    onDismissAboutDialog: () -> Unit,
+    onDismissBillingDialog: () -> Unit,
+    onDismissChangeLogDialog: () -> Unit,
+    onDismissResetDialog: () -> Unit,
+    onDismissDataPolicyDialog: () -> Unit,
+) {
+  val showResetDialog by state.isShowingResetDialog.collectAsState()
+  val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsState()
+  val showAboutDialog by state.isShowingAboutDialog.collectAsState()
+  val showBillingDialog by billingState.isShowingDialog.collectAsState()
+  val showChangeLogDialog by changeLogState.isShowingDialog.collectAsState()
+
+  SettingsScreen(
+      modifier = modifier,
+      shape = shape,
+      elevation = customElevation,
+      state = state,
+      options = options,
+      hideClearAll = hideClearAll,
+      hideUpgradeInformation = hideUpgradeInformation,
+      topItemMargin = customTopItemMargin,
+      bottomItemMargin = customBottomItemMargin,
+      customPreContent = customPrePreferences,
+      customPostContent = customPostPreferences,
+      onDarkModeChanged = onDarkModeChanged,
+      onLicensesClicked = onLicensesClicked,
+      onCheckUpdateClicked = onCheckUpdateClicked,
+      onShowChangeLogClicked = onShowChangeLogClicked,
+      onResetClicked = onResetClicked,
+      onDonateClicked = onDonateClicked,
+      onBugReportClicked = onBugReportClicked,
+      onViewSourceClicked = onViewSourceClicked,
+      onViewDataPolicyClicked = onViewDataPolicyClicked,
+      onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+      onViewSocialMediaClicked = onViewSocialMediaClicked,
+      onViewBlogClicked = onViewBlogClicked,
+      onOpenMarketPage = onOpenMarketPage,
   )
 
   if (showDataPolicyDialog) {
     DataPolicyDisclosureDialog(
-        onDismiss = { viewModel.handleCloseDataPolicyDialog() },
+        onDismiss = onDismissDataPolicyDialog,
     )
   }
 
   if (showResetDialog) {
     ResetDialog(
-        onDismiss = { viewModel.handleCloseResetDialog() },
+        onDismiss = onDismissResetDialog,
     )
   }
 
   if (showAboutDialog) {
     AboutDialog(
-        onDismiss = { viewModel.handleCloseAboutDialog() },
+        onDismiss = onDismissAboutDialog,
+    )
+  }
+
+  if (showBillingDialog) {
+    BillingDialog(
+        onDismiss = onDismissBillingDialog,
+    )
+  }
+
+  if (showChangeLogDialog) {
+    ChangeLogDialog(
+        onDismiss = onDismissChangeLogDialog,
     )
   }
 }

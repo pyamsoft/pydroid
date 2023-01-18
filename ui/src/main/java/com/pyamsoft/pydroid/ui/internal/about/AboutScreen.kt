@@ -46,7 +46,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
-import com.pyamsoft.pydroid.ui.util.rememberAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateList
 
 @Composable
 internal fun AboutScreen(
@@ -127,8 +127,7 @@ private fun AboutList(
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
 ) {
-  val licenses by state.licenses.collectAsState()
-  val list = licenses.rememberAsStateList()
+  val licenses = state.licenses.collectAsStateList()
 
   LazyColumn(
       modifier = modifier,
@@ -136,7 +135,7 @@ private fun AboutList(
       contentPadding = PaddingValues(MaterialTheme.keylines.baseline),
   ) {
     items(
-        items = list,
+        items = licenses,
         key = { "${it.name}:${it.libraryUrl}" },
     ) { item ->
       AboutListItem(

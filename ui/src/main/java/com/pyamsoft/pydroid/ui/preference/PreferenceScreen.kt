@@ -24,13 +24,12 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
-import com.pyamsoft.pydroid.ui.util.SafeList
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
-import com.pyamsoft.pydroid.ui.util.safe
 
 /** Create a screen that hosts Preference Composables */
 @Composable
@@ -38,10 +37,8 @@ public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
-    preferences: SafeList<Preferences>,
+    preferences: SnapshotStateList<Preferences>,
 ) {
-  val data = preferences.list.rememberAsStateList()
-
   LazyColumn(
       modifier = modifier,
   ) {
@@ -53,7 +50,7 @@ public fun PreferenceScreen(
       }
     }
 
-    data.forEach { preference ->
+    preferences.forEach { preference ->
       when (preference) {
         is Preferences.Group ->
             renderGroupInScope(
@@ -205,7 +202,7 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
                           ),
                   ),
               )
-              .safe())
+              .rememberAsStateList())
 }
 
 @Preview

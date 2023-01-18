@@ -55,7 +55,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
-import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 @Composable
 internal fun SimplePreferenceItem(
@@ -206,10 +205,6 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-    // We do this fun little remember here because a List in compose is always re-composed
-    // so we have to turn the list into a mutableStateList and then it will avoid recomposition
-    val items = entries.rememberAsStateList()
-
     Dialog(
         onDismissRequest = onDismiss,
     ) {
@@ -227,7 +222,7 @@ internal fun ListPreferenceItem(
           }
 
           items(
-              items = items,
+              items = entries,
               key = { it.value },
           ) { item ->
             PreferenceDialogItem(

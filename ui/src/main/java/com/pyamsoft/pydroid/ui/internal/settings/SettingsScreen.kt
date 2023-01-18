@@ -28,7 +28,9 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
@@ -41,8 +43,6 @@ import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
-import com.pyamsoft.pydroid.ui.util.SafeList
-import com.pyamsoft.pydroid.ui.util.safe
 
 @Composable
 internal fun SettingsScreen(
@@ -55,8 +55,8 @@ internal fun SettingsScreen(
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
-    customPreContent: SafeList<Preferences>,
-    customPostContent: SafeList<Preferences>,
+    customPreContent: SnapshotStateList<Preferences>,
+    customPostContent: SnapshotStateList<Preferences>,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -142,8 +142,8 @@ private fun SettingsList(
     options: PYDroidActivityOptions,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
-    customPreContent: SafeList<Preferences>,
-    customPostContent: SafeList<Preferences>,
+    customPreContent: SnapshotStateList<Preferences>,
+    customPostContent: SnapshotStateList<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
@@ -216,23 +216,21 @@ private fun SettingsList(
           socialMediaPreferences,
           dangerZonePreferences,
       ) {
-        mutableListOf<Preferences>().apply {
-          addAll(customPreContent.list)
+        mutableStateListOf<Preferences>().apply {
+          addAll(customPreContent)
           add(applicationPrefs)
           add(supportPrefs)
           add(infoPreferences)
           add(socialMediaPreferences)
           add(dangerZonePreferences)
-          addAll(customPostContent.list)
+          addAll(customPostContent)
         }
       }
-
-  val data = remember(preferences) { preferences.safe() }
 
   PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
-      preferences = data,
+      preferences = preferences,
   )
 }
 
@@ -252,8 +250,8 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       elevation = ZeroElevation,
       topItemMargin = ZeroSize,
       bottomItemMargin = ZeroSize,
-      customPreContent = emptyList<Preferences>().safe(),
-      customPostContent = emptyList<Preferences>().safe(),
+      customPreContent = remember { mutableStateListOf() },
+      customPostContent = remember { mutableStateListOf() },
       onDarkModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},

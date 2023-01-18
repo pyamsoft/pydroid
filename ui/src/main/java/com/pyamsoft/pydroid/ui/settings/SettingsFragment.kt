@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.util.dispose
 import com.pyamsoft.pydroid.ui.util.recompose
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 /** Fragment for displaying a settings page */
 @Deprecated("Start migrating to Compose and use SettingsPage")
@@ -87,8 +88,8 @@ public abstract class SettingsFragment : Fragment() {
           SettingsPage(
               hideClearAll = hideClearAll,
               hideUpgradeInformation = hideUpgradeInformation,
-              customPrePreferences = customPrePreferences(),
-              customPostPreferences = customPostPreferences(),
+              customPrePreferences = customPrePreferences().rememberAsStateList(),
+              customPostPreferences = customPostPreferences().rememberAsStateList(),
               customTopItemMargin = customTopItemMargin(),
               customBottomItemMargin = customBottomItemMargin(),
               customElevation = customElevation(),

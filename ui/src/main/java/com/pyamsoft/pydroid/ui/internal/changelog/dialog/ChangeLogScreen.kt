@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.util.rememberAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateList
 
 @Composable
 @JvmOverloads
@@ -50,8 +50,7 @@ internal fun ChangeLogScreen(
     onRateApp: () -> Unit,
     onClose: () -> Unit
 ) {
-  val lines by state.changeLog.collectAsState()
-  val changeLog = lines.rememberAsStateList()
+  val changeLog = state.changeLog.collectAsStateList()
   val icon by state.icon.collectAsState()
   val name by state.name.collectAsState()
   val versionCode by state.applicationVersionCode.collectAsState()

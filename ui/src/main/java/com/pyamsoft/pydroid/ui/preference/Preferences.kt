@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.ui.preference
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.vector.ImageVector
 import java.util.UUID
 
@@ -88,7 +90,7 @@ public sealed class Preferences {
       override val summary: String,
       override val icon: ImageVector?,
       internal val value: String,
-      internal val entries: Map<String, String>,
+      internal val entries: SnapshotStateList<Map.Entry<String, String>>,
       internal val onPreferenceSelected: (key: String, value: String) -> Unit,
   ) : Item()
 
@@ -208,7 +210,7 @@ public fun listPreference(
       isEnabled = isEnabled,
       summary = summary,
       value = value,
-      entries = entries,
+      entries = entries.entries.toMutableStateList(),
       icon = icon,
       onPreferenceSelected = onPreferenceSelected,
   )

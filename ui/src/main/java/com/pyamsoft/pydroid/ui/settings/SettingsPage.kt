@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -50,11 +52,8 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
-import com.pyamsoft.pydroid.ui.util.SafeList
 import com.pyamsoft.pydroid.ui.util.rememberActivity
-import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
-import com.pyamsoft.pydroid.ui.util.rememberSafe
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,8 +78,8 @@ public fun SettingsPage(
     shape: Shape = RectangleShape,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
-    customPrePreferences: List<Preferences> = remember { emptyList() },
-    customPostPreferences: List<Preferences> = remember { emptyList() },
+    customPrePreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
+    customPostPreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
     customTopItemMargin: Dp = ZeroSize,
     customBottomItemMargin: Dp = ZeroSize,
     customElevation: Dp = ZeroElevation,
@@ -157,8 +156,8 @@ public fun SettingsPage(
       customElevation = customElevation,
       customTopItemMargin = customTopItemMargin,
       customBottomItemMargin = customBottomItemMargin,
-      customPrePreferences = customPrePreferences.rememberSafe(),
-      customPostPreferences = customPostPreferences.rememberSafe(),
+      customPrePreferences = customPrePreferences,
+      customPostPreferences = customPostPreferences,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = handleCheckForUpdates,
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
@@ -197,8 +196,8 @@ private fun SettingsContent(
     shape: Shape,
     hideUpgradeInformation: Boolean,
     hideClearAll: Boolean,
-    customPrePreferences: SafeList<Preferences>,
-    customPostPreferences: SafeList<Preferences>,
+    customPrePreferences: SnapshotStateList<Preferences>,
+    customPostPreferences: SnapshotStateList<Preferences>,
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
     customElevation: Dp,

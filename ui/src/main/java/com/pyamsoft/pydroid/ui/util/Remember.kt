@@ -21,15 +21,19 @@ import android.content.Context
 import android.content.ContextWrapper
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import kotlinx.coroutines.flow.StateFlow
 
 /** Assume not null and remember the result */
 @Composable
@@ -88,4 +92,36 @@ public fun <T : Any> Collection<T>.rememberAsStateList(): SnapshotStateList<T> {
 @CheckResult
 public fun <K : Any, V : Any> Map<K, V>.rememberAsStateList(): SnapshotStateList<Map.Entry<K, V>> {
   return remember(this) { this.entries.toMutableStateList() }
+}
+
+/**
+ * Any Map in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State Map into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <K : Any, V : Any> Map<K, V>.rememberAsStateMap(): SnapshotStateMap<K, V> {
+  return remember(this) { mutableStateMapOf(*this.toList().toTypedArray()) }
+}
+
+/**
+ * Any list in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State list into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(): SnapshotStateList<T> {
+  val state by this.collectAsState()
+  return state.rememberAsStateList()
+}
+
+/**
+ * Any Map in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State Map into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(): SnapshotStateMap<K, V> {
+  val state by this.collectAsState()
+  return state.rememberAsStateMap()
 }

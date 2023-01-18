@@ -32,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -45,7 +47,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.util.rememberAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateList
 
 @Composable
 internal fun BillingScreen(
@@ -56,8 +58,7 @@ internal fun BillingScreen(
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val skus by state.skuList.collectAsState()
-  val skuList = skus.rememberAsStateList()
+  val skuList = state.skuList.collectAsStateList()
   val connected by state.connected.collectAsState()
   val icon by state.icon.collectAsState()
   val name by state.name.collectAsState()
@@ -197,7 +198,7 @@ private fun BillingError(
 }
 
 private val PREVIEW_SKUS =
-    listOf(
+    mutableStateListOf(
         object : BillingSku {
           override val id: String = "test"
           override val displayPrice: String = "$10.00"
@@ -217,7 +218,7 @@ private val PREVIEW_SKUS =
 @Composable
 private fun PreviewBillingScreen(
     connected: BillingState,
-    skuList: List<BillingSku>,
+    skuList: SnapshotStateList<BillingSku>,
     error: Throwable?,
 ) {
   BillingScreen(
@@ -240,7 +241,7 @@ private fun PreviewBillingScreen(
 private fun PreviewBillingScreenConnectedWithNoListNoError() {
   PreviewBillingScreen(
       connected = BillingState.CONNECTED,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = null,
   )
 }
@@ -250,7 +251,7 @@ private fun PreviewBillingScreenConnectedWithNoListNoError() {
 private fun PreviewBillingScreenConnectedWithNoListError() {
   PreviewBillingScreen(
       connected = BillingState.CONNECTED,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = RuntimeException("TEST"),
   )
 }
@@ -300,7 +301,7 @@ private fun PreviewBillingScreenDisconnectedWithListNoError() {
 private fun PreviewBillingScreenDisconnectedWithNoListNoError() {
   PreviewBillingScreen(
       connected = BillingState.DISCONNECTED,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = null,
   )
 }
@@ -310,7 +311,7 @@ private fun PreviewBillingScreenDisconnectedWithNoListNoError() {
 private fun PreviewBillingScreenDisconnectedWithNoListError() {
   PreviewBillingScreen(
       connected = BillingState.DISCONNECTED,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = RuntimeException("TEST"),
   )
 }
@@ -340,7 +341,7 @@ private fun PreviewBillingScreenLoadingWithListNoError() {
 private fun PreviewBillingScreenLoadingWithNoListNoError() {
   PreviewBillingScreen(
       connected = BillingState.LOADING,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = null,
   )
 }
@@ -350,7 +351,7 @@ private fun PreviewBillingScreenLoadingWithNoListNoError() {
 private fun PreviewBillingScreenLoadingWithNoListError() {
   PreviewBillingScreen(
       connected = BillingState.LOADING,
-      skuList = emptyList(),
+      skuList = remember { mutableStateListOf() },
       error = RuntimeException("TEST"),
   )
 }

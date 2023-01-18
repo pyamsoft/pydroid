@@ -16,176 +16,121 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
+import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
-/**
- * Create a screen that hosts Preference Composables
- */
+/** This stable class must be used to avoid Recompositions */
+@Stable
+public data class PreferenceScreenData(
+    /** The list of preferences */
+    public val preferences: List<Preferences>
+)
+
+/** Extension function for easy usage */
+@CheckResult
+public fun List<Preferences>.asScreenData(): PreferenceScreenData {
+  return PreferenceScreenData(this)
+}
+
+/** Create a screen that hosts Preference Composables */
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
-    preferences: List<Preferences>,
+    preferences: PreferenceScreenData,
 ) {
+  val data = preferences.preferences.rememberAsStateList()
+
   LazyColumn(
       modifier = modifier,
   ) {
-    val maxIndex = preferences.lastIndex
-    preferences.forEachIndexed { index, preference ->
+    if (topItemMargin > ZeroSize) {
+      item {
+        Spacer(
+            modifier = Modifier.fillMaxWidth().height(topItemMargin),
+        )
+      }
+    }
+
+    data.forEach { preference ->
       when (preference) {
         is Preferences.Group ->
             renderGroupInScope(
                 modifier = Modifier.fillMaxWidth(),
-                listScope = this,
-                topItemMargin = topItemMargin,
-                bottomItemMargin = bottomItemMargin,
-                index = index,
-                maxIndex = maxIndex,
                 preference = preference,
             )
         is Preferences.Item ->
             renderItemInScope(
                 modifier = Modifier.fillMaxWidth(),
-                listScope = this,
-                topItemMargin = topItemMargin,
-                bottomItemMargin = bottomItemMargin,
-                index = index,
-                maxIndex = maxIndex,
                 preference = preference,
             )
       }
     }
-  }
-}
 
-// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
-// calling applications will break with a NoClassDefFoundError
-//
-// Don't do private fun LazyListScope.FunctionName()
-// or
-// content: LazyListScope.() -> Unit
-//
-// until this is fixed.
-private fun renderPaddedItemsInScope(
-    listScope: LazyListScope,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    index: Int,
-    maxIndex: Int,
-    content: () -> Unit
-) {
-  if (index == 0) {
-    listScope.item {
-      Spacer(modifier = Modifier.fillMaxWidth().statusBarsPadding().height(topItemMargin))
-    }
-  }
-
-  content()
-
-  if (index == maxIndex) {
-    listScope.item {
-      Spacer(
-          modifier = Modifier.fillMaxWidth().navigationBarsPadding().height(bottomItemMargin),
-      )
-    }
-  }
-}
-
-// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
-// calling applications will break with a NoClassDefFoundError
-//
-// Don't do private fun LazyListScope.FunctionName()
-// or
-// content: LazyListScope.() -> Unit
-//
-// until this is fixed.
-private fun renderGroupInScope(
-    modifier: Modifier = Modifier,
-    listScope: LazyListScope,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    index: Int,
-    maxIndex: Int,
-    preference: Preferences.Group
-) {
-  val name = preference.name
-  val preferences = preference.preferences
-  val isEnabled = preference.isEnabled
-
-  renderPaddedItemsInScope(
-      listScope = listScope,
-      topItemMargin = topItemMargin,
-      bottomItemMargin = bottomItemMargin,
-      index = index,
-      maxIndex = maxIndex,
-  ) {
-    listScope.item {
-      PreferenceGroupHeader(
-          modifier = Modifier.fillMaxWidth(),
-          name = name,
-      )
-    }
-
-    listScope.items(
-        items = preferences,
-        key = { it.renderKey },
-    ) { item ->
-      CompositionLocalProvider(
-          LocalPreferenceEnabledStatus provides isEnabled,
-      ) {
-        RenderItem(
-            modifier = modifier,
-            preference = item,
+    if (bottomItemMargin > ZeroSize) {
+      item {
+        Spacer(
+            modifier = Modifier.fillMaxWidth().height(bottomItemMargin),
         )
       }
     }
   }
 }
 
-// NOTE(Peter): Do not extend anything with LazyListScope.() -> Unit, or else
-// calling applications will break with a NoClassDefFoundError
-//
-// Don't do private fun LazyListScope.FunctionName()
-// or
-// content: LazyListScope.() -> Unit
-//
-// until this is fixed.
-private fun renderItemInScope(
+private fun LazyListScope.renderGroupInScope(
     modifier: Modifier = Modifier,
-    listScope: LazyListScope,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    index: Int,
-    maxIndex: Int,
-    preference: Preferences.Item
+    preference: Preferences.Group
 ) {
-  renderPaddedItemsInScope(
-      listScope = listScope,
-      topItemMargin = topItemMargin,
-      bottomItemMargin = bottomItemMargin,
-      index = index,
-      maxIndex = maxIndex,
-  ) {
-    listScope.item {
+  val name = preference.name
+  val preferences = preference.preferences
+  val isEnabled = preference.isEnabled
+
+  item {
+    PreferenceGroupHeader(
+        modifier = Modifier.fillMaxWidth(),
+        name = name,
+    )
+  }
+
+  items(
+      items = preferences,
+      key = { it.renderKey },
+  ) { item ->
+    CompositionLocalProvider(
+        LocalPreferenceEnabledStatus provides isEnabled,
+    ) {
       RenderItem(
           modifier = modifier,
-          preference = preference,
+          preference = item,
       )
     }
+  }
+}
+
+private fun LazyListScope.renderItemInScope(
+    modifier: Modifier = Modifier,
+    preference: Preferences.Item
+) {
+  item {
+    RenderItem(
+        modifier = modifier,
+        preference = preference,
+    )
   }
 }
 
@@ -235,45 +180,48 @@ private fun RenderItem(
 private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   PreferenceScreen(
       preferences =
-          listOf(
-              preferenceGroup(
-                  name = "TEST",
-                  isEnabled = isEnabled,
-                  preferences =
-                      listOf(
-                          preference(
-                              name = "TEST ITEM 1",
-                          ),
-                          preference(
-                              name = "TEST ITEM 2",
-                              summary = "TESTING 123",
-                          ),
-                          inAppPreference(
-                              name = "TEST IN-APP",
-                          ),
-                          checkBoxPreference(
-                              name = "TEST CHECKBOX 1",
-                              checked = false,
-                              onCheckedChanged = {},
-                          ),
-                          checkBoxPreference(
-                              name = "TEST CHECKBOX 2",
-                              checked = true,
-                              onCheckedChanged = {},
-                          ),
-                          switchPreference(
-                              name = "TEST SWITCH 1",
-                              checked = false,
-                              onCheckedChanged = {},
-                          ),
-                          switchPreference(
-                              name = "TEST SWITCH 2",
-                              checked = true,
-                              onCheckedChanged = {},
-                          ),
-                      ),
-              ),
-          ),
+          remember {
+            listOf(
+                    preferenceGroup(
+                        name = "TEST",
+                        isEnabled = isEnabled,
+                        preferences =
+                            listOf(
+                                preference(
+                                    name = "TEST ITEM 1",
+                                ),
+                                preference(
+                                    name = "TEST ITEM 2",
+                                    summary = "TESTING 123",
+                                ),
+                                inAppPreference(
+                                    name = "TEST IN-APP",
+                                ),
+                                checkBoxPreference(
+                                    name = "TEST CHECKBOX 1",
+                                    checked = false,
+                                    onCheckedChanged = {},
+                                ),
+                                checkBoxPreference(
+                                    name = "TEST CHECKBOX 2",
+                                    checked = true,
+                                    onCheckedChanged = {},
+                                ),
+                                switchPreference(
+                                    name = "TEST SWITCH 1",
+                                    checked = false,
+                                    onCheckedChanged = {},
+                                ),
+                                switchPreference(
+                                    name = "TEST SWITCH 2",
+                                    checked = true,
+                                    onCheckedChanged = {},
+                                ),
+                            ),
+                    ),
+                )
+                .asScreenData()
+          },
   )
 }
 

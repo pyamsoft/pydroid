@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
+import com.pyamsoft.pydroid.ui.preference.asScreenData
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
@@ -211,18 +212,20 @@ private fun SettingsList(
         mutableListOf<Preferences>().apply {
           //          addAll(customPreContent)
           add(applicationPrefs)
-//          add(supportPrefs)
-          //          add(infoPreferences)
-          //          add(socialMediaPreferences)
-          //          add(dangerZonePreferences)
+          add(supportPrefs)
+          add(infoPreferences)
+          add(socialMediaPreferences)
+          add(dangerZonePreferences)
           //          addAll(customPostContent)
         }
       }
 
+  val data = remember(preferences) { preferences.asScreenData() }
+
   PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
-      preferences = preferences,
+      preferences = data,
   )
 }
 

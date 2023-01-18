@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
@@ -69,4 +71,21 @@ private fun resolveActivity(context: Context): FragmentActivity {
 public fun rememberActivity(): FragmentActivity {
   val context = LocalContext.current
   return remember(context) { resolveActivity(context) }
+}
+
+/**
+ * Any list in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State list into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <T : Any> Collection<T>.rememberAsStateList(): SnapshotStateList<T> {
+  return remember(this) { this.toMutableStateList() }
+}
+
+/** rememberAsStateList convenience for Maps */
+@Composable
+@CheckResult
+public fun <K : Any, V : Any> Map<K, V>.rememberAsStateList(): SnapshotStateList<Map.Entry<K, V>> {
+  return remember(this) { this.entries.toMutableStateList() }
 }

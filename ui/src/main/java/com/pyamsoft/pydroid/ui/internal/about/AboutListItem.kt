@@ -40,8 +40,8 @@ import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 internal fun AboutListItem(
     modifier: Modifier = Modifier,
     library: OssLibrary,
-    onViewHomePage: () -> Unit,
-    onViewLicense: () -> Unit
+    onViewHomePage: (OssLibrary) -> Unit,
+    onViewLicense: (OssLibrary) -> Unit
 ) {
   Card(
       modifier = modifier,
@@ -65,10 +65,10 @@ internal fun AboutListItem(
           modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
       ) {
         ViewLicense(
-            onClick = onViewLicense,
+            onClick = { onViewLicense(library) },
         )
         VisitHomepage(
-            onClick = onViewHomePage,
+            onClick = { onViewHomePage(library) },
         )
       }
     }

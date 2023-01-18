@@ -35,7 +35,9 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 @Composable
 internal fun AboutScreen(
@@ -122,7 +125,9 @@ private fun AboutList(
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
 ) {
-  val list = state.licenses
+  val list = state.licenses.rememberAsStateList()
+  val handleViewHomePage by rememberUpdatedState { item: OssLibrary -> onViewHomePage(item) }
+  val handleViewLicense by rememberUpdatedState { item: OssLibrary -> onViewLicense(item) }
 
   LazyColumn(
       modifier = modifier,
@@ -136,8 +141,8 @@ private fun AboutList(
       AboutListItem(
           modifier = Modifier.fillMaxWidth(),
           library = item,
-          onViewHomePage = { onViewHomePage(item) },
-          onViewLicense = { onViewLicense(item) },
+          onViewHomePage = handleViewHomePage,
+          onViewLicense = handleViewLicense,
       )
     }
   }

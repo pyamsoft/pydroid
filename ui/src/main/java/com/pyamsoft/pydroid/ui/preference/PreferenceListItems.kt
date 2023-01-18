@@ -40,7 +40,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -56,6 +55,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
+import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 
 @Composable
 internal fun SimplePreferenceItem(
@@ -158,8 +158,8 @@ internal fun SwitchPreferenceItem(
   val name = preference.name
   val summary = preference.summary
   val icon = preference.icon
-  val onCheckedChanged = preference.onCheckedChanged
   val checked = preference.checked
+  val onCheckedChanged = preference.onCheckedChanged
 
   PreferenceItem(
       isEnabled = isEnabled,
@@ -212,9 +212,9 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-      // We do this fun little remember here because a List in compose is always re-composed
-      // so we have to turn the list into a mutableStateList and then it will avoid recomposition
-    val items = remember(entries) { mutableStateListOf(*entries.toList().toTypedArray()) }
+    // We do this fun little remember here because a List in compose is always re-composed
+    // so we have to turn the list into a mutableStateList and then it will avoid recomposition
+    val items = entries.rememberAsStateList()
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -234,12 +234,12 @@ internal fun ListPreferenceItem(
 
           items(
               items = items,
-              key = { it.second },
+              key = { it.value },
           ) { item ->
             PreferenceDialogItem(
                 modifier = Modifier.fillMaxWidth(),
-                name = item.first,
-                value = item.second,
+                name = item.key,
+                value = item.value,
                 current = currentValue,
                 onClick = handleSelected,
             )

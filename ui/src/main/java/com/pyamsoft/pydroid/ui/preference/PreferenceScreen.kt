@@ -24,52 +24,49 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.ZeroSize
-import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
+/**
+ * Create a screen that hosts Preference Composables
+ */
 @Composable
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
-    elevation: Dp = ZeroElevation,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
     preferences: List<Preferences>,
 ) {
-  Surface(
+  LazyColumn(
       modifier = modifier,
-      elevation = elevation,
   ) {
-    LazyColumn {
-      val maxIndex = preferences.lastIndex
-      preferences.forEachIndexed { index, preference ->
-        when (preference) {
-          is Preferences.Group ->
-              renderGroupInScope(
-                  modifier = Modifier.fillMaxWidth(),
-                  listScope = this,
-                  topItemMargin = topItemMargin,
-                  bottomItemMargin = bottomItemMargin,
-                  index = index,
-                  maxIndex = maxIndex,
-                  preference = preference,
-              )
-          is Preferences.Item ->
-              renderItemInScope(
-                  modifier = Modifier.fillMaxWidth(),
-                  listScope = this,
-                  topItemMargin = topItemMargin,
-                  bottomItemMargin = bottomItemMargin,
-                  index = index,
-                  maxIndex = maxIndex,
-                  preference = preference,
-              )
-        }
+    val maxIndex = preferences.lastIndex
+    preferences.forEachIndexed { index, preference ->
+      when (preference) {
+        is Preferences.Group ->
+            renderGroupInScope(
+                modifier = Modifier.fillMaxWidth(),
+                listScope = this,
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
+                index = index,
+                maxIndex = maxIndex,
+                preference = preference,
+            )
+        is Preferences.Item ->
+            renderItemInScope(
+                modifier = Modifier.fillMaxWidth(),
+                listScope = this,
+                topItemMargin = topItemMargin,
+                bottomItemMargin = bottomItemMargin,
+                index = index,
+                maxIndex = maxIndex,
+                preference = preference,
+            )
       }
     }
   }

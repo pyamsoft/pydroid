@@ -209,13 +209,13 @@ private fun SettingsList(
           dangerZonePreferences,
       ) {
         mutableListOf<Preferences>().apply {
-          addAll(customPreContent)
+          //          addAll(customPreContent)
           add(applicationPrefs)
-          add(supportPrefs)
-          add(infoPreferences)
-          add(socialMediaPreferences)
-          add(dangerZonePreferences)
-          addAll(customPostContent)
+//          add(supportPrefs)
+          //          add(infoPreferences)
+          //          add(socialMediaPreferences)
+          //          add(dangerZonePreferences)
+          //          addAll(customPostContent)
         }
       }
 

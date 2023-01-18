@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.Checkbox
 import androidx.compose.material.ContentAlpha
@@ -39,6 +40,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -194,6 +196,11 @@ internal fun ListPreferenceItem(
 
   val onDismiss by rememberUpdatedState { setShowDialog(false) }
 
+  val handleSelected by rememberUpdatedState { name: String, value: String ->
+    onPreferenceSelected(name, value)
+    onDismiss()
+  }
+
   PreferenceItem(
       isEnabled = isEnabled,
       text = title,
@@ -205,97 +212,129 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
+      // We do this fun little remember here because a List in compose is always re-composed
+      // so we have to turn the list into a mutableStateList and then it will avoid recomposition
+    val items = remember(entries) { mutableStateListOf(*entries.toList().toTypedArray()) }
+
     Dialog(
         onDismissRequest = onDismiss,
     ) {
       Surface(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
+          modifier = Modifier.padding(MaterialTheme.keylines.content),
           elevation = DialogDefaults.Elevation,
           shape = MaterialTheme.shapes.medium,
       ) {
-        val items = remember(entries) { entries.toList() }
-
         LazyColumn {
           item {
-            Text(
+            PreferenceDialogTitle(
                 modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-                text = title,
-                style = MaterialTheme.typography.h6,
+                title = title,
             )
           }
 
-          for (item in items) {
-            item {
-              val name = item.first
-              val value = item.second
-
-              val isSelected =
-                  remember(
-                      value,
-                      currentValue,
-                  ) {
-                    value == currentValue
-                  }
-
-              val onEntrySelected by rememberUpdatedState {
-                onPreferenceSelected(name, value)
-                onDismiss()
-              }
-
-              Row(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .selectable(
-                              selected = isSelected,
-                              onClick = {
-                                if (!isSelected) {
-                                  onEntrySelected()
-                                }
-                              },
-                          )
-                          .padding(
-                              horizontal = MaterialTheme.keylines.content,
-                              vertical = MaterialTheme.keylines.typography,
-                          ),
-                  verticalAlignment = Alignment.CenterVertically,
-              ) {
-                RadioButton(
-                    modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-                    selected = isSelected,
-                    onClick = {
-                      if (!isSelected) {
-                        onEntrySelected()
-                      }
-                    },
-                )
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.body1,
-                )
-              }
-            }
+          items(
+              items = items,
+              key = { it.second },
+          ) { item ->
+            PreferenceDialogItem(
+                modifier = Modifier.fillMaxWidth(),
+                name = item.first,
+                value = item.second,
+                current = currentValue,
+                onClick = handleSelected,
+            )
           }
 
           item {
-            Row(
+            PreferenceDialogActions(
                 modifier =
                     Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
-            ) {
-              Spacer(
-                  modifier = Modifier.weight(1F),
-              )
-
-              TextButton(
-                  onClick = onDismiss,
-              ) {
-                Text(
-                    text = stringResource(R.string.close),
-                )
-              }
-            }
+                onDismiss = onDismiss,
+            )
           }
         }
       }
+    }
+  }
+}
+
+@Composable
+private fun PreferenceDialogTitle(
+    modifier: Modifier = Modifier,
+    title: String,
+) {
+  Text(
+      modifier = modifier.padding(MaterialTheme.keylines.content),
+      text = title,
+      style = MaterialTheme.typography.h6,
+  )
+}
+
+@Composable
+private fun PreferenceDialogItem(
+    modifier: Modifier = Modifier,
+    name: String,
+    value: String,
+    current: String,
+    onClick: (name: String, value: String) -> Unit,
+) {
+  val isSelected =
+      remember(
+          value,
+          current,
+      ) {
+        value == current
+      }
+
+  val handleClick by rememberUpdatedState {
+    if (!isSelected) {
+      onClick(name, value)
+    }
+  }
+
+  Row(
+      modifier =
+          modifier
+              .selectable(
+                  selected = isSelected,
+                  onClick = handleClick,
+              )
+              .padding(
+                  horizontal = MaterialTheme.keylines.content,
+                  vertical = MaterialTheme.keylines.typography,
+              ),
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
+    RadioButton(
+        modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+        selected = isSelected,
+        onClick = handleClick,
+    )
+    Text(
+        text = name,
+        style = MaterialTheme.typography.body1,
+    )
+  }
+}
+
+@Composable
+private fun PreferenceDialogActions(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+  Row(
+      modifier = modifier,
+  ) {
+    Spacer(
+        modifier = Modifier.weight(1F),
+    )
+
+    TextButton(
+        onClick = onDismiss,
+    ) {
+      Text(
+          text = stringResource(R.string.close),
+      )
     }
   }
 }

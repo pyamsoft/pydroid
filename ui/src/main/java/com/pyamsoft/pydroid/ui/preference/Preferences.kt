@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.preference
 
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import java.util.UUID
 
@@ -35,6 +36,7 @@ public sealed class Preferences {
   internal abstract val isEnabled: Boolean
 
   /** Represents a single Preference item */
+  @Stable
   public abstract class Item protected constructor() : Preferences() {
 
     /** Summary */
@@ -45,6 +47,7 @@ public sealed class Preferences {
   }
 
   /** Represents a simple Preference item */
+  @Stable
   internal data class SimplePreference
   internal constructor(
       override val name: String,
@@ -55,6 +58,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a Custom Preference item */
+  @Stable
   internal data class CustomPreference
   internal constructor(
       override val isEnabled: Boolean,
@@ -65,6 +69,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a In-App Purchase Preference item */
+  @Stable
   internal data class InAppPreference
   internal constructor(
       override val name: String,
@@ -75,6 +80,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a List Preference item */
+  @Stable
   internal data class ListPreference
   internal constructor(
       override val name: String,
@@ -87,6 +93,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a CheckBox Preference item */
+  @Stable
   internal data class CheckBoxPreference
   internal constructor(
       override val name: String,
@@ -98,6 +105,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a Switch Preference item */
+  @Stable
   internal data class SwitchPreference
   internal constructor(
       override val name: String,
@@ -109,6 +117,7 @@ public sealed class Preferences {
   ) : Item()
 
   /** Represents a group of Preferences */
+  @Stable
   public data class Group
   internal constructor(
       override val name: String,

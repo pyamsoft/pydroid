@@ -21,6 +21,11 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
+import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
+import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
+import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
+import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
@@ -49,6 +54,10 @@ internal interface SettingsComponent {
         internal val versionModule: VersionModule,
         internal val changeLogModule: ChangeLogModule,
         internal val options: PYDroidActivityOptions,
+        internal val billingPreferences: BillingPreferences,
+        internal val billingState: MutableBillingViewState,
+        internal val changeLogState: MutableChangeLogViewState,
+        internal val isFakeBillingUpsell: Boolean,
     )
   }
 
@@ -74,6 +83,17 @@ internal interface SettingsComponent {
               state = params.versionCheckState,
               interactor = params.versionModule.provideInteractor(),
               interactorCache = params.versionModule.provideInteractorCache(),
+          )
+      injector.billingViewModel =
+          BillingViewModeler(
+              state = params.billingState,
+              preferences = params.billingPreferences,
+              isFakeUpsell = params.isFakeBillingUpsell,
+          )
+      injector.changeLogViewModel =
+          ChangeLogViewModeler(
+              state = params.changeLogState,
+              interactor = params.changeLogModule.provideInteractor(),
           )
     }
 

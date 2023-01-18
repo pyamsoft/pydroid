@@ -110,6 +110,8 @@ internal interface AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
     private val versionCheckState = MutableVersionCheckViewState()
+    private val billingState = MutableBillingViewState()
+    private val changeLogState = MutableChangeLogViewState()
 
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
@@ -153,7 +155,7 @@ internal interface AppComponent {
     private val billingParams =
         BillingComponent.Factory.Parameters(
             preferences = params.billingPreferences,
-            state = MutableBillingViewState(),
+            state = billingState,
             isFakeBillingUpsell = params.debug.showBillingUpsell,
         )
 
@@ -170,12 +172,15 @@ internal interface AppComponent {
             theming = params.theming,
             versionCheckState = versionCheckState,
             state = MutableSettingsViewState(),
-        )
+            billingPreferences = params.billingPreferences,
+            billingState = billingState,
+            isFakeBillingUpsell = params.debug.showBillingUpsell,
+            changeLogState = changeLogState)
 
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
-            state = MutableChangeLogViewState(),
+            state = changeLogState,
         )
 
     private val changeLogDialogParams =

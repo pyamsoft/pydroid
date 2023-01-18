@@ -72,6 +72,7 @@ private fun rememberResetPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.clear_all_title)
   val summary = stringResource(R.string.clear_all_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(

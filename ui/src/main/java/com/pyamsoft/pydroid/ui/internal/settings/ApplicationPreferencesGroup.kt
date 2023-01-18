@@ -119,7 +119,6 @@ private fun rememberDarkThemePreference(
   val values = stringArrayResource(R.array.dark_mode_values_v1)
   val rawValue = remember(darkMode) { darkMode.toRawString() }
 
-  // Don't use by so we can memoize
   val handleChange by rememberUpdatedState(onChange)
 
   return remember(
@@ -147,6 +146,7 @@ private fun rememberLicensesPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.about_license_title)
   val summary = stringResource(R.string.about_license_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -169,6 +169,7 @@ private fun rememberUpdatePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.check_version_title)
   val summary = stringResource(R.string.check_version_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -191,6 +192,7 @@ private fun rememberChangeLogPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.upgrade_info_title)
   val summary = stringResource(R.string.upgrade_info_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(

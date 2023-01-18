@@ -98,24 +98,6 @@ internal fun DataPolicyDisclosureDialog(
     }
   }
 
-  val handleAcceptDataPolicy by rememberUpdatedState {
-    viewModel.handleAccept(
-        scope = scope,
-        onAccepted = onDismiss,
-    )
-  }
-
-  val handleRejectDataPolicy by rememberUpdatedState {
-    viewModel.handleReject(
-        scope = scope,
-        onRejected = { activity.finishAndRemoveTask() },
-    )
-  }
-
-  val handleViewPrivacy by rememberUpdatedState { viewModel.handleViewPrivacyPolicy(openPage) }
-
-  val handleViewTos by rememberUpdatedState { viewModel.handleViewTermsOfService(openPage) }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -128,10 +110,20 @@ internal fun DataPolicyDisclosureDialog(
         state = viewModel.state,
         imageLoader = imageLoader,
         onNavigationErrorDismissed = handleHideNavigationError,
-        onAccept = handleAcceptDataPolicy,
-        onReject = handleRejectDataPolicy,
-        onPrivacyPolicyClicked = handleViewPrivacy,
-        onTermsOfServiceClicked = handleViewTos,
+        onAccept = {
+          viewModel.handleAccept(
+              scope = scope,
+              onAccepted = onDismiss,
+          )
+        },
+        onReject = {
+          viewModel.handleReject(
+              scope = scope,
+              onRejected = { activity.finishAndRemoveTask() },
+          )
+        },
+        onPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy(openPage) },
+        onTermsOfServiceClicked = { viewModel.handleViewTermsOfService(openPage) },
     )
   }
 }

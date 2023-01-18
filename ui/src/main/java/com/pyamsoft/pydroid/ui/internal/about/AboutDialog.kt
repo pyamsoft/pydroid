@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
@@ -86,14 +85,6 @@ internal fun AboutDialog(
     }
   }
 
-  val handleViewLicense by rememberUpdatedState { library: OssLibrary ->
-    handleOpenPage(library.licenseUrl)
-  }
-
-  val handleViewHomePage by rememberUpdatedState { library: OssLibrary ->
-    handleOpenPage(library.libraryUrl)
-  }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -104,8 +95,8 @@ internal fun AboutDialog(
     AboutScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
-        onViewHomePage = handleViewHomePage,
-        onViewLicense = handleViewLicense,
+        onViewHomePage = { handleOpenPage(it.libraryUrl) },
+        onViewLicense = { handleOpenPage(it.licenseUrl) },
         onNavigationErrorDismissed = handleDismissFailedNavigation,
         onClose = onDismiss,
     )

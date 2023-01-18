@@ -116,8 +116,6 @@ internal fun BillingDialog(
     return@rememberUpdatedState
   }
 
-  val handleClearBillingError by rememberUpdatedState { viewModel.handleClearError() }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -130,7 +128,7 @@ internal fun BillingDialog(
         state = viewModel.state,
         imageLoader = imageLoader,
         onPurchase = handleLaunchPurchase,
-        onBillingErrorDismissed = handleClearBillingError,
+        onBillingErrorDismissed = { viewModel.handleClearError() },
         onClose = onDismiss,
     )
   }

@@ -21,7 +21,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
@@ -58,11 +57,6 @@ internal fun ResetDialog(
   val viewModel = rememberNotNull(component.viewModel)
 
   val scope = rememberCoroutineScope()
-  val handleReset by rememberUpdatedState {
-    viewModel.handleFullReset(
-        scope = scope,
-    )
-  }
 
   Dialog(
       onDismissRequest = onDismiss,
@@ -70,7 +64,11 @@ internal fun ResetDialog(
     ResetScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
-        onReset = handleReset,
+        onReset = {
+          viewModel.handleFullReset(
+              scope = scope,
+          )
+        },
         onClose = onDismiss,
     )
   }

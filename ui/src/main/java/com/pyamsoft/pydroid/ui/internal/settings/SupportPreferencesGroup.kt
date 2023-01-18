@@ -111,6 +111,7 @@ private fun rememberDonatePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.donate_title)
   val summary = stringResource(R.string.donate_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(

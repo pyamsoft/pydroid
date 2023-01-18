@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
@@ -104,14 +103,6 @@ public fun SettingsPage(
     }
   }
 
-  val handleChangeDarkMode by rememberUpdatedState { mode: Theming.Mode ->
-    viewModel.handleChangeDarkMode(
-        // Don't use scope since if this leaves Composition it would die
-        scope = scope,
-        mode = mode,
-    )
-  }
-
   val handleCheckForUpdates by rememberUpdatedState {
     if (options.disableVersionCheck) {
       Logger.w("Application has disabled the VersionCheck component")
@@ -134,18 +125,6 @@ public fun SettingsPage(
     } catch (e: Throwable) {
       Logger.e(e, "Unable to open Activity for URL: $url")
     }
-  }
-
-  val handleViewBlog by rememberUpdatedState { viewModel.handleViewBlog(handleOpenPage) }
-  val handleViewSocials by rememberUpdatedState { viewModel.handleViewSocialMedia(handleOpenPage) }
-  val handleViewTos by rememberUpdatedState { viewModel.handleViewTermsOfService(handleOpenPage) }
-  val handleViewPrivacy by rememberUpdatedState {
-    viewModel.handleViewPrivacyPolicy(handleOpenPage)
-  }
-  val handleViewSource by rememberUpdatedState { viewModel.handleViewSourceCode(handleOpenPage) }
-  val handleReportBug by rememberUpdatedState { viewModel.handleReportBug(handleOpenPage) }
-  val handleOpenMarket by rememberUpdatedState {
-    handleOpenPage(MarketLinker.getStorePageLink(activity))
   }
 
   val showResetDialog by viewModel.state.isShowingResetDialog.collectAsState()
@@ -172,20 +151,25 @@ public fun SettingsPage(
       bottomItemMargin = customBottomItemMargin,
       customPreContent = customPrePreferences,
       customPostContent = customPostPreferences,
-      onDarkModeChanged = handleChangeDarkMode,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = handleCheckForUpdates,
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
       onResetClicked = { viewModel.handleOpenResetDialog() },
       onDonateClicked = { billingViewModel.handleOpenDialog() },
-      onBugReportClicked = handleReportBug,
-      onViewSourceClicked = handleViewSource,
       onViewDataPolicyClicked = { viewModel.handleOpenDataPolicyDialog() },
-      onViewPrivacyPolicyClicked = handleViewPrivacy,
-      onViewTermsOfServiceClicked = handleViewTos,
-      onViewSocialMediaClicked = handleViewSocials,
-      onViewBlogClicked = handleViewBlog,
-      onOpenMarketPage = handleOpenMarket,
+      onBugReportClicked = { viewModel.handleReportBug(handleOpenPage) },
+      onViewSourceClicked = { viewModel.handleViewSourceCode(handleOpenPage) },
+      onViewPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy(handleOpenPage) },
+      onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService(handleOpenPage) },
+      onViewSocialMediaClicked = { viewModel.handleViewSocialMedia(handleOpenPage) },
+      onViewBlogClicked = { viewModel.handleViewBlog(handleOpenPage) },
+      onOpenMarketPage = { handleOpenPage(MarketLinker.getStorePageLink(activity)) },
+      onDarkModeChanged = {
+        viewModel.handleChangeDarkMode(
+            scope = scope,
+            mode = it,
+        )
+      },
   )
 
   if (showDataPolicyDialog) {

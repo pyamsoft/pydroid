@@ -108,6 +108,7 @@ private fun rememberBugReportPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.bugreport_title)
   val summary = stringResource(R.string.bugreport_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -130,6 +131,7 @@ private fun rememberViewSourceCodePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_source_title)
   val summary = stringResource(R.string.view_source_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -152,6 +154,7 @@ private fun rememberDataPolicyPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_data_policy_title)
   val summary = stringResource(R.string.view_data_policy_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -174,6 +177,7 @@ private fun rememberPrivacyPolicyPreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_privacy_title)
   val summary = stringResource(R.string.view_privacy_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(
@@ -196,6 +200,7 @@ private fun rememberTermsOfServicePreference(
 ): Preferences.Item {
   val name = stringResource(R.string.view_terms_title)
   val summary = stringResource(R.string.view_terms_summary)
+
   val handleClick by rememberUpdatedState(onClick)
 
   return remember(

@@ -40,10 +40,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -178,26 +177,25 @@ internal fun SwitchPreferenceItem(
 internal fun ListPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.ListPreference,
+    showDialog: Boolean,
+    onOpenDialog: () -> Unit,
+    onCloseDialog: () -> Unit,
 ) {
-  val (showDialog, setShowDialog) = rememberSaveable { mutableStateOf(false) }
-
   val isEnabled = preference.isEnabled
   val title = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
   val currentValue = preference.value
   val entries = preference.entries
+  val summary = preference.summary
+  val icon = preference.icon
   val onPreferenceSelected = preference.onPreferenceSelected
-
-  val onDismiss by rememberUpdatedState { setShowDialog(false) }
 
   val handleSelected by rememberUpdatedState { name: String, value: String ->
     onPreferenceSelected(name, value)
-    onDismiss()
+    onCloseDialog()
   }
 
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { setShowDialog(!showDialog) },
+      modifier = modifier.clickable(enabled = isEnabled) { onOpenDialog() },
       isEnabled = isEnabled,
       text = title,
       summary = summary,
@@ -205,42 +203,61 @@ internal fun ListPreferenceItem(
   )
 
   if (showDialog) {
-    Dialog(
-        onDismissRequest = onDismiss,
+    PreferenceDialog(
+        title = title,
+        currentValue = currentValue,
+        entries = entries,
+        onDismiss = onCloseDialog,
+        onSelected = handleSelected,
+    )
+  }
+}
+
+@Composable
+private fun PreferenceDialog(
+    modifier: Modifier = Modifier,
+    title: String,
+    currentValue: String,
+    entries: SnapshotStateList<Map.Entry<String, String>>,
+    onSelected: (String, String) -> Unit,
+    onDismiss: () -> Unit
+) {
+
+  Dialog(
+      onDismissRequest = onDismiss,
+  ) {
+    Surface(
+        modifier = modifier.padding(MaterialTheme.keylines.content),
+        elevation = DialogDefaults.Elevation,
+        shape = MaterialTheme.shapes.medium,
     ) {
-      Surface(
-          modifier = Modifier.padding(MaterialTheme.keylines.content),
-          elevation = DialogDefaults.Elevation,
-          shape = MaterialTheme.shapes.medium,
-      ) {
-        LazyColumn {
-          item {
-            PreferenceDialogTitle(
-                modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-                title = title,
-            )
-          }
+      LazyColumn {
+        item {
+          PreferenceDialogTitle(
+              modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+              title = title,
+          )
+        }
 
-          items(
-              items = entries,
-              key = { it.value },
-          ) { item ->
-            PreferenceDialogItem(
-                modifier = Modifier.fillMaxWidth(),
-                name = item.key,
-                value = item.value,
-                current = currentValue,
-                onClick = handleSelected,
-            )
-          }
+        items(
+            items = entries,
+            key = { it.value },
+        ) { item ->
+          PreferenceDialogItem(
+              modifier = Modifier.fillMaxWidth(),
+              name = item.key,
+              value = item.value,
+              current = currentValue,
+              onClick = onSelected,
+          )
+        }
 
-          item {
-            PreferenceDialogActions(
-                modifier =
-                    Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
-                onDismiss = onDismiss,
-            )
-          }
+        item {
+          PreferenceDialogActions(
+              modifier =
+                  Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
+              onDismiss = onDismiss,
+          )
         }
       }
     }

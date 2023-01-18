@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import java.util.UUID
 
 /** A Preferences model */
+@Stable
 public sealed class Preferences {
 
   /** Key for rendering */

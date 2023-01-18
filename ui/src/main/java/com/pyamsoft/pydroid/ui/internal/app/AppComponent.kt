@@ -44,6 +44,8 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.MutableChangeLogDialogViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
+import com.pyamsoft.pydroid.ui.internal.preference.MutablePreferenceViewState
+import com.pyamsoft.pydroid.ui.internal.preference.PreferencesComponent
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityComponents
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
@@ -78,6 +80,8 @@ internal interface AppComponent {
   @CheckResult fun plusVersionUpgrade(): VersionUpgradeComponent.Factory
 
   @CheckResult fun plusSettings(): SettingsComponent.Factory
+
+  @CheckResult fun plusPreferences(): PreferencesComponent.Factory
 
   interface Factory {
 
@@ -212,6 +216,11 @@ internal interface AppComponent {
             module = params.dataPolicyModule,
         )
 
+    private val preferenceParams =
+        PreferencesComponent.Factory.Parameters(
+            state = MutablePreferenceViewState(),
+        )
+
     private fun connectBilling(activity: FragmentActivity) {
       if (options.disableBilling) {
         Logger.w("Application has disabled the billing component")
@@ -304,6 +313,10 @@ internal interface AppComponent {
 
     override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
+    }
+
+    override fun plusPreferences(): PreferencesComponent.Factory {
+      return PreferencesComponent.Impl.FactoryImpl(preferenceParams)
     }
 
     class FactoryImpl

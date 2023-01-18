@@ -75,6 +75,7 @@ internal fun rememberSupportPreferencesGroup(
       preferences,
   ) {
     preferenceGroup(
+        id = "support_pyamsoft",
         name = title,
         preferences = preferences,
     )
@@ -96,6 +97,7 @@ private fun rememberRatePreference(
       summary,
   ) {
     preference(
+        id = "rate_app",
         name = "Rate $applicationName",
         summary = summary,
         icon = Icons.Outlined.Star,
@@ -119,6 +121,7 @@ private fun rememberDonatePreference(
       summary,
   ) {
     inAppPreference(
+        id = "tip_me",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Redeem,

@@ -59,6 +59,7 @@ internal fun rememberDangerZonePreferencesGroup(
       preferences,
   ) {
     preferenceGroup(
+        id = "danger_zone",
         name = title,
         preferences = preferences,
     )
@@ -80,6 +81,7 @@ private fun rememberResetPreference(
       summary,
   ) {
     preference(
+        id = "reset_app",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Warning,

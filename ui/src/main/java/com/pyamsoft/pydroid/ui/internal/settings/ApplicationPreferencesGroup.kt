@@ -101,6 +101,7 @@ internal fun rememberApplicationPreferencesGroup(
       preferences,
   ) {
     preferenceGroup(
+        id = "app_settings",
         name = title,
         preferences = preferences,
     )
@@ -129,6 +130,7 @@ private fun rememberDarkThemePreference(
       rawValue,
   ) {
     listPreference(
+        id = "dark_mode",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Visibility,
@@ -154,6 +156,7 @@ private fun rememberLicensesPreference(
       summary,
   ) {
     preference(
+        id = "libraries",
         name = name,
         summary = summary,
         icon = Icons.Outlined.LibraryBooks,
@@ -177,6 +180,7 @@ private fun rememberUpdatePreference(
       summary,
   ) {
     preference(
+        id = "in_app_update",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Download,
@@ -200,6 +204,7 @@ private fun rememberChangeLogPreference(
       summary,
   ) {
     preference(
+        id = "show_changelog",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Whatshot,

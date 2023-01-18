@@ -462,12 +462,11 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
-	public static final field $stable I
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/Preferences$Group : com/pyamsoft/pydroid/ui/preference/Preferences {
-	public final fun copy (Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -478,38 +477,38 @@ public abstract class com/pyamsoft/pydroid/ui/preference/Preferences$Item : com/
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
-	public static final fun checkBoxPreference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun checkBoxPreference (Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun checkBoxPreference (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun checkBoxPreference (Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun checkBoxPreference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun customPreference (ZLkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun customPreference$default (ZLkotlin/jvm/functions/Function3;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun inAppPreference (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun inAppPreference (Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun inAppPreference (Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun inAppPreference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun inAppPreference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun inAppPreference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun listPreference$default (Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preference (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preference (Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preference (Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun preference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun preferenceGroup (Ljava/lang/String;Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
-	public static final fun preferenceGroup (Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
-	public static synthetic fun preferenceGroup$default (Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
-	public static final fun switchPreference (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun switchPreference (Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun switchPreference (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static final fun switchPreference (Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun switchPreference$default (Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun checkBoxPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun customPreference (Ljava/lang/String;ZLkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun customPreference$default (Ljava/lang/String;ZLkotlin/jvm/functions/Function3;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun inAppPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun listPreference$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preference (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preference (Ljava/lang/String;Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun preference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun preferenceGroup (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public static final fun preferenceGroup (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public static synthetic fun preferenceGroup$default (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun switchPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 }
 
 public final class com/pyamsoft/pydroid/ui/rating/RatingLauncherKt {

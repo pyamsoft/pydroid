@@ -137,7 +137,7 @@ private fun LazyListScope.renderGroupInScope(
 
   items(
       items = preferences,
-      key = { it.renderKey },
+      key = { it.id },
   ) { item ->
     CompositionLocalProvider(
         LocalPreferenceEnabledStatus provides isEnabled,
@@ -179,7 +179,7 @@ private fun RenderItem(
     onOpenDialog: (String) -> Unit,
     onCloseDialog: (String) -> Unit,
 ) {
-  val id = preference.renderKey
+  val id = preference.id
   val showDialog = remember(shownDialogs, id) { shownDialogs.getOrElse(id) { false } }
 
   return when (preference) {
@@ -228,36 +228,44 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
       preferences =
           listOf(
                   preferenceGroup(
+                      id = "TEST",
                       name = "TEST",
                       isEnabled = isEnabled,
                       preferences =
                           listOf(
                               preference(
+                                  id = "TEST ITEM 1",
                                   name = "TEST ITEM 1",
                               ),
                               preference(
+                                  id = "TEST ITEM 2",
                                   name = "TEST ITEM 2",
                                   summary = "TESTING 123",
                               ),
                               inAppPreference(
+                                  id = "TEST IN-APP",
                                   name = "TEST IN-APP",
                               ),
                               checkBoxPreference(
+                                  id = "TEST CHECKBOX 1",
                                   name = "TEST CHECKBOX 1",
                                   checked = false,
                                   onCheckedChanged = {},
                               ),
                               checkBoxPreference(
+                                  id = "TEST CHECKBOX 2",
                                   name = "TEST CHECKBOX 2",
                                   checked = true,
                                   onCheckedChanged = {},
                               ),
                               switchPreference(
+                                  id = "TEST SWITCH 1",
                                   name = "TEST SWITCH 1",
                                   checked = false,
                                   onCheckedChanged = {},
                               ),
                               switchPreference(
+                                  id = "TEST SWITCH 2",
                                   name = "TEST SWITCH 2",
                                   checked = true,
                                   onCheckedChanged = {},

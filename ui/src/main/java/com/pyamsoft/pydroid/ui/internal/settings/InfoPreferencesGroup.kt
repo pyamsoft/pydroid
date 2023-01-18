@@ -95,6 +95,7 @@ internal fun rememberInfoPreferencesGroup(
       preferences,
   ) {
     preferenceGroup(
+        id = "app_info",
         name = title,
         preferences = preferences,
     )
@@ -116,6 +117,7 @@ private fun rememberBugReportPreference(
       summary,
   ) {
     preference(
+        id = "bug_report",
         name = name,
         summary = summary,
         icon = Icons.Outlined.BugReport,
@@ -139,6 +141,7 @@ private fun rememberViewSourceCodePreference(
       summary,
   ) {
     preference(
+        id = "view_source",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Code,
@@ -162,6 +165,7 @@ private fun rememberDataPolicyPreference(
       summary,
   ) {
     preference(
+        id = "data_policy",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
@@ -185,6 +189,7 @@ private fun rememberPrivacyPolicyPreference(
       summary,
   ) {
     preference(
+        id = "privacy_policy",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
@@ -208,6 +213,7 @@ private fun rememberTermsOfServicePreference(
       summary,
   ) {
     preference(
+        id = "view_tos",
         name = name,
         summary = summary,
         icon = Icons.Outlined.Business,

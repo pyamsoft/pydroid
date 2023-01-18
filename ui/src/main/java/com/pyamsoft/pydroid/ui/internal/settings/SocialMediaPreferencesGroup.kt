@@ -59,6 +59,7 @@ internal fun rememberSocialMediaPreferencesGroup(
       preferences,
   ) {
     preferenceGroup(
+        id = "social_groups",
         name = title,
         preferences = preferences,
     )
@@ -80,6 +81,7 @@ private fun rememberSocialMediaPreference(
       summary,
   ) {
     preference(
+        id = "social_media",
         name = name,
         summary = summary,
         onClick = handleClick,
@@ -102,6 +104,7 @@ private fun rememberBlogPreference(
       summary,
   ) {
     preference(
+        id = "blog",
         name = name,
         summary = summary,
         onClick = handleClick,

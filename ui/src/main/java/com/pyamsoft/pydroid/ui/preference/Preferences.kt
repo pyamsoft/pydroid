@@ -23,14 +23,13 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.vector.ImageVector
-import java.util.UUID
 
 /** A Preferences model */
 @Stable
 public sealed class Preferences {
 
   /** Key for rendering */
-  internal val renderKey: String = UUID.randomUUID().toString()
+  internal abstract val id: String
 
   /** Name */
   internal abstract val name: String
@@ -53,6 +52,7 @@ public sealed class Preferences {
   @Stable
   internal data class SimplePreference
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
@@ -64,6 +64,7 @@ public sealed class Preferences {
   @Stable
   internal data class CustomPreference
   internal constructor(
+      override val id: String,
       override val isEnabled: Boolean,
       override val name: String = "",
       override val summary: String = "",
@@ -75,6 +76,7 @@ public sealed class Preferences {
   @Stable
   internal data class InAppPreference
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
@@ -86,6 +88,7 @@ public sealed class Preferences {
   @Stable
   internal data class ListPreference
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
@@ -99,6 +102,7 @@ public sealed class Preferences {
   @Stable
   internal data class CheckBoxPreference
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
@@ -111,6 +115,7 @@ public sealed class Preferences {
   @Stable
   internal data class SwitchPreference
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       override val summary: String,
@@ -123,6 +128,7 @@ public sealed class Preferences {
   @Stable
   public data class Group
   internal constructor(
+      override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
       internal val preferences: List<Item>
@@ -133,11 +139,13 @@ public sealed class Preferences {
 @CheckResult
 @JvmOverloads
 public fun preferenceGroup(
+    id: String,
     name: String,
     isEnabled: Boolean = true,
     preferences: List<Preferences.Item>,
 ): Preferences.Group {
   return Preferences.Group(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       preferences = preferences,
@@ -147,10 +155,12 @@ public fun preferenceGroup(
 /** Create a new Preference.CustomPreference */
 @CheckResult
 public fun customPreference(
+    id: String,
     isEnabled: Boolean = true,
     content: @Composable (isEnabled: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.CustomPreference(
+      id = id,
       isEnabled = isEnabled,
       content = content,
   )
@@ -160,6 +170,7 @@ public fun customPreference(
 @CheckResult
 @JvmOverloads
 public fun preference(
+    id: String,
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
@@ -167,6 +178,7 @@ public fun preference(
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.SimplePreference(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       summary = summary,
@@ -179,6 +191,7 @@ public fun preference(
 @CheckResult
 @JvmOverloads
 public fun inAppPreference(
+    id: String,
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
@@ -186,6 +199,7 @@ public fun inAppPreference(
     onClick: (() -> Unit)? = null,
 ): Preferences.Item {
   return Preferences.InAppPreference(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       summary = summary,
@@ -198,6 +212,7 @@ public fun inAppPreference(
 @CheckResult
 @JvmOverloads
 public fun listPreference(
+    id: String,
     name: String,
     value: String,
     entries: Map<String, String>,
@@ -207,6 +222,7 @@ public fun listPreference(
     onPreferenceSelected: (key: String, value: String) -> Unit,
 ): Preferences.Item {
   return Preferences.ListPreference(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       summary = summary,
@@ -221,6 +237,7 @@ public fun listPreference(
 @CheckResult
 @JvmOverloads
 public fun checkBoxPreference(
+    id: String,
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
@@ -229,6 +246,7 @@ public fun checkBoxPreference(
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.CheckBoxPreference(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       summary = summary,
@@ -242,6 +260,7 @@ public fun checkBoxPreference(
 @CheckResult
 @JvmOverloads
 public fun switchPreference(
+    id: String,
     name: String,
     isEnabled: Boolean = true,
     summary: String = "",
@@ -250,6 +269,7 @@ public fun switchPreference(
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.SwitchPreference(
+      id = id,
       name = name,
       isEnabled = isEnabled,
       summary = summary,

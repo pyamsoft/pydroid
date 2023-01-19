@@ -23,11 +23,13 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
 public interface StateRestorer {
 
   /** Restore the state of the object from the given Bundle */
-  @Deprecated("Start migrating over to consumeRestoredState")
+  @Deprecated(
+      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
   public fun restoreState(savedInstanceState: Bundle?)
 
   /** Restore the state of the object from the given UiSavedStateReader */
-  @Deprecated("Start migrating over to consumeRestoredState")
+  @Deprecated(
+      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
   public fun restoreState(savedInstanceState: UiSavedStateReader)
 
   /** Given a registry, we restore values from our saved keys */

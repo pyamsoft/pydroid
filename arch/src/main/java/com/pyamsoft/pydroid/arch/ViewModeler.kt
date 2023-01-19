@@ -44,8 +44,8 @@ import androidx.compose.runtime.Composable
  * correctly on each pass, which was originally the one downside of handling config changes yourself
  * - you would need to re-access and recreate the resources system for your new context.
  *
- * Process death is handled by the [StateSaver] and will write to the Bundle IF you call it in
- * onSaveInstanceState
+ * Process death is handled by the [SaveStateDisposableEffect]. You must include this effect in
+ * which ever highest-level Composable holds your VM
  *
  * This ViewModeler class is a proper VM in the MVVM architecture as it owns and manages a state
  * object which is then passed to the view for drawing.
@@ -70,13 +70,14 @@ public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
   @get:CheckResult public val state: S
 
   /** Save state to a bundle */
-  @Deprecated("Start migrating over to registerSaveState")
+  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
   override fun saveState(outState: Bundle) {
     saveState(outState = outState.toWriter())
   }
 
   /** Restore state from a bundle */
-  @Deprecated("Start migrating over to consumeRestoredState")
+  @Deprecated(
+      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
   override fun restoreState(savedInstanceState: Bundle?) {
     restoreState(savedInstanceState = savedInstanceState.toReader())
   }

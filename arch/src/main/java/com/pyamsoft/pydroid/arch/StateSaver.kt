@@ -24,10 +24,11 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
 public interface StateSaver {
 
   /** Save the state of the object into the given Bundle */
-  @Deprecated("Start migrating over to registerSaveState") public fun saveState(outState: Bundle)
+  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
+  public fun saveState(outState: Bundle)
 
   /** Save the state of the object into the given UiSavedStateWriter */
-  @Deprecated("Start migrating over to registerSaveState")
+  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
   public fun saveState(outState: UiSavedStateWriter)
 
   /** Given a registry, we register key value providers for various entries to be saved */

@@ -45,20 +45,22 @@ protected constructor(
     content(state)
   }
 
-  @Deprecated("Start migrating over to registerSaveState")
+  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
   final override fun saveState(outState: Bundle) {
     super.saveState(outState)
   }
 
-  @Deprecated("Start migrating over to registerSaveState")
+  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
   override fun saveState(outState: UiSavedStateWriter) {}
 
-  @Deprecated("Start migrating over to consumeRestoredState")
+  @Deprecated(
+      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
   final override fun restoreState(savedInstanceState: Bundle?) {
     super.restoreState(savedInstanceState)
   }
 
-  @Deprecated("Start migrating over to consumeRestoredState")
+  @Deprecated(
+      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
   override fun restoreState(savedInstanceState: UiSavedStateReader) {}
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}

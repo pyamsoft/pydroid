@@ -79,7 +79,7 @@ internal fun VersionUpgradeDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         newVersionCode = newVersionCode,
-        onUpgrade = handleCompleteUpgrade,
+        onUpgrade = { handleCompleteUpgrade() },
         onClose = onDismiss,
     )
   }

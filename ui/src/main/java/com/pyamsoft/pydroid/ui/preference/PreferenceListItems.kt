@@ -208,7 +208,7 @@ internal fun ListPreferenceItem(
         currentValue = currentValue,
         entries = entries,
         onDismiss = onCloseDialog,
-        onSelected = handleSelected,
+        onSelected = { name, value -> handleSelected(name, value) },
     )
   }
 }
@@ -303,7 +303,7 @@ private fun PreferenceDialogItem(
           modifier
               .selectable(
                   selected = isSelected,
-                  onClick = handleClick,
+                  onClick = { handleClick() },
               )
               .padding(
                   horizontal = MaterialTheme.keylines.content,
@@ -314,7 +314,7 @@ private fun PreferenceDialogItem(
     RadioButton(
         modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
         selected = isSelected,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
     Text(
         text = name,

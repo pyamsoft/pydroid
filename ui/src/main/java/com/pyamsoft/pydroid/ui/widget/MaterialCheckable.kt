@@ -83,7 +83,7 @@ public fun <T : Any> rememberMaterialCheckableHeightMatcherGenerator(): HeightMa
     HeightMatcherGeneratorImpl(
         gapHeightGenerator = createGapHeightGenerator(density, largest, heights),
         onSizeChangedModifierGenerator =
-            createOnSizeChangedModifierGenerator(heights, handleSetHeight),
+            createOnSizeChangedModifierGenerator(heights) { handleSetHeight(it) },
     )
   }
 }

@@ -84,7 +84,7 @@ private fun rememberSocialMediaPreference(
         id = "social_media",
         name = name,
         summary = summary,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -107,7 +107,7 @@ private fun rememberBlogPreference(
         id = "blog",
         name = name,
         summary = summary,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }

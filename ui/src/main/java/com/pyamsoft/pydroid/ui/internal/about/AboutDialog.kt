@@ -97,7 +97,7 @@ internal fun AboutDialog(
         state = viewModel.state,
         onViewHomePage = { handleOpenPage(it.libraryUrl) },
         onViewLicense = { handleOpenPage(it.licenseUrl) },
-        onNavigationErrorDismissed = handleDismissFailedNavigation,
+        onNavigationErrorDismissed = { handleDismissFailedNavigation() },
         onClose = onDismiss,
     )
   }

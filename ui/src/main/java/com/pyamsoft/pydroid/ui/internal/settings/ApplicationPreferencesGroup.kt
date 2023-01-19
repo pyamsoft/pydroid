@@ -160,7 +160,7 @@ private fun rememberLicensesPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.LibraryBooks,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -184,7 +184,7 @@ private fun rememberUpdatePreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Download,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -208,7 +208,7 @@ private fun rememberChangeLogPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Whatshot,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }

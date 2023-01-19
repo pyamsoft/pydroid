@@ -85,7 +85,7 @@ private fun rememberResetPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Warning,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }

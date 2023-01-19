@@ -127,7 +127,7 @@ internal fun BillingDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         imageLoader = imageLoader,
-        onPurchase = handleLaunchPurchase,
+        onPurchase = { handleLaunchPurchase(it) },
         onBillingErrorDismissed = { viewModel.handleClearError() },
         onClose = onDismiss,
     )

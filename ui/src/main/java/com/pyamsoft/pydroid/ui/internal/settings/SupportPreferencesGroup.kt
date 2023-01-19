@@ -101,7 +101,7 @@ private fun rememberRatePreference(
         name = "Rate $applicationName",
         summary = summary,
         icon = Icons.Outlined.Star,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -125,7 +125,7 @@ private fun rememberDonatePreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Redeem,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }

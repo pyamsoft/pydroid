@@ -121,7 +121,7 @@ private fun rememberBugReportPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.BugReport,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -145,7 +145,7 @@ private fun rememberViewSourceCodePreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Code,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -169,7 +169,7 @@ private fun rememberDataPolicyPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -193,7 +193,7 @@ private fun rememberPrivacyPolicyPreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Policy,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }
@@ -217,7 +217,7 @@ private fun rememberTermsOfServicePreference(
         name = name,
         summary = summary,
         icon = Icons.Outlined.Business,
-        onClick = handleClick,
+        onClick = { handleClick() },
     )
   }
 }

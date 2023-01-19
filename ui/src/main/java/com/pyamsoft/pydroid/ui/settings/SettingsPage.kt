@@ -159,7 +159,7 @@ public fun SettingsPage(
       customPrePreferences = customPrePreferences,
       customPostPreferences = customPostPreferences,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
-      onCheckUpdateClicked = handleCheckForUpdates,
+      onCheckUpdateClicked = { handleCheckForUpdates() },
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
       onResetClicked = { viewModel.handleOpenResetDialog() },
       onDonateClicked = { billingViewModel.handleOpenDialog() },
@@ -171,17 +171,17 @@ public fun SettingsPage(
       onViewSocialMediaClicked = { viewModel.handleViewSocialMedia(handleOpenPage) },
       onViewBlogClicked = { viewModel.handleViewBlog(handleOpenPage) },
       onOpenMarketPage = { handleOpenPage(MarketLinker.getStorePageLink(activity)) },
+      onDismissDataPolicyDialog = { viewModel.handleCloseDataPolicyDialog() },
+      onDismissResetDialog = { viewModel.handleCloseResetDialog() },
+      onDismissAboutDialog = { viewModel.handleCloseAboutDialog() },
+      onDismissBillingDialog = { billingViewModel.handleCloseDialog() },
+      onDismissChangeLogDialog = { changeLogViewModel.handleCloseDialog() },
       onDarkModeChanged = {
         viewModel.handleChangeDarkMode(
             scope = scope,
             mode = it,
         )
       },
-      onDismissDataPolicyDialog = { viewModel.handleCloseDataPolicyDialog() },
-      onDismissResetDialog = { viewModel.handleCloseResetDialog() },
-      onDismissAboutDialog = { viewModel.handleCloseAboutDialog() },
-      onDismissBillingDialog = { billingViewModel.handleCloseDialog() },
-      onDismissChangeLogDialog = { changeLogViewModel.handleCloseDialog() },
   )
 }
 

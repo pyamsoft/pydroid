@@ -109,7 +109,7 @@ internal fun DataPolicyDisclosureDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         imageLoader = imageLoader,
-        onNavigationErrorDismissed = handleHideNavigationError,
+        onNavigationErrorDismissed = { handleHideNavigationError() },
         onAccept = {
           viewModel.handleAccept(
               scope = scope,

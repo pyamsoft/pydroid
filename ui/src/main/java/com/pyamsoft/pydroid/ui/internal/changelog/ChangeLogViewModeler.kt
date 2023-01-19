@@ -71,7 +71,7 @@ internal constructor(
   }
 
   internal fun handleDismissUpsell(scope: CoroutineScope) {
-    state.isShowingUpsell.value = false
+    state.isShowUpsell.value = false
 
     // mark as shown so that in the future we do not show.
     scope.launch(context = Dispatchers.Main) { interactor.markChangeLogShown() }

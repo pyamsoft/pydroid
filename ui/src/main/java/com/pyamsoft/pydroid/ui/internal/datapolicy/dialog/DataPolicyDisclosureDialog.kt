@@ -21,9 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
@@ -86,9 +84,9 @@ internal fun DataPolicyDisclosureDialog(
   val scope = rememberCoroutineScope()
   val uriHandler = LocalUriHandler.current
 
-  val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
+  val handleHideNavigationError = { viewModel.handleHideNavigationError() }
 
-  val openPage by rememberUpdatedState { url: String ->
+  val openPage = { url: String ->
     handleHideNavigationError()
 
     try {
@@ -109,7 +107,7 @@ internal fun DataPolicyDisclosureDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         imageLoader = imageLoader,
-        onNavigationErrorDismissed = { handleHideNavigationError() },
+        onNavigationErrorDismissed = handleHideNavigationError,
         onAccept = {
           viewModel.handleAccept(
               scope = scope,

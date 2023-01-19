@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.version.upgrade
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
@@ -61,16 +59,6 @@ internal fun VersionUpgradeDialog(
   val viewModel = rememberNotNull(component.viewModel)
 
   val activity = rememberActivity()
-  val handleCompleteUpgrade by rememberUpdatedState {
-    viewModel.completeUpgrade(
-        // Don't use scope since if this leaves Composition it would die
-        scope = activity.lifecycleScope,
-        onUpgradeComplete = {
-          Logger.d("Upgrade complete, dismiss")
-          activity.finish()
-        },
-    )
-  }
 
   Dialog(
       onDismissRequest = onDismiss,
@@ -79,7 +67,16 @@ internal fun VersionUpgradeDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         newVersionCode = newVersionCode,
-        onUpgrade = { handleCompleteUpgrade() },
+        onUpgrade = {
+          viewModel.completeUpgrade(
+              // Don't use scope since if this leaves Composition it would die
+              scope = activity.lifecycleScope,
+              onUpgradeComplete = {
+                Logger.d("Upgrade complete, dismiss")
+                activity.finish()
+              },
+          )
+        },
         onClose = onDismiss,
     )
   }

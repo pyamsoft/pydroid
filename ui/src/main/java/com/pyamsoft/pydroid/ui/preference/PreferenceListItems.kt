@@ -39,9 +39,7 @@ import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -189,11 +187,6 @@ internal fun ListPreferenceItem(
   val icon = preference.icon
   val onPreferenceSelected = preference.onPreferenceSelected
 
-  val handleSelected by rememberUpdatedState { name: String, value: String ->
-    onPreferenceSelected(name, value)
-    onCloseDialog()
-  }
-
   PreferenceItem(
       modifier = modifier.clickable(enabled = isEnabled) { onOpenDialog() },
       isEnabled = isEnabled,
@@ -208,7 +201,10 @@ internal fun ListPreferenceItem(
         currentValue = currentValue,
         entries = entries,
         onDismiss = onCloseDialog,
-        onSelected = { name, value -> handleSelected(name, value) },
+        onSelected = { name, value ->
+          onPreferenceSelected(name, value)
+          onCloseDialog()
+        },
     )
   }
 }
@@ -292,7 +288,7 @@ private fun PreferenceDialogItem(
         value == current
       }
 
-  val handleClick by rememberUpdatedState {
+  val handleClick = {
     if (!isSelected) {
       onClick(name, value)
     }
@@ -303,7 +299,7 @@ private fun PreferenceDialogItem(
           modifier
               .selectable(
                   selected = isSelected,
-                  onClick = { handleClick() },
+                  onClick = handleClick,
               )
               .padding(
                   horizontal = MaterialTheme.keylines.content,
@@ -314,7 +310,7 @@ private fun PreferenceDialogItem(
     RadioButton(
         modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
         selected = isSelected,
-        onClick = { handleClick() },
+        onClick = handleClick,
     )
     Text(
         text = name,

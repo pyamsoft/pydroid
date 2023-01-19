@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -32,7 +31,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.ZeroSize
@@ -96,39 +94,7 @@ public fun SettingsPage(
   val changeLogViewModel = rememberNotNull(component.changeLogViewModel)
   val billingViewModel = rememberNotNull(component.billingViewModel)
 
-  val handleShowVersionUpgrade by rememberUpdatedState { launcher: AppUpdateLauncher ->
-    if (options.requireNotNull().disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return@rememberUpdatedState
-    }
-
-    // Don't use scope since if this leaves Composition it would die
-    // Enforce that we do this on the Main thread
-    activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      launcher
-          .update(activity, RC_APP_UPDATE)
-          .onSuccess { Logger.d("Launched an in-app update flow") }
-          .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
-    }
-  }
-
-  val handleCheckForUpdates by rememberUpdatedState {
-    if (options.disableVersionCheck) {
-      Logger.w("Application has disabled the VersionCheck component")
-      return@rememberUpdatedState
-    }
-
-    versionViewModel.handleCheckForUpdates(
-        scope = scope,
-        force = true,
-        onLaunchUpdate = {
-          versionViewModel.handleOpenDialog()
-          handleShowVersionUpgrade(it)
-        },
-    )
-  }
-
-  val handleOpenPage by rememberUpdatedState { url: String ->
+  val handleOpenPage = { url: String ->
     try {
       uriHandler.openUri(url)
     } catch (e: Throwable) {
@@ -159,7 +125,31 @@ public fun SettingsPage(
       customPrePreferences = customPrePreferences,
       customPostPreferences = customPostPreferences,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
-      onCheckUpdateClicked = { handleCheckForUpdates() },
+      onCheckUpdateClicked = {
+        if (options.disableVersionCheck) {
+          Logger.w("Application has disabled the VersionCheck component")
+        } else {
+          versionViewModel.handleCheckForUpdates(
+              scope = scope,
+              force = true,
+              onLaunchUpdate = { launcher ->
+                versionViewModel.handleOpenDialog()
+                if (options.requireNotNull().disableVersionCheck) {
+                  Logger.w("Application has disabled the VersionCheck component")
+                } else {
+                  // Don't use scope since if this leaves Composition it would die
+                  // Enforce that we do this on the Main thread
+                  activity.lifecycleScope.launch(context = Dispatchers.Main) {
+                    launcher
+                        .update(activity, RC_APP_UPDATE)
+                        .onSuccess { Logger.d("Launched an in-app update flow") }
+                        .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
+                  }
+                }
+              },
+          )
+        }
+      },
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
       onResetClicked = { viewModel.handleOpenResetDialog() },
       onDonateClicked = { billingViewModel.handleOpenDialog() },

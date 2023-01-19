@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
@@ -31,7 +29,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
-import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -104,18 +101,6 @@ internal fun BillingDialog(
   val imageLoader = rememberNotNull(component.imageLoader)
   val purchaseClient = rememberNotNull(component.purchaseClient)
 
-  val handleLaunchPurchase by rememberUpdatedState { sku: BillingSku ->
-    // Enforce on main thread since billing is Google
-    activity.lifecycleScope.launch(context = Dispatchers.Main) {
-      Enforcer.assertOnMainThread()
-
-      Logger.d("Start purchase flow for $sku")
-      purchaseClient.requireNotNull().purchase(activity, sku)
-    }
-
-    return@rememberUpdatedState
-  }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -127,7 +112,15 @@ internal fun BillingDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel.state,
         imageLoader = imageLoader,
-        onPurchase = { handleLaunchPurchase(it) },
+        onPurchase = { sku ->
+          // Enforce on main thread since billing is Google
+          activity.lifecycleScope.launch(context = Dispatchers.Main) {
+            Enforcer.assertOnMainThread()
+
+            Logger.d("Start purchase flow for $sku")
+            purchaseClient.requireNotNull().purchase(activity, sku)
+          }
+        },
         onBillingErrorDismissed = { viewModel.handleClearError() },
         onClose = onDismiss,
     )

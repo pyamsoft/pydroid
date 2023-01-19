@@ -39,6 +39,12 @@ private data class StabilizedImpl<T>(
     override val data: T,
 ) : Stabilized<T>
 
+/** Create arbitrary data as Stabilized */
+@CheckResult
+public fun <T> stabilized(data: T): Stabilized<T> {
+  return data.stabilize()
+}
+
 /** Wrap arbitrary data as Stabilized */
 @CheckResult
 public fun <T> T.stabilize(): Stabilized<T> {

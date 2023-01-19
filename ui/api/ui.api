@@ -619,6 +619,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/util/Stabilized {
 public final class com/pyamsoft/pydroid/ui/util/StabilizedKt {
 	public static final fun rememberStable (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
 	public static final fun stabilize (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
+	public static final fun stabilized (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {

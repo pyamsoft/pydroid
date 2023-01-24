@@ -73,6 +73,10 @@ public final class com/pyamsoft/pydroid/ui/app/ComposeThemeProviderKt {
 	public static final fun invoke (Lcom/pyamsoft/pydroid/ui/app/ComposeThemeProvider;Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class com/pyamsoft/pydroid/ui/app/DialogKt {
+	public static final fun Dialog (Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/window/DialogProperties;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static final fun makeFullHeight (Landroidx/fragment/app/DialogFragment;)V
 	public static final fun makeFullHeight (Landroidx/fragment/app/DialogFragment;Z)V

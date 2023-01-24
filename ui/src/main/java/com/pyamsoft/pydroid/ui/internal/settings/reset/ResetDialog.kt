@@ -19,12 +19,11 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.Dialog
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph

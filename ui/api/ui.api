@@ -74,7 +74,7 @@ public final class com/pyamsoft/pydroid/ui/app/ComposeThemeProviderKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/app/DialogKt {
-	public static final fun Dialog (Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/window/DialogProperties;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberDialogProperties (ZZLandroidx/compose/ui/window/SecureFlagPolicy;Landroidx/compose/runtime/Composer;II)Landroidx/compose/ui/window/DialogProperties;
 }
 
 public final class com/pyamsoft/pydroid/ui/app/DialogsKt {

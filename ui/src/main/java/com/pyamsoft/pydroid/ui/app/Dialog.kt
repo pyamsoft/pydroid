@@ -16,85 +16,38 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Dialog as ComposeDialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.SecureFlagPolicy
 
 /**
  * Compose Dialog is currently a little buggy.
  *
- * A dialog sizes incorrectly when launched, and does not re-size when for example the orientation
- * of the device changes. You can see this by creating a Dialog composable with a fill-max-width in
- * landscape and then rotating the device to portait.
- *
- * We try to avoid this class of bugs by always having Dialog take up the screen size, and then
- * passing through clicks.
- *
- * The API tries to match the Dialog one
+ * Using the default usePlatformDefaultWidth field causes the dialog to be sized incorrectly. This
+ * helper function provides a DialogProperties object that always unsets this field to avoid these
+ * dialog sizing bugs.
  */
 @Composable
+@CheckResult
 @OptIn(ExperimentalComposeUiApi::class)
-public fun Dialog(
-    onDismissRequest: () -> Unit,
-    properties: DialogProperties = DialogProperties(),
-    content: @Composable () -> Unit
-) {
-  val props =
-      DialogProperties(
-          dismissOnBackPress = properties.dismissOnBackPress,
-          dismissOnClickOutside = properties.dismissOnClickOutside,
-          securePolicy = properties.securePolicy,
-          usePlatformDefaultWidth = properties.usePlatformDefaultWidth,
-          decorFitsSystemWindows = properties.decorFitsSystemWindows,
-      )
-
-  ComposeDialog(
-      onDismissRequest = onDismissRequest,
-      properties = props,
+public fun rememberDialogProperties(
+    dismissOnBackPress: Boolean = true,
+    dismissOnClickOutside: Boolean = true,
+    securePolicy: SecureFlagPolicy = SecureFlagPolicy.Inherit,
+): DialogProperties {
+  return remember(
+      dismissOnBackPress,
+      dismissOnClickOutside,
+      securePolicy,
   ) {
-    // This is a transparent box which occupies the whole screen size and tracks clicks to dismiss
-    // since there is no Dialog "outside". Dialog will handle the back button for us though.
-    Box(
-        modifier =
-            Modifier.fillMaxSize()
-                // Eat clicks "outside"
-                .clickable(
-                    enabled = properties.dismissOnClickOutside,
-                    // Use this to avoid ripple
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                ) {
-                  onDismissRequest()
-                },
-        contentAlignment = Alignment.Center,
-    ) {
-      // This box hosts the actual Dialog content and eats clicks to avoid clicking a dialog causing
-      // it to dismiss
-      Box(
-          modifier =
-              Modifier
-                  // Wrap dialog to content width
-                  .wrapContentWidth()
-                  // Eat clicks on the "dialog" host
-                  .clickable(
-                      // Use this to avoid ripple
-                      interactionSource = remember { MutableInteractionSource() },
-                      indication = null,
-                  ) {
-                    // Intentional nothing
-                  },
-      ) {
-        content()
-      }
-    }
+    DialogProperties(
+        dismissOnBackPress = dismissOnBackPress,
+        dismissOnClickOutside = dismissOnClickOutside,
+        securePolicy = securePolicy,
+        usePlatformDefaultWidth = false,
+    )
   }
 }

@@ -117,7 +117,7 @@ subprojects {
   apply plugin: "org.gradle.android.cache-fix"
 
   final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "26.2.0-SNAPSHOT"
+  final POM_VERSION = "26.2.0"
 
 
   // Kapt flags
@@ -208,8 +208,8 @@ subprojects {
           artifact androidJavadocsJar
           from project.components.release
 
-          groupId POM_GROUP
           artifactId project.name
+          groupId POM_GROUP
           version POM_VERSION
         }
       }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,13 +48,12 @@ public fun Dialog(
     properties: DialogProperties = DialogProperties(),
     content: @Composable () -> Unit
 ) {
-  // Override the properties and do not use the platform width
   val props =
       DialogProperties(
           dismissOnBackPress = properties.dismissOnBackPress,
           dismissOnClickOutside = properties.dismissOnClickOutside,
           securePolicy = properties.securePolicy,
-          usePlatformDefaultWidth = false,
+          usePlatformDefaultWidth = properties.usePlatformDefaultWidth,
           decorFitsSystemWindows = properties.decorFitsSystemWindows,
       )
 
@@ -65,22 +65,33 @@ public fun Dialog(
     // since there is no Dialog "outside". Dialog will handle the back button for us though.
     Box(
         modifier =
-            Modifier.fillMaxSize().clickable(enabled = properties.dismissOnClickOutside) {
-              onDismissRequest()
-            },
+            Modifier.fillMaxSize()
+                // Eat clicks "outside"
+                .clickable(
+                    enabled = properties.dismissOnClickOutside,
+                    // Use this to avoid ripple
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                  onDismissRequest()
+                },
         contentAlignment = Alignment.Center,
     ) {
       // This box hosts the actual Dialog content and eats clicks to avoid clicking a dialog causing
       // it to dismiss
       Box(
           modifier =
-              Modifier.clickable(
-                  // Use this to avoid ripple
-                  interactionSource = remember { MutableInteractionSource() },
-                  indication = null,
-              ) {
-                // Intentional nothing
-              },
+              Modifier
+                  // Wrap dialog to content width
+                  .wrapContentWidth()
+                  // Eat clicks on the "dialog" host
+                  .clickable(
+                      // Use this to avoid ripple
+                      interactionSource = remember { MutableInteractionSource() },
+                      indication = null,
+                  ) {
+                    // Intentional nothing
+                  },
       ) {
         content()
       }

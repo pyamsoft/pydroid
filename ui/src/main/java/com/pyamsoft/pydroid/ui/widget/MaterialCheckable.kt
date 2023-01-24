@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.createGapHeight
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.createOnSizeChangedModifierGenerator
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMaterialCheckableAlpha
 import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMaterialCheckableColor
-import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMaterialCheckableIcon
+import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMaterialCheckableIconColor
 
 /**
  * Given a list of items in a parent Composable of different content heights, this remember will
@@ -103,8 +103,6 @@ public fun MaterialCheckable(
     /** Hack to make two different cards the same size based on their content */
     extraHeight: Dp = ZeroSize,
 ) {
-  val colors = MaterialTheme.colors
-  val selectedColor = remember(colors) { colors.primary }
 
   MaterialCheckable(
       modifier = modifier,
@@ -112,7 +110,7 @@ public fun MaterialCheckable(
       condition = condition,
       title = title,
       description = description,
-      selectedColor = selectedColor,
+      selectedColor = MaterialTheme.colors.primary,
       extraHeight = extraHeight,
       onClick = onClick,
   )
@@ -154,7 +152,7 @@ private fun MaterialCheckable(
     onClick: () -> Unit,
 ) {
   val color = rememberMaterialCheckableColor(condition, selectedColor)
-  val iconColor = rememberMaterialCheckableIcon(condition)
+  val iconColor = rememberMaterialCheckableIconColor(condition)
   val alphas = rememberMaterialCheckableAlpha(isEditable, condition)
 
   val checkIcon =

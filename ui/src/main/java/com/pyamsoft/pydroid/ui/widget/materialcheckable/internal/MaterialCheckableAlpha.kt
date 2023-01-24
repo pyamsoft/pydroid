@@ -37,26 +37,23 @@ internal fun rememberMaterialCheckableColor(
     condition: Boolean,
     selectedColor: Color,
 ): Color {
-  val colors = MaterialTheme.colors
+  val unselectedColor = MaterialTheme.colors.onSurface
   return remember(
       condition,
-      colors,
+      unselectedColor,
       selectedColor,
   ) {
-    if (condition) selectedColor else colors.onSurface
+    if (condition) selectedColor else unselectedColor
   }
 }
 
 @Composable
 @CheckResult
-internal fun rememberMaterialCheckableIcon(condition: Boolean): Color {
-  val colors = MaterialTheme.colors
-  return remember(
-      condition,
-      colors,
-  ) {
-    if (condition) colors.success else colors.onSurface
-  }
+internal fun rememberMaterialCheckableIconColor(condition: Boolean): Color {
+  return rememberMaterialCheckableColor(
+      condition = condition,
+      selectedColor = MaterialTheme.colors.success,
+  )
 }
 
 @Composable

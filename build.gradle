@@ -62,14 +62,6 @@ buildscript {
         // This pulls in all the UI bits too, which is a little lame.
         preference = "1.2.0"
     }
-
-    dependencies {
-        // Gradle version checker
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.44.0'
-
-        // Spotless
-        classpath "com.diffplug.spotless:spotless-plugin-gradle:6.13.0"
-    }
 }
 
 plugins {
@@ -88,6 +80,14 @@ plugins {
     // Dokka
     // https://github.com/Kotlin/dokka
     id 'org.jetbrains.dokka' version "1.7.20" apply false
+
+    // Gradle version checker
+    // https://github.com/ben-manes/gradle-versions-plugin
+    id 'com.github.ben-manes.versions' version '0.44.0' apply false
+
+    // Spotless
+    // https://github.com/diffplug/spotless
+    id "com.diffplug.spotless" version "6.13.0" apply false
 
     // Validate the public API
     // https://github.com/Kotlin/binary-compatibility-validator
@@ -230,6 +230,25 @@ allprojects {
         }
     }
 
+    // Java compile show
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+        options.deprecation = true
+    }
+
+    // Version Plugin ignore non-stable releases
+    def isNonStable = { version ->
+        def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
+        def regex = /^[0-9,.v-]+(-r)?$/
+        return !stableKeyword && !(version ==~ regex)
+    }
+    tasks.named("dependencyUpdates").configure {
+        rejectVersionIf {
+            isNonStable(it.candidate.version)
+        }
+    }
+
+    // Spotless plugin
     spotless {
         java {
             target "src/**/*.java"
@@ -255,22 +274,5 @@ allprojects {
             endWithNewline()
             indentWithSpaces(2)
         }
-    }
-
-    def isNonStable = { version ->
-        def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
-        def regex = /^[0-9,.v-]+(-r)?$/
-        return !stableKeyword && !(version ==~ regex)
-    }
-
-    tasks.named("dependencyUpdates").configure {
-        rejectVersionIf {
-            isNonStable(it.candidate.version)
-        }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
-        options.deprecation = true
     }
 }

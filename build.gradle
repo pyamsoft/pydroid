@@ -50,7 +50,7 @@ buildscript {
     appCompat = "1.6.0"
 
     // Material Design
-    materialDesign = "1.7.0"
+    materialDesign = "1.8.0"
 
     // Google Play libraries
     appUpdate = "2.0.1"

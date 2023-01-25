@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Peter Kenji Yamanaka
  *
@@ -18,269 +17,279 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-  ext {
-    kotlin_version = '1.8.0'
-    dokka_version = "1.7.20"
-    compose_version = "1.3.3"
-    compose_compiler_version = "1.4.0"
-  }
-  repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
 
-    maven {
-      url "https://plugins.gradle.org/m2/"
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+
+        maven {
+            url 'https://jitpack.io'
+            content {
+                includeGroup("com.github.pyamsoft")
+            }
+        }
     }
 
-    maven {
-      url 'https://jitpack.io'
-      content {
-        includeGroup("com.github.pyamsoft")
-      }
+    ext {
+        // SDK
+        minSdk = 22
+        maxSdk = 33
+
+        // Us (pyamsoft libraries)
+        // -SNAPSHOT versions are not published yet and must be built locally
+        cachify = "0.2.0"
+        highlander = "0.2.0"
+
+        // Kotlin
+        kotlin_version = '1.8.0'
+
+        // Compose
+        compose_version = "1.3.3"
+        compose_compiler_version = "1.4.0"
+        composeActivity = "1.6.1"
+        composeMaterial = "1.3.1"
+        accompanist = "0.28.0"
+        coil = "2.2.2"
+
+        // Kotlin
+        coroutines = '1.6.4'
+
+        // AndroidX
+        annotation = "1.5.0"
+        core = "1.9.0"
+        lifecycle = "2.5.1"
+        fragment = "1.5.5"
+        startup = "1.1.1"
+        appCompat = "1.6.0"
+
+        // Material Design
+        materialDesign = "1.7.0"
+
+        // Google Play libraries
+        appUpdate = "2.0.1"
+        review = "2.0.1"
+        billing = "5.1.0"
+
+        // Needed just for androidx.preference.PreferenceManager
+        // Eventually, big G may push for DataStore being a requirement, which will be pain
+        // This pulls in all the UI bits too, which is a little lame.
+        preference = "1.2.0"
     }
-  }
 
-  ext {
+    dependencies {
+        // Gradle version checker
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.44.0'
 
-    minSdk = 22
-    maxSdk = 33
-
-    // Us (pyamsoft libraries)
-    // -SNAPSHOT versions are not published yet and must be built locally
-    cachify = "0.2.0"
-    highlander = "0.2.0"
-
-    // Compose
-    composeActivity = "1.6.1"
-    composeMaterial = "1.3.1"
-    accompanist = "0.28.0"
-    coil = "2.2.2"
-
-    // Kotlin
-    coroutines = '1.6.4'
-
-    // AndroidX
-    annotation = "1.5.0"
-    core = "1.9.0"
-    lifecycle = "2.5.1"
-    fragment = "1.5.5"
-    startup = "1.1.1"
-    appCompat = "1.6.0"
-
-    // Material Design
-    materialDesign = "1.7.0"
-
-    // Google Play libraries
-    appUpdate = "2.0.1"
-    review = "2.0.1"
-    billing = "5.1.0"
-
-    // Needed just for androidx.preference.PreferenceManager
-    // Eventually, big G may push for DataStore being a requirement, which will be pain
-    // This pulls in all the UI bits too, which is a little lame.
-    preference = "1.2.0"
-  }
-
-  dependencies {
-    // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.44.0'
-
-    // Kotlin
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-    // Dokka
-    classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
-
-    // Spotless
-    classpath "com.diffplug.spotless:spotless-plugin-gradle:6.13.0"
-  }
+        // Spotless
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:6.13.0"
+    }
 }
 
 plugins {
-  // Android AGP
-  // https://developer.android.com/studio/build#top-level
-  id 'com.android.library' version '7.4.0' apply false
+    // Android AGP
+    // https://developer.android.com/studio/build#top-level
+    id 'com.android.library' version '7.4.0' apply false
 
-  // Fix Android build cache
-  // https://github.com/gradle/android-cache-fix-gradle-plugin
-  id "org.gradle.android.cache-fix" version "2.6.2" apply false
+    // Fix Android build cache
+    // https://github.com/gradle/android-cache-fix-gradle-plugin
+    id "org.gradle.android.cache-fix" version "2.6.2" apply false
 
-  // Validate the public API
-  // https://github.com/Kotlin/binary-compatibility-validator
-  id 'org.jetbrains.kotlinx.binary-compatibility-validator' version '0.12.1'
+    // Kotlin
+    // https://developer.android.com/studio/build#top-level
+    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
+
+    // Dokka
+    // https://github.com/Kotlin/dokka
+    id 'org.jetbrains.dokka' version "1.7.20" apply false
+
+    // Validate the public API
+    // https://github.com/Kotlin/binary-compatibility-validator
+    id 'org.jetbrains.kotlinx.binary-compatibility-validator' version '0.12.1'
 }
 
 subprojects {
-  apply plugin: 'com.android.library'
-  apply plugin: 'kotlin-android'
-  apply plugin: 'kotlin-kapt'
-  apply plugin: 'org.jetbrains.dokka'
-  apply plugin: 'maven-publish'
-  apply plugin: "org.gradle.android.cache-fix"
+    // Android AGP
+    apply plugin: 'com.android.library'
 
-  final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "26.2.1-SNAPSHOT"
+    // AGP Cache fix
+    apply plugin: "org.gradle.android.cache-fix"
 
-  // Kapt flags
-  kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-    mapDiagnosticLocations = true
+    // Kotlin
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-kapt'
 
-    javacOptions {
-      option("-Xlint:unchecked")
-      option("-Xlint:deprecation")
-      option("-Xmaxerrs", 10000)
-    }
-  }
+    // Dokka
+    apply plugin: 'org.jetbrains.dokka'
 
-  android {
-    compileSdkVersion rootProject.ext.maxSdk
+    // Publish
+    apply plugin: 'maven-publish'
 
-    //noinspection GroovyMissingReturnStatement
-    defaultConfig {
-      minSdkVersion rootProject.ext.minSdk
+    final POM_GROUP = "com.github.pyamsoft.pydroid"
+    final POM_VERSION = "26.2.1-SNAPSHOT"
 
-      // For vector drawables
-      vectorDrawables.useSupportLibrary = true
+    // Kapt flags
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
+        mapDiagnosticLocations = true
 
-      // Consumer proguard file
-      consumerProguardFiles "consumer-rules.pro"
-
-      // Only English, I don't have any translations
-      resConfigs "en"
-
-      compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-      }
-
-      kotlinOptions {
-        jvmTarget = "11"
-      }
-
-      publishing {
-        singleVariant("release") {
-          // Do not include withSources and withJavadoc here because we will
-          // add them with our own custom hooks below
+        javacOptions {
+            option("-Xlint:unchecked")
+            option("-Xlint:deprecation")
+            option("-Xmaxerrs", 10000)
         }
-      }
     }
 
-    buildTypes {
-      debug {
-        minifyEnabled false
-        shrinkResources false
-      }
+    android {
+        compileSdkVersion rootProject.ext.maxSdk
 
-      release {
-        minifyEnabled false
-        shrinkResources false
-      }
-    }
+        //noinspection GroovyMissingReturnStatement
+        defaultConfig {
+            minSdkVersion rootProject.ext.minSdk
 
-    buildFeatures {
-      buildConfig false
-    }
-  }
+            // For vector drawables
+            vectorDrawables.useSupportLibrary = true
 
-  project.afterEvaluate {
-    task androidSourcesJar(type: Jar) {
-      archiveClassifier.convention('sources')
-      archiveClassifier.set('sources')
-      from android.sourceSets.main.java.source
-    }
+            // Consumer proguard file
+            consumerProguardFiles "consumer-rules.pro"
 
-    task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
-      archiveClassifier.convention('javadoc')
-      archiveClassifier.set('javadoc')
-      from "$buildDir/dokka"
-    }
+            // Only English, I don't have any translations
+            resConfigs "en"
 
-    artifacts {
-      archives androidSourcesJar
-      archives androidJavadocsJar
-    }
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_11
+                targetCompatibility JavaVersion.VERSION_11
+            }
 
-    publishing {
-      publications {
-        PYDroid(MavenPublication) {
-          artifact androidSourcesJar
-          artifact androidJavadocsJar
-          from project.components.release
+            kotlinOptions {
+                jvmTarget = "11"
+            }
 
-          artifactId project.name
-          groupId POM_GROUP
-          version POM_VERSION
+            publishing {
+                singleVariant("release") {
+                    // Do not include withSources and withJavadoc here because we will
+                    // add them with our own custom hooks below
+                }
+            }
         }
-      }
+
+        buildTypes {
+            debug {
+                minifyEnabled false
+                shrinkResources false
+            }
+
+            release {
+                minifyEnabled false
+                shrinkResources false
+            }
+        }
+
+        buildFeatures {
+            buildConfig false
+        }
     }
-  }
+
+    project.afterEvaluate {
+        task androidSourcesJar(type: Jar) {
+            archiveClassifier.convention('sources')
+            archiveClassifier.set('sources')
+            from android.sourceSets.main.java.source
+        }
+
+        task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
+            archiveClassifier.convention('javadoc')
+            archiveClassifier.set('javadoc')
+            from "$buildDir/dokka"
+        }
+
+        artifacts {
+            archives androidSourcesJar
+            archives androidJavadocsJar
+        }
+
+        publishing {
+            publications {
+                PYDroid(MavenPublication) {
+                    artifact androidSourcesJar
+                    artifact androidJavadocsJar
+                    from project.components.release
+
+                    artifactId project.name
+                    groupId POM_GROUP
+                    version POM_VERSION
+                }
+            }
+        }
+    }
 }
 
 allprojects {
-  apply plugin: "com.diffplug.spotless"
-  apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: "com.diffplug.spotless"
+    apply plugin: 'com.github.ben-manes.versions'
 
-  spotless {
-    java {
-      target "src/**/*.java"
+    spotless {
+        java {
+            target "src/**/*.java"
 
-      removeUnusedImports()
-      trimTrailingWhitespace()
-      endWithNewline()
-      indentWithSpaces(2)
-    }
-    kotlin {
-      target "src/**/*.kt"
-      ktfmt()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
+        }
+        kotlin {
+            target "src/**/*.kt"
+            ktfmt()
 
-      trimTrailingWhitespace()
-      endWithNewline()
-      indentWithSpaces(2)
-    }
-    groovyGradle {
-      target "*.gradle"
-      greclipse()
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
+        }
+        groovyGradle {
+            target "*.gradle"
+            greclipse()
 
-      trimTrailingWhitespace()
-      endWithNewline()
-      indentWithSpaces(2)
-    }
-  }
-
-  def isNonStable = { version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
-    def regex = /^[0-9,.v-]+(-r)?$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-
-  tasks.named("dependencyUpdates").configure {
-    rejectVersionIf {
-      isNonStable(it.candidate.version)
-    }
-  }
-
-  repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
-
-    maven {
-      url "https://plugins.gradle.org/m2/"
+            trimTrailingWhitespace()
+            endWithNewline()
+            indentWithSpaces(2)
+        }
     }
 
-    maven {
-      url 'https://jitpack.io'
-      content {
-        includeGroup("com.github.pyamsoft")
-      }
+    def isNonStable = { version ->
+        def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
+        def regex = /^[0-9,.v-]+(-r)?$/
+        return !stableKeyword && !(version ==~ regex)
     }
-  }
 
-  tasks.withType(JavaCompile) {
-    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
-    options.deprecation = true
-  }
+    tasks.named("dependencyUpdates").configure {
+        rejectVersionIf {
+            isNonStable(it.candidate.version)
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+
+        maven {
+            url 'https://jitpack.io'
+            content {
+                includeGroup("com.github.pyamsoft")
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+        options.deprecation = true
+    }
 }

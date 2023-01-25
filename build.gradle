@@ -127,6 +127,17 @@ subprojects {
     }
   }
 
+  // Configure matching toolchains
+  // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc
+  kotlin {
+    jvmToolchain(11)
+  }
+  java {
+    toolchain {
+      languageVersion.set(JavaLanguageVersion.of(11))
+    }
+  }
+
   android {
     compileSdkVersion rootProject.ext.maxSdk
 

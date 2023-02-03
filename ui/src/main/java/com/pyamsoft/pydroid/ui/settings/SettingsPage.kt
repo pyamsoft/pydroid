@@ -133,18 +133,17 @@ public fun SettingsPage(
               scope = scope,
               force = true,
               onLaunchUpdate = { launcher ->
+                // Mark the dialog as open, so that once the update data is fully downloaded it
+                // will pop up on screen
                 versionViewModel.handleOpenDialog()
-                if (options.requireNotNull().disableVersionCheck) {
-                  Logger.w("Application has disabled the VersionCheck component")
-                } else {
-                  // Don't use scope since if this leaves Composition it would die
-                  // Enforce that we do this on the Main thread
-                  activity.lifecycleScope.launch(context = Dispatchers.Main) {
-                    launcher
-                        .update(activity, RC_APP_UPDATE)
-                        .onSuccess { Logger.d("Launched an in-app update flow") }
-                        .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
-                  }
+
+                // Don't use scope since if this leaves Composition it would die
+                // Enforce that we do this on the Main thread
+                activity.lifecycleScope.launch(context = Dispatchers.Main) {
+                  launcher
+                      .update(activity, RC_APP_UPDATE)
+                      .onSuccess { Logger.d("Launched an in-app update flow") }
+                      .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
                 }
               },
           )

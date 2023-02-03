@@ -47,6 +47,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
@@ -55,9 +56,6 @@ import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-// Only bottom 16 bits.
-private const val RC_APP_UPDATE = 146
 
 @Composable
 private fun MountHooks(
@@ -141,9 +139,9 @@ public fun SettingsPage(
                 // Enforce that we do this on the Main thread
                 activity.lifecycleScope.launch(context = Dispatchers.Main) {
                   launcher
-                      .update(activity, RC_APP_UPDATE)
+                      .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
                       .onSuccess { Logger.d("Launched an in-app update flow") }
-                      .onFailure { err -> Logger.e(err, "Unable to launch in-app update flow") }
+                      .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
                 }
               },
           )

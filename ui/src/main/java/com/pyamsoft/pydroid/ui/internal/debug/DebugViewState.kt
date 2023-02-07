@@ -24,11 +24,14 @@ import kotlinx.coroutines.flow.StateFlow
 @Stable
 internal interface DebugViewState : UiViewState {
   val isInAppDebuggingEnabled: StateFlow<Boolean>
-  val inAppDebuggingLogLines: StateFlow<List<LogLine>>
+  val inAppDebuggingLogLines: StateFlow<List<InAppDebugLogLine>>
 }
 
 @Stable
-internal class MutableDebugViewState internal constructor() : DebugViewState {
+internal class MutableDebugViewState
+internal constructor(
+    logLinesBus: StateFlow<List<InAppDebugLogLine>>,
+) : DebugViewState {
   override val isInAppDebuggingEnabled = MutableStateFlow(false)
-  override val inAppDebuggingLogLines = MutableStateFlow(emptyList<LogLine>())
+  override val inAppDebuggingLogLines = logLinesBus
 }

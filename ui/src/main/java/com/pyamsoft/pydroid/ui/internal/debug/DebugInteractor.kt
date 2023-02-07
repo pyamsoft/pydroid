@@ -20,5 +20,5 @@ package com.pyamsoft.pydroid.ui.internal.debug
 internal interface DebugInteractor {
 
   /** Copy a list of log lines to the clipboard */
-  suspend fun copyInAppDebugMessagesToClipboard(lines: List<LogLine>)
+  suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>)
 }

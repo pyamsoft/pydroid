@@ -22,7 +22,7 @@ import java.util.UUID
 
 @Stable
 @Immutable
-internal data class LogLine
+internal data class InAppDebugLogLine
 internal constructor(
     val level: Level,
     val line: String,

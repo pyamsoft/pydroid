@@ -21,10 +21,10 @@ import android.util.Log
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.DEBUG
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.ERROR
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.WARNING
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +41,7 @@ internal constructor(
 ) : InAppDebugLogger {
 
   // Inject target
-  internal var bus: MutableStateFlow<List<LogLine>>? = null
+  internal var bus: MutableStateFlow<List<InAppDebugLogLine>>? = null
   internal var preferences: DebugPreferences? = null
 
   private var heldApplication: Application? = application
@@ -98,7 +98,7 @@ internal constructor(
           b.update { lines ->
             if (isLoggingEnabled) {
               // This can potentially be a huge list that can affect performance.
-              lines + LogLine(level, line, throwable)
+              lines + InAppDebugLogLine(level, line, throwable)
             } else {
               emptyList()
             }

@@ -50,9 +50,9 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.DEBUG
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.ERROR
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.WARNING
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 

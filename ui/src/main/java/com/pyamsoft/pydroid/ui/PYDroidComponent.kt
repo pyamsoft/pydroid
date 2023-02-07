@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractorImpl
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -99,7 +99,7 @@ internal interface PYDroidComponent {
     private val preferences by
         lazy(NONE) { PYDroidPreferencesImpl(params.application, params.version) }
 
-    private val logLinesBus by lazy(NONE) { MutableStateFlow<List<LogLine>>(emptyList()) }
+    private val logLinesBus by lazy(NONE) { MutableStateFlow<List<InAppDebugLogLine>>(emptyList()) }
 
     private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
 

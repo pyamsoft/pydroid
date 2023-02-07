@@ -47,7 +47,7 @@ import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.debug.DebugComponent
 import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractor
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
 import com.pyamsoft.pydroid.ui.internal.debug.MutableDebugViewState
 import com.pyamsoft.pydroid.ui.internal.preference.MutablePreferenceViewState
 import com.pyamsoft.pydroid.ui.internal.preference.PreferencesComponent
@@ -98,7 +98,7 @@ internal interface AppComponent {
     data class Parameters
     internal constructor(
         internal val debugPreferences: DebugPreferences,
-        internal val logLinesBus: StateFlow<List<LogLine>>,
+        internal val logLinesBus: StateFlow<List<InAppDebugLogLine>>,
         internal val debugInteractor: DebugInteractor,
         internal val billingPreferences: BillingPreferences,
         internal val context: Context,
@@ -236,9 +236,11 @@ internal interface AppComponent {
 
     private val inAppDebugParams =
         DebugComponent.Factory.Parameters(
-            state = MutableDebugViewState(),
+            state =
+                MutableDebugViewState(
+                    logLinesBus = params.logLinesBus,
+                ),
             preferences = params.debugPreferences,
-            logLinesBus = params.logLinesBus,
             interactor = params.debugInteractor,
         )
 

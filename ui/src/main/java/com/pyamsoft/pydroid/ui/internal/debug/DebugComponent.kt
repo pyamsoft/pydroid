@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.annotation.CheckResult
-import kotlinx.coroutines.flow.StateFlow
 
 internal interface DebugComponent {
 
@@ -31,7 +30,6 @@ internal interface DebugComponent {
     internal constructor(
         internal val state: MutableDebugViewState,
         internal val preferences: DebugPreferences,
-        internal val logLinesBus: StateFlow<List<LogLine>>,
         internal val interactor: DebugInteractor,
     )
   }
@@ -46,7 +44,6 @@ internal interface DebugComponent {
           DebugViewModeler(
               state = params.state,
               preferences = params.preferences,
-              logLinesBus = params.logLinesBus,
               interactor = params.interactor,
           )
     }

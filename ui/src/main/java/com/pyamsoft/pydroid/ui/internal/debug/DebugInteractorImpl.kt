@@ -23,9 +23,9 @@ import androidx.annotation.CheckResult
 import androidx.core.content.getSystemService
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.DEBUG
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.ERROR
-import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.WARNING
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -43,7 +43,7 @@ internal constructor(
       }
 
   @CheckResult
-  private fun parseLine(line: LogLine): String {
+  private fun parseLine(line: InAppDebugLogLine): String {
     val level =
         when (line.level) {
           DEBUG -> "[D]"
@@ -55,7 +55,7 @@ internal constructor(
     return "$level ${line.line} $errorMessage"
   }
 
-  override suspend fun copyInAppDebugMessagesToClipboard(lines: List<LogLine>) =
+  override suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>) =
       withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 

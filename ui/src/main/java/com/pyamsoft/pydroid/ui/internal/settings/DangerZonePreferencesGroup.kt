@@ -111,9 +111,9 @@ private fun rememberDeveloperModePreference(
     onClick: () -> Unit,
     onChange: () -> Unit,
 ): Preferences.Item {
-  val name = "Developer Mode"
+  val name = "Debug Mode"
   val summary =
-      "Enables developer mode to view debugging information. ENABLING THIS OPTION MAY IMPACT PERFORMANCE."
+      "Enables debugging mode to view application troubleshooting information. ENABLING THIS OPTION MAY IMPACT PERFORMANCE."
 
   val handleClick by rememberUpdatedState(onClick)
   val handleChange by rememberUpdatedState(onChange)

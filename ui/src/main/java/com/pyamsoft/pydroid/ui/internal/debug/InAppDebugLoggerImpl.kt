@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -48,8 +47,6 @@ internal constructor(
   private var heldApplication: Application? = application
   private var isLoggingEnabled = false
 
-  // Coroutines
-  private var preferenceListenJob: Job? = null
   private val scope by lazy(NONE) { MainScope() }
 
   @CheckResult
@@ -73,11 +70,17 @@ internal constructor(
         // Don't hold onto Application.Context past what we need it for
         heldApplication = null
 
-        preferenceListenJob?.cancel()
-        preferenceListenJob =
-            scope.launch(context = Dispatchers.Main) {
-              prefs.listenForInAppDebuggingEnabled().collectLatest { isLoggingEnabled = it }
+        // Should only launch once if we are injected correctly
+        scope.launch(context = Dispatchers.Main) {
+          prefs.listenForInAppDebuggingEnabled().collectLatest { enabled ->
+            isLoggingEnabled = enabled
+
+            // Clear log bus if disabled
+            if (!enabled) {
+              bus?.update { emptyList() }
             }
+          }
+        }
       }
     }
   }
@@ -88,12 +91,17 @@ internal constructor(
       throwable: Throwable?,
   ) {
     bus?.also { b ->
-      scope.launch(context = Dispatchers.IO) {
-        b.update { lines ->
-          if (isLoggingEnabled) {
-            lines + LogLine(level, line, throwable)
-          } else {
-            emptyList()
+      // If logging is enabled, this can be expensive.
+      // Double check here just to avoid any extra work
+      if (isLoggingEnabled) {
+        scope.launch(context = Dispatchers.IO) {
+          b.update { lines ->
+            if (isLoggingEnabled) {
+              // This can potentially be a huge list that can affect performance.
+              lines + LogLine(level, line, throwable)
+            } else {
+              emptyList()
+            }
           }
         }
       }
@@ -119,7 +127,7 @@ internal constructor(
   ) {
     val t = tag.orEmpty()
     when (priority) {
-      Log.ASSERT -> Log.wtf(t, message)
+      Log.ASSERT,
       Log.ERROR -> log(ERROR, t, message, throwable)
       Log.WARN -> log(WARNING, t, message, throwable)
       else -> log(DEBUG, t, message, throwable)

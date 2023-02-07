@@ -30,5 +30,5 @@ internal interface DebugViewState : UiViewState {
 @Stable
 internal class MutableDebugViewState internal constructor() : DebugViewState {
   override val isInAppDebuggingEnabled = MutableStateFlow(false)
-  override val inAppDebuggingLogLines = MutableStateFlow(mutableListOf<LogLine>())
+  override val inAppDebuggingLogLines = MutableStateFlow(emptyList<LogLine>())
 }

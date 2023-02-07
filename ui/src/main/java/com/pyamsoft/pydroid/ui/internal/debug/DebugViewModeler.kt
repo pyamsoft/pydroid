@@ -39,7 +39,7 @@ internal constructor(
         s.isInAppDebuggingEnabled.value = enabled
 
         if (!enabled) {
-          s.inAppDebuggingLogLines.update { it.apply { clear() } }
+          s.inAppDebuggingLogLines.update { emptyList() }
         }
       }
     }
@@ -48,12 +48,10 @@ internal constructor(
       logLinesBus.onEvent { line ->
         val isDebuggingEnabled = s.isInAppDebuggingEnabled.value
         s.inAppDebuggingLogLines.update { lines ->
-          lines.apply {
-            if (isDebuggingEnabled) {
-              add(line)
-            } else {
-              clear()
-            }
+          if (isDebuggingEnabled) {
+            lines + line
+          } else {
+            emptyList()
           }
         }
       }

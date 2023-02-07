@@ -114,14 +114,6 @@ private fun InAppDebugScreen(
                 ),
         ) {
           if (isEnabled) {
-            item {
-              Text(
-                  modifier = Modifier.fillMaxWidth(),
-                  text = "In-App Debugging is not enabled.",
-                  style = MaterialTheme.typography.h5,
-              )
-            }
-          } else {
             items(
                 items = lines,
                 key = { it.id },
@@ -139,6 +131,14 @@ private fun InAppDebugScreen(
                                 ERROR -> MaterialTheme.colors.error
                               },
                       ),
+              )
+            }
+          } else {
+            item {
+              Text(
+                  modifier = Modifier.fillMaxWidth(),
+                  text = "In-App Debugging is not enabled.",
+                  style = MaterialTheme.typography.h5,
               )
             }
           }

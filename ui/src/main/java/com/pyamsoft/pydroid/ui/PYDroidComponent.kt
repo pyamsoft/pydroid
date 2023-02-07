@@ -33,8 +33,8 @@ import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractorImpl
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming

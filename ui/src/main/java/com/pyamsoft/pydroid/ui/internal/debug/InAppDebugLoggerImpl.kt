@@ -94,11 +94,20 @@ internal constructor(
       // If logging is enabled, this can be expensive.
       // Double check here just to avoid any extra work
       if (isLoggingEnabled) {
+        // Record the timestamp before the coroutine launched as this is immediate
+        val timestamp = System.nanoTime()
+
         scope.launch(context = Dispatchers.IO) {
           b.update { lines ->
             if (isLoggingEnabled) {
               // This can potentially be a huge list that can affect performance.
-              lines + InAppDebugLogLine(level, line, throwable)
+              lines +
+                  InAppDebugLogLine(
+                      timestamp = timestamp,
+                      level = level,
+                      line = line,
+                      throwable = throwable,
+                  )
             } else {
               emptyList()
             }

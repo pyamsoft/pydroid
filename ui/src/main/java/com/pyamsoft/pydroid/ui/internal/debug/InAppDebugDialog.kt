@@ -109,6 +109,8 @@ private fun InAppDebugScreen(
     setCopied(true)
   }
 
+  val sortedLines = remember(lines) { lines.sortedBy { it.timestamp } }
+
   Dialog(
       properties = rememberDialogProperties(),
       onDismissRequest = onDismiss,
@@ -140,8 +142,8 @@ private fun InAppDebugScreen(
           ) {
             if (isEnabled) {
               items(
-                  items = lines,
-                  key = { it.id },
+                  items = sortedLines,
+                  key = { it.timestamp.toString() },
               ) { line ->
                 Text(
                     modifier = Modifier.fillMaxWidth(),

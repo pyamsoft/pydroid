@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import java.util.UUID
 
 @Stable
 @Immutable
@@ -27,7 +26,7 @@ internal constructor(
     val level: Level,
     val line: String,
     val throwable: Throwable?,
-    val id: String = UUID.randomUUID().toString(),
+    val timestamp: Long
 ) {
 
   @Stable

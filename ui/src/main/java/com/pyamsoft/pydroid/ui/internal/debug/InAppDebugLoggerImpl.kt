@@ -39,7 +39,7 @@ internal constructor(
 ) : InAppDebugLogger {
 
   // Inject target
-  internal var bus: MutableStateFlow<MutableList<InAppDebugLogLine>>? = null
+  internal var bus: MutableStateFlow<List<InAppDebugLogLine>>? = null
   internal var preferences: DebugPreferences? = null
 
   private var heldApplication: Application? = application
@@ -75,7 +75,7 @@ internal constructor(
 
             // Clear log bus if disabled
             if (!enabled) {
-              bus?.update { it.apply { clear() } }
+              bus?.update { emptyList() }
             }
           }
         }
@@ -97,19 +97,17 @@ internal constructor(
 
         scope.launch(context = Dispatchers.IO) {
           b.update { lines ->
-            lines.apply {
-              if (isLoggingEnabled) {
-                // This can potentially be a huge list that can affect performance.
-                add(
-                    InAppDebugLogLine(
-                        timestamp = timestamp,
-                        level = level,
-                        line = line,
-                        throwable = throwable,
-                    ))
-              } else {
-                clear()
-              }
+            if (isLoggingEnabled) {
+              // This can potentially be a huge list that can affect performance.
+              lines +
+                  InAppDebugLogLine(
+                      timestamp = timestamp,
+                      level = level,
+                      line = line,
+                      throwable = throwable,
+                  )
+            } else {
+              emptyList()
             }
           }
         }

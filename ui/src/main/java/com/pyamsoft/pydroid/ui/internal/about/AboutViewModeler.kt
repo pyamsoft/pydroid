@@ -32,7 +32,7 @@ internal constructor(
 
   private val licenseRunner = highlander<List<OssLibrary>> { interactor.loadLicenses() }
 
-  internal fun handleLoadLicenses(scope: CoroutineScope) {
+  internal fun bind(scope: CoroutineScope) {
     val s = state
 
     if (s.loadingState.value != AboutViewState.LoadingState.NONE) {

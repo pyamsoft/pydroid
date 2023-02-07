@@ -26,6 +26,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,12 +46,28 @@ import com.pyamsoft.pydroid.ui.util.collectAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 @Composable
+private fun MountHooks(
+    viewModel: DebugViewModeler,
+) {
+  LaunchedEffect(
+      viewModel,
+  ) {
+    viewModel.bind(scope = this)
+  }
+}
+
+@Composable
 internal fun InAppDebugDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { DebugInjector() }
   val viewModel = rememberNotNull(component.viewModel)
+
+  MountHooks(
+      viewModel = viewModel,
+  )
+
   SaveStateDisposableEffect(viewModel)
 
   InAppDebugScreen(

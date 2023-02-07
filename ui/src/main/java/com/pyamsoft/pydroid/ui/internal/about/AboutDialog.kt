@@ -55,7 +55,7 @@ private fun MountHooks(
   LaunchedEffect(
       viewModel,
   ) {
-    viewModel.handleLoadLicenses(scope = this)
+    viewModel.bind(scope = this)
   }
 }
 

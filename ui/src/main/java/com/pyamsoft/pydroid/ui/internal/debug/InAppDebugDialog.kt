@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,8 +38,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
@@ -128,60 +131,62 @@ private fun InAppDebugScreen(
                   topStart = ZeroCornerSize,
               ),
       ) {
-        LazyColumn(
-            modifier =
-                Modifier.padding(
-                    MaterialTheme.keylines.content,
-                ),
+        Box(
+            modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
+            contentAlignment = Alignment.BottomCenter,
         ) {
-          if (isEnabled) {
-            items(
-                items = lines,
-                key = { it.id },
-            ) { line ->
-              Text(
-                  modifier = Modifier.fillMaxWidth(),
-                  text =
-                      remember(line) {
-                        val level =
-                            when (line.level) {
-                              DEBUG -> "[D]"
-                              WARNING -> "[W]"
-                              ERROR -> "[E]"
-                            }
-
-                        val errorMessage =
-                            if (line.throwable == null) "" else line.throwable.message.orEmpty()
-                        return@remember "$level ${line.line} $errorMessage"
-                      },
-                  style =
-                      MaterialTheme.typography.body2.copy(
-                          fontFamily = FontFamily.Monospace,
-                          color =
+          LazyColumn(
+              modifier = Modifier.fillMaxSize(),
+          ) {
+            if (isEnabled) {
+              items(
+                  items = lines,
+                  key = { it.id },
+              ) { line ->
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text =
+                        remember(line) {
+                          val level =
                               when (line.level) {
-                                DEBUG -> MaterialTheme.colors.onSurface
-                                WARNING -> MaterialTheme.colors.warning
-                                ERROR -> MaterialTheme.colors.error
-                              },
-                      ),
-              )
-            }
-          } else {
-            item {
-              Text(
-                  modifier = Modifier.fillMaxWidth(),
-                  text = "In-App Debugging is not enabled.",
-                  style = MaterialTheme.typography.h5,
-              )
+                                DEBUG -> "[D]"
+                                WARNING -> "[W]"
+                                ERROR -> "[E]"
+                              }
+
+                          val errorMessage =
+                              if (line.throwable == null) "" else line.throwable.message.orEmpty()
+                          return@remember "$level ${line.line} $errorMessage"
+                        },
+                    style =
+                        MaterialTheme.typography.caption.copy(
+                            fontFamily = FontFamily.Monospace,
+                            color =
+                                when (line.level) {
+                                  DEBUG -> MaterialTheme.colors.onSurface
+                                  WARNING -> MaterialTheme.colors.warning
+                                  ERROR -> MaterialTheme.colors.error
+                                },
+                        ),
+                )
+              }
+            } else {
+              item {
+                Text(
+                    modifier = Modifier.fillMaxSize(),
+                    text = "In-App Developer Mode is not enabled.",
+                    style = MaterialTheme.typography.h5,
+                    textAlign = TextAlign.Center,
+                )
+              }
             }
           }
 
-          item {
-            LogLinesCopied(
-                snackbarHostState = snackbarHostState,
-                show = copied,
-                onSnackbarDismissed = { setCopied(false) })
-          }
+          LogLinesCopied(
+              snackbarHostState = snackbarHostState,
+              show = copied,
+              onSnackbarDismissed = { setCopied(false) },
+          )
         }
       }
     }

@@ -42,7 +42,7 @@ internal constructor(
 ) : InAppDebugLogger {
 
   // Inject target
-  internal var bus: MutableStateFlow<MutableList<LogLine>>? = null
+  internal var bus: MutableStateFlow<List<LogLine>>? = null
   internal var preferences: DebugPreferences? = null
 
   private var heldApplication: Application? = application
@@ -89,8 +89,12 @@ internal constructor(
   ) {
     bus?.also { b ->
       scope.launch(context = Dispatchers.IO) {
-        if (isLoggingEnabled) {
-          b.update { lines -> lines.apply { add(LogLine(level, line, throwable)) } }
+        b.update { lines ->
+          if (isLoggingEnabled) {
+            lines + LogLine(level, line, throwable)
+          } else {
+            emptyList()
+          }
         }
       }
     }

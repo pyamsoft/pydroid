@@ -16,9 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -36,7 +33,6 @@ import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.ZeroSize
-import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -284,7 +280,6 @@ private fun SettingsContent(
 
   if (showInAppDebuggingDialog) {
     InAppDebugDialog(
-        modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
         onDismiss = onDismissInAppDebuggingDialog,
     )
   }

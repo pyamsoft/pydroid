@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -91,7 +92,7 @@ private fun InAppDebugScreen(
       onDismissRequest = onDismiss,
   ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
     ) {
       DialogToolbar(
           modifier = Modifier.fillMaxWidth(),
@@ -99,7 +100,7 @@ private fun InAppDebugScreen(
           onClose = onDismiss,
       )
       Surface(
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth().weight(1F),
           elevation = DialogDefaults.Elevation,
           shape =
               MaterialTheme.shapes.medium.copy(

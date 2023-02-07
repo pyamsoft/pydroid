@@ -99,7 +99,7 @@ internal interface PYDroidComponent {
     private val preferences by
         lazy(NONE) { PYDroidPreferencesImpl(params.application, params.version) }
 
-    private val logLinesBus by lazy(NONE) { MutableStateFlow<List<InAppDebugLogLine>>(emptyList()) }
+    private val logLinesBus by lazy(NONE) { MutableStateFlow(mutableListOf<InAppDebugLogLine>()) }
 
     private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
 

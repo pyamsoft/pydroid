@@ -22,9 +22,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.*
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +39,7 @@ internal constructor(
 ) : InAppDebugLogger {
 
   // Inject target
-  internal var bus: MutableStateFlow<List<InAppDebugLogLine>>? = null
+  internal var bus: MutableStateFlow<MutableList<InAppDebugLogLine>>? = null
   internal var preferences: DebugPreferences? = null
 
   private var heldApplication: Application? = application
@@ -77,7 +75,7 @@ internal constructor(
 
             // Clear log bus if disabled
             if (!enabled) {
-              bus?.update { emptyList() }
+              bus?.update { it.apply { clear() } }
             }
           }
         }
@@ -99,17 +97,19 @@ internal constructor(
 
         scope.launch(context = Dispatchers.IO) {
           b.update { lines ->
-            if (isLoggingEnabled) {
-              // This can potentially be a huge list that can affect performance.
-              lines +
-                  InAppDebugLogLine(
-                      timestamp = timestamp,
-                      level = level,
-                      line = line,
-                      throwable = throwable,
-                  )
-            } else {
-              emptyList()
+            lines.apply {
+              if (isLoggingEnabled) {
+                // This can potentially be a huge list that can affect performance.
+                add(
+                    InAppDebugLogLine(
+                        timestamp = timestamp,
+                        level = level,
+                        line = line,
+                        throwable = throwable,
+                    ))
+              } else {
+                clear()
+              }
             }
           }
         }

@@ -267,6 +267,10 @@ public final class com/pyamsoft/pydroid/ui/icons/RedeemKt {
 	public static final fun getRedeem (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }
 
+public final class com/pyamsoft/pydroid/ui/icons/TerminalKt {
+	public static final fun getTerminal (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
 public final class com/pyamsoft/pydroid/ui/icons/VisibilityKt {
 	public static final fun getVisibility (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }

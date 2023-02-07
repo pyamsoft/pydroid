@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.icons.Code
+import com.pyamsoft.pydroid.ui.icons.Terminal
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
@@ -126,7 +127,7 @@ private fun rememberDeveloperModePreference(
         id = "developer_mode",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Code,
+        icon = Icons.Outlined.Terminal,
         checked = checked,
         onClick = { handleClick() },
         onCheckedChanged = { handleChange() },

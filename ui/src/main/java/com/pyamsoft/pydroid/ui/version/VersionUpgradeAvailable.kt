@@ -82,16 +82,17 @@ internal constructor(
                         scope = owner.lifecycleScope,
                         force = false,
                         onLaunchUpdate = { launcher ->
-                          // This will pop the in-app update dialog open. We should instead set a flag
+                          // This will pop the in-app update dialog open. We should instead set a
+                          // flag
                           // which displays some non-intrusive in-app UI via InterruptCard
 
                           // Don't use scope since if this leaves Composition it would die
                           // Enforce that we do this on the Main thread
                           activity.lifecycleScope.launch(context = Dispatchers.Main) {
                             launcher
-                              .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
-                              .onSuccess { Logger.d("Launched an in-app update flow") }
-                              .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
+                                .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
+                                .onSuccess { Logger.d("Launched an in-app update flow") }
+                                .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
                           }
                         },
                     )

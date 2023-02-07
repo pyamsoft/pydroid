@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 internal class SettingsViewModeler
@@ -34,7 +36,20 @@ internal constructor(
     private val termsConditionsUrl: String,
     private val theming: Theming,
     private val changeLogInteractor: ChangeLogInteractor,
+    private val debugPreferences: DebugPreferences,
 ) : AbstractViewModeler<SettingsViewState>(state) {
+
+  private data class LoadConfig(
+      var name: Boolean = false,
+      var inAppDebug: Boolean = false,
+      var darkMode: Boolean = false,
+  )
+
+  private fun markConfigLoaded(loadConfig: LoadConfig) {
+    if (loadConfig.darkMode && loadConfig.inAppDebug && loadConfig.name) {
+      state.loadingState.value = SettingsViewState.LoadingState.DONE
+    }
+  }
 
   override fun registerSaveState(
       registry: SaveableStateRegistry
@@ -49,6 +64,11 @@ internal constructor(
         registry
             .registerProvider(KEY_SHOW_DATA_POLICY_DIALOG) { state.isShowingDataPolicyDialog.value }
             .also { add(it) }
+        registry
+            .registerProvider(KEY_SHOW_IN_APP_DEBUG_DIALOG) {
+              state.isShowingInAppDebugDialog.value
+            }
+            .also { add(it) }
       }
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
@@ -56,38 +76,69 @@ internal constructor(
         .consumeRestored(KEY_SHOW_ABOUT_DIALOG)
         ?.let { it as Boolean }
         ?.also { state.isShowingAboutDialog.value = it }
-
     registry
         .consumeRestored(KEY_SHOW_RESET_DIALOG)
         ?.let { it as Boolean }
         ?.also { state.isShowingResetDialog.value = it }
-
     registry
         .consumeRestored(KEY_SHOW_DATA_POLICY_DIALOG)
         ?.let { it as Boolean }
         ?.also { state.isShowingDataPolicyDialog.value = it }
+    registry
+        .consumeRestored(KEY_SHOW_IN_APP_DEBUG_DIALOG)
+        ?.let { it as Boolean }
+        ?.also { state.isInAppDebuggingEnabled.value = it }
   }
 
   internal fun bind(scope: CoroutineScope) {
+    val s = state
+
+    // Done loading or already loading
+    if (s.loadingState.value != SettingsViewState.LoadingState.NONE) {
+      return
+    }
+
+    // Create a config to mark which bits are loaded
+    val config = LoadConfig()
+    s.loadingState.value = SettingsViewState.LoadingState.LOADING
+
     scope.launch(context = Dispatchers.Main) {
       val name = changeLogInteractor.getDisplayName()
       state.applicationName.value = name
-    }
-  }
 
-  internal fun handleLoadPreferences(scope: CoroutineScope) {
-    val s = state
-    s.loadingState.value = SettingsViewState.LoadingState.LOADING
+      if (!config.name) {
+        config.name = true
+        markConfigLoaded(config)
+      }
+    }
+
+    scope.launch(context = Dispatchers.Main) {
+      debugPreferences.listenForInAppDebuggingEnabled().collectLatest { enabled ->
+        state.isInAppDebuggingEnabled.value = enabled
+
+        if (!config.inAppDebug) {
+          config.inAppDebug = true
+          markConfigLoaded(config)
+        }
+      }
+    }
 
     scope.launch(context = Dispatchers.Main) {
       theming.listenForModeChanges().collectLatest {
         s.darkMode.value = it
 
-        // Upon sync, mark loaded
-        if (s.loadingState.value == SettingsViewState.LoadingState.LOADING) {
-          s.loadingState.value = SettingsViewState.LoadingState.DONE
+        if (!config.darkMode) {
+          config.darkMode = true
+          markConfigLoaded(config)
         }
       }
+    }
+  }
+
+  internal fun handleChangeInAppDebugEnabled(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) {
+      val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { !it }
+      debugPreferences.setInAppDebuggingEnabled(newEnabled)
     }
   }
 
@@ -151,6 +202,14 @@ internal constructor(
     onOpenUrl(bugReportUrl)
   }
 
+  fun handleCloseInAppDebuggingDialog() {
+    state.isShowingInAppDebugDialog.value = false
+  }
+
+  fun handleOpenInAppDebuggingDialog() {
+    state.isShowingInAppDebugDialog.value = true
+  }
+
   companion object {
 
     private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
@@ -159,5 +218,6 @@ internal constructor(
     private const val KEY_SHOW_ABOUT_DIALOG = "settings_show_about_dialog"
     private const val KEY_SHOW_RESET_DIALOG = "settings_show_reset_dialog"
     private const val KEY_SHOW_DATA_POLICY_DIALOG = "settings_show_data_policy_dialog"
+    private const val KEY_SHOW_IN_APP_DEBUG_DIALOG = "settings_show_in_app_debug_dialog"
   }
 }

@@ -110,14 +110,9 @@ internal constructor(
     state.isUpgradeDialogShowing.value = false
   }
 
-
   companion object {
 
-    /**
-     * Request code for in-app updates
-     * Only bottom 16 bits.
-     */
+    /** Request code for in-app updates Only bottom 16 bits. */
     internal const val RC_APP_UPDATE = 146
-
   }
 }

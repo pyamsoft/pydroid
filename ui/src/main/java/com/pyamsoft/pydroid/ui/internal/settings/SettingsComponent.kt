@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
+import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.settings.SettingsFragment
@@ -55,6 +56,7 @@ internal interface SettingsComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val options: PYDroidActivityOptions,
         internal val billingPreferences: BillingPreferences,
+        internal val debugPreferences: DebugPreferences,
         internal val billingState: MutableBillingViewState,
         internal val changeLogState: MutableChangeLogViewState,
         internal val isFakeBillingUpsell: Boolean,
@@ -77,6 +79,7 @@ internal interface SettingsComponent {
               viewSourceUrl = params.viewSourceUrl,
               theming = params.theming,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
+              debugPreferences = params.debugPreferences,
           )
       injector.versionViewModel =
           VersionCheckViewModeler(

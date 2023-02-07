@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
+import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
@@ -43,7 +44,12 @@ internal class PYDroidPreferencesImpl
 internal constructor(
     context: Context,
     private val versionCode: Int,
-) : ThemingPreferences, BillingPreferences, ChangeLogPreferences, DataPolicyPreferences {
+) :
+    ThemingPreferences,
+    BillingPreferences,
+    ChangeLogPreferences,
+    DataPolicyPreferences,
+    DebugPreferences {
 
   private val darkModeKey = context.getString(R.string.dark_mode_key)
 
@@ -77,6 +83,23 @@ internal constructor(
         if (currentCount < threshold) {
           prefs.edit { putInt(key, currentCount + 1) }
         }
+      }
+
+  override suspend fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        return@withContext prefs.booleanFlow(
+            KEY_IN_APP_DEBUGGING,
+            DEFAULT_IN_APP_DEBUGGING_ENABLED,
+        )
+      }
+
+  override suspend fun setInAppDebuggingEnabled(enabled: Boolean) =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+
+        prefs.edit { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
       }
 
   override suspend fun listenForBillingUpsellChanges(): Flow<Boolean> =
@@ -195,8 +218,7 @@ internal constructor(
     private const val KEY_BILLING_SHOW_UPSELL_COUNT = "billing_show_upsell_v1"
     private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 10
 
-    private const val DEFAULT_RATING_SHOW_UPSELL_COUNT = 0
-    private const val KEY_RATING_SHOW_UPSELL_COUNT = "rating_show_upsell_v1"
-    private const val VALUE_RATING_SHOW_UPSELL_THRESHOLD = 7
+    private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false
+    private const val KEY_IN_APP_DEBUGGING = "in_app_debugging_v1"
   }
 }

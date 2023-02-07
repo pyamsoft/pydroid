@@ -71,10 +71,13 @@ internal fun SettingsScreen(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
+    onInAppDebuggingClicked: () -> Unit,
+    onInAppDebuggingChanged: () -> Unit,
 ) {
   val loadingState by state.loadingState.collectAsState()
   val applicationName by state.applicationName.collectAsState()
   val darkMode by state.darkMode.collectAsState()
+  val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsState()
 
   Surface(
       modifier = modifier,
@@ -98,6 +101,7 @@ internal fun SettingsScreen(
               bottomItemMargin = bottomItemMargin,
               customPreContent = customPreContent,
               customPostContent = customPostContent,
+              isInAppDebugChecked = isInAppDebugEnabled,
               hideClearAll = hideClearAll,
               hideUpgradeInformation = hideUpgradeInformation,
               onDarkModeChanged = onDarkModeChanged,
@@ -114,6 +118,8 @@ internal fun SettingsScreen(
               onViewSocialMediaClicked = onViewSocialMediaClicked,
               onViewBlogClicked = onViewBlogClicked,
               onOpenMarketPage = onOpenMarketPage,
+              onInAppDebuggingClicked = onInAppDebuggingClicked,
+              onInAppDebuggingChanged = onInAppDebuggingChanged,
           )
         }
       }
@@ -146,6 +152,7 @@ private fun SettingsList(
     customPostContent: SnapshotStateList<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
+    isInAppDebugChecked: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
@@ -162,6 +169,8 @@ private fun SettingsList(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
+    onInAppDebuggingClicked: () -> Unit,
+    onInAppDebuggingChanged: () -> Unit,
 ) {
   val applicationPrefs =
       rememberApplicationPreferencesGroup(
@@ -202,8 +211,11 @@ private fun SettingsList(
 
   val dangerZonePreferences =
       rememberDangerZonePreferencesGroup(
+          isInAppDebugChecked = isInAppDebugChecked,
           hideClearAll = hideClearAll,
           onResetClicked = onResetClicked,
+          onInAppDebuggingChanged = onInAppDebuggingChanged,
+          onInAppDebuggingClicked = onInAppDebuggingClicked,
       )
 
   val preferences =
@@ -266,6 +278,8 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       onViewTermsOfServiceClicked = {},
       onViewSocialMediaClicked = {},
       onViewBlogClicked = {},
+      onInAppDebuggingClicked = {},
+      onInAppDebuggingChanged = {},
   )
 }
 

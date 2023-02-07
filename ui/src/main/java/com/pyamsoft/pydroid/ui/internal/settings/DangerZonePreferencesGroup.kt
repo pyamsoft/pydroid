@@ -25,15 +25,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.icons.Code
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
+import com.pyamsoft.pydroid.ui.preference.switchPreference
 
 @Composable
 @CheckResult
 internal fun rememberDangerZonePreferencesGroup(
     hideClearAll: Boolean,
+    isInAppDebugChecked: Boolean,
     onResetClicked: () -> Unit,
+    onInAppDebuggingClicked: () -> Unit,
+    onInAppDebuggingChanged: () -> Unit,
 ): Preferences.Group {
 
   val resetPreference =
@@ -41,12 +46,21 @@ internal fun rememberDangerZonePreferencesGroup(
           onClick = onResetClicked,
       )
 
+  val developerModePreference =
+      rememberDeveloperModePreference(
+          checked = isInAppDebugChecked,
+          onClick = onInAppDebuggingClicked,
+          onChange = onInAppDebuggingChanged,
+      )
+
   val preferences =
       remember(
           hideClearAll,
           resetPreference,
+          developerModePreference,
       ) {
         mutableListOf<Preferences.Item>().apply {
+          add(developerModePreference)
           if (!hideClearAll) {
             add(resetPreference)
           }
@@ -86,6 +100,37 @@ private fun rememberResetPreference(
         summary = summary,
         icon = Icons.Outlined.Warning,
         onClick = { handleClick() },
+    )
+  }
+}
+
+@Composable
+@CheckResult
+private fun rememberDeveloperModePreference(
+    checked: Boolean,
+    onClick: () -> Unit,
+    onChange: () -> Unit,
+): Preferences.Item {
+  val name = "Developer Mode"
+  val summary =
+      "Enables developer mode to view debugging information. ENABLING THIS OPTION MAY IMPACT PERFORMANCE."
+
+  val handleClick by rememberUpdatedState(onClick)
+  val handleChange by rememberUpdatedState(onChange)
+
+  return remember(
+      name,
+      summary,
+      checked,
+  ) {
+    switchPreference(
+        id = "developer_mode",
+        name = name,
+        summary = summary,
+        icon = Icons.Outlined.Code,
+        checked = checked,
+        onClick = { handleClick() },
+        onCheckedChanged = { handleChange() },
     )
   }
 }

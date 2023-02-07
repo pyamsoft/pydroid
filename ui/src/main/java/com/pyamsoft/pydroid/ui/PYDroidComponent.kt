@@ -32,10 +32,13 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
+import com.pyamsoft.pydroid.ui.internal.debug.LogLine
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -49,6 +52,8 @@ internal interface PYDroidComponent {
   @CheckResult fun plusDataPolicyDialog(): DataPolicyDialogComponent.Factory
 
   @CheckResult fun plusReset(): ResetComponent.Factory
+
+  fun inject(logger: InAppDebugLoggerImpl)
 
   interface Factory {
 
@@ -85,21 +90,19 @@ internal interface PYDroidComponent {
     // this can lead to StackOverflow errors unless initialization is done in a very specific order.
     //
     // This setup system is not perfect and we are looking to hopefully have something better soon.
-    private val imageLoader: ImageLoader by
-        lazy(LazyThreadSafetyMode.NONE) { ImageLoader(params.application) }
+    private val imageLoader: ImageLoader by lazy(NONE) { ImageLoader(params.application) }
 
-    private val theming: Theming by lazy(LazyThreadSafetyMode.NONE) { ThemingImpl(preferences) }
+    private val theming: Theming by lazy(NONE) { ThemingImpl(preferences) }
 
     private val preferences by
-        lazy(LazyThreadSafetyMode.NONE) {
-          PYDroidPreferencesImpl(params.application, params.version)
-        }
+        lazy(NONE) { PYDroidPreferencesImpl(params.application, params.version) }
 
-    private val composeTheme by
-        lazy(LazyThreadSafetyMode.NONE) { ComposeThemeFactory(theming, params.theme) }
+    private val logLinesBus by lazy(NONE) { EventBus.create<LogLine>() }
+
+    private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
 
     private val dataPolicyModule by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           DataPolicyModule(
               DataPolicyModule.Parameters(
                   context = context,
@@ -109,7 +112,7 @@ internal interface PYDroidComponent {
         }
 
     private val changeLogModule by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           ChangeLogModule(
               ChangeLogModule.Parameters(
                   context = context,
@@ -120,7 +123,7 @@ internal interface PYDroidComponent {
         }
 
     private val appParams by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           AppComponent.Factory.Parameters(
               context = context,
               theming = theming,
@@ -136,11 +139,13 @@ internal interface PYDroidComponent {
               viewSourceUrl = params.viewSourceUrl,
               debug = params.debug,
               billingPreferences = preferences,
+              debugPreferences = preferences,
+              logLinesBus = logLinesBus,
           )
         }
 
     private val aboutParams by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           AboutComponent.Factory.Parameters(
               composeTheme = composeTheme,
               module = AboutModule(),
@@ -148,7 +153,7 @@ internal interface PYDroidComponent {
         }
 
     private val dataPolicyParams by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           DataPolicyDialogComponent.Factory.Parameters(
               composeTheme = composeTheme,
               imageLoader = imageLoader,
@@ -159,7 +164,7 @@ internal interface PYDroidComponent {
         }
 
     private val resetParams by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           ResetComponent.Factory.Parameters(
               module =
                   SettingsModule(
@@ -172,11 +177,11 @@ internal interface PYDroidComponent {
         }
 
     private val provider by
-        lazy(LazyThreadSafetyMode.NONE) {
+        lazy(NONE) {
           object : ModuleProvider {
 
             private val modules by
-                lazy(LazyThreadSafetyMode.NONE) {
+                lazy(NONE) {
                   object : ModuleProvider.Modules {
 
                     override fun imageLoader(): ImageLoader {
@@ -219,6 +224,11 @@ internal interface PYDroidComponent {
 
     override fun moduleProvider(): ModuleProvider {
       return provider
+    }
+
+    override fun inject(logger: InAppDebugLoggerImpl) {
+      logger.bus = logLinesBus
+      logger.preferences = preferences
     }
 
     class FactoryImpl internal constructor() : Factory {

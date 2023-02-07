@@ -193,6 +193,16 @@ public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion {
 	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 }
 
+public abstract interface class com/pyamsoft/pydroid/ui/debug/InAppDebugLogger {
+	public static final field Companion Lcom/pyamsoft/pydroid/ui/debug/InAppDebugLogger$Companion;
+	public static fun createInAppDebugLogger (Landroid/app/Application;)Lcom/pyamsoft/pydroid/ui/debug/InAppDebugLogger;
+	public abstract fun log (ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+}
+
+public final class com/pyamsoft/pydroid/ui/debug/InAppDebugLogger$Companion {
+	public final fun createInAppDebugLogger (Landroid/app/Application;)Lcom/pyamsoft/pydroid/ui/debug/InAppDebugLogger;
+}
+
 public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/CardDefaults;
@@ -358,6 +368,13 @@ public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/Composable
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
+public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
@@ -485,11 +502,12 @@ public abstract class com/pyamsoft/pydroid/ui/preference/Preferences$Item : com/
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
+	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun checkBoxPreference (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun checkBoxPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun checkBoxPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun customPreference (Ljava/lang/String;ZLkotlin/jvm/functions/Function3;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static synthetic fun customPreference$default (Ljava/lang/String;ZLkotlin/jvm/functions/Function3;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
@@ -512,11 +530,12 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
 	public static final fun preferenceGroup (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public static final fun preferenceGroup (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public static synthetic fun preferenceGroup$default (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
+	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun switchPreference (Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun switchPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun switchPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 }
 
 public final class com/pyamsoft/pydroid/ui/rating/RatingLauncherKt {

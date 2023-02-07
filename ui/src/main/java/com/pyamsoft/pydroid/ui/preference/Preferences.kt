@@ -108,6 +108,7 @@ public sealed class Preferences {
       override val summary: String,
       override val icon: ImageVector?,
       internal val checked: Boolean,
+      internal val onClick: (() -> Unit)?,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
   ) : Item()
 
@@ -121,6 +122,7 @@ public sealed class Preferences {
       override val summary: String,
       override val icon: ImageVector?,
       internal val checked: Boolean,
+      internal val onClick: (() -> Unit)?,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
   ) : Item()
 
@@ -243,6 +245,7 @@ public fun checkBoxPreference(
     summary: String = "",
     icon: ImageVector? = null,
     checked: Boolean,
+    onClick: (() -> Unit)? = null,
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.CheckBoxPreference(
@@ -252,6 +255,7 @@ public fun checkBoxPreference(
       summary = summary,
       icon = icon,
       checked = checked,
+      onClick = onClick,
       onCheckedChanged = onCheckedChanged,
   )
 }
@@ -266,6 +270,7 @@ public fun switchPreference(
     summary: String = "",
     icon: ImageVector? = null,
     checked: Boolean,
+    onClick: (() -> Unit)? = null,
     onCheckedChanged: (checked: Boolean) -> Unit,
 ): Preferences.Item {
   return Preferences.SwitchPreference(
@@ -275,6 +280,7 @@ public fun switchPreference(
       summary = summary,
       icon = icon,
       checked = checked,
+      onClick = onClick,
       onCheckedChanged = onCheckedChanged,
   )
 }

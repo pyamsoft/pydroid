@@ -125,11 +125,12 @@ internal fun CheckBoxPreferenceItem(
   val name = preference.name
   val summary = preference.summary
   val icon = preference.icon
+  val onClick = preference.onClick
   val onCheckedChanged = preference.onCheckedChanged
   val checked = preference.checked
 
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onCheckedChanged(!checked) },
+      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
       isEnabled = isEnabled,
       text = name,
       summary = summary,
@@ -154,10 +155,11 @@ internal fun SwitchPreferenceItem(
   val summary = preference.summary
   val icon = preference.icon
   val checked = preference.checked
+  val onClick = preference.onClick
   val onCheckedChanged = preference.onCheckedChanged
 
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onCheckedChanged(!checked) },
+      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
       isEnabled = isEnabled,
       text = name,
       summary = summary,

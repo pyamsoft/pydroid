@@ -16,6 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,8 +35,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.ZeroSize
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -42,6 +45,7 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugDialog
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInjector
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
@@ -61,10 +65,7 @@ import kotlinx.coroutines.launch
 private fun MountHooks(
     viewModel: SettingsViewModeler,
 ) {
-  LaunchedEffect(viewModel) {
-    viewModel.bind(scope = this)
-    viewModel.handleLoadPreferences(scope = this)
-  }
+  LaunchedEffect(viewModel) { viewModel.bind(scope = this) }
 }
 
 /** Composable for displaying a settings page */
@@ -169,6 +170,9 @@ public fun SettingsPage(
             mode = it,
         )
       },
+      onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled(scope = scope) },
+      onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
+      onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
   )
 }
 
@@ -202,17 +206,21 @@ private fun SettingsContent(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
+    onInAppDebuggingChanged: () -> Unit,
+    onInAppDebuggingClicked: () -> Unit,
     onDismissAboutDialog: () -> Unit,
     onDismissBillingDialog: () -> Unit,
     onDismissChangeLogDialog: () -> Unit,
     onDismissResetDialog: () -> Unit,
     onDismissDataPolicyDialog: () -> Unit,
+    onDismissInAppDebuggingDialog: () -> Unit,
 ) {
   val showResetDialog by state.isShowingResetDialog.collectAsState()
   val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsState()
   val showAboutDialog by state.isShowingAboutDialog.collectAsState()
   val showBillingDialog by billingState.isShowingDialog.collectAsState()
   val showChangeLogDialog by changeLogState.isShowingDialog.collectAsState()
+  val showInAppDebuggingDialog by state.isShowingInAppDebugDialog.collectAsState()
 
   SettingsScreen(
       modifier = modifier,
@@ -240,6 +248,8 @@ private fun SettingsContent(
       onViewSocialMediaClicked = onViewSocialMediaClicked,
       onViewBlogClicked = onViewBlogClicked,
       onOpenMarketPage = onOpenMarketPage,
+      onInAppDebuggingChanged = onInAppDebuggingChanged,
+      onInAppDebuggingClicked = onInAppDebuggingClicked,
   )
 
   if (showDataPolicyDialog) {
@@ -269,6 +279,13 @@ private fun SettingsContent(
   if (showChangeLogDialog) {
     ChangeLogDialog(
         onDismiss = onDismissChangeLogDialog,
+    )
+  }
+
+  if (showInAppDebuggingDialog) {
+    InAppDebugDialog(
+        modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
+        onDismiss = onDismissInAppDebuggingDialog,
     )
   }
 }

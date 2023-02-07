@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.EventConsumer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -46,6 +45,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.MutableChangeLogDialogV
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.MutableDataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.debug.DebugComponent
+import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractor
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.LogLine
 import com.pyamsoft.pydroid.ui.internal.debug.MutableDebugViewState
@@ -65,6 +65,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnCreate
+import kotlinx.coroutines.flow.StateFlow
 
 internal interface AppComponent {
 
@@ -97,7 +98,8 @@ internal interface AppComponent {
     data class Parameters
     internal constructor(
         internal val debugPreferences: DebugPreferences,
-        internal val logLinesBus: EventConsumer<LogLine>,
+        internal val logLinesBus: StateFlow<List<LogLine>>,
+        internal val debugInteractor: DebugInteractor,
         internal val billingPreferences: BillingPreferences,
         internal val context: Context,
         internal val theming: Theming,
@@ -237,6 +239,7 @@ internal interface AppComponent {
             state = MutableDebugViewState(),
             preferences = params.debugPreferences,
             logLinesBus = params.logLinesBus,
+            interactor = params.debugInteractor,
         )
 
     private fun connectBilling(activity: FragmentActivity) {

@@ -17,9 +17,9 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.bus.EventConsumer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,8 +27,9 @@ import kotlinx.coroutines.launch
 internal class DebugViewModeler
 internal constructor(
     override val state: MutableDebugViewState,
+    private val interactor: DebugInteractor,
     private val preferences: DebugPreferences,
-    private val logLinesBus: EventConsumer<LogLine>,
+    private val logLinesBus: StateFlow<List<LogLine>>,
 ) : AbstractViewModeler<DebugViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
@@ -45,16 +46,21 @@ internal constructor(
     }
 
     scope.launch(context = Dispatchers.Main) {
-      logLinesBus.onEvent { line ->
+      logLinesBus.collectLatest { lines ->
         val isDebuggingEnabled = s.isInAppDebuggingEnabled.value
-        s.inAppDebuggingLogLines.update { lines ->
-          if (isDebuggingEnabled) {
-            lines + line
-          } else {
-            emptyList()
-          }
+        if (isDebuggingEnabled) {
+          s.inAppDebuggingLogLines.value = lines
+        } else {
+          s.inAppDebuggingLogLines.value = emptyList()
         }
       }
+    }
+  }
+
+  internal fun handleCopy(scope: CoroutineScope) {
+    scope.launch(context = Dispatchers.Main) {
+      val lines = state.inAppDebuggingLogLines.value
+      interactor.copyInAppDebugMessagesToClipboard(lines)
     }
   }
 }

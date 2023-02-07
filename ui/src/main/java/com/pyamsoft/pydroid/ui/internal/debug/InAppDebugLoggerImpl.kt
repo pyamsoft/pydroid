@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.debug
 import android.app.Application
 import android.util.Log
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.internal.debug.LogLine.Level
@@ -31,7 +30,9 @@ import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
@@ -41,7 +42,7 @@ internal constructor(
 ) : InAppDebugLogger {
 
   // Inject target
-  internal var bus: EventBus<LogLine>? = null
+  internal var bus: MutableStateFlow<MutableList<LogLine>>? = null
   internal var preferences: DebugPreferences? = null
 
   private var heldApplication: Application? = application
@@ -69,6 +70,9 @@ internal constructor(
 
       // If we are injected, let's start our listen bus
       preferences?.also { prefs ->
+        // Don't hold onto Application.Context past what we need it for
+        heldApplication = null
+
         preferenceListenJob?.cancel()
         preferenceListenJob =
             scope.launch(context = Dispatchers.Main) {
@@ -86,20 +90,10 @@ internal constructor(
     bus?.also { b ->
       scope.launch(context = Dispatchers.IO) {
         if (isLoggingEnabled) {
-          b.send(LogLine(level, line, throwable))
+          b.update { lines -> lines.apply { add(LogLine(level, line, throwable)) } }
         }
       }
     }
-  }
-
-  private fun inject() {
-    val a = heldApplication
-    if (a != null) {
-      injectPYDroid(a)
-    }
-
-    // Don't hold onto Application.Context past what we need it for
-    heldApplication = null
   }
 
   private fun log(
@@ -108,8 +102,8 @@ internal constructor(
       message: String,
       throwable: Throwable?,
   ) {
-    inject()
-    val logTag = if (tag.isBlank()) "" else "[${tag}] "
+    heldApplication?.also { injectPYDroid(it) }
+    val logTag = if (tag.isBlank()) "" else "$tag "
     publishLog(level, "${logTag}$message", throwable)
   }
 
@@ -119,7 +113,7 @@ internal constructor(
       message: String,
       throwable: Throwable?,
   ) {
-    val t = tag.orEmpty().ifBlank { "InAppDebugLogger" }
+    val t = tag.orEmpty()
     when (priority) {
       Log.ASSERT -> Log.wtf(t, message)
       Log.ERROR -> log(ERROR, t, message, throwable)

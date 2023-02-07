@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.debug
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,12 +25,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.window.Dialog
@@ -65,6 +72,8 @@ internal fun InAppDebugDialog(
   val component = rememberComposableInjector { DebugInjector() }
   val viewModel = rememberNotNull(component.viewModel)
 
+  val scope = rememberCoroutineScope()
+
   MountHooks(
       viewModel = viewModel,
   )
@@ -75,6 +84,7 @@ internal fun InAppDebugDialog(
       modifier = modifier,
       state = viewModel.state,
       onDismiss = onDismiss,
+      onCopy = { viewModel.handleCopy(scope = scope) },
   )
 }
 
@@ -83,9 +93,18 @@ private fun InAppDebugScreen(
     modifier: Modifier = Modifier,
     state: DebugViewState,
     onDismiss: () -> Unit,
+    onCopy: () -> Unit,
 ) {
   val isEnabled by state.isInAppDebuggingEnabled.collectAsState()
   val lines = state.inAppDebuggingLogLines.collectAsStateList()
+
+  val snackbarHostState = remember { SnackbarHostState() }
+  val (copied, setCopied) = remember { mutableStateOf(false) }
+
+  val handleCopied = {
+    onCopy()
+    setCopied(true)
+  }
 
   Dialog(
       properties = rememberDialogProperties(),
@@ -100,7 +119,8 @@ private fun InAppDebugScreen(
           onClose = onDismiss,
       )
       Surface(
-          modifier = Modifier.fillMaxWidth().weight(1F),
+          modifier =
+              Modifier.fillMaxWidth().weight(1F).clickable(enabled = isEnabled) { handleCopied() },
           elevation = DialogDefaults.Elevation,
           shape =
               MaterialTheme.shapes.medium.copy(
@@ -121,7 +141,19 @@ private fun InAppDebugScreen(
             ) { line ->
               Text(
                   modifier = Modifier.fillMaxWidth(),
-                  text = line.line,
+                  text =
+                      remember(line) {
+                        val level =
+                            when (line.level) {
+                              DEBUG -> "[D]"
+                              WARNING -> "[W]"
+                              ERROR -> "[E]"
+                            }
+
+                        val errorMessage =
+                            if (line.throwable == null) "" else line.throwable.message.orEmpty()
+                        return@remember "$level ${line.line} $errorMessage"
+                      },
                   style =
                       MaterialTheme.typography.body2.copy(
                           fontFamily = FontFamily.Monospace,
@@ -143,8 +175,38 @@ private fun InAppDebugScreen(
               )
             }
           }
+
+          item {
+            LogLinesCopied(
+                snackbarHostState = snackbarHostState,
+                show = copied,
+                onSnackbarDismissed = { setCopied(false) })
+          }
         }
       }
+    }
+  }
+}
+
+@Composable
+private fun LogLinesCopied(
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
+    show: Boolean,
+    onSnackbarDismissed: () -> Unit,
+) {
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHostState,
+  )
+
+  if (show) {
+    LaunchedEffect(Unit) {
+      snackbarHostState.showSnackbar(
+          message = "Developer Log Copied",
+          duration = SnackbarDuration.Short,
+      )
+      onSnackbarDismissed()
     }
   }
 }

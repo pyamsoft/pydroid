@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
+import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractorImpl
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
 import com.pyamsoft.pydroid.ui.internal.debug.LogLine
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
@@ -41,6 +42,7 @@ import com.pyamsoft.pydroid.ui.theme.ThemingImpl
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 internal interface PYDroidComponent {
@@ -97,9 +99,12 @@ internal interface PYDroidComponent {
     private val preferences by
         lazy(NONE) { PYDroidPreferencesImpl(params.application, params.version) }
 
-    private val logLinesBus by lazy(NONE) { EventBus.create<LogLine>() }
+    private val logLinesBus by
+        lazy(NONE) { MutableStateFlow<MutableList<LogLine>>(mutableListOf()) }
 
     private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
+
+    private val debugInteractor by lazy(NONE) { DebugInteractorImpl(params.application) }
 
     private val dataPolicyModule by
         lazy(NONE) {
@@ -141,6 +146,7 @@ internal interface PYDroidComponent {
               billingPreferences = preferences,
               debugPreferences = preferences,
               logLinesBus = logLinesBus,
+              debugInteractor = debugInteractor,
           )
         }
 

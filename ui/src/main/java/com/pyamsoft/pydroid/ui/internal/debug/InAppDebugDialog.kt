@@ -136,6 +136,18 @@ private fun InAppDebugScreen(
             if (isEnabled) {
               extraContent()
 
+              item {
+                Text(
+                    text = "Logs",
+                    style =
+                        MaterialTheme.typography.caption.copy(
+                            color =
+                                MaterialTheme.colors.onSurface.copy(
+                                    alpha = ContentAlpha.disabled,
+                                ),
+                        ),
+                )
+              }
               items(
                   items = sortedLines,
                   key = { it.timestamp.toString() },

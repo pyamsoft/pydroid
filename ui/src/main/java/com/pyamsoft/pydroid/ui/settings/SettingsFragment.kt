@@ -23,8 +23,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.Dp
 import androidx.fragment.app.Fragment
@@ -64,6 +64,9 @@ public abstract class SettingsFragment : Fragment() {
   /** Override this method to add additional margin to the top settings item */
   @Composable @CheckResult protected abstract fun customBottomItemMargin(): Dp
 
+  /** Override this method to add additional developer mode content to the dialog */
+  protected abstract fun LazyListScope.extraDebugContent()
+
   /** Override this method to add additional margin to the top settings item */
   @Composable
   @CheckResult
@@ -93,6 +96,7 @@ public abstract class SettingsFragment : Fragment() {
               customTopItemMargin = customTopItemMargin(),
               customBottomItemMargin = customBottomItemMargin(),
               customElevation = customElevation(),
+              extraDebugContent = { extraDebugContent() },
           )
         }
       }

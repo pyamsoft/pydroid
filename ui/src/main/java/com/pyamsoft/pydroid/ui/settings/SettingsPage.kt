@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -76,6 +77,7 @@ public fun SettingsPage(
     customTopItemMargin: Dp = ZeroSize,
     customBottomItemMargin: Dp = ZeroSize,
     customElevation: Dp = ZeroElevation,
+    extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   val activity = rememberActivity()
   val scope = rememberCoroutineScope()
@@ -169,6 +171,7 @@ public fun SettingsPage(
       onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled(scope = scope) },
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
+      extraDebugContent = extraDebugContent,
   )
 }
 
@@ -210,6 +213,7 @@ private fun SettingsContent(
     onDismissResetDialog: () -> Unit,
     onDismissDataPolicyDialog: () -> Unit,
     onDismissInAppDebuggingDialog: () -> Unit,
+    extraDebugContent: LazyListScope.() -> Unit,
 ) {
   val showResetDialog by state.isShowingResetDialog.collectAsState()
   val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsState()
@@ -281,6 +285,7 @@ private fun SettingsContent(
   if (showInAppDebuggingDialog) {
     InAppDebugDialog(
         onDismiss = onDismissInAppDebuggingDialog,
+        extraContent = extraDebugContent,
     )
   }
 }

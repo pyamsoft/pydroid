@@ -17,20 +17,12 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,9 +42,7 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
+import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.*
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
@@ -71,6 +61,7 @@ private fun MountHooks(
 internal fun InAppDebugDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
+    extraContent: LazyListScope.() -> Unit,
 ) {
   val component = rememberComposableInjector { DebugInjector() }
   val viewModel = rememberNotNull(component.viewModel)
@@ -86,6 +77,7 @@ internal fun InAppDebugDialog(
   InAppDebugScreen(
       modifier = modifier,
       state = viewModel.state,
+      extraContent = extraContent,
       onDismiss = onDismiss,
       onCopy = { viewModel.handleCopy(scope = scope) },
   )
@@ -97,6 +89,7 @@ private fun InAppDebugScreen(
     state: DebugViewState,
     onDismiss: () -> Unit,
     onCopy: () -> Unit,
+    extraContent: LazyListScope.() -> Unit = {},
 ) {
   val isEnabled by state.isInAppDebuggingEnabled.collectAsState()
   val lines = state.inAppDebuggingLogLines.collectAsStateList()
@@ -141,6 +134,8 @@ private fun InAppDebugScreen(
               modifier = Modifier.fillMaxSize(),
           ) {
             if (isEnabled) {
+              extraContent()
+
               items(
                   items = sortedLines,
                   key = { it.timestamp.toString() },

@@ -22,15 +22,14 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
-import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.*
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.LazyThreadSafetyMode.NONE
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
 internal class InAppDebugLoggerImpl
@@ -135,9 +134,9 @@ internal constructor(
     val t = tag.orEmpty()
     when (priority) {
       Log.ASSERT,
-      Log.ERROR -> log(ERROR, t, message, throwable)
-      Log.WARN -> log(WARNING, t, message, throwable)
-      else -> log(DEBUG, t, message, throwable)
+      Log.ERROR -> log(Level.ERROR, t, message, throwable)
+      Log.WARN -> log(Level.WARNING, t, message, throwable)
+      else -> log(Level.DEBUG, t, message, throwable)
     }
   }
 }

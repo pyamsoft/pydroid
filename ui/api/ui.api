@@ -375,8 +375,10 @@ public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/Composable
 public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {
@@ -559,6 +561,7 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 	protected abstract fun customPostPreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	protected abstract fun customPrePreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	protected abstract fun customTopItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
+	protected abstract fun extraDebugContent (Landroidx/compose/foundation/lazy/LazyListScope;)V
 	protected abstract fun getHideClearAll ()Z
 	protected abstract fun getHideUpgradeInformation ()Z
 	public fun onConfigurationChanged (Landroid/content/res/Configuration;)V
@@ -567,7 +570,7 @@ public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androi
 }
 
 public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
-	public static final fun SettingsPage-7LSsfP0 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/snapshots/SnapshotStateList;FFFLandroidx/compose/runtime/Composer;II)V
+	public static final fun SettingsPage-IBxwOmc (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/snapshots/SnapshotStateList;FFFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {

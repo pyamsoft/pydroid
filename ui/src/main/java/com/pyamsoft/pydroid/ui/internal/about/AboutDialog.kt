@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
@@ -70,9 +72,11 @@ internal fun AboutDialog(
 
   val uriHandler = LocalUriHandler.current
 
-  val handleDismissFailedNavigation = { viewModel.handleDismissFailedNavigation() }
+  val handleDismissFailedNavigation by rememberUpdatedState {
+    viewModel.handleDismissFailedNavigation()
+  }
 
-  val handleOpenPage = { url: String ->
+  val handleOpenPage by rememberUpdatedState { url: String ->
     handleDismissFailedNavigation()
 
     try {
@@ -95,7 +99,7 @@ internal fun AboutDialog(
         state = viewModel.state,
         onViewHomePage = { handleOpenPage(it.libraryUrl) },
         onViewLicense = { handleOpenPage(it.licenseUrl) },
-        onNavigationErrorDismissed = handleDismissFailedNavigation,
+        onNavigationErrorDismissed = { handleDismissFailedNavigation() },
         onClose = onDismiss,
     )
   }

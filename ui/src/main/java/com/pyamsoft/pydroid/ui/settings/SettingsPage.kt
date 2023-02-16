@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -91,7 +92,7 @@ public fun SettingsPage(
   val changeLogViewModel = rememberNotNull(component.changeLogViewModel)
   val billingViewModel = rememberNotNull(component.billingViewModel)
 
-  val handleOpenPage = { url: String ->
+  val handleOpenPage by rememberUpdatedState { url: String ->
     try {
       uriHandler.openUri(url)
     } catch (e: Throwable) {

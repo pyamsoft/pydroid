@@ -401,15 +401,11 @@ public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
-public final class com/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSingletons$VersionUpgradeScreenKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/upgrade/ComposableSingletons$VersionUpgradeScreenKt;
+public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$DismissableInterruptCardKt {
@@ -653,11 +649,11 @@ public final class com/pyamsoft/pydroid/ui/util/StabilizedKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {
-	public abstract fun getAvailableUpdateVersionCode ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun getLauncher ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun getUpdateProgressPercent ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun isCheckingForUpdate ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun isUpdateReadyToInstall ()Lkotlinx/coroutines/flow/StateFlow;
-	public abstract fun isUpgradeDialogShowing ()Lkotlinx/coroutines/flow/StateFlow;
+	public abstract fun isUpgraded ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState : java/lang/Enum {
@@ -684,7 +680,7 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Compani
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
-	public final fun Render (Lkotlin/jvm/functions/Function4;Landroidx/compose/runtime/Composer;I)V
+	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;

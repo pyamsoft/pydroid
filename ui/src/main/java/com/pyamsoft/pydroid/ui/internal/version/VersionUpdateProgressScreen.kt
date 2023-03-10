@@ -126,9 +126,9 @@ private fun PreviewVersionCheckFull() {
 @Preview
 @Composable
 private fun PreviewVersionCheckOverflow() {
-    PreviewVersionUpdateProgress(
-        state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 2.00F },
-    )
+  PreviewVersionUpdateProgress(
+      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 2.00F },
+  )
 }
 
 @Preview

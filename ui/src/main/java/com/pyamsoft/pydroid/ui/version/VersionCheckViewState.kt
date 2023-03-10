@@ -38,7 +38,10 @@ public interface VersionCheckViewState : UiViewState {
   /** If an upload is downloading, how close are we to done? */
   public val updateProgressPercent: StateFlow<Float>
 
-  /** Has the upgrade completion been triggered (in production, the app closes, this is just to guard double-clicks) */
+  /**
+   * Has the upgrade completion been triggered (in production, the app closes, this is just to guard
+   * double-clicks)
+   */
   public val isUpgraded: StateFlow<Boolean>
 
   @Stable

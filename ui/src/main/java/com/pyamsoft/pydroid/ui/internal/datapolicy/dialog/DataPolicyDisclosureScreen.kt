@@ -245,6 +245,8 @@ private fun NavigationError(
           message = error.message ?: "An unexpected error occurred",
           duration = SnackbarDuration.Long,
       )
+
+      // We ignore the showSnackbar result because we don't care (no actions)
       onSnackbarDismissed()
     }
   }

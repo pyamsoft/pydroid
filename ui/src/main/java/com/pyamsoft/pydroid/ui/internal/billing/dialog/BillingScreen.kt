@@ -192,6 +192,8 @@ private fun BillingError(
           message = if (message.isNullOrBlank()) "An unexpected error occurred" else message,
           duration = SnackbarDuration.Short,
       )
+
+      // We ignore the showSnackbar result because we don't care (no actions)
       onSnackbarDismissed()
     }
   }

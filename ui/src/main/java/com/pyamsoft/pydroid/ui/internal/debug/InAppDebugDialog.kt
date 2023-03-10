@@ -233,6 +233,8 @@ private fun LogLinesCopied(
           message = "Developer Log Copied",
           duration = SnackbarDuration.Short,
       )
+
+      // We ignore the showSnackbar result because we don't care (no actions)
       onSnackbarDismissed()
     }
   }

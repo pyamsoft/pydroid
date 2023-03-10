@@ -19,23 +19,25 @@ package com.pyamsoft.pydroid.ui.version
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeAvailableScreen
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeCompleteScreen
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
+/** Upon download action started, this callback will run */
+public typealias OnUpdateDownloadStartedCallback = (AppUpdateLauncher) -> Unit
 
 /** Upon upgrade action started, this callback will run */
 public typealias OnUpgradeStartedCallback = () -> Unit
@@ -44,6 +46,7 @@ public typealias OnUpgradeStartedCallback = () -> Unit
 public typealias VersionUpgradeWidget =
     (
         VersionCheckViewState,
+        OnUpdateDownloadStartedCallback,
         OnUpgradeStartedCallback,
     ) -> Unit
 
@@ -81,20 +84,6 @@ internal constructor(
                     .handleCheckForUpdates(
                         scope = owner.lifecycleScope,
                         force = false,
-                        onLaunchUpdate = { launcher ->
-                          // This will pop the in-app update dialog open. We should instead set a
-                          // flag
-                          // which displays some non-intrusive in-app UI via InterruptCard
-
-                          // Don't use scope since if this leaves Composition it would die
-                          // Enforce that we do this on the Main thread
-                          activity.lifecycleScope.launch(context = Dispatchers.Main) {
-                            launcher
-                                .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
-                                .onSuccess { Logger.d("Launched an in-app update flow") }
-                                .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
-                          }
-                        },
                     )
               }
             }
@@ -107,26 +96,6 @@ internal constructor(
     activity.doOnDestroy {
       hostingActivity = null
       viewModel = null
-    }
-  }
-
-  @Composable
-  private fun RenderContent(
-      state: VersionCheckViewState,
-      onDismissDialog: () -> Unit,
-      content: @Composable () -> Unit,
-  ) {
-    val showDialog by state.isUpgradeDialogShowing.collectAsState()
-    val isUpdateReady by state.isUpdateReadyToInstall.collectAsState()
-
-    content()
-
-    if (showDialog && isUpdateReady) {
-      val newVersionCode by state.availableUpdateVersionCode.collectAsState()
-      VersionUpgradeDialog(
-          newVersionCode = newVersionCode,
-          onDismiss = onDismissDialog,
-      )
     }
   }
 
@@ -146,12 +115,35 @@ internal constructor(
     val vm = viewModel.requireNotNull()
     val state = vm.state
 
-    RenderContent(
-        state = state,
-        onDismissDialog = { vm.handleCloseDialog() },
-    ) {
-      content(state) { vm.handleOpenDialog() }
-    }
+    content(
+        state,
+        { launcher ->
+          // We expect to have an Activity mounted here
+          val a = hostingActivity.requireNotNull()
+
+          // Don't use scope since if this leaves Composition it would die
+          // Enforce that we do this on the Main thread
+          a.lifecycleScope.launch(context = Dispatchers.Main) {
+            launcher
+                .update(a, VersionCheckViewModeler.RC_APP_UPDATE)
+                .onSuccess { Logger.d("Launched an in-app update flow") }
+                .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
+          }
+        },
+        {
+          // We expect to have an Activity mounted here
+          val a = hostingActivity.requireNotNull()
+
+          // Fire the upgrade (in prod, this closes the app)
+          vm.handleCompleteUpgrade(
+              scope = a.lifecycleScope,
+              onUpgradeCompleted = {
+                Logger.d("Upgrade completed, finish Activity")
+                a.finish()
+              },
+          )
+        },
+    )
   }
 
   /** Render into a composable the default version check screen upsell */
@@ -159,11 +151,17 @@ internal constructor(
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
   ) {
-    Render { state, onUpgradeStarted ->
+    Render { state, onDownloadStarted, onUpgradeStarted ->
       VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,
-          onUpgrade = onUpgradeStarted,
+          onBeginInAppUpdate = onDownloadStarted,
+      )
+
+      VersionUpgradeCompleteScreen(
+          modifier = modifier,
+          state = state,
+          onCompleteUpdate = onUpgradeStarted,
       )
     }
   }

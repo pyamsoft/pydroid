@@ -59,8 +59,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.MutableVersionUpgradeViewState
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
@@ -82,8 +80,6 @@ internal interface AppComponent {
   @CheckResult fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
 
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
-
-  @CheckResult fun plusVersionUpgrade(): VersionUpgradeComponent.Factory
 
   @CheckResult fun plusSettings(): SettingsComponent.Factory
 
@@ -209,13 +205,6 @@ internal interface AppComponent {
             state = MutableChangeLogDialogViewState(),
         )
 
-    private val versionUpgradeParams =
-        VersionUpgradeComponent.Factory.Parameters(
-            module = versionModule,
-            composeTheme = params.composeTheme,
-            state = MutableVersionUpgradeViewState(params.version),
-        )
-
     private val versionCheckParams =
         VersionCheckComponent.Factory.Parameters(
             module = versionModule,
@@ -304,10 +293,6 @@ internal interface AppComponent {
                   disabled = options.disableVersionCheck,
               ),
       )
-    }
-
-    override fun plusVersionUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(versionUpgradeParams)
     }
 
     override fun plusBillingDialog(): BillingDialogComponent.Factory {

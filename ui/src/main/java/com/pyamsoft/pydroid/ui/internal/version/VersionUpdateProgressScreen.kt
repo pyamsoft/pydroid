@@ -42,7 +42,8 @@ internal fun VersionUpdateProgressScreen(
   val isUpgradeReady by state.isUpdateReadyToInstall.collectAsState()
   val progress by state.updateProgressPercent.collectAsState()
 
-  val validProgress = remember(progress) { if (progress.isNaN()) 0F else progress }
+  val validProgress =
+      remember(progress) { if (progress.isNaN()) 0F else progress.coerceAtMost(1.0F) }
 
   val isVisible =
       remember(
@@ -60,10 +61,10 @@ internal fun VersionUpdateProgressScreen(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       Text(
-          modifier = Modifier.padding(bottom = MaterialTheme.keylines.typography),
+          modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
           text = "Downloading Update...",
           style =
-              MaterialTheme.typography.caption.copy(
+              MaterialTheme.typography.body2.copy(
                   color =
                       MaterialTheme.colors.primary.copy(
                           alpha = ContentAlpha.medium,
@@ -120,6 +121,14 @@ private fun PreviewVersionCheckFull() {
   PreviewVersionUpdateProgress(
       state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 1.00F },
   )
+}
+
+@Preview
+@Composable
+private fun PreviewVersionCheckOverflow() {
+    PreviewVersionUpdateProgress(
+        state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 2.00F },
+    )
 }
 
 @Preview

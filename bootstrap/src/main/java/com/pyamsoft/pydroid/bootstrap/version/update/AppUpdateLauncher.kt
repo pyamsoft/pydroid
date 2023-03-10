@@ -31,16 +31,13 @@ public interface AppUpdateLauncher {
 
   public companion object {
 
-    /** When we have no valid update, like an empty update */
-    public const val NO_VALID_UPDATE_VERSION: Int = -1
-
     /** Create a no-op update launcher */
     @JvmStatic
     @CheckResult
     public fun empty(): AppUpdateLauncher {
       return object : AppUpdateLauncher {
 
-        override fun availableUpdateVersion(): Int = NO_VALID_UPDATE_VERSION
+        override fun availableUpdateVersion(): Int = 0
 
         override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> {
           return ResultWrapper.success(Unit)

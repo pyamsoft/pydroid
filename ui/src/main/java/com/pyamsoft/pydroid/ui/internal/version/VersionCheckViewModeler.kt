@@ -56,12 +56,12 @@ internal constructor(
               s.updateProgressPercent.value = percent
             } else {
               Logger.w("Download marks progress, but update is ready to install: $percent")
+              s.updateProgressPercent.value = 1F
             }
           },
           onDownloadCompleted = {
             Logger.d("App update download ready!")
             s.isUpdateReadyToInstall.value = true
-            s.updateProgressPercent.value = 0F
             onUpgradeReady()
           },
       )
@@ -71,9 +71,13 @@ internal constructor(
   internal fun handleCheckForUpdates(
       scope: CoroutineScope,
       force: Boolean,
-      onLaunchUpdate: (AppUpdateLauncher) -> Unit,
   ) {
     val s = state
+
+    if (s.launcher.value != null) {
+      Logger.d("Launcher is already available, do not check for update again")
+      return
+    }
 
     if (s.isUpdateReadyToInstall.value) {
       Logger.d("Update is already ready to install, do not check for update again")
@@ -91,23 +95,29 @@ internal constructor(
       checkUpdateRunner
           .call(force)
           .onSuccess { Logger.d("Update data found as: $it") }
-          .onSuccess { s.availableUpdateVersionCode.value = it.availableUpdateVersion() }
-          .onSuccess(onLaunchUpdate)
+          .onSuccess { s.launcher.value = it }
           .onFailure { Logger.e(it, "Error checking for latest version") }
-          .onFailure {
-            s.availableUpdateVersionCode.value = AppUpdateLauncher.NO_VALID_UPDATE_VERSION
-          }
+          .onFailure { s.launcher.value = null }
           .onFinally { Logger.d("Done checking for updates") }
           .onFinally { s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.DONE }
     }
   }
 
-  internal fun handleOpenDialog() {
-    state.isUpgradeDialogShowing.value = true
-  }
+  internal fun handleCompleteUpgrade(
+      scope: CoroutineScope,
+      onUpgradeCompleted: () -> Unit,
+  ) {
+    if (state.isUpgraded.value) {
+      Logger.w("Already upgraded, do nothing")
+      return
+    }
 
-  internal fun handleCloseDialog() {
-    state.isUpgradeDialogShowing.value = false
+    state.isUpgraded.value = true
+    scope.launch(context = Dispatchers.Main) {
+      Logger.d("Updating app, restart via update manager!")
+      interactor.completeUpdate()
+      onUpgradeCompleted()
+    }
   }
 
   companion object {

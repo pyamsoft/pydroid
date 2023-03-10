@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
@@ -30,25 +31,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
-internal fun VersionUpgradeAvailableScreen(
+internal fun VersionUpgradeCompleteScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
-    onBeginInAppUpdate: (AppUpdateLauncher) -> Unit,
+    onCompleteUpdate: () -> Unit,
 ) {
   val launcher by state.launcher.collectAsState()
-  val progress by state.updateProgressPercent.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
 
-  // Show if we have a launcher but its not done downloading the update yet
+  // Show once the upgrade is ready
   InterruptCard(
       modifier = modifier,
-      visible = !isReady && launcher != null && progress <= 0,
+      visible = isReady && launcher != null,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -58,9 +57,9 @@ internal fun VersionUpgradeAvailableScreen(
             launcher.let { l ->
               if (l == null) {
                 // Should basically never happen
-                "A new in-app update is available!"
+                "Your in-app update is ready!"
               } else {
-                "A new in-app update to version ${l.availableUpdateVersion()} is available!"
+                "Your in-app update to version ${l.availableUpdateVersion()} is ready!"
               }
             }
           }
@@ -73,12 +72,24 @@ internal fun VersionUpgradeAvailableScreen(
               ),
       )
 
+      Text(
+          modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
+          text = "Completing the in-app update will close and restart this app.",
+          style =
+              MaterialTheme.typography.caption.copy(
+                  color =
+                      MaterialTheme.colors.primary.copy(
+                          alpha = ContentAlpha.medium,
+                      ),
+              ),
+      )
+
       OutlinedButton(
           modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-          onClick = { onBeginInAppUpdate(launcher.requireNotNull()) },
+          onClick = onCompleteUpdate,
       ) {
         Text(
-            text = "Download",
+            text = "Complete Update",
         )
       }
     }
@@ -86,37 +97,37 @@ internal fun VersionUpgradeAvailableScreen(
 }
 
 @Composable
-private fun PreviewVersionUpgradeAvailableScreen(
+private fun PreviewVersionUpgradeCompleteScreen(
     state: MutableVersionCheckViewState,
 ) {
   Surface {
-    VersionUpgradeAvailableScreen(
+    VersionUpgradeCompleteScreen(
         state = state,
-        onBeginInAppUpdate = {},
+        onCompleteUpdate = {},
     )
   }
 }
 
 @Preview
 @Composable
-private fun PreviewVersionCheckScreenAvailable() {
-  PreviewVersionUpgradeAvailableScreen(
+private fun PreviewVersionUpgradeCompleteScreen() {
+  PreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
             launcher.value = AppUpdateLauncher.empty()
-            isUpdateReadyToInstall.value = false
+            isUpdateReadyToInstall.value = true
           },
   )
 }
 
 @Preview
 @Composable
-private fun PreviewVersionCheckScreenNotAvailable() {
-  PreviewVersionUpgradeAvailableScreen(
+private fun PreviewVersionUpgradeCompleteScreenNoLauncher() {
+  PreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
             launcher.value = null
-            isUpdateReadyToInstall.value = false
+            isUpdateReadyToInstall.value = true
           },
   )
 }

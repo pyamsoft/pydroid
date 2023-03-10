@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.ZeroSize
@@ -49,15 +48,12 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 private fun MountHooks(
@@ -130,20 +126,6 @@ public fun SettingsPage(
           versionViewModel.handleCheckForUpdates(
               scope = scope,
               force = true,
-              onLaunchUpdate = { launcher ->
-                // Mark the dialog as open, so that once the update data is fully downloaded it
-                // will pop up on screen
-                versionViewModel.handleOpenDialog()
-
-                // Don't use scope since if this leaves Composition it would die
-                // Enforce that we do this on the Main thread
-                activity.lifecycleScope.launch(context = Dispatchers.Main) {
-                  launcher
-                      .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
-                      .onSuccess { Logger.d("Launched an in-app update flow") }
-                      .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
-                }
-              },
           )
         }
       },

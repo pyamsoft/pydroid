@@ -45,10 +45,13 @@ internal fun VersionUpgradeAvailableScreen(
   val progress by state.updateProgressPercent.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
 
+  val isUpdateAvailable =
+      remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
+
   // Show if we have a launcher but its not done downloading the update yet
   InterruptCard(
       modifier = modifier,
-      visible = !isReady && launcher != null && progress <= 0,
+      visible = !isReady && progress <= 0 && isUpdateAvailable,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),

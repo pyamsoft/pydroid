@@ -21,6 +21,7 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
@@ -64,7 +65,13 @@ internal constructor(
     self.downloadCompletes()
   }
 
-  override fun availableUpdateVersion(): Int = info.availableVersionCode()
+  override fun availableUpdateVersion(): Int {
+    return if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+      info.availableVersionCode()
+    } else {
+      0
+    }
+  }
 
   override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {

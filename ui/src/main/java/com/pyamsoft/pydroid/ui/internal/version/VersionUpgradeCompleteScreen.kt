@@ -44,10 +44,13 @@ internal fun VersionUpgradeCompleteScreen(
   val launcher by state.launcher.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
 
+  val isUpdateAvailable =
+      remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
+
   // Show once the upgrade is ready
   InterruptCard(
       modifier = modifier,
-      visible = isReady && launcher != null,
+      visible = isReady && isUpdateAvailable,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),

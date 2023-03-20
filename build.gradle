@@ -24,7 +24,7 @@ buildscript {
 
     // Us (pyamsoft libraries)
     // -SNAPSHOT versions are not published yet and must be built locally
-    cachify = "0.2.0"
+    cachify = "0.2.1"
     highlander = "0.2.1"
 
     // Kotlin

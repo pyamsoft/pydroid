@@ -44,7 +44,7 @@ buildscript {
     // AndroidX
     annotation = "1.6.0"
     core = "1.9.0"
-    lifecycle = "2.6.0"
+    lifecycle = "2.6.1"
     fragment = "1.5.5"
     startup = "1.1.1"
     appCompat = "1.6.1"

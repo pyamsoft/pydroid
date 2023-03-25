@@ -28,7 +28,4 @@ dependencies {
 
   // Expose coroutines
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
-
-  // Kotlin
-  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

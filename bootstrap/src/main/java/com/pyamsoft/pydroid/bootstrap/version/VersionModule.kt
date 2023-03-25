@@ -25,8 +25,8 @@ import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.ThreadEnforcer
-import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit.MINUTES
+import kotlinx.coroutines.Dispatchers
 
 /** In-App update module */
 public class VersionModule(params: Parameters) {

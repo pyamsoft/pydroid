@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
@@ -212,6 +213,10 @@ internal interface PYDroidComponent {
 
                     override fun theming(): Theming {
                       return theming
+                    }
+
+                    override fun enforcer(): ThreadEnforcer {
+                      return enforcer
                     }
                   }
                 }

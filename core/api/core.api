@@ -4,6 +4,10 @@ public final class com/pyamsoft/pydroid/core/Enforcer {
 	public final fun assertOnMainThread ()V
 }
 
+public final class com/pyamsoft/pydroid/core/EnforcerKt {
+	public static final fun createThreadEnforcer (Z)Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
+}
+
 public final class com/pyamsoft/pydroid/core/Logger {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/core/Logger;
 	public final fun d (Ljava/lang/String;[Ljava/lang/Object;)V
@@ -51,5 +55,10 @@ public final class com/pyamsoft/pydroid/core/ResultWrapper {
 public final class com/pyamsoft/pydroid/core/ResultWrapper$Companion {
 	public final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
 	public final fun success (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
+}
+
+public abstract interface class com/pyamsoft/pydroid/core/ThreadEnforcer {
+	public abstract fun assertOffMainThread ()V
+	public abstract fun assertOnMainThread ()V
 }
 

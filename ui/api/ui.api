@@ -3,6 +3,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider$Modules {
+	public abstract fun enforcer ()Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
 	public abstract fun imageLoader ()Lcoil/ImageLoader;
 	public abstract fun theming ()Lcom/pyamsoft/pydroid/ui/theme/Theming;
 }
@@ -636,16 +637,6 @@ public final class com/pyamsoft/pydroid/ui/util/RememberKt {
 	public static final fun rememberAsStateMap (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/util/Stabilized {
-	public abstract fun getData ()Ljava/lang/Object;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/StabilizedKt {
-	public static final fun rememberStable (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
-	public static final fun stabilize (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
-	public static final fun stabilized (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/ui/util/Stabilized;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckViewState : com/pyamsoft/pydroid/arch/UiViewState {

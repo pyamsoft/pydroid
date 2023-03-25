@@ -29,7 +29,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
@@ -117,8 +116,6 @@ internal fun BillingDialog(
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google
           activity.lifecycleScope.launch(context = Dispatchers.Main) {
-            Enforcer.assertOnMainThread()
-
             Logger.d("Start purchase flow for $sku")
             purchaseClient.requireNotNull().purchase(activity, sku)
           }

@@ -24,8 +24,9 @@ import com.pyamsoft.cachify.storage.MemoryCacheStorage
 import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ResultWrapper
-import java.util.concurrent.TimeUnit.MINUTES
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import kotlinx.coroutines.Dispatchers
+import java.util.concurrent.TimeUnit.MINUTES
 
 /** In-App update module */
 public class VersionModule(params: Parameters) {
@@ -35,10 +36,12 @@ public class VersionModule(params: Parameters) {
   init {
     val updater =
         PlayStoreAppUpdater(
-            params.context.applicationContext,
-            params.version,
-            params.isFakeUpgradeAvailable,
+            enforcer = params.enforcer,
+            context = params.context.applicationContext,
+            version = params.version,
+            isFakeUpgradeAvailable = params.isFakeUpgradeAvailable,
         )
+
     val network = VersionInteractorNetwork(updater)
     impl = VersionInteractorImpl(network, createCache(network))
   }
@@ -75,6 +78,7 @@ public class VersionModule(params: Parameters) {
   public constructor(
       internal val context: Context,
       internal val version: Int,
+      internal val enforcer: ThreadEnforcer,
 
       /** If this field is set, the version module will always deliver an update */
       internal val isFakeUpgradeAvailable: Boolean = false,

@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,7 +33,6 @@ internal constructor(
       onDownloadCompleted: () -> Unit
   ) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
         return@withContext networkInteractor.watchDownloadStatus(
             onDownloadProgress = onDownloadProgress,
             onDownloadCompleted = onDownloadCompleted,
@@ -43,19 +41,14 @@ internal constructor(
 
   override suspend fun completeUpdate() =
       withContext(context = Dispatchers.Main) {
-        Enforcer.assertOnMainThread()
         return@withContext networkInteractor.completeUpdate()
       }
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
         return@withContext updateCache.call()
       }
 
   override suspend fun invalidateVersion() =
-      withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-        updateCache.clear()
-      }
+      withContext(context = Dispatchers.IO) { updateCache.clear() }
 }

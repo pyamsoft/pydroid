@@ -21,8 +21,8 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
@@ -42,6 +42,7 @@ import kotlinx.coroutines.withContext
 
 internal class PYDroidPreferencesImpl
 internal constructor(
+    enforcer: ThreadEnforcer,
     context: Context,
     private val versionCode: Int,
 ) :
@@ -54,7 +55,7 @@ internal constructor(
   private val darkModeKey = context.getString(R.string.dark_mode_key)
 
   private val prefs by lazy {
-    Enforcer.assertOffMainThread()
+    enforcer.assertOffMainThread()
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
@@ -64,11 +65,7 @@ internal constructor(
       threshold: Int,
   ): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        val countFlow = prefs.intFlow(key, defaultValue)
-
-        return@withContext countFlow.map { it >= threshold }
+        prefs.intFlow(key, defaultValue).map { it >= threshold }
       }
 
   private suspend fun incrementToThreshold(
@@ -77,8 +74,6 @@ internal constructor(
       threshold: Int,
   ) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         val currentCount = prefs.getInt(key, defaultValue)
         if (currentCount < threshold) {
           prefs.edit { putInt(key, currentCount + 1) }
@@ -87,9 +82,7 @@ internal constructor(
 
   override suspend fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext prefs.booleanFlow(
+        prefs.booleanFlow(
             KEY_IN_APP_DEBUGGING,
             DEFAULT_IN_APP_DEBUGGING_ENABLED,
         )
@@ -97,16 +90,12 @@ internal constructor(
 
   override suspend fun setInAppDebuggingEnabled(enabled: Boolean) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         prefs.edit { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
       }
 
   override suspend fun listenForBillingUpsellChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext listenForThreshold(
+        listenForThreshold(
             KEY_BILLING_SHOW_UPSELL_COUNT,
             DEFAULT_BILLING_SHOW_UPSELL_COUNT,
             VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
@@ -115,8 +104,6 @@ internal constructor(
 
   override suspend fun maybeShowBillingUpsell() =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         incrementToThreshold(
             KEY_BILLING_SHOW_UPSELL_COUNT,
             DEFAULT_BILLING_SHOW_UPSELL_COUNT,
@@ -126,8 +113,6 @@ internal constructor(
 
   override suspend fun resetBillingShown() =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         prefs.edit {
           putInt(
               KEY_BILLING_SHOW_UPSELL_COUNT,
@@ -138,9 +123,7 @@ internal constructor(
 
   override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext prefs
+        prefs
             .intFlow(
                 LAST_SHOWN_CHANGELOG,
                 DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
@@ -157,16 +140,12 @@ internal constructor(
 
   override suspend fun markChangeLogShown() =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         // Mark the changelog as shown for this version
         prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
       }
 
   override suspend fun listenForDarkModeChanges(): Flow<Mode> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         if (!prefs.contains(darkModeKey)) {
           // Initialize this key here so the preference screen can be populated
           prefs.edit {
@@ -182,16 +161,12 @@ internal constructor(
 
   override suspend fun setDarkMode(mode: Mode) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         prefs.edit { putString(darkModeKey, mode.toRawString()) }
       }
 
   override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext prefs.booleanFlow(
+        prefs.booleanFlow(
             KEY_DATA_POLICY_CONSENTED,
             DEFAULT_DATA_POLICY_CONSENTED,
         )
@@ -199,8 +174,6 @@ internal constructor(
 
   override suspend fun respondToPolicy(accepted: Boolean) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         prefs.edit { putBoolean(KEY_DATA_POLICY_CONSENTED, accepted) }
       }
 

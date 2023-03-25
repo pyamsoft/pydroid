@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -49,7 +48,6 @@ internal constructor(
   /** Which mode are we in right now? */
   override suspend fun listenForModeChanges(): Flow<Theming.Mode> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
         return@withContext preferences.listenForDarkModeChanges()
       }
 

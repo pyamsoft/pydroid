@@ -26,24 +26,27 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.isDebugMode
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 internal class PlayStoreAppUpdater
 internal constructor(
+    enforcer: ThreadEnforcer,
     context: Context,
     version: Int,
     isFakeUpgradeAvailable: Boolean,
 ) : AppUpdater {
 
   private val manager by lazy {
+    enforcer.assertOffMainThread()
+
     if (context.isDebugMode()) {
       FakeAppUpdateManager(context.applicationContext).apply {
         if (isFakeUpgradeAvailable) {
@@ -55,33 +58,9 @@ internal constructor(
     }
   }
 
-  @CheckResult
-  private inline fun createStatusListener(
-      crossinline onDownloadProgress: (Float) -> Unit,
-      crossinline onDownloadCompleted: () -> Unit
-  ): InstallStateUpdatedListener {
-    return InstallStateUpdatedListener { state ->
-      val status = state.installStatus()
-      Logger.d("Install state changed: $status")
-      if (status == InstallStatus.DOWNLOADING) {
-        Logger.d("Download in progress")
-        val bytesDownloaded = state.bytesDownloaded()
-        val totalBytes = state.totalBytesToDownload()
-        val progress = (bytesDownloaded / totalBytes.toFloat())
-        Logger.d("Download status: $bytesDownloaded / $totalBytes => $progress")
-        onDownloadProgress(progress)
-      } else if (status == InstallStatus.DOWNLOADED) {
-        Logger.d("Download completed!")
-        onDownloadCompleted()
-      }
-    }
-  }
-
   override suspend fun complete() =
       withContext(context = Dispatchers.Main) {
-        Enforcer.assertOnMainThread()
-
-        return@withContext suspendCancellableCoroutine { continuation ->
+        suspendCancellableCoroutine { continuation ->
           Logger.d("Now completing update...")
           manager
               .completeUpdate()
@@ -101,9 +80,7 @@ internal constructor(
       onDownloadCompleted: () -> Unit
   ) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext suspendCancellableCoroutine<Unit> { continuation ->
+        suspendCancellableCoroutine<Unit> { continuation ->
           val listener =
               createStatusListener(
                   onDownloadProgress = onDownloadProgress,
@@ -122,8 +99,6 @@ internal constructor(
 
   override suspend fun checkForUpdate(): AppUpdateLauncher =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         if (manager is FakeAppUpdateManager) {
           Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
           delay(2000L)
@@ -151,4 +126,29 @@ internal constructor(
               }
         }
       }
+
+  companion object {
+
+    @CheckResult
+    private inline fun createStatusListener(
+        crossinline onDownloadProgress: (Float) -> Unit,
+        crossinline onDownloadCompleted: () -> Unit
+    ): InstallStateUpdatedListener {
+      return InstallStateUpdatedListener { state ->
+        val status = state.installStatus()
+        Logger.d("Install state changed: $status")
+        if (status == InstallStatus.DOWNLOADING) {
+          Logger.d("Download in progress")
+          val bytesDownloaded = state.bytesDownloaded()
+          val totalBytes = state.totalBytesToDownload()
+          val progress = (bytesDownloaded / totalBytes.toFloat())
+          Logger.d("Download status: $bytesDownloaded / $totalBytes => $progress")
+          onDownloadProgress(progress)
+        } else if (status == InstallStatus.DOWNLOADED) {
+          Logger.d("Download completed!")
+          onDownloadCompleted()
+        }
+      }
+    }
+  }
 }

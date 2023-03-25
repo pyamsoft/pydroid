@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.app
 
 import android.content.Context
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.util.applicationDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -28,8 +27,5 @@ protected constructor(
 ) : AppInteractor {
 
   final override suspend fun getDisplayName(): String =
-      withContext(context = Dispatchers.Default) {
-        Enforcer.assertOffMainThread()
-        return@withContext context.applicationDisplayName
-      }
+      withContext(context = Dispatchers.Default) { context.applicationDisplayName }
 }

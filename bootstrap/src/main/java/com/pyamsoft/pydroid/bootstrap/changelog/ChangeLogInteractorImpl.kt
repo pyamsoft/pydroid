@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
-import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -33,7 +32,6 @@ internal constructor(
 
   override suspend fun listenShowChangeLogChanges(): Flow<Boolean> =
       withContext(context = Dispatchers.Default) {
-        Enforcer.assertOffMainThread()
         return@withContext preferences.listenForShowChangelogChanges().map { show ->
           // Force to show if this is faked
           return@map show || isFakeChangeLogAvailable
@@ -41,8 +39,5 @@ internal constructor(
       }
 
   override suspend fun markChangeLogShown() =
-      withContext(context = Dispatchers.Default) {
-        Enforcer.assertOffMainThread()
-        preferences.markChangeLogShown()
-      }
+      withContext(context = Dispatchers.Default) { preferences.markChangeLogShown() }
 }

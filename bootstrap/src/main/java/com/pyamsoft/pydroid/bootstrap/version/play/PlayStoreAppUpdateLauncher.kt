@@ -23,7 +23,6 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
@@ -75,8 +74,6 @@ internal constructor(
 
   override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
-        Enforcer.assertOnMainThread()
-
         return@withContext try {
           Logger.d("Begin update flow $requestCode $info")
           if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {

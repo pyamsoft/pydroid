@@ -20,13 +20,12 @@ import android.app.Activity
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
-import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 
 internal class PlayStoreAppRatingLauncher
 internal constructor(
@@ -36,8 +35,6 @@ internal constructor(
 
   override suspend fun rate(activity: Activity): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
-        Enforcer.assertOnMainThread()
-
         return@withContext suspendCancellableCoroutine { continuation ->
           manager
               .launchReviewFlow(activity, info)

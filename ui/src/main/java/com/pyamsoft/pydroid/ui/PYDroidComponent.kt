@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
+import com.pyamsoft.pydroid.core.createThreadEnforcer
 import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
@@ -39,11 +40,12 @@ import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
-import kotlin.LazyThreadSafetyMode.NONE
+import com.pyamsoft.pydroid.util.isDebugMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlin.LazyThreadSafetyMode.NONE
 
 internal interface PYDroidComponent {
 
@@ -85,6 +87,8 @@ internal interface PYDroidComponent {
       params: Component.Parameters,
   ) : Component {
 
+    private val enforcer = createThreadEnforcer(params.application.isDebugMode())
+
     private val context: Context = params.application
 
     // Must be Lazy since ImageLoader calls getSystemService() internally.
@@ -97,13 +101,25 @@ internal interface PYDroidComponent {
     private val theming: Theming by lazy(NONE) { ThemingImpl(preferences) }
 
     private val preferences by
-        lazy(NONE) { PYDroidPreferencesImpl(params.application, params.version) }
+        lazy(NONE) {
+          PYDroidPreferencesImpl(
+              enforcer = enforcer,
+              context = params.application,
+              versionCode = params.version,
+          )
+        }
 
     private val logLinesBus by lazy(NONE) { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
 
     private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
 
-    private val debugInteractor by lazy(NONE) { DebugInteractorImpl(params.application) }
+    private val debugInteractor by
+        lazy(NONE) {
+          DebugInteractorImpl(
+              enforcer = enforcer,
+              context = params.application,
+          )
+        }
 
     private val dataPolicyModule by
         lazy(NONE) {
@@ -129,6 +145,7 @@ internal interface PYDroidComponent {
     private val appParams by
         lazy(NONE) {
           AppComponent.Factory.Parameters(
+              enforcer = enforcer,
               context = context,
               theming = theming,
               billingErrorBus = EventBus.create(),

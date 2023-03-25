@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
@@ -110,6 +111,7 @@ internal interface AppComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val dataPolicyModule: DataPolicyModule,
         internal val debug: DebugParameters,
+        internal val enforcer: ThreadEnforcer,
     )
   }
 
@@ -139,6 +141,7 @@ internal interface AppComponent {
     private val ratingModule =
         RatingModule(
             RatingModule.Parameters(
+                enforcer = params.enforcer,
                 context = params.context.applicationContext,
             ),
         )
@@ -148,6 +151,7 @@ internal interface AppComponent {
     private val versionModule =
         VersionModule(
             VersionModule.Parameters(
+                enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
                 isFakeUpgradeAvailable = params.debug.upgradeAvailable,

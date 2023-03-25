@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
@@ -35,9 +34,7 @@ internal constructor(
       onDownloadCompleted: () -> Unit
   ) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
-        return@withContext updater.watchDownloadStatus(
+        updater.watchDownloadStatus(
             onDownloadProgress = onDownloadProgress,
             onDownloadCompleted = onDownloadCompleted,
         )
@@ -45,16 +42,12 @@ internal constructor(
 
   override suspend fun completeUpdate() =
       withContext(context = Dispatchers.Main) {
-        Enforcer.assertOnMainThread()
-
         Logger.d("GOING DOWN FOR UPDATE")
         updater.complete()
       }
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         return@withContext try {
           ResultWrapper.success(updater.checkForUpdate())
         } catch (e: Throwable) {

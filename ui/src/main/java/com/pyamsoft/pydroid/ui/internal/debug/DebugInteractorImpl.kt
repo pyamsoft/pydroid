@@ -21,24 +21,26 @@ import android.content.ClipboardManager
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.core.content.getSystemService
-import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.LazyThreadSafetyMode.NONE
 
 /** Interactor for Debug operations */
 internal class DebugInteractorImpl
 internal constructor(
+    enforcer: ThreadEnforcer,
     private val context: Context,
 ) : DebugInteractor {
 
   private val clipboardManager by
       lazy(NONE) {
-        Enforcer.assertOffMainThread()
+        enforcer.assertOffMainThread()
+
         context.applicationContext.getSystemService<ClipboardManager>().requireNotNull()
       }
 
@@ -57,8 +59,6 @@ internal constructor(
 
   override suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>) =
       withContext(context = Dispatchers.IO) {
-        Enforcer.assertOffMainThread()
-
         clipboardManager.setPrimaryClip(
             ClipData.newPlainText(
                 "Developer Messages", """```

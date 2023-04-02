@@ -122,7 +122,7 @@ private fun InAppDebugScreen(
       onDismissRequest = onDismiss,
   ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
+        modifier = modifier.padding(MaterialTheme.keylines.content),
     ) {
       DialogToolbar(
           modifier = Modifier.fillMaxWidth(),

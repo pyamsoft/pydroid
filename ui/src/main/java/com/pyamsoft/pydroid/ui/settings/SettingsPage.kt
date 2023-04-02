@@ -51,6 +51,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
+import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -237,30 +238,35 @@ private fun SettingsContent(
 
   if (showDataPolicyDialog) {
     DataPolicyDisclosureDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissDataPolicyDialog,
     )
   }
 
   if (showResetDialog) {
     ResetDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissResetDialog,
     )
   }
 
   if (showAboutDialog) {
     AboutDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissAboutDialog,
     )
   }
 
   if (showBillingDialog) {
     BillingDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissBillingDialog,
     )
   }
 
   if (showChangeLogDialog) {
     ChangeLogDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissChangeLogDialog,
     )
   }

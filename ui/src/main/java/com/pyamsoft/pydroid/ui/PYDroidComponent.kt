@@ -42,11 +42,11 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
 import com.pyamsoft.pydroid.util.isDebugMode
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlin.LazyThreadSafetyMode.NONE
 
 internal interface PYDroidComponent {
 

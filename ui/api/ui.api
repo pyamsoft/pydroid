@@ -624,6 +624,12 @@ public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
 	public static final fun commitNow (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
 }
 
+public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
+	public static final fun fillUpToPortraitHeight (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+	public static final fun fillUpToPortraitWidth (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+	public static final fun fullScreenDialog (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+}
+
 public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 	public static final fun getDefaultSharedPreferencesName (Landroid/content/Context;)Ljava/lang/String;
 }

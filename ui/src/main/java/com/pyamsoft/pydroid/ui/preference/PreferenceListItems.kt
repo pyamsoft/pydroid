@@ -55,6 +55,7 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
+import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 
 @Composable
 internal fun SimplePreferenceItem(
@@ -202,6 +203,7 @@ internal fun ListPreferenceItem(
 
   if (showDialog) {
     PreferenceDialog(
+        modifier = Modifier.fullScreenDialog(),
         title = title,
         currentValue = currentValue,
         entries = entries,

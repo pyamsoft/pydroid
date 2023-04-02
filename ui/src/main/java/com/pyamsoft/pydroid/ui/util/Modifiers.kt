@@ -1,0 +1,76 @@
+/*
+ * Copyright 2023 pyamsoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.pyamsoft.pydroid.ui.util
+
+import android.content.res.Configuration
+import androidx.annotation.CheckResult
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+
+/** Enforces the width is the size of the screen width in portrait mode */
+@CheckResult
+public fun Modifier.fillUpToPortraitWidth(): Modifier {
+  return this.composed {
+    val configuration = LocalConfiguration.current
+
+    val width =
+        remember(configuration) {
+          configuration.run {
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) screenWidthDp else screenHeightDp
+          }
+        }
+
+    return@composed widthIn(
+        max = width.dp,
+    )
+  }
+}
+
+/** Enforces the height is the size of the screen width in portrait mode */
+@CheckResult
+public fun Modifier.fillUpToPortraitHeight(): Modifier {
+  return this.composed {
+    val configuration = LocalConfiguration.current
+
+    val height =
+        remember(configuration) {
+          configuration.run {
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) screenHeightDp else screenWidthDp
+          }
+        }
+
+    return@composed heightIn(
+        max = height.dp,
+    )
+  }
+}
+
+/**
+ * Apply some modifiers to a Dialog
+ *
+ * This allows the dialog to stretch to fill a space which is at max the width in Portrait mode but
+ * will occupy less space if not needed
+ */
+@CheckResult
+public fun Modifier.fullScreenDialog(): Modifier {
+  return this.fillUpToPortraitWidth().fillUpToPortraitHeight()
+}

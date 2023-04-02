@@ -48,6 +48,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
+import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 
 @Composable
 internal fun BillingScreen(
@@ -78,7 +79,7 @@ internal fun BillingScreen(
       }
 
   AppHeaderDialog(
-      modifier = modifier.fillMaxWidth(),
+      modifier = modifier.fullScreenDialog(),
       icon = icon,
       name = name,
       imageLoader = imageLoader,

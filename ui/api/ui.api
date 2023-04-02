@@ -605,6 +605,11 @@ public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
 	public static final fun recompose (Landroidx/fragment/app/Fragment;)V
 }
 
+public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
+	public static final fun isLandscape (Landroid/content/res/Configuration;)Z
+	public static final fun isPortrait (Landroid/content/res/Configuration;)Z
+}
+
 public final class com/pyamsoft/pydroid/ui/util/DialogFragmentKt {
 	public static final fun show (Landroidx/fragment/app/DialogFragment;Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)V
 }

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.widthIn
@@ -35,7 +34,15 @@ public fun Modifier.fillUpToPortraitWidth(): Modifier {
     val width =
         remember(configuration) {
           configuration.run {
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) screenWidthDp else screenHeightDp
+            if (isPortrait) {
+              // In portrait, we can take up the whole screen width if we want to
+              // this will be huge on tablet, but who owns a tablet?
+              screenWidthDp
+            } else {
+              // Else in landscape mode we can use the portrait width * 2 because
+              // we have more horizontal estate
+              screenHeightDp * 2
+            }
           }
         }
 
@@ -54,7 +61,14 @@ public fun Modifier.fillUpToPortraitHeight(): Modifier {
     val height =
         remember(configuration) {
           configuration.run {
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) screenHeightDp else screenWidthDp
+            if (isPortrait) {
+              // Use the total height in portrait mode
+              screenHeightDp
+            } else {
+              // Use the portrait height in landscape mode, which keeps
+              // sizes consistent even during rotation
+              screenWidthDp
+            }
           }
         }
 

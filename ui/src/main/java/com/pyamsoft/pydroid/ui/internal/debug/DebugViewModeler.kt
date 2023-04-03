@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.debug
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class DebugViewModeler
@@ -33,7 +32,7 @@ internal constructor(
     val s = state
 
     scope.launch(context = Dispatchers.Main) {
-      preferences.listenForInAppDebuggingEnabled().collectLatest { enabled ->
+      preferences.listenForInAppDebuggingEnabled().collect { enabled ->
         s.isInAppDebuggingEnabled.value = enabled
       }
     }

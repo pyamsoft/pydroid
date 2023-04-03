@@ -21,7 +21,6 @@ import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class DataPolicyViewModeler
@@ -49,7 +48,7 @@ internal constructor(
       scope: CoroutineScope,
   ) {
     scope.launch(context = Dispatchers.Main) {
-      interactor.listenForPolicyAcceptedChanges().collectLatest { accepted ->
+      interactor.listenForPolicyAcceptedChanges().collect { accepted ->
         state.isAccepted.value =
             if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED
             else DataPolicyViewState.AcceptedState.REJECTED

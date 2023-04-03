@@ -23,13 +23,12 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.LazyThreadSafetyMode.NONE
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
 internal class InAppDebugLoggerImpl
@@ -69,7 +68,7 @@ internal constructor(
 
         // Should only launch once if we are injected correctly
         scope.launch(context = Dispatchers.Main) {
-          prefs.listenForInAppDebuggingEnabled().collectLatest { enabled ->
+          prefs.listenForInAppDebuggingEnabled().collect { enabled ->
             isLoggingEnabled = enabled
 
             // Clear log bus if disabled

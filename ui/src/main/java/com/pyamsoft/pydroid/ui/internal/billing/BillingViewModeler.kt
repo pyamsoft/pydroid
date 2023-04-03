@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class BillingViewModeler
@@ -53,7 +52,7 @@ internal constructor(
   internal fun bind(scope: CoroutineScope) {
     val s = state
     scope.launch(context = Dispatchers.Main) {
-      preferences.listenForBillingUpsellChanges().collectLatest { show ->
+      preferences.listenForBillingUpsellChanges().collect { show ->
         if (show) {
           Logger.d("Showing Billing upsell")
           s.isShowingUpsell.value = true

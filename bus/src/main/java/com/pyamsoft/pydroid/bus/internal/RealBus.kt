@@ -18,10 +18,9 @@ package com.pyamsoft.pydroid.bus.internal
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.EventBus
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
 /** Real implementation of the EventBus */
 internal class RealBus<T : Any>
@@ -37,5 +36,5 @@ internal constructor(
 
   @CheckResult
   override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
-      withContext(context = context) { bus.collectLatest(emitter) }
+      withContext(context = context) { bus.collect(emitter) }
 }

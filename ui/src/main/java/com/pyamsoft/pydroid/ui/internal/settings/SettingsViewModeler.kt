@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
@@ -113,7 +112,7 @@ internal constructor(
     }
 
     scope.launch(context = Dispatchers.Main) {
-      debugPreferences.listenForInAppDebuggingEnabled().collectLatest { enabled ->
+      debugPreferences.listenForInAppDebuggingEnabled().collect { enabled ->
         state.isInAppDebuggingEnabled.value = enabled
 
         if (!config.inAppDebug) {
@@ -124,7 +123,7 @@ internal constructor(
     }
 
     scope.launch(context = Dispatchers.Main) {
-      theming.listenForModeChanges().collectLatest {
+      theming.listenForModeChanges().collect {
         s.darkMode.value = it
 
         if (!config.darkMode) {

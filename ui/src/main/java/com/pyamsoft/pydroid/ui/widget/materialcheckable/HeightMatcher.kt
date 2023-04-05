@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Dp
  *
  * Will only work given that the largest component does not update it's height after being measured.
  */
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public interface HeightMatcher {
   /** The extra height to fill the gap */
   public val extraHeight: Dp

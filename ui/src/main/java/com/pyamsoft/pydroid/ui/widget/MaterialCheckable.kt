@@ -64,6 +64,7 @@ import com.pyamsoft.pydroid.ui.widget.materialcheckable.internal.rememberMateria
  */
 @Composable
 @CheckResult
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public fun <T : Any> rememberMaterialCheckableHeightMatcherGenerator(): HeightMatcherGenerator<T> {
   val (heights, setHeights) = remember { mutableStateOf(emptyMap<T, Int>()) }
 
@@ -109,6 +110,7 @@ public fun <T : Any> rememberMaterialCheckableHeightMatcherGenerator(): HeightMa
 
 /** Fancy checkable with Material Design ish elements */
 @Composable
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public fun MaterialCheckable(
     modifier: Modifier = Modifier,
     isEditable: Boolean,
@@ -133,6 +135,7 @@ public fun MaterialCheckable(
 }
 
 @Composable
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public fun ColoredMaterialCheckable(
     modifier: Modifier = Modifier,
     isEditable: Boolean,

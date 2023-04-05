@@ -21,6 +21,7 @@ package com.pyamsoft.pydroid.ui.widget.materialcheckable
  *
  * Alpha can changed based on editable and selected state
  */
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public interface MaterialCheckableAlpha {
   /** Primary content alpha */
   public val primary: Float

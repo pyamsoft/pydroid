@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
  *
  * Will only work given that the largest component does not update it's height after being measured.
  */
+@Deprecated("Do not use, applications should implement their own MaterialCheckable")
 public interface HeightMatcherGenerator<T : Any> {
 
   /** Generate a [HeightMatcher] for a given item */

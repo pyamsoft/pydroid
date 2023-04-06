@@ -25,4 +25,7 @@ public interface RatingViewState : UiViewState {
 
   /** Have we already attempted to show in-app rating */
   public val isInAppRatingShown: StateFlow<Boolean>
+
+  /** Are we loading the in-app rating */
+  public val isLoading: StateFlow<Boolean>
 }

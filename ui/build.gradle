@@ -59,9 +59,6 @@ dependencies {
   // Cachify
   implementation "com.github.pyamsoft:cachify:$cachify"
 
-  // Highlander
-  implementation "com.github.pyamsoft:highlander:$highlander"
-
   api project(':arch')
   api project(':billing')
   api project(':bootstrap')

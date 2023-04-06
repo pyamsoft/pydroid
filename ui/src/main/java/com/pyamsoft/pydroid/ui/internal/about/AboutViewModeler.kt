@@ -16,10 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,10 +25,8 @@ import kotlinx.coroutines.launch
 internal class AboutViewModeler
 internal constructor(
     override val state: MutableAboutViewState,
-    interactor: AboutInteractor,
+    private val interactor: AboutInteractor,
 ) : AbstractViewModeler<AboutViewState>(state) {
-
-  private val licenseRunner = highlander<List<OssLibrary>> { interactor.loadLicenses() }
 
   internal fun bind(scope: CoroutineScope) {
     val s = state
@@ -42,8 +38,11 @@ internal constructor(
     s.loadingState.value = AboutViewState.LoadingState.LOADING
     scope.launch(context = Dispatchers.Main) {
       s.apply {
-        licenses.value = licenseRunner.call()
-        loadingState.value = AboutViewState.LoadingState.DONE
+        try {
+          licenses.value = interactor.loadLicenses()
+        } finally {
+          loadingState.value = AboutViewState.LoadingState.DONE
+        }
       }
     }
   }

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import com.pyamsoft.highlander.highlander
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
@@ -34,14 +34,14 @@ internal constructor(
     private val interactorCache: VersionInteractor.Cache,
 ) : AbstractViewModeler<VersionCheckViewState>(state) {
 
-  private val checkUpdateRunner =
-      highlander<ResultWrapper<AppUpdateLauncher>, Boolean> { force ->
-        if (force) {
-          interactorCache.invalidateVersion()
-        }
+  @CheckResult
+  private suspend fun runCheckUpdate(force: Boolean): ResultWrapper<AppUpdateLauncher> {
+    if (force) {
+      interactorCache.invalidateVersion()
+    }
 
-        return@highlander interactor.checkVersion()
-      }
+    return interactor.checkVersion()
+  }
 
   internal fun bind(
       scope: CoroutineScope,
@@ -92,8 +92,7 @@ internal constructor(
     Logger.d("Begin check for updates")
     s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
     scope.launch(context = Dispatchers.Main) {
-      checkUpdateRunner
-          .call(force)
+      runCheckUpdate(force)
           .onSuccess { Logger.d("Update data found as: $it") }
           .onSuccess { s.launcher.value = it }
           .onFailure { Logger.e(it, "Error checking for latest version") }

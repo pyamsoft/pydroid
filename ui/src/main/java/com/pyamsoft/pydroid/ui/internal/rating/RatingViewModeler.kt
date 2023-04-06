@@ -16,12 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.ui.rating.RatingViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,28 +28,27 @@ import kotlinx.coroutines.launch
 internal class RatingViewModeler
 internal constructor(
     override val state: MutableRatingViewState,
-    interactor: RatingInteractor,
+    private val interactor: RatingInteractor,
 ) : AbstractViewModeler<RatingViewState>(state) {
-
-  private val loadRunner =
-      highlander<ResultWrapper<AppRatingLauncher>> { interactor.askForRating() }
 
   internal fun loadInAppRating(
       scope: CoroutineScope,
       onLaunchInAppRating: (AppRatingLauncher) -> Unit
   ) {
     val s = state
-    if (s.isInAppRatingShown.value) {
+    if (s.isInAppRatingShown.value || s.isLoading.value) {
       return
     }
 
+    s.isLoading.value = true
     scope.launch(context = Dispatchers.Main) {
-      loadRunner
-          .call()
+      interactor
+          .askForRating()
           .onSuccess { Logger.d("Launch in-app rating: $it") }
           .onSuccess { s.isInAppRatingShown.value = true }
           .onSuccess { onLaunchInAppRating(it) }
           .onFailure { Logger.e(it, "Unable to launch in-app rating") }
+          .onFinally { s.isLoading.value = false }
     }
   }
 }

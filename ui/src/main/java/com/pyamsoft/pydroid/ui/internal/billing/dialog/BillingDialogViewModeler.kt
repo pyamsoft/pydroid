@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
-import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -33,13 +32,6 @@ internal constructor(
     private val interactor: BillingInteractor,
     private val provider: AppProvider,
 ) : AbstractViewModeler<BillingDialogViewState>(state) {
-
-  private val refreshRunner =
-      highlander<Unit>(
-          context = Dispatchers.IO,
-      ) {
-        interactor.refresh()
-      }
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
@@ -73,6 +65,17 @@ internal constructor(
   }
 
   internal fun handleRefresh(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) { refreshRunner.call() }
+    if (state.isRefreshing.value) {
+      return
+    }
+
+    state.isRefreshing.value = true
+    scope.launch(context = Dispatchers.Main) {
+      try {
+        interactor.refresh()
+      } finally {
+        state.isRefreshing.value = false
+      }
+    }
   }
 }

@@ -252,21 +252,19 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid standard architecture for an MVVM UI design pattern",
     )
-    add(
-        "Highlander",
-        "https://github.com/pyamsoft/highlander",
-        "There can be only one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time.",
-    )
+
     add(
         "Kotlin Coroutines",
         "https://github.com/Kotlin/kotlinx.coroutines",
         "Library support for Kotlin coroutines with multiplatform support.",
     )
+
     add(
         "AndroidX Lifecycle",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
         "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
     )
+
     addComposeArchLibraries()
     addBusLibraries()
     addUtilLibraries()

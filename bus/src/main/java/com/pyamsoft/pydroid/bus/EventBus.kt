@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.bus
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.internal.RealBus
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 /** A basic EventBus interface with send and receive methods */
 public interface EventBus<T : Any> : EventConsumer<T> {

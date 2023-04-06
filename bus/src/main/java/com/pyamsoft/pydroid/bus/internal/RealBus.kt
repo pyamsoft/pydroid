@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.bus.internal
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.EventBus
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 /** Real implementation of the EventBus */
 internal class RealBus<T : Any>

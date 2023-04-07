@@ -77,8 +77,13 @@ internal constructor(
     }
 
     Logger.d("Begin check for updates")
-    s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
     scope.launch(context = Dispatchers.Main) {
+      if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
+        Logger.d("We are already checking for an update.")
+        return@launch
+      }
+
+      s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
       interactor
           .checkVersion()
           .onSuccess { Logger.d("Update data found as: $it") }

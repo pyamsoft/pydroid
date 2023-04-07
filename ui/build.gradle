@@ -56,9 +56,6 @@ dependencies {
   // Material Design
   implementation "com.google.android.material:material:$materialDesign"
 
-  // Cachify
-  implementation "com.github.pyamsoft:cachify:$cachify"
-
   api project(':arch')
   api project(':billing')
   api project(':bootstrap')

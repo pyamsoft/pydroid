@@ -34,11 +34,4 @@ public interface VersionInteractor {
 
   /** Complete the update, which will restart the application */
   public suspend fun completeUpdate()
-
-  /** Cache for version related data */
-  public interface Cache {
-
-    /** Invalidate the version cache */
-    public suspend fun invalidateVersion()
-  }
 }

@@ -144,11 +144,6 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid bootstrap extensions for quickly spinning up new applications",
     )
-    add(
-        "Cachify",
-        "https://github.com/pyamsoft/cachify",
-        "Simple in-memory caching of all the things",
-    )
 
     add(
         "Google Play In-App Updates Library",

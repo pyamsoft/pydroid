@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ResultWrapper
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +24,7 @@ import kotlinx.coroutines.withContext
 internal class VersionInteractorImpl
 internal constructor(
     private val networkInteractor: VersionInteractorNetwork,
-    private val updateCache: Cached<ResultWrapper<AppUpdateLauncher>>
-) : VersionInteractor, VersionInteractor.Cache {
+) : VersionInteractor {
 
   override suspend fun watchDownloadStatus(
       onDownloadProgress: (Float) -> Unit,
@@ -46,9 +44,6 @@ internal constructor(
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.IO) {
-        return@withContext updateCache.call()
+        return@withContext networkInteractor.checkVersion()
       }
-
-  override suspend fun invalidateVersion() =
-      withContext(context = Dispatchers.IO) { updateCache.clear() }
 }

@@ -50,7 +50,6 @@ internal interface VersionCheckComponent {
           VersionCheckViewModeler(
               state = params.state,
               interactor = params.module.provideInteractor(),
-              interactorCache = params.module.provideInteractorCache(),
           )
     }
 
@@ -59,7 +58,6 @@ internal interface VersionCheckComponent {
           VersionCheckViewModeler(
               state = params.state,
               interactor = params.module.provideInteractor(),
-              interactorCache = params.module.provideInteractorCache(),
           )
     }
 

@@ -18,15 +18,8 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.cachify.Cached
-import com.pyamsoft.cachify.cachify
-import com.pyamsoft.cachify.storage.MemoryCacheStorage
 import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.core.ThreadEnforcer
-import java.util.concurrent.TimeUnit.MINUTES
-import kotlinx.coroutines.Dispatchers
 
 /** In-App update module */
 public class VersionModule(params: Parameters) {
@@ -43,33 +36,13 @@ public class VersionModule(params: Parameters) {
         )
 
     val network = VersionInteractorNetwork(updater)
-    impl = VersionInteractorImpl(network, createCache(network))
+    impl = VersionInteractorImpl(network)
   }
 
   /** Provide version interactor */
   @CheckResult
   public fun provideInteractor(): VersionInteractor {
     return impl
-  }
-
-  /** Provide version interactor cache */
-  @CheckResult
-  public fun provideInteractorCache(): VersionInteractor.Cache {
-    return impl
-  }
-
-  public companion object {
-
-    @JvmStatic
-    @CheckResult
-    private fun createCache(network: VersionInteractor): Cached<ResultWrapper<AppUpdateLauncher>> {
-      return cachify<ResultWrapper<AppUpdateLauncher>>(
-          context = Dispatchers.IO,
-          storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) },
-      ) {
-        network.checkVersion()
-      }
-    }
   }
 
   /** Module parameters */

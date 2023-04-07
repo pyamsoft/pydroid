@@ -16,12 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.ResultWrapper
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,17 +28,7 @@ internal class VersionCheckViewModeler
 internal constructor(
     override val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
-    private val interactorCache: VersionInteractor.Cache,
 ) : AbstractViewModeler<VersionCheckViewState>(state) {
-
-  @CheckResult
-  private suspend fun runCheckUpdate(force: Boolean): ResultWrapper<AppUpdateLauncher> {
-    if (force) {
-      interactorCache.invalidateVersion()
-    }
-
-    return interactor.checkVersion()
-  }
 
   internal fun bind(
       scope: CoroutineScope,
@@ -74,11 +61,6 @@ internal constructor(
   ) {
     val s = state
 
-    if (s.launcher.value != null) {
-      Logger.d("Launcher is already available, do not check for update again")
-      return
-    }
-
     if (s.isUpdateReadyToInstall.value) {
       Logger.d("Update is already ready to install, do not check for update again")
       return
@@ -89,10 +71,16 @@ internal constructor(
       return
     }
 
+    if (s.launcher.value != null && !force) {
+      Logger.d("Launcher is already available, do not check for update again")
+      return
+    }
+
     Logger.d("Begin check for updates")
     s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
     scope.launch(context = Dispatchers.Main) {
-      runCheckUpdate(force)
+      interactor
+          .checkVersion()
           .onSuccess { Logger.d("Update data found as: $it") }
           .onSuccess { s.launcher.value = it }
           .onFailure { Logger.e(it, "Error checking for latest version") }

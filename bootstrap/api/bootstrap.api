@@ -205,18 +205,9 @@ public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionIn
 	public abstract fun watchDownloadStatus (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public abstract interface class com/pyamsoft/pydroid/bootstrap/version/VersionInteractor$Cache {
-	public abstract fun invalidateVersion (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule {
-	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion;
 	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters;)V
 	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/version/VersionInteractor;
-	public final fun provideInteractorCache ()Lcom/pyamsoft/pydroid/bootstrap/version/VersionInteractor$Cache;
-}
-
-public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Companion {
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Parameters {

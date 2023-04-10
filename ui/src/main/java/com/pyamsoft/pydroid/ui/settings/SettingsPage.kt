@@ -273,6 +273,7 @@ private fun SettingsContent(
 
   if (showInAppDebuggingDialog) {
     InAppDebugDialog(
+        modifier = Modifier.fullScreenDialog(),
         onDismiss = onDismissInAppDebuggingDialog,
         extraContent = extraDebugContent,
     )

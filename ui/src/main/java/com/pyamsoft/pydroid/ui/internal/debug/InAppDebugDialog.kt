@@ -140,7 +140,7 @@ private fun InAppDebugScreen(
               ),
       ) {
         Box(
-            modifier = Modifier.fillMaxSize().padding(MaterialTheme.keylines.content),
+            modifier = Modifier.padding(MaterialTheme.keylines.content),
             contentAlignment = Alignment.BottomCenter,
         ) {
           LazyColumn(

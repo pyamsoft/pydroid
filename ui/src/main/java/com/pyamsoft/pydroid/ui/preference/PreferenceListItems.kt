@@ -42,7 +42,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,7 +54,6 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 
 @Composable
 internal fun SimplePreferenceItem(
@@ -181,17 +179,12 @@ internal fun SwitchPreferenceItem(
 internal fun ListPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.ListPreference,
-    showDialog: Boolean,
     onOpenDialog: () -> Unit,
-    onCloseDialog: () -> Unit,
 ) {
   val isEnabled = preference.isEnabled
   val title = preference.name
-  val currentValue = preference.value
-  val entries = preference.entries
   val summary = preference.summary
   val icon = preference.icon
-  val onPreferenceSelected = preference.onPreferenceSelected
 
   PreferenceItem(
       modifier = modifier.clickable(enabled = isEnabled) { onOpenDialog() },
@@ -200,31 +193,19 @@ internal fun ListPreferenceItem(
       summary = summary,
       icon = icon,
   )
-
-  if (showDialog) {
-    PreferenceDialog(
-        modifier = Modifier.fullScreenDialog(),
-        title = title,
-        currentValue = currentValue,
-        entries = entries,
-        onDismiss = onCloseDialog,
-        onSelected = { name, value ->
-          onPreferenceSelected(name, value)
-          onCloseDialog()
-        },
-    )
-  }
 }
 
 @Composable
-private fun PreferenceDialog(
+internal fun PreferenceDialog(
     modifier: Modifier = Modifier,
-    title: String,
-    currentValue: String,
-    entries: SnapshotStateList<Map.Entry<String, String>>,
-    onSelected: (String, String) -> Unit,
+    preference: Preferences.ListPreference,
     onDismiss: () -> Unit
 ) {
+  val title = preference.name
+  val currentValue = preference.value
+  val entries = preference.entries
+  val onPreferenceSelected = preference.onPreferenceSelected
+
   Dialog(
       properties = rememberDialogProperties(),
       onDismissRequest = onDismiss,
@@ -251,8 +232,10 @@ private fun PreferenceDialog(
               name = item.key,
               value = item.value,
               current = currentValue,
-              onClick = onSelected,
-          )
+              onClick = { k, v ->
+                onPreferenceSelected(k, v)
+                onDismiss()
+              })
         }
 
         item {

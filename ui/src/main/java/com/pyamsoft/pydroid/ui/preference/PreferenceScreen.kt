@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
 import com.pyamsoft.pydroid.ui.util.collectAsStateMap
+import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
@@ -75,6 +76,21 @@ private fun PreferenceScreenInternal(
 ) {
   val shownDialogs = state.dialogStates.collectAsStateMap()
 
+  val dialogPreferences =
+      remember(
+          shownDialogs,
+          preferences,
+      ) {
+        shownDialogs
+            .filterValues { it }
+            .keys
+            .asSequence()
+            .mapNotNull { id -> preferences.firstOrNull { it.id == id } }
+            .mapNotNull { it as? Preferences.ListPreference }
+            .toList()
+            .toMutableStateList()
+      }
+
   LazyColumn(
       modifier = modifier,
   ) {
@@ -92,17 +108,13 @@ private fun PreferenceScreenInternal(
             renderGroupInScope(
                 modifier = Modifier.fillMaxWidth(),
                 preference = preference,
-                shownDialogs = shownDialogs,
                 onOpenDialog = onOpenDialog,
-                onCloseDialog = onCloseDialog,
             )
         is Preferences.Item ->
             renderItemInScope(
                 modifier = Modifier.fillMaxWidth(),
                 preference = preference,
-                shownDialogs = shownDialogs,
                 onOpenDialog = onOpenDialog,
-                onCloseDialog = onCloseDialog,
             )
       }
     }
@@ -115,14 +127,21 @@ private fun PreferenceScreenInternal(
       }
     }
   }
+
+  // Hold dialogs outside of the LazyColumn so that they will mount immediately
+  for (pref in dialogPreferences) {
+    PreferenceDialog(
+        modifier = Modifier.fullScreenDialog(),
+        preference = pref,
+        onDismiss = { onCloseDialog(pref.id) },
+    )
+  }
 }
 
 private fun LazyListScope.renderGroupInScope(
     modifier: Modifier = Modifier,
     preference: Preferences.Group,
-    shownDialogs: SnapshotStateMap<String, Boolean>,
     onOpenDialog: (String) -> Unit,
-    onCloseDialog: (String) -> Unit,
 ) {
   val name = preference.name
   val preferences = preference.preferences
@@ -145,9 +164,7 @@ private fun LazyListScope.renderGroupInScope(
       RenderItem(
           modifier = modifier,
           preference = item,
-          shownDialogs = shownDialogs,
           onOpenDialog = onOpenDialog,
-          onCloseDialog = onCloseDialog,
       )
     }
   }
@@ -156,17 +173,13 @@ private fun LazyListScope.renderGroupInScope(
 private fun LazyListScope.renderItemInScope(
     modifier: Modifier = Modifier,
     preference: Preferences.Item,
-    shownDialogs: SnapshotStateMap<String, Boolean>,
     onOpenDialog: (String) -> Unit,
-    onCloseDialog: (String) -> Unit,
 ) {
   item {
     RenderItem(
         modifier = modifier,
         preference = preference,
-        shownDialogs = shownDialogs,
         onOpenDialog = onOpenDialog,
-        onCloseDialog = onCloseDialog,
     )
   }
 }
@@ -175,12 +188,9 @@ private fun LazyListScope.renderItemInScope(
 private fun RenderItem(
     modifier: Modifier = Modifier,
     preference: Preferences.Item,
-    shownDialogs: SnapshotStateMap<String, Boolean>,
     onOpenDialog: (String) -> Unit,
-    onCloseDialog: (String) -> Unit,
 ) {
   val id = preference.id
-  val showDialog = remember(shownDialogs, id) { shownDialogs.getOrElse(id) { false } }
 
   return when (preference) {
     is Preferences.SimplePreference ->
@@ -202,9 +212,7 @@ private fun RenderItem(
         ListPreferenceItem(
             modifier = modifier,
             preference = preference,
-            showDialog = showDialog,
             onOpenDialog = { onOpenDialog(id) },
-            onCloseDialog = { onCloseDialog(id) },
         )
     is Preferences.InAppPreference ->
         InAppPreferenceItem(

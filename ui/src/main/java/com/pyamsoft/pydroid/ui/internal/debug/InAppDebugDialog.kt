@@ -130,8 +130,7 @@ private fun InAppDebugScreen(
           onClose = onDismiss,
       )
       Surface(
-          modifier =
-              Modifier.fillMaxWidth().weight(1F).clickable(enabled = isEnabled) { handleCopied() },
+          modifier = Modifier.fillMaxWidth(),
           elevation = DialogDefaults.Elevation,
           shape =
               MaterialTheme.shapes.medium.copy(
@@ -144,7 +143,7 @@ private fun InAppDebugScreen(
             contentAlignment = Alignment.BottomCenter,
         ) {
           LazyColumn(
-              modifier = Modifier.fillMaxSize(),
+              modifier = Modifier.clickable(enabled = isEnabled) { handleCopied() },
           ) {
             if (isEnabled) {
               extraContent()

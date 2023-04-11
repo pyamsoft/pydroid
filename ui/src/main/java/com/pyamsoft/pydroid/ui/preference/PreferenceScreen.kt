@@ -76,16 +76,31 @@ private fun PreferenceScreenInternal(
 ) {
   val shownDialogs = state.dialogStates.collectAsStateMap()
 
+  val allPreferences =
+      remember(preferences) {
+        // Collect all preferences in the group
+        val allPreferences = mutableSetOf<Preferences>()
+        for (p in preferences) {
+          if (p is Preferences.Group) {
+            allPreferences.addAll(p.preferences)
+          } else {
+            allPreferences.add(p)
+          }
+        }
+
+        return@remember allPreferences
+      }
+
   val dialogPreferences =
       remember(
           shownDialogs,
-          preferences,
+          allPreferences,
       ) {
         shownDialogs
             .filterValues { it }
             .keys
             .asSequence()
-            .mapNotNull { id -> preferences.firstOrNull { it.id == id } }
+            .mapNotNull { id -> allPreferences.firstOrNull { it.id == id } }
             .mapNotNull { it as? Preferences.ListPreference }
             .toList()
             .toMutableStateList()

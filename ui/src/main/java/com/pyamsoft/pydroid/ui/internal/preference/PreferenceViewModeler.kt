@@ -53,21 +53,22 @@ internal constructor(
         ?.also { ids ->
           // Add the ids back into the map
           state.dialogStates.update { map ->
-            map.toMutableMap().apply {
-              for (id in ids) {
-                put(id, true)
-              }
+            var r = map
+            for (id in ids) {
+              r = r + (id to true)
             }
+
+            return@update r
           }
         }
   }
 
   fun handleShowDialog(preferenceId: String) {
-    state.dialogStates.update { it.toMutableMap().apply { put(preferenceId.trim(), true) } }
+    state.dialogStates.update { it + (preferenceId.trim() to true) }
   }
 
   fun handleDismissDialog(preferenceId: String) {
-    state.dialogStates.update { it.toMutableMap().apply { put(preferenceId.trim(), false) } }
+    state.dialogStates.update { it + (preferenceId.trim() to false) }
   }
 
   companion object {

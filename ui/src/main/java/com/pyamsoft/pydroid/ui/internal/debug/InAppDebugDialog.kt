@@ -63,6 +63,8 @@ import com.pyamsoft.pydroid.ui.util.rememberNotNull
 private fun MountHooks(
     viewModel: DebugViewModeler,
 ) {
+  SaveStateDisposableEffect(viewModel)
+
   LaunchedEffect(
       viewModel,
   ) {
@@ -84,8 +86,6 @@ internal fun InAppDebugDialog(
   MountHooks(
       viewModel = viewModel,
   )
-
-  SaveStateDisposableEffect(viewModel)
 
   InAppDebugScreen(
       modifier = modifier,
@@ -139,12 +139,12 @@ private fun InAppDebugScreen(
               ),
       ) {
         Box(
-            modifier = Modifier.padding(MaterialTheme.keylines.content),
+            modifier =
+                Modifier.clickable(enabled = isEnabled) { handleCopied() }
+                    .padding(MaterialTheme.keylines.content),
             contentAlignment = Alignment.BottomCenter,
         ) {
-          LazyColumn(
-              modifier = Modifier.clickable(enabled = isEnabled) { handleCopied() },
-          ) {
+          LazyColumn {
             if (isEnabled) {
               extraContent()
 
@@ -168,16 +168,9 @@ private fun InAppDebugScreen(
                     modifier = Modifier.fillMaxWidth(),
                     text =
                         remember(line) {
-                          val level =
-                              when (line.level) {
-                                DEBUG -> "[D]"
-                                WARNING -> "[W]"
-                                ERROR -> "[E]"
-                              }
-
                           val errorMessage =
                               if (line.throwable == null) "" else line.throwable.message.orEmpty()
-                          return@remember "$level ${line.line} $errorMessage"
+                          return@remember "${line.line} $errorMessage"
                         },
                     style =
                         MaterialTheme.typography.caption.copy(
@@ -193,12 +186,17 @@ private fun InAppDebugScreen(
               }
             } else {
               item {
-                Text(
+                Box(
                     modifier = Modifier.fillMaxSize(),
-                    text = "In-App Developer Mode is not enabled.",
-                    style = MaterialTheme.typography.h5,
-                    textAlign = TextAlign.Center,
-                )
+                    contentAlignment = Alignment.Center,
+                ) {
+                  Text(
+                      modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+                      text = "In-App Developer Mode is not enabled.",
+                      style = MaterialTheme.typography.h5,
+                      textAlign = TextAlign.Center,
+                  )
+                }
               }
             }
           }

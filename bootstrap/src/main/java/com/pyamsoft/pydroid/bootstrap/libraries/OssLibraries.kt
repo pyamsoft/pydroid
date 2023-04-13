@@ -49,10 +49,6 @@ public object OssLibraries {
   /** Using pydroid-util library */
   public var usingUtil: Boolean = false
 
-  /** Using pydroid-inject library */
-  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
-  public var usingInject: Boolean = false
-
   private var addedBus: Boolean = false
   private var addedBilling: Boolean = false
   private var addedBuild: Boolean = false
@@ -66,9 +62,6 @@ public object OssLibraries {
   private var addedUi: Boolean = false
   private var addedTheme: Boolean = false
   private var addedUtil: Boolean = false
-
-  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
-  private var addedInject: Boolean = false
 
   private fun addBuildLibraries() {
     if (addedBuild) {
@@ -355,22 +348,6 @@ public object OssLibraries {
     addUtilLibraries()
   }
 
-  @Deprecated("PYDroid-Inject is deprecated and use is discouraged.")
-  private fun addInjectLibraries() {
-    if (addedInject) {
-      return
-    }
-    addedInject = true
-
-    add(
-        "PYDroid Inject",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid dependency injection library",
-    )
-
-    addCoreLibraries()
-  }
-
   private fun addNotifyLibraries() {
     if (addedNotify) {
       return
@@ -455,10 +432,6 @@ public object OssLibraries {
 
     if (usingBus) {
       addBusLibraries()
-    }
-
-    if (usingInject) {
-      addInjectLibraries()
     }
 
     if (usingNotify) {

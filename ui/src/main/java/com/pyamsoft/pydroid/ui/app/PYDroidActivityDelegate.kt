@@ -23,7 +23,4 @@ public interface PYDroidActivityDelegate {
    * is up to Google
    */
   public fun loadInAppRating()
-
-  /** Check for in-app updates */
-  @Deprecated("Don't use this function, use NewVersionWidget composable.") public fun checkUpdates()
 }

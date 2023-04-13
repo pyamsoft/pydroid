@@ -19,46 +19,6 @@ package com.pyamsoft.pydroid.core
 import android.os.Looper
 import androidx.annotation.CheckResult
 
-/**
- * Enforce expected threading contexts
- *
- * This is deprecated but kept unchanged for ABI compatibility
- */
-@Deprecated(
-    """Instead of using this, you should inject a ThreadEnforcer.
-
-For one, injecting enforces that you dependency inject, which is always good for an architecture.
-Two, this runs its checks in production mode, which (since you have already tested that these
-asserts are honored in debug mode right?) just adds extra cycles initializing a Looper and a Lazy
-and checking Threads.
-
-In debug mode you should use a DebugThreadEnforcer which will perform as this does,
-and in Production Mode you should inject a NoopThreadEnforcer which will do nothing in its checks
-""")
-public object Enforcer {
-
-  private val mainLooper by lazy { Looper.getMainLooper().requireNotNull() }
-
-  @CheckResult
-  private fun isMainThread(): Boolean {
-    return mainLooper.thread == Thread.currentThread()
-  }
-
-  /** Throws an exception if the current thread is the Main or UI thread */
-  public fun assertOffMainThread() {
-    if (isMainThread()) {
-      throw AssertionError("This operation must be OFF the Main/UI thread!")
-    }
-  }
-
-  /** Throws an exception if the current thread is not the Main or UI thread */
-  public fun assertOnMainThread() {
-    if (!isMainThread()) {
-      throw AssertionError("This operation must be ON the Main/UI thread!")
-    }
-  }
-}
-
 /** Enforces that operations are taking place on expected threads, or throws Assertion errors */
 public interface ThreadEnforcer {
 

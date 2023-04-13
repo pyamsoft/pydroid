@@ -127,10 +127,4 @@ internal constructor(
         .requireNotNull { "RatingDelegate is NULL, was this destroyed?" }
         .loadInAppRating()
   }
-
-  /** Check for in-app updates */
-  @Deprecated("Don't use this function, use NewVersionWidget composable.")
-  override fun checkUpdates() {
-    // TODO left blank
-  }
 }

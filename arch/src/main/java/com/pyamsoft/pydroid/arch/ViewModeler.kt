@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import androidx.compose.runtime.Composable
 
 /**
  * A ViewModel
@@ -52,33 +50,6 @@ import androidx.compose.runtime.Composable
  */
 public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
 
-  /** Render this state with arbitrary content */
-  @Composable
-  @Deprecated("Use state() instead")
-  public fun Render(content: @Composable (state: S) -> Unit)
-
-  /** Get the current state */
-  @Composable
-  @CheckResult
-  @Deprecated(
-      "Use the state field instead",
-      replaceWith = ReplaceWith("state"),
-  )
-  public fun state(): S
-
   /** Get the current state */
   @get:CheckResult public val state: S
-
-  /** Save state to a bundle */
-  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
-  override fun saveState(outState: Bundle) {
-    saveState(outState = outState.toWriter())
-  }
-
-  /** Restore state from a bundle */
-  @Deprecated(
-      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
-  override fun restoreState(savedInstanceState: Bundle?) {
-    restoreState(savedInstanceState = savedInstanceState.toReader())
-  }
 }

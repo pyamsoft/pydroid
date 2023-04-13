@@ -18,81 +18,9 @@ package com.pyamsoft.pydroid.ui.app
 
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
-import com.pyamsoft.pydroid.util.doOnCreate
-import com.pyamsoft.pydroid.util.doOnDestroy
-
-/**
- * The base Activity class for PYDroid.
- *
- * You are required to extend this class so that other ui bits work.
- *
- * Also see [installPYDroid] and [PYDroidActivityDelegate]
- */
-@Deprecated(
-    """Use AppCompatActivity.installPYDroid(provider, options) instead.
-
-PYDroidActivity requires that an implementation extend it, which may not be easy for
-an application which already has its own BaseActivity style implementation.
-
-Users are instead encouraged to use the extension function AppCompatActivity.installPYDroid()
-which will set up all of the expected bits of the old PYDroidActivity but can be used
-with any kind of BaseActivity as long as it extends from the AppCompat library's AppCompatActivity
-(as PYDroid internally relies on the use of FragmentActivity and its LifecycleOwner)
-""")
-public abstract class PYDroidActivity :
-    AppCompatActivity(), ChangeLogProvider, PYDroidActivityDelegate {
-
-  /** Disable the billing component */
-  protected open val disableBilling: Boolean = false
-
-  /** Disable the rating component */
-  protected open val disableRating: Boolean = false
-
-  /** Disable the version check component */
-  protected open val disableVersionCheck: Boolean = false
-
-  /** Disable the data policy component */
-  protected open val disableDataPolicy: Boolean = false
-
-  /** Activity delegate */
-  private var delegate: PYDroidActivityDelegate? = null
-
-  init {
-    this.doOnCreate {
-      delegate =
-          installPYDroid(
-              provider = this,
-              options =
-                  PYDroidActivityOptions(
-                      disableBilling = disableBilling,
-                      disableRating = disableRating,
-                      disableVersionCheck = disableVersionCheck,
-                      disableDataPolicy = disableDataPolicy,
-                  ),
-          )
-    }
-
-    this.doOnDestroy { delegate = null }
-  }
-
-  /**
-   * Rating Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that
-   * is up to Google
-   */
-  override fun loadInAppRating() {
-    delegate.requireNotNull().loadInAppRating()
-  }
-
-  /** Check for in-app updates */
-  @Deprecated("Don't use this function, use NewVersionWidget composable.")
-  override fun checkUpdates() {
-    delegate.requireNotNull().checkUpdates()
-  }
-}
 
 @CheckResult
 private fun createPYDroidDelegate(

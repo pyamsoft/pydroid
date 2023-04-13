@@ -10,14 +10,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider$Modules {
 
 public final class com/pyamsoft/pydroid/ui/PYDroid {
 	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/PYDroid$Companion;
-	public final fun getSystemService (Ljava/lang/String;)Ljava/lang/Object;
-	public static final fun init (Landroid/app/Application;Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;)Lcom/pyamsoft/pydroid/ui/PYDroid;
 	public final fun modules ()Lcom/pyamsoft/pydroid/ui/ModuleProvider$Modules;
-}
-
-public final class com/pyamsoft/pydroid/ui/PYDroid$Companion {
-	public final fun init (Landroid/app/Application;Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;)Lcom/pyamsoft/pydroid/ui/PYDroid;
 }
 
 public final class com/pyamsoft/pydroid/ui/PYDroid$DebugParameters {
@@ -90,19 +83,7 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static synthetic fun makeFullscreen$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
 }
 
-public abstract class com/pyamsoft/pydroid/ui/app/PYDroidActivity : androidx/appcompat/app/AppCompatActivity, com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate, com/pyamsoft/pydroid/ui/changelog/ChangeLogProvider {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun checkUpdates ()V
-	protected fun getDisableBilling ()Z
-	protected fun getDisableDataPolicy ()Z
-	protected fun getDisableRating ()Z
-	protected fun getDisableVersionCheck ()Z
-	public fun loadInAppRating ()V
-}
-
 public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate {
-	public abstract fun checkUpdates ()V
 	public abstract fun loadInAppRating ()V
 }
 
@@ -416,63 +397,6 @@ public final class com/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public abstract interface class com/pyamsoft/pydroid/ui/navigator/BackstackNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
-	public abstract fun backStackSize ()I
-	public abstract fun goBack ()V
-}
-
-public abstract class com/pyamsoft/pydroid/ui/navigator/BaseNavigator : com/pyamsoft/pydroid/ui/navigator/Navigator {
-	public static final field $stable I
-	public fun <init> ()V
-	public final fun navigateTo (Ljava/lang/Object;)V
-	public final fun restoreState (Landroid/os/Bundle;)V
-	protected abstract fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
-	public final fun saveState (Landroid/os/Bundle;)V
-	protected abstract fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
-}
-
-public abstract class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator : com/pyamsoft/pydroid/ui/navigator/BaseNavigator, com/pyamsoft/pydroid/ui/navigator/BackstackNavigator {
-	public static final field $stable I
-	public static final field Companion Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Companion;
-	protected fun <init> (Landroidx/fragment/app/FragmentActivity;I)V
-	protected fun <init> (Landroidx/lifecycle/LifecycleOwner;Landroidx/fragment/app/FragmentManager;I)V
-	public final fun backStackSize ()I
-	protected final fun commit (Lkotlin/jvm/functions/Function1;)V
-	protected final fun commit (ZLkotlin/jvm/functions/Function1;)V
-	public static synthetic fun commit$default (Lcom/pyamsoft/pydroid/ui/navigator/FragmentNavigator;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	protected final fun commitNow (Lkotlin/jvm/functions/Function1;)V
-	public final fun currentScreen ()Ljava/lang/Object;
-	public final fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
-	public final fun goBack ()V
-	public final fun goBackNow ()V
-	public final fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
-	public final fun navigateTo (Ljava/lang/Object;Z)V
-	protected fun onBack ()V
-	protected abstract fun onRestoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
-	protected abstract fun onSaveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
-	protected abstract fun performFragmentTransaction (ILandroidx/fragment/app/Fragment;Landroidx/fragment/app/Fragment;)V
-	protected abstract fun produceFragmentForScreen (Ljava/lang/Object;)Landroidx/fragment/app/Fragment;
-	protected final fun restoreState (Lcom/pyamsoft/pydroid/arch/UiSavedStateReader;)V
-	protected final fun saveState (Lcom/pyamsoft/pydroid/arch/UiSavedStateWriter;)V
-}
-
-public final class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Companion {
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/navigator/FragmentNavigator$Screen {
-	public abstract fun getScreenId ()Ljava/lang/Object;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/navigator/Navigator {
-	public abstract fun currentScreen ()Ljava/lang/Object;
-	public abstract fun currentScreenState (Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
-	public abstract fun loadIfEmpty (Lkotlin/jvm/functions/Function0;)V
-	public abstract fun navigateTo (Ljava/lang/Object;)V
-	public abstract fun navigateTo (Ljava/lang/Object;Z)V
-	public abstract fun restoreState (Landroid/os/Bundle;)V
-	public abstract fun saveState (Landroid/os/Bundle;)V
-}
-
 public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
@@ -551,22 +475,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/rating/RatingViewState :
 	public abstract fun isLoading ()Lkotlinx/coroutines/flow/StateFlow;
 }
 
-public abstract class com/pyamsoft/pydroid/ui/settings/SettingsFragment : androidx/fragment/app/Fragment {
-	public static final field $stable I
-	public fun <init> ()V
-	protected abstract fun customBottomItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
-	protected fun customElevation-chRvn1I (Landroidx/compose/runtime/Composer;I)F
-	protected abstract fun customPostPreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
-	protected abstract fun customPrePreferences (Landroidx/compose/runtime/Composer;I)Ljava/util/List;
-	protected abstract fun customTopItemMargin-chRvn1I (Landroidx/compose/runtime/Composer;I)F
-	protected abstract fun extraDebugContent (Landroidx/compose/foundation/lazy/LazyListScope;)V
-	protected abstract fun getHideClearAll ()Z
-	protected abstract fun getHideUpgradeInformation ()Z
-	public fun onConfigurationChanged (Landroid/content/res/Configuration;)V
-	public final fun onCreateView (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;
-	public fun onDestroyView ()V
-}
-
 public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
 	public static final fun SettingsPage-IBxwOmc (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/Shape;ZZLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/snapshots/SnapshotStateList;FFFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
@@ -597,13 +505,6 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 	public static final field SYSTEM Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
 	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
 	public static fun values ()[Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/ComposeViewKt {
-	public static final fun dispose (Landroidx/compose/ui/platform/ComposeView;)V
-	public static final fun dispose (Landroidx/fragment/app/Fragment;)V
-	public static final fun recompose (Landroidx/compose/ui/platform/ComposeView;)V
-	public static final fun recompose (Landroidx/fragment/app/Fragment;)V
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
@@ -710,12 +611,6 @@ public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefr
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
-public final class com/pyamsoft/pydroid/ui/widget/MaterialCheckableKt {
-	public static final fun ColoredMaterialCheckable-0hWCJGs (Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Ljava/lang/String;JLkotlin/jvm/functions/Function0;FLandroidx/compose/runtime/Composer;II)V
-	public static final fun MaterialCheckable-au3_HiA (Landroidx/compose/ui/Modifier;ZZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;FLandroidx/compose/runtime/Composer;II)V
-	public static final fun rememberMaterialCheckableHeightMatcherGenerator (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcherGenerator;
-}
-
 public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
 	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
@@ -730,19 +625,5 @@ public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {
 
 public final class com/pyamsoft/pydroid/ui/widget/UpdateProgressWidgetKt {
 	public static final fun UpdateProgressWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcher {
-	public abstract fun getExtraHeight-D9Ej5fM ()F
-	public abstract fun getOnSizeChangedModifier ()Landroidx/compose/ui/Modifier;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcherGenerator {
-	public abstract fun generateFor (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/widget/materialcheckable/HeightMatcher;
-}
-
-public abstract interface class com/pyamsoft/pydroid/ui/widget/materialcheckable/MaterialCheckableAlpha {
-	public abstract fun getPrimary ()F
-	public abstract fun getSecondary ()F
 }
 

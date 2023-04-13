@@ -16,9 +16,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
-import androidx.annotation.CheckResult
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 
 /**
@@ -28,40 +25,6 @@ public abstract class AbstractViewModeler<S : UiViewState>
 protected constructor(
     override val state: S,
 ) : ViewModeler<S> {
-
-  @Composable
-  @CheckResult
-  @Deprecated(
-      "Use the state field instead",
-      replaceWith = ReplaceWith("state"),
-  )
-  final override fun state(): S {
-    return state
-  }
-
-  @Composable
-  @Deprecated("Use state() instead")
-  final override fun Render(content: @Composable (state: S) -> Unit) {
-    content(state)
-  }
-
-  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
-  final override fun saveState(outState: Bundle) {
-    super.saveState(outState)
-  }
-
-  @Deprecated("Start migrating over to registerSaveState. Don't forget SaveStateDisposableEffect")
-  override fun saveState(outState: UiSavedStateWriter) {}
-
-  @Deprecated(
-      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
-  final override fun restoreState(savedInstanceState: Bundle?) {
-    super.restoreState(savedInstanceState)
-  }
-
-  @Deprecated(
-      "Start migrating over to consumeRestoredState. Don't forget SaveStateDisposableEffect")
-  override fun restoreState(savedInstanceState: UiSavedStateReader) {}
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}
 

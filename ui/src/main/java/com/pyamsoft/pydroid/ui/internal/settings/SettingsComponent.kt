@@ -29,12 +29,9 @@ import com.pyamsoft.pydroid.ui.internal.changelog.MutableChangeLogViewState
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
-import com.pyamsoft.pydroid.ui.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface SettingsComponent {
-
-  fun inject(fragment: SettingsFragment)
 
   fun inject(injector: SettingsInjector)
 
@@ -97,10 +94,6 @@ internal interface SettingsComponent {
               state = params.changeLogState,
               interactor = params.changeLogModule.provideInteractor(),
           )
-    }
-
-    override fun inject(fragment: SettingsFragment) {
-      fragment.composeTheme = params.composeTheme
     }
 
     internal class FactoryImpl

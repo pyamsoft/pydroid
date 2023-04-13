@@ -1,9 +1,3 @@
-public final class com/pyamsoft/pydroid/core/Enforcer {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/core/Enforcer;
-	public final fun assertOffMainThread ()V
-	public final fun assertOnMainThread ()V
-}
-
 public final class com/pyamsoft/pydroid/core/EnforcerKt {
 	public static final fun createThreadEnforcer (Z)Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
 }

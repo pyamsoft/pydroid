@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
 import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.theme.ThemeProvider
-import com.pyamsoft.pydroid.ui.theme.Theming
 
 /**
  * A Compose theme provider which does nothing
@@ -68,29 +67,6 @@ internal constructor(
   public fun modules(): ModuleProvider.Modules {
     return moduleProvider().get()
   }
-
-  /**
-   * Override Application.getSystemService() with this to get the PYDroid object graph
-   *
-   * See also [installPYDroid]
-   */
-  @CheckResult
-  @Deprecated(
-      """Do not use, use Application.installPYDroid() instead
-
-PYDroid.init requires that an Application class call it at a very specific point, and override
-the getSystemService() function in a very specific order which is prone to mistakes.
-
-Users are instead encouraged to use the extension function Application.installPYDroid()
-which will set up all of the expected bits of the old PYDroid.init but can be used anywhere,
-including outside of an Application class.
-""")
-  public fun getSystemService(name: String): Any? =
-      when (name) {
-        PYDroidComponent::class.java.name -> instance.component
-        Theming::class.java.name -> modules().theming()
-        else -> null
-      }
 
   /** PYDroid parameters */
   public data class Parameters
@@ -147,61 +123,6 @@ including outside of an Application class.
     val termsConditionsUrl: String
     val version: Int
     val logger: PYDroidLogger?
-  }
-
-  /** Static methods */
-  public companion object {
-
-    /**
-     * Initialize the library
-     *
-     * Track the Instance at the application level, such as:
-     * ```
-     * Application.kt
-     *
-     * private var pydroid: PYDroid? = null
-     *
-     * override fun onCreate() {
-     *   this.pydroid = PYDroid.init(
-     *     this,
-     *     PYDroid.Parameters(
-     *       name = getString(R.string.app_name),
-     *       bugReportUrl = getString(R.string.bug_report),
-     *       version = BuildConfig.VERSION_CODE,
-     *       debug = PYDroid.DebugParameters( ... ),
-     *     ),
-     *   )
-     * }
-     *
-     * override fun getSystemService(name: String): Any? {
-     *   return pydroid?.getSystemService(name) ?: super.getSystemService(name)
-     * }
-     * ```
-     *
-     * Generally speaking, you should treat a PYDroid instance as a Singleton. If you create more
-     * than one instance and attempt to swap them out at runtime, the behavior of the library and
-     * its dependent components is completely undefined.
-     *
-     * See also [installPYDroid]
-     */
-    @JvmStatic
-    @CheckResult
-    @Deprecated(
-        """Do not use, use Application.installPYDroid() instead
-
-PYDroid.init requires that an Application class call it at a very specific point, and override
-the getSystemService() function in a very specific order which is prone to mistakes.
-
-Users are instead encouraged to use the extension function Application.installPYDroid()
-which will set up all of the expected bits of the old PYDroid.init but can be used anywhere,
-including outside of an Application class.
-    """)
-    public fun init(
-        application: Application,
-        params: Parameters,
-    ): PYDroid {
-      return application.internalInstallPYDroid(params)
-    }
   }
 }
 

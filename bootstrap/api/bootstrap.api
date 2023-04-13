@@ -76,7 +76,6 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibraries {
 	public final fun getUsingAutopsy ()Z
 	public final fun getUsingBilling ()Z
 	public final fun getUsingBus ()Z
-	public final fun getUsingInject ()Z
 	public final fun getUsingNotify ()Z
 	public final fun getUsingTheme ()Z
 	public final fun getUsingUi ()Z
@@ -86,7 +85,6 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibraries {
 	public final fun setUsingAutopsy (Z)V
 	public final fun setUsingBilling (Z)V
 	public final fun setUsingBus (Z)V
-	public final fun setUsingInject (Z)V
 	public final fun setUsingNotify (Z)V
 	public final fun setUsingTheme (Z)V
 	public final fun setUsingUi (Z)V

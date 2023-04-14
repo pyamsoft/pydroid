@@ -122,11 +122,11 @@ subprojects {
   // Configure matching toolchains
   // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc
   kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
   }
   java {
     toolchain {
-      languageVersion.set(JavaLanguageVersion.of(11))
+      languageVersion.set(JavaLanguageVersion.of(17))
     }
   }
 
@@ -147,12 +147,12 @@ subprojects {
       resConfigs "en"
 
       compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
       }
 
       kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
       }
 
       publishing {

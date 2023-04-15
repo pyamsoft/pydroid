@@ -23,13 +23,23 @@ pluginManagement {
 }
 
 rootProject.name = "PYDroid"
+
 include(":arch")
+
 include(":autopsy")
+
 include(":billing")
+
 include(":bootstrap")
+
 include(":bus")
+
 include(":core")
+
 include(":notify")
+
 include(":theme")
+
 include(":ui")
+
 include(":util")

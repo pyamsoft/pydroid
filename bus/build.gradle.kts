@@ -17,11 +17,7 @@
 android {
   namespace = "com.pyamsoft.pydroid.bus"
 
-  kotlinOptions {
-    freeCompilerArgs += "-Xexplicit-api=strict"
-  }
+  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
 }
 
-dependencies {
-  api(project(":core"))
-}
+dependencies { api(project(":core")) }

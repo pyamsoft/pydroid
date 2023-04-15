@@ -17,13 +17,9 @@
 android {
   namespace = "com.pyamsoft.pydroid.theme"
 
-  kotlinOptions {
-    freeCompilerArgs += "-Xexplicit-api=strict"
-  }
+  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
 
-  buildFeatures {
-    compose = true
-  }
+  buildFeatures { compose = true }
 
   composeOptions {
     kotlinCompilerExtensionVersion = "${rootProject.extra["compose_compiler_version"]}"
@@ -32,7 +28,8 @@ android {
 
 dependencies {
   // Compose
-  implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
+  implementation(
+      "androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
   implementation("androidx.activity:activity-compose:${rootProject.extra["composeActivity"]}")
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
   implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")

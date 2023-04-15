@@ -17,9 +17,7 @@
 android {
   namespace = "com.pyamsoft.pydroid.notify"
 
-  kotlinOptions {
-    freeCompilerArgs += "-Xexplicit-api=strict"
-  }
+  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
 }
 
 dependencies {

@@ -17,9 +17,7 @@
 android {
   namespace = "com.pyamsoft.pydroid.billing"
 
-  kotlinOptions {
-    freeCompilerArgs += "-Xexplicit-api=strict"
-  }
+  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
 }
 
 dependencies {
@@ -29,5 +27,4 @@ dependencies {
 
   api(project(":bus"))
   api(project(":util"))
-
 }

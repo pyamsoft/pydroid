@@ -15,17 +15,17 @@
  */
 
 android {
-  namespace "com.pyamsoft.pydroid.core"
+  namespace = "com.pyamsoft.pydroid.core"
 
   kotlinOptions {
-    freeCompilerArgs += '-Xexplicit-api=strict'
+    freeCompilerArgs += "-Xexplicit-api=strict"
   }
 }
 
 dependencies {
   // Expose annotations
-  api "androidx.annotation:annotation:$annotation"
+  api("androidx.annotation:annotation:1.6.0")
 
   // Expose coroutines
-  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }

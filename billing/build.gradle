@@ -15,18 +15,18 @@
  */
 
 android {
-  namespace "com.pyamsoft.pydroid.billing"
+  namespace = "com.pyamsoft.pydroid.billing"
 
   kotlinOptions {
-    freeCompilerArgs += '-Xexplicit-api=strict'
+    freeCompilerArgs += "-Xexplicit-api=strict"
   }
 }
 
 dependencies {
-  api project(':bus')
-  api project(':util')
+  api project(":bus")
+  api project(":util")
 
-  implementation "androidx.appcompat:appcompat:$appCompat"
-  implementation "com.android.billingclient:billing:$billing"
-  implementation "androidx.compose.runtime:runtime:$compose_version"
+  implementation("androidx.appcompat:appcompat:1.6.1")
+  implementation("com.android.billingclient:billing:5.2.0")
+  implementation("androidx.compose.runtime:runtime:$compose_version")
 }

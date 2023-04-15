@@ -15,35 +15,35 @@
  */
 
 android {
-  namespace "com.pyamsoft.pydroid.autopsy"
+  namespace = "com.pyamsoft.pydroid.autopsy"
 
   kotlinOptions {
-    freeCompilerArgs += '-Xexplicit-api=strict'
+    freeCompilerArgs += "-Xexplicit-api=strict"
   }
 
   buildFeatures {
-    compose true
+    compose= true
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion "$compose_compiler_version"
+    kotlinCompilerExtensionVersion = "$compose_compiler_version"
   }
 }
 
 dependencies {
-  api project(':core')
-  api project(':theme')
+  api project(":core")
+  api project(":theme")
 
   // Compose
-  implementation "androidx.compose.compiler:compiler:$compose_compiler_version"
-  implementation "androidx.activity:activity-compose:$composeActivity"
-  implementation "androidx.compose.ui:ui:$compose_version"
-  implementation "androidx.compose.material:material:$composeMaterial"
-  implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-  debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+  implementation("androidx.compose.compiler:compiler:$compose_compiler_version")
+  implementation("androidx.activity:activity-compose:$composeActivity")
+  implementation("androidx.compose.ui:ui:$compose_version")
+  implementation("androidx.compose.material:material:$composeMaterial")
+  implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
+  debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
 
   // Accompanist
-  implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist"
+  implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
 
-  implementation "androidx.startup:startup-runtime:$startup"
+  implementation("androidx.startup:startup-runtime:1.1.1")
 }

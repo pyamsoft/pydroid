@@ -18,93 +18,56 @@
 
 buildscript {
   ext {
-    // SDK
-    minSdk = 22
-    maxSdk = 33
-
     // Compose
     compose_version = "1.4.1"
     compose_compiler_version = "1.4.5"
     composeActivity = "1.7.0"
     composeMaterial = "1.4.1"
     accompanist = "0.30.1"
-    coil = "2.3.0"
-
-    // Kotlin
-    coroutines = '1.6.4'
 
     // AndroidX
-    annotation = "1.6.0"
     core = "1.10.0"
-    lifecycle = "2.6.1"
     fragment = "1.5.6"
-    startup = "1.1.1"
-    appCompat = "1.6.1"
-
-    // Material Design
-    materialDesign = "1.8.0"
-
-    // Google Play libraries
-    appUpdate = "2.0.1"
-    review = "2.0.1"
-    billing = "5.2.0"
-
-    // Needed just for androidx.preference.PreferenceManager
-    // Eventually, big G may push for DataStore being a requirement, which will be pain
-    // This pulls in all the UI bits too, which is a little lame.
-    preference = "1.2.0"
   }
 }
 
 plugins {
   // Android AGP
   // https://developer.android.com/studio/build#top-level
-  id 'com.android.library' version '8.0.0' apply false
+  id("com.android.library") version "8.0.0" apply false
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
-  id "org.gradle.android.cache-fix" version "2.7.0" apply false
+  id("org.gradle.android.cache-fix") version "2.7.0" apply false
 
   // Kotlin
   // https://developer.android.com/studio/build#top-level
-  id 'org.jetbrains.kotlin.android' version "1.8.20" apply false
+  id("org.jetbrains.kotlin.android") version "1.8.20" apply false
 
   // Dokka
   // https://github.com/Kotlin/dokka
-  id 'org.jetbrains.dokka' version "1.8.10" apply false
+  id("org.jetbrains.dokka") version "1.8.10" apply false
 
   // Gradle version checker
   // https://github.com/ben-manes/gradle-versions-plugin
-  id 'com.github.ben-manes.versions' version '0.46.0' apply false
+  id("com.github.ben-manes.versions") version "0.46.0" apply false
 
   // Spotless
   // https://github.com/diffplug/spotless
-  id "com.diffplug.spotless" version "6.18.0" apply false
+  id("com.diffplug.spotless") version "6.18.0" apply false
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
-  id 'org.jetbrains.kotlinx.binary-compatibility-validator' version '0.13.0'
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.0"
 }
 
 subprojects {
-  // Android AGP
-  apply plugin: 'com.android.library'
-
-  // AGP Cache fix
+  apply plugin: "com.android.library"
   apply plugin: "org.gradle.android.cache-fix"
-
-  // Kotlin
-  apply plugin: 'kotlin-android'
-  apply plugin: 'kotlin-kapt'
-
-  // Dokka
-  apply plugin: 'org.jetbrains.dokka'
-
-  // Publish
-  apply plugin: 'maven-publish'
-
-  final POM_GROUP = "com.github.pyamsoft.pydroid"
-  final POM_VERSION = "26.4.0"
+  apply plugin: "kotlin-android"
+  apply plugin: "kotlin-kapt"
+  apply plugin: "org.jetbrains.dokka"
+  apply plugin: "maven-publish"
 
   // Kapt flags
   kapt {
@@ -131,24 +94,24 @@ subprojects {
   }
 
   android {
-    compileSdkVersion rootProject.ext.maxSdk
+    compileSdkVersion(33)
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
-      minSdkVersion rootProject.ext.minSdk
+      minSdkVersion(22)
 
       // For vector drawables
       vectorDrawables.useSupportLibrary = true
 
       // Consumer proguard file
-      consumerProguardFiles "consumer-rules.pro"
+      consumerProguardFiles("consumer-rules.pro")
 
-      // Only English, I don't have any translations
-      resConfigs "en"
+      // Only English, I don"t have any translations
+      resConfigs("en")
 
       compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility =JavaVersion.VERSION_17
+        targetCompatibility =JavaVersion.VERSION_17
       }
 
       kotlinOptions {
@@ -157,57 +120,38 @@ subprojects {
 
       publishing {
         singleVariant("release") {
-          // Do not include withSources and withJavadoc here because we will
-          // add them with our own custom hooks below
+          withSourcesJar()
+          withJavadocJar()
         }
       }
     }
 
     buildTypes {
       debug {
-        minifyEnabled false
-        shrinkResources false
+        minifyEnabled =false
+        shrinkResources =false
       }
 
       release {
-        minifyEnabled false
-        shrinkResources false
+        minifyEnabled =false
+        shrinkResources = false
       }
     }
 
     buildFeatures {
-      buildConfig false
+      buildConfig = false
     }
   }
 
   project.afterEvaluate {
-    task androidSourcesJar(type: Jar) {
-      archiveClassifier.convention('sources')
-      archiveClassifier.set('sources')
-      from android.sourceSets.main.java.source
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
-      archiveClassifier.convention('javadoc')
-      archiveClassifier.set('javadoc')
-      from "$buildDir/dokka"
-    }
-
-    artifacts {
-      archives androidSourcesJar
-      archives androidJavadocsJar
-    }
-
     publishing {
       publications {
         PYDroid(MavenPublication) {
-          artifact androidSourcesJar
-          artifact androidJavadocsJar
           from project.components.release
 
           artifactId project.name
-          groupId POM_GROUP
-          version POM_VERSION
+          groupId "com.github.pyamsoft.pydroid"
+          version "26.4.0"
         }
       }
     }
@@ -216,7 +160,7 @@ subprojects {
 
 allprojects {
   apply plugin: "com.diffplug.spotless"
-  apply plugin: 'com.github.ben-manes.versions'
+  apply plugin: "com.github.ben-manes.versions"
 
   repositories {
     mavenLocal()
@@ -226,35 +170,26 @@ allprojects {
 
     // Jitpack
     maven {
-      url 'https://jitpack.io'
+      url = "https://jitpack.io"
       content {
         includeGroup("com.github.pyamsoft")
       }
     }
   }
 
-  // Java compile show
+  // Java compile
   tasks.withType(JavaCompile) {
-    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    options.compilerArgs += [
+            "-Xlint:unchecked",
+            "-Xlint:deprecation",
+    ]
     options.deprecation = true
   }
 
-  // Version Plugin ignore non-stable releases
-  def isNonStable = { version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
-    def regex = /^[0-9,.v-]+(-r)?$/
-    return !stableKeyword && !(version ==~ regex)
-  }
-  tasks.named("dependencyUpdates").configure {
-    rejectVersionIf {
-      isNonStable(it.candidate.version)
-    }
-  }
-
-  // Spotless plugin
+  // Spotless
   spotless {
     java {
-      target "src/**/*.java"
+      target("src/**/*.java")
 
       removeUnusedImports()
       trimTrailingWhitespace()
@@ -262,7 +197,7 @@ allprojects {
       indentWithSpaces(2)
     }
     kotlin {
-      target "src/**/*.kt"
+      target("src/**/*.kt")
       ktfmt()
 
       trimTrailingWhitespace()
@@ -270,7 +205,7 @@ allprojects {
       indentWithSpaces(2)
     }
     groovyGradle {
-      target "*.gradle"
+      target("*.gradle")
       greclipse()
 
       trimTrailingWhitespace()

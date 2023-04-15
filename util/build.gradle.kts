@@ -15,7 +15,7 @@
  */
 
 android {
-  namespace = "com.pyamsoft.pydroid.notify"
+  namespace = "com.pyamsoft.pydroid.util"
 
   kotlinOptions {
     freeCompilerArgs += "-Xexplicit-api=strict"
@@ -23,9 +23,8 @@ android {
 }
 
 dependencies {
-  implementation("androidx.core:core:$core")
-  implementation("androidx.fragment:fragment-ktx:$fragment")
-
-  api project(":core")
-  api project(":util")
+  implementation("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
+  implementation("androidx.core:core:${rootProject.extra["core"]}")
+  implementation("androidx.lifecycle:lifecycle-common:2.6.1")
+  api(project(":core"))
 }

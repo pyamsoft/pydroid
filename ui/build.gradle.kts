@@ -26,13 +26,13 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "$compose_compiler_version"
+    kotlinCompilerExtensionVersion = "${rootProject.extra["compose_compiler_version"]}"
   }
 }
 
 dependencies {
   // These need to be API since they are used as base classes for Activity and Fragment
-  api("androidx.fragment:fragment-ktx:$fragment")
+  api("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
 
   // Needed just for androidx.preference.PreferenceManager
   // Eventually, big G may push for DataStore being a requirement, which will be pain
@@ -40,29 +40,29 @@ dependencies {
   api("androidx.preference:preference:1.2.0")
 
   // Compose
-  implementation("androidx.compose.compiler:compiler:$compose_compiler_version")
-  implementation("androidx.activity:activity-compose:$composeActivity")
-  implementation("androidx.compose.ui:ui:$compose_version")
-  implementation("androidx.compose.material:material:$composeMaterial")
-  implementation("androidx.compose.animation:animation:$compose_version")
-  implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-  debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
-  //  implementation "androidx.compose.material:material-icons-extended:1.3.1"
+  implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
+  implementation("androidx.activity:activity-compose:${rootProject.extra["composeActivity"]}")
+  implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
+  implementation("androidx.compose.animation:animation:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose_version"]}")
+  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
+  //  implementation("androidx.compose.material:material-icons-extended:1.3.1")
 
   // Compose Image loading
   implementation("io.coil-kt:coil-compose-base:2.3.0")
 
   // Accompanist
-  implementation("com.google.accompanist:accompanist-insets:$accompanist")
+  implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist"]}")
 
-  implementation("androidx.core:core-ktx:$core")
+  implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
 
   // Material Design
   implementation("com.google.android.material:material:1.8.0")
 
-  api project(":arch")
-  api project(":billing")
-  api project(":bootstrap")
-  api project(":util")
-  api project(":theme")
+  api(project(":arch"))
+  api(project(":billing"))
+  api(project(":bootstrap"))
+  api(project(":util"))
+  api(project(":theme"))
 }

@@ -26,24 +26,24 @@ android {
   }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = "$compose_compiler_version"
+    kotlinCompilerExtensionVersion = "${rootProject.extra["compose_compiler_version"]}"
   }
 }
 
 dependencies {
-  api project(":core")
-  api project(":theme")
-
   // Compose
-  implementation("androidx.compose.compiler:compiler:$compose_compiler_version")
-  implementation("androidx.activity:activity-compose:$composeActivity")
-  implementation("androidx.compose.ui:ui:$compose_version")
-  implementation("androidx.compose.material:material:$composeMaterial")
-  implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-  debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
+  implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
+  implementation("androidx.activity:activity-compose:${rootProject.extra["composeActivity"]}")
+  implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
+  implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose_version"]}")
+  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
 
   // Accompanist
-  implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist")
+  implementation("com.google.accompanist:accompanist-systemuicontroller:${rootProject.extra["accompanist"]}")
 
   implementation("androidx.startup:startup-runtime:1.1.1")
+
+  api(project(":core"))
+  api(project(":theme"))
 }

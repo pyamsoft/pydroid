@@ -23,10 +23,11 @@ android {
 }
 
 dependencies {
-  api project(":bus")
-  api project(":util")
-
   implementation("androidx.appcompat:appcompat:1.6.1")
   implementation("com.android.billingclient:billing:5.2.0")
-  implementation("androidx.compose.runtime:runtime:$compose_version")
+  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
+
+  api(project(":bus"))
+  api(project(":util"))
+
 }

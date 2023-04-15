@@ -15,20 +15,27 @@
  */
 
 android {
-  namespace = "com.pyamsoft.pydroid.bootstrap"
+  namespace = "com.pyamsoft.pydroid.arch"
 
   kotlinOptions {
     freeCompilerArgs += "-Xexplicit-api=strict"
   }
+
+  buildFeatures {
+    compose = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = rootProject.extra["compose_compiler_version"] as? String
+  }
 }
 
 dependencies {
-  implementation("androidx.core:core-ktx:$core")
+  // Compose
+  implementation("androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
+  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.runtime:runtime-saveable:${rootProject.extra["compose_version"]}")
 
-  implementation("com.google.android.play:app-update:2.0.1")
-  implementation("com.google.android.play:review:2.0.1")
-
-  implementation("androidx.compose.runtime:runtime:$compose_version")
-
-  api project(':util')
+  api(project(":bus"))
+  api(project(":util"))
 }

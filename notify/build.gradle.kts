@@ -15,27 +15,17 @@
  */
 
 android {
-  namespace = "com.pyamsoft.pydroid.arch"
+  namespace = "com.pyamsoft.pydroid.notify"
 
   kotlinOptions {
     freeCompilerArgs += "-Xexplicit-api=strict"
   }
-
-  buildFeatures {
-    compose = true
-  }
-
-  composeOptions {
-    kotlinCompilerExtensionVersion = "$compose_compiler_version"
-  }
 }
 
 dependencies {
-  // Compose
-  implementation("androidx.compose.compiler:compiler:$compose_compiler_version")
-  implementation("androidx.compose.runtime:runtime:$compose_version")
-  implementation("androidx.compose.runtime:runtime-saveable:$compose_version")
+  implementation("androidx.core:core:${rootProject.extra["core"]}")
+  implementation("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
 
-  api project(":bus")
-  api project(":util")
+  api(project(":core"))
+  api(project(":util"))
 }

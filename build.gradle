@@ -94,11 +94,11 @@ subprojects {
   }
 
   android {
-    compileSdkVersion(33)
+    compileSdk = 33
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
-      minSdkVersion(22)
+      minSdk = 22
 
       // For vector drawables
       vectorDrawables.useSupportLibrary = true
@@ -107,7 +107,7 @@ subprojects {
       consumerProguardFiles("consumer-rules.pro")
 
       // Only English, I don"t have any translations
-      resConfigs("en")
+      resourceConfigurations = ["en"]
 
       compileOptions {
         sourceCompatibility =JavaVersion.VERSION_17

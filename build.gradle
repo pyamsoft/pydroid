@@ -110,8 +110,11 @@ subprojects {
       resourceConfigurations = ["en"]
 
       compileOptions {
-        sourceCompatibility =JavaVersion.VERSION_17
-        targetCompatibility =JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled = true
       }
 
       kotlinOptions {
@@ -128,12 +131,12 @@ subprojects {
 
     buildTypes {
       debug {
-        minifyEnabled =false
-        shrinkResources =false
+        minifyEnabled = false
+        shrinkResources = false
       }
 
       release {
-        minifyEnabled =false
+        minifyEnabled = false
         shrinkResources = false
       }
     }
@@ -155,6 +158,10 @@ subprojects {
         }
       }
     }
+  }
+
+  dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
   }
 }
 

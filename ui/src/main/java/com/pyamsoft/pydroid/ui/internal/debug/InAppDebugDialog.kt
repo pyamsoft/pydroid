@@ -59,6 +59,12 @@ import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
+private enum class InAppDebugContentTypes {
+  LINE,
+  TITLE,
+  DISABLED,
+}
+
 @Composable
 private fun MountHooks(
     viewModel: DebugViewModeler,
@@ -148,7 +154,9 @@ private fun InAppDebugScreen(
             if (isEnabled) {
               extraContent()
 
-              item {
+              item(
+                  contentType = InAppDebugContentTypes.TITLE,
+              ) {
                 Text(
                     text = "Logs",
                     style =
@@ -163,6 +171,7 @@ private fun InAppDebugScreen(
               items(
                   items = sortedLines,
                   key = { it.timestamp.toString() },
+                  contentType = { InAppDebugContentTypes.LINE },
               ) { line ->
                 Text(
                     modifier = Modifier.fillMaxWidth(),
@@ -185,7 +194,9 @@ private fun InAppDebugScreen(
                 )
               }
             } else {
-              item {
+              item(
+                  contentType = InAppDebugContentTypes.DISABLED,
+              ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,

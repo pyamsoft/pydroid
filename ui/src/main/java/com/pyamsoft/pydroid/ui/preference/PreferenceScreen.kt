@@ -40,6 +40,13 @@ import com.pyamsoft.pydroid.ui.util.fullScreenDialog
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
+private enum class PreferenceScreenContentTypes {
+  PREFERENCE,
+  TOP_SPACER,
+  BOTTOM_SPACER,
+  GROUP_HEADER,
+}
+
 /** Create a screen that hosts Preference Composables */
 @Composable
 public fun PreferenceScreen(
@@ -110,7 +117,9 @@ private fun PreferenceScreenInternal(
       modifier = modifier,
   ) {
     if (topItemMargin > ZeroSize) {
-      item {
+      item(
+          contentType = PreferenceScreenContentTypes.TOP_SPACER,
+      ) {
         Spacer(
             modifier = Modifier.fillMaxWidth().height(topItemMargin),
         )
@@ -135,7 +144,9 @@ private fun PreferenceScreenInternal(
     }
 
     if (bottomItemMargin > ZeroSize) {
-      item {
+      item(
+          contentType = PreferenceScreenContentTypes.BOTTOM_SPACER,
+      ) {
         Spacer(
             modifier = Modifier.fillMaxWidth().height(bottomItemMargin),
         )
@@ -162,7 +173,9 @@ private fun LazyListScope.renderGroupInScope(
   val preferences = preference.preferences
   val isEnabled = preference.isEnabled
 
-  item {
+  item(
+      contentType = PreferenceScreenContentTypes.GROUP_HEADER,
+  ) {
     PreferenceGroupHeader(
         modifier = Modifier.fillMaxWidth(),
         name = name,
@@ -172,6 +185,7 @@ private fun LazyListScope.renderGroupInScope(
   items(
       items = preferences,
       key = { it.id },
+      contentType = { PreferenceScreenContentTypes.PREFERENCE },
   ) { item ->
     CompositionLocalProvider(
         LocalPreferenceEnabledStatus provides isEnabled,
@@ -190,7 +204,9 @@ private fun LazyListScope.renderItemInScope(
     preference: Preferences.Item,
     onOpenDialog: (String) -> Unit,
 ) {
-  item {
+  item(
+      contentType = PreferenceScreenContentTypes.PREFERENCE,
+  ) {
     RenderItem(
         modifier = modifier,
         preference = preference,

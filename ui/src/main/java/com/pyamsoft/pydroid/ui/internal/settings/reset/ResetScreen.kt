@@ -37,6 +37,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 
+private enum class ResetScreenContentTypes {
+  TITLE,
+  MESSAGE,
+  ACTIONS,
+}
+
 @Composable
 internal fun ResetScreen(
     modifier: Modifier = Modifier,
@@ -53,7 +59,9 @@ internal fun ResetScreen(
     LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth(),
     ) {
-      item {
+      item(
+          contentType = ResetScreenContentTypes.TITLE,
+      ) {
         Box(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         ) {
@@ -61,7 +69,9 @@ internal fun ResetScreen(
         }
       }
 
-      item {
+      item(
+          contentType = ResetScreenContentTypes.MESSAGE,
+      ) {
         Box(
             modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
         ) {
@@ -69,7 +79,9 @@ internal fun ResetScreen(
         }
       }
 
-      item {
+      item(
+          contentType = ResetScreenContentTypes.ACTIONS,
+      ) {
         Actions(
             isReset = reset,
             onReset = onReset,

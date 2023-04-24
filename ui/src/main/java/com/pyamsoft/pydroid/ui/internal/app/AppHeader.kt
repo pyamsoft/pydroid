@@ -43,6 +43,12 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
+internal enum class AppHeaderContentTypes {
+  HEADER,
+  FOOTER,
+  ITEM
+}
+
 @Composable
 private fun AppHeader(
     modifier: Modifier = Modifier,
@@ -113,7 +119,9 @@ internal fun AppHeaderDialog(
         modifier = modifier,
     ) {
       val scope = this
-      item {
+      item(
+          contentType = AppHeaderContentTypes.HEADER,
+      ) {
         AppHeader(
             modifier = Modifier.fillMaxWidth(),
             icon = icon,
@@ -125,7 +133,9 @@ internal fun AppHeaderDialog(
       scope.content()
 
       // Footer for dialogs
-      item {
+      item(
+          contentType = AppHeaderContentTypes.FOOTER,
+      ) {
         val elevation = LocalDialogElevation.current
         val c = LocalDialogColor.current
 
@@ -151,7 +161,9 @@ internal inline fun LazyListScope.dialogItem(
     crossinline content: @Composable () -> Unit
 ) {
   val self = this
-  self.item {
+  self.item(
+      contentType = AppHeaderContentTypes.ITEM,
+  ) {
     val elevation = LocalDialogElevation.current
     val color = LocalDialogColor.current
 
@@ -184,7 +196,7 @@ private fun PreviewAppHeaderDialog() {
       name = "TEST",
       imageLoader = createNewTestImageLoader(),
   ) {
-    item {
+    dialogItem {
       Text(
           text = "Just a Test",
       )

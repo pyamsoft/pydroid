@@ -32,6 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.pyamsoft.pydroid.theme.keylines
 
+private enum class CrashScreenContentTypes {
+  THREAD,
+  THROWABLE,
+  MESSAGE,
+  TRACE,
+}
+
 @Composable
 internal fun CrashScreen(
     modifier: Modifier = Modifier,
@@ -48,25 +55,33 @@ internal fun CrashScreen(
     LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.typography),
     ) {
-      item {
+      item(
+          contentType = CrashScreenContentTypes.THREAD,
+      ) {
         ThreadName(
             threadName = threadName,
         )
       }
 
-      item {
+      item(
+          contentType = CrashScreenContentTypes.THROWABLE,
+      ) {
         ThrowableName(
             throwableName = throwableName,
         )
       }
 
-      item {
+      item(
+          contentType = CrashScreenContentTypes.MESSAGE,
+      ) {
         ThrowableMessage(
             throwableMessage = throwableMessage,
         )
       }
 
-      item {
+      item(
+          contentType = CrashScreenContentTypes.TRACE,
+      ) {
         StackTrace(
             stackTrace = stackTrace,
         )

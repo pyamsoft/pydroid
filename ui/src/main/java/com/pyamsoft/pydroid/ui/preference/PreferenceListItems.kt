@@ -55,6 +55,12 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 
+private enum class PreferenceContentTypes {
+  DIALOG_ITEM,
+  DIALOG_TITLE,
+  DIALOG_ACTION,
+}
+
 @Composable
 internal fun SimplePreferenceItem(
     modifier: Modifier = Modifier,
@@ -216,7 +222,9 @@ internal fun PreferenceDialog(
         shape = MaterialTheme.shapes.medium,
     ) {
       LazyColumn {
-        item {
+        item(
+            contentType = PreferenceContentTypes.DIALOG_TITLE,
+        ) {
           PreferenceDialogTitle(
               modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
               title = title,
@@ -226,6 +234,7 @@ internal fun PreferenceDialog(
         items(
             items = entries,
             key = { it.value },
+            contentType = { PreferenceContentTypes.DIALOG_ITEM },
         ) { item ->
           PreferenceDialogItem(
               modifier = Modifier.fillMaxWidth(),
@@ -238,7 +247,9 @@ internal fun PreferenceDialog(
               })
         }
 
-        item {
+        item(
+            contentType = PreferenceContentTypes.DIALOG_ACTION,
+        ) {
           PreferenceDialogActions(
               modifier =
                   Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),

@@ -48,6 +48,10 @@ import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
 
+private enum class AboutScreenContentTypes {
+  LIBRARY
+}
+
 @Composable
 internal fun AboutScreen(
     modifier: Modifier = Modifier,
@@ -137,6 +141,7 @@ private fun AboutList(
     items(
         items = licenses,
         key = { "${it.name}:${it.libraryUrl}" },
+        contentType = { AboutScreenContentTypes.LIBRARY },
     ) { item ->
       AboutListItem(
           modifier = Modifier.fillMaxWidth(),

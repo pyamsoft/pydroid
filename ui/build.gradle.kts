@@ -55,7 +55,7 @@ dependencies {
   implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
 
   // Material Design
-  implementation("com.google.android.material:material:1.8.0")
+  implementation("com.google.android.material:material:1.9.0")
 
   api(project(":arch"))
   api(project(":billing"))

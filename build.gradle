@@ -19,10 +19,10 @@
 buildscript {
   ext {
     // Compose
-    compose_version = "1.4.2"
-    compose_compiler_version = "1.4.6"
+    compose_version = "1.4.3"
+    compose_compiler_version = "1.4.7"
     composeActivity = "1.7.1"
-    composeMaterial = "1.4.2"
+    composeMaterial = "1.4.3"
     accompanist = "0.30.1"
 
     // AndroidX
@@ -42,7 +42,7 @@ plugins {
 
   // Kotlin
   // https://developer.android.com/studio/build#top-level
-  id("org.jetbrains.kotlin.android") version "1.8.20" apply false
+  id("org.jetbrains.kotlin.android") version "1.8.21" apply false
 
   // Dokka
   // https://github.com/Kotlin/dokka

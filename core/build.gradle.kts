@@ -25,5 +25,5 @@ dependencies {
   api("androidx.annotation:annotation:1.6.0")
 
   // Expose coroutines
-  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
 }

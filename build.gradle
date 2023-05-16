@@ -63,6 +63,10 @@ plugins {
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.1"
+
+  // Gradle Doctor
+  // https://runningcode.github.io/gradle-doctor/
+  id("com.osacky.doctor") version "0.8.1" apply true
 }
 
 subprojects {

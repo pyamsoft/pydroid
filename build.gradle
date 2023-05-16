@@ -69,22 +69,8 @@ subprojects {
   apply plugin: "com.android.library"
   apply plugin: "org.gradle.android.cache-fix"
   apply plugin: "kotlin-android"
-  apply plugin: "kotlin-kapt"
   apply plugin: "org.jetbrains.dokka"
   apply plugin: "maven-publish"
-
-  // Kapt flags
-  kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-    mapDiagnosticLocations = true
-
-    javacOptions {
-      option("-Xlint:unchecked")
-      option("-Xlint:deprecation")
-      option("-Xmaxerrs", 10000)
-    }
-  }
 
   // Configure matching toolchains
   // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc

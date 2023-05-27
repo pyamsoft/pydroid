@@ -23,7 +23,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.withContext
 
 /** Real implementation of the EventBus */
+@Deprecated("Use SharedFlow directly instead")
 internal class RealBus<T : Any>
+@Deprecated("Use SharedFlow directly instead")
 internal constructor(
     private val replayCount: Int,
     private val context: CoroutineContext,

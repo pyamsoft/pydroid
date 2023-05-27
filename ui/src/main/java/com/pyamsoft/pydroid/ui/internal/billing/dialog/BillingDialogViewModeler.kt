@@ -42,20 +42,26 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Main) {
-      interactor.watchSkuList { status, list ->
-        Logger.d("SKU list updated: $status $list")
-        state.apply {
-          connected.value = status
-          skuList.value = list.sortedBy { it.price }
+    interactor.watchSkuList().also { f ->
+      scope.launch(context = Dispatchers.IO) {
+        f.collect { snapshot ->
+          val status = snapshot.status
+          val list = snapshot.skus
+          Logger.d("SKU list updated: $status $list")
+          state.apply {
+            connected.value = status
+            skuList.value = list.sortedBy { it.price }
+          }
         }
       }
     }
 
-    scope.launch(context = Dispatchers.Main) {
-      interactor.watchErrors { error ->
-        Logger.e(error, "Billing error received")
-        state.error.value = error
+    interactor.watchBillingErrors().also { f ->
+      scope.launch(context = Dispatchers.IO) {
+        f.collect { err ->
+          Logger.e(err, "Billing error received")
+          state.error.value = err
+        }
       }
     }
   }

@@ -4,8 +4,21 @@ public abstract interface class com/pyamsoft/pydroid/billing/BillingConnector {
 
 public abstract interface class com/pyamsoft/pydroid/billing/BillingInteractor {
 	public abstract fun refresh (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun watchErrors (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun watchSkuList (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun watchBillingErrors ()Lkotlinx/coroutines/flow/Flow;
+	public abstract fun watchSkuList ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/pyamsoft/pydroid/billing/BillingInteractor$BillingSkuListSnapshot {
+	public fun <init> (Lcom/pyamsoft/pydroid/billing/BillingState;Ljava/util/List;)V
+	public final fun component1 ()Lcom/pyamsoft/pydroid/billing/BillingState;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Lcom/pyamsoft/pydroid/billing/BillingState;Ljava/util/List;)Lcom/pyamsoft/pydroid/billing/BillingInteractor$BillingSkuListSnapshot;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingInteractor$BillingSkuListSnapshot;Lcom/pyamsoft/pydroid/billing/BillingState;Ljava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingInteractor$BillingSkuListSnapshot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSkus ()Ljava/util/List;
+	public final fun getStatus ()Lcom/pyamsoft/pydroid/billing/BillingState;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class com/pyamsoft/pydroid/billing/BillingLauncher {
@@ -20,9 +33,9 @@ public final class com/pyamsoft/pydroid/billing/BillingModule {
 }
 
 public final class com/pyamsoft/pydroid/billing/BillingModule$Parameters {
-	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)V
-	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public fun <init> (Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;)V
+	public final fun copy (Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

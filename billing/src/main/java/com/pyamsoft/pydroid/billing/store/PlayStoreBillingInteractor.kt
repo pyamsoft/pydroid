@@ -36,7 +36,6 @@ import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -44,14 +43,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class PlayStoreBillingInteractor
 internal constructor(
     context: Context,
-    private val errorBus: EventBus<Throwable>,
+    private val errorBus: MutableSharedFlow<Throwable>,
 ) :
     BillingInteractor,
     BillingConnector,
@@ -206,9 +209,12 @@ internal constructor(
         querySkus()
       }
 
-  override suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit) =
-      withContext(context = Dispatchers.IO) {
-        skuFlow.collect { event -> onSkuListReceived(event.state, event.list) }
+  override fun watchSkuList(): Flow<BillingInteractor.BillingSkuListSnapshot> =
+      skuFlow.map {
+        BillingInteractor.BillingSkuListSnapshot(
+            status = it.state,
+            skus = it.list,
+        )
       }
 
   override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
@@ -232,17 +238,12 @@ internal constructor(
           }
         } catch (e: Throwable) {
           Logger.e(e, "Failed purchase flow for SKU: $sku")
-          errorBus.send(RuntimeException(e.message ?: "An error occurred during purchasing."))
+          errorBus.emit(RuntimeException(e.message ?: "An error occurred during purchasing."))
         }
       }
 
-  override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
-      withContext(context = Dispatchers.IO) {
-        errorBus.onEvent { err ->
-          Logger.e(err, "Billing error received!")
-          onErrorReceived(err)
-        }
-      }
+  override fun watchBillingErrors(): Flow<Throwable> =
+      errorBus.onEach { Logger.e(it, "Billing error received!") }
 
   override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
     if (result.isOk()) {
@@ -258,7 +259,7 @@ internal constructor(
       } else {
         billingScope.launch(context = Dispatchers.IO) {
           Logger.w("Purchase response not OK: ${result.debugMessage}")
-          errorBus.send(RuntimeException(result.debugMessage))
+          errorBus.emit(RuntimeException(result.debugMessage))
         }
       }
     }

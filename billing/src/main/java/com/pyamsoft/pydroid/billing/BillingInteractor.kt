@@ -16,15 +16,24 @@
 
 package com.pyamsoft.pydroid.billing
 
+import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
+
 /** Abstracts the Play Store Billing client */
 public interface BillingInteractor {
 
   /** Get the list of SKU */
-  public suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit)
+  @CheckResult public fun watchSkuList(): Flow<BillingSkuListSnapshot>
 
   /** Watch for errors in the billing client */
-  public suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit)
+  @CheckResult public fun watchBillingErrors(): Flow<Throwable>
 
   /** Refresh the SKU list */
   public suspend fun refresh()
+
+  /** A snapshot of the billing SKU list */
+  public data class BillingSkuListSnapshot(
+      val status: BillingState,
+      val skus: List<BillingSku>,
+  )
 }

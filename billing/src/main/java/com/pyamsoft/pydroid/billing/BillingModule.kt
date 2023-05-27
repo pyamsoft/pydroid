@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.billing
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
-import com.pyamsoft.pydroid.bus.EventBus
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 /** Billing module */
 public class BillingModule(params: Parameters) {
@@ -51,6 +51,6 @@ public class BillingModule(params: Parameters) {
   /** Module parameters */
   public data class Parameters(
       internal val context: Context,
-      internal val errorBus: EventBus<Throwable>,
+      internal val errorBus: MutableSharedFlow<Throwable>,
   )
 }

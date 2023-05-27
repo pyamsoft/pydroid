@@ -23,6 +23,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 /** A basic EventBus interface with send and receive methods */
+@Deprecated("Use SharedFlow directly instead")
 public interface EventBus<T : Any> : EventConsumer<T> {
 
   /** Emit an event to the event bus, suspend if needed by the implementation */

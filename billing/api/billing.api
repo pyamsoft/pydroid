@@ -33,9 +33,9 @@ public final class com/pyamsoft/pydroid/billing/BillingModule {
 }
 
 public final class com/pyamsoft/pydroid/billing/BillingModule$Parameters {
-	public fun <init> (Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;)V
-	public final fun copy (Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;Landroid/content/Context;Lkotlinx/coroutines/flow/MutableSharedFlow;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public fun <init> (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)V
+	public final fun copy (Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;Landroid/content/Context;Lcom/pyamsoft/pydroid/bus/EventBus;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/billing/BillingModule$Parameters;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

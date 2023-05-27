@@ -16,15 +16,6 @@
 
 package com.pyamsoft.pydroid.bus
 
-/** A simple receive side implementation of an EventBus */
-@Deprecated("Use SharedFlow directly instead")
-public interface EventConsumer<T : Any> {
+import kotlinx.coroutines.flow.Flow
 
-  /**
-   * Receive an event from the bus and do things with it.
-   *
-   * Any events sent before this function is called may be replayed or dropped based on the
-   * implementation specifics.
-   */
-  public suspend fun onEvent(emitter: suspend (event: T) -> Unit)
-}
+public interface EventConsumer<T : Any> : Flow<T>

@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
@@ -63,7 +64,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnCreate
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 internal interface AppComponent {
@@ -105,7 +105,7 @@ internal interface AppComponent {
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
         internal val composeTheme: ComposeThemeFactory,
-        internal val billingErrorBus: MutableSharedFlow<Throwable>,
+        internal val billingErrorBus: EventBus<Throwable>,
         internal val imageLoader: ImageLoader,
         internal val version: Int,
         internal val changeLogModule: ChangeLogModule,

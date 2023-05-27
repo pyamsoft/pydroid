@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
+import com.pyamsoft.pydroid.bus.internal.DefaultEventBus
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
@@ -44,7 +45,6 @@ import com.pyamsoft.pydroid.util.isDebugMode
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -149,7 +149,7 @@ internal interface PYDroidComponent {
               enforcer = enforcer,
               context = context,
               theming = theming,
-              billingErrorBus = MutableSharedFlow(),
+              billingErrorBus = DefaultEventBus(),
               changeLogModule = changeLogModule,
               composeTheme = composeTheme,
               imageLoader = imageLoader,

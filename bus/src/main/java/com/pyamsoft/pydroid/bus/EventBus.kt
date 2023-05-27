@@ -16,35 +16,12 @@
 
 package com.pyamsoft.pydroid.bus
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.internal.RealBus
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 
-/** A basic EventBus interface with send and receive methods */
-@Deprecated("Use SharedFlow directly instead")
-public interface EventBus<T : Any> : EventConsumer<T> {
-
-  /** Emit an event to the event bus, suspend if needed by the implementation */
-  public suspend fun send(event: T)
-
-  public companion object {
-
-    /**
-     * The EventBus will event the event in the following cases
-     *
-     * The EventBus is backed by a SharedFlow and follows it's implementation for behavior regarding
-     * sending and collecting of events
-     *
-     * See [MutableSharedFlow.emit] and [MutableSharedFlow.collect]
-     */
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    public fun <T : Any> create(
-        replayCount: Int = 0,
-        context: CoroutineContext = EmptyCoroutineContext
-    ): EventBus<T> = RealBus(replayCount, context)
-  }
-}
+/**
+ * A basic EventBus interface with send and receive methods
+ *
+ * An event bus is a MutableSharedFlow but implements an EventConsumer interface which allows a DI
+ * framework like Dagger to easily inject it as a 'resolver' of a dependency
+ */
+public interface EventBus<T : Any> : EventConsumer<T>, MutableSharedFlow<T>

@@ -1,5 +1,5 @@
 # pydroid-bus
-(deprecated) PYDroid Event Bus
+PYDroid Event Bus
 
 ## What is this
 

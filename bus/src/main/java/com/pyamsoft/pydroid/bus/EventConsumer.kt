@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bus
 
 /** A simple receive side implementation of an EventBus */
+@Deprecated("Use SharedFlow directly instead")
 public interface EventConsumer<T : Any> {
 
   /**

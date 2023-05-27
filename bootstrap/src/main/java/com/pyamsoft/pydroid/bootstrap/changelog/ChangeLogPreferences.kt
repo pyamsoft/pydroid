@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 public interface ChangeLogPreferences {
 
   /** Return if the changelog should be shown or not */
-  @CheckResult public suspend fun listenForShowChangelogChanges(): Flow<Boolean>
+  @CheckResult public fun listenForShowChangelogChanges(): Flow<Boolean>
 
   /** Mark the changelog as shown for the current application state */
   public suspend fun markChangeLogShown()

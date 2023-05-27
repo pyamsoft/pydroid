@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 internal interface DebugPreferences {
 
   /** Return if the debugging is on */
-  @CheckResult suspend fun listenForInAppDebuggingEnabled(): Flow<Boolean>
+  @CheckResult fun listenForInAppDebuggingEnabled(): Flow<Boolean>
 
   /** Mark the debugging on or off */
   suspend fun setInAppDebuggingEnabled(enabled: Boolean)

@@ -46,10 +46,7 @@ internal constructor(
   }
 
   /** Which mode are we in right now? */
-  override suspend fun listenForModeChanges(): Flow<Theming.Mode> =
-      withContext(context = Dispatchers.IO) {
-        return@withContext preferences.listenForDarkModeChanges()
-      }
+  override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForDarkModeChanges()
 
   /** Set application wide dark mode */
   override suspend fun setDarkTheme(mode: Theming.Mode) =

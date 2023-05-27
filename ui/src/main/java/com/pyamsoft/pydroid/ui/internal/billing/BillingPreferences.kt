@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 internal interface BillingPreferences {
 
   /** Should we show a Billing upsell */
-  @CheckResult suspend fun listenForBillingUpsellChanges(): Flow<Boolean>
+  @CheckResult fun listenForBillingUpsellChanges(): Flow<Boolean>
 
   /** Show the upsell if we have hit the "minimum" shown count */
   suspend fun maybeShowBillingUpsell()

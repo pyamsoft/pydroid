@@ -51,11 +51,14 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     val s = state
-    scope.launch(context = Dispatchers.Main) {
-      preferences.listenForBillingUpsellChanges().collect { show ->
-        if (show) {
-          Logger.d("Showing Billing upsell")
-          s.isShowingUpsell.value = true
+
+    preferences.listenForBillingUpsellChanges().also { f ->
+      scope.launch(context = Dispatchers.IO) {
+        f.collect { show ->
+          if (show) {
+            Logger.d("Showing Billing upsell")
+            s.isShowingUpsell.value = true
+          }
         }
       }
     }

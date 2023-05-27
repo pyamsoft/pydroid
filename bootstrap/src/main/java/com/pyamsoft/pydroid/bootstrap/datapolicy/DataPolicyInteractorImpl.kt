@@ -28,8 +28,8 @@ internal constructor(
     private val preferences: DataPolicyPreferences,
 ) : DataPolicyInteractor, AppInteractorImpl(context) {
 
-  override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) { preferences.listenForPolicyAcceptedChanges() }
+  override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
+      preferences.listenForPolicyAcceptedChanges()
 
   override suspend fun acceptPolicy() =
       withContext(context = Dispatchers.IO) { preferences.respondToPolicy(true) }

@@ -31,10 +31,8 @@ internal constructor(
   internal fun bind(scope: CoroutineScope) {
     val s = state
 
-    scope.launch(context = Dispatchers.Main) {
-      preferences.listenForInAppDebuggingEnabled().collect { enabled ->
-        s.isInAppDebuggingEnabled.value = enabled
-      }
+    preferences.listenForInAppDebuggingEnabled().also { f ->
+      scope.launch(context = Dispatchers.IO) { f.collect { s.isInAppDebuggingEnabled.value = it } }
     }
   }
 

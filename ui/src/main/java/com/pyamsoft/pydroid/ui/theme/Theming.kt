@@ -36,7 +36,7 @@ public interface Theming {
   @CheckResult public fun isDarkTheme(activity: Activity): Boolean
 
   /** Get current mode */
-  @CheckResult public suspend fun listenForModeChanges(): Flow<Mode>
+  @CheckResult public fun listenForModeChanges(): Flow<Mode>
 
   /** Set application wide dark mode */
   public suspend fun setDarkTheme(mode: Mode)

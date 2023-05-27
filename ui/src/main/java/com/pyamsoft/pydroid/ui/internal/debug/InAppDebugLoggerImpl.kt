@@ -67,13 +67,15 @@ internal constructor(
         heldApplication = null
 
         // Should only launch once if we are injected correctly
-        scope.launch(context = Dispatchers.Main) {
-          prefs.listenForInAppDebuggingEnabled().collect { enabled ->
-            isLoggingEnabled = enabled
+        prefs.listenForInAppDebuggingEnabled().also { f ->
+          scope.launch(context = Dispatchers.IO) {
+            f.collect { enabled ->
+              isLoggingEnabled = enabled
 
-            // Clear log bus if disabled
-            if (!enabled) {
-              bus?.update { emptyList() }
+              // Clear log bus if disabled
+              if (!enabled) {
+                bus?.update { emptyList() }
+              }
             }
           }
         }

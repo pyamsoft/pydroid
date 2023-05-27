@@ -12,7 +12,7 @@ public abstract interface class com/pyamsoft/pydroid/bootstrap/app/AppInteractor
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogInteractor : com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
-	public abstract fun listenShowChangeLogChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun listenShowChangeLogChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun markChangeLogShown (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -33,13 +33,13 @@ public final class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogModule$Para
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/changelog/ChangeLogPreferences {
-	public abstract fun listenForShowChangelogChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun listenForShowChangelogChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun markChangeLogShown (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyInteractor : com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
 	public abstract fun acceptPolicy (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun listenForPolicyAcceptedChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun listenForPolicyAcceptedChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun rejectPolicy (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -58,7 +58,7 @@ public final class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyModule$Pa
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/datapolicy/DataPolicyPreferences {
-	public abstract fun listenForPolicyAcceptedChanges (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun listenForPolicyAcceptedChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun respondToPolicy (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 

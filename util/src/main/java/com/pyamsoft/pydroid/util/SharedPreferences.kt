@@ -19,10 +19,13 @@ package com.pyamsoft.pydroid.util
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 
 @CheckResult
 private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
@@ -88,4 +91,103 @@ public fun SharedPreferences.stringSetFlow(
   return this.preferenceFlow(key, defaultValue) { k, v ->
     getStringSet(k, v)?.toSet() ?: defaultValue
   }
+}
+
+/** Lazily initialize SharedPreferences to avoid a main-thread ANR */
+@CheckResult
+@PublishedApi
+internal inline fun lazyPreferencesFlow(
+    crossinline preferences: () -> SharedPreferences
+): Flow<SharedPreferences> {
+  return callbackFlow { trySendBlocking(preferences()) }
+}
+
+/**
+ * Watch a SharedPreference Int for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceIntFlow(
+    key: String,
+    defaultValue: Int,
+    crossinline preferences: () -> SharedPreferences
+): Flow<Int> {
+  return lazyPreferencesFlow(preferences).flatMapConcat { it.intFlow(key, defaultValue) }
+}
+
+/**
+ * Watch a SharedPreference Boolean for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceBooleanFlow(
+    key: String,
+    defaultValue: Boolean,
+    crossinline preferences: () -> SharedPreferences
+): Flow<Boolean> {
+  return lazyPreferencesFlow(preferences).flatMapLatest { it.booleanFlow(key, defaultValue) }
+}
+
+/**
+ * Watch a SharedPreference String for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceStringFlow(
+    key: String,
+    defaultValue: String,
+    crossinline preferences: () -> SharedPreferences
+): Flow<String> {
+  return lazyPreferencesFlow(preferences).flatMapLatest { it.stringFlow(key, defaultValue) }
+}
+
+/**
+ * Watch a SharedPreference Float for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceFloatFlow(
+    key: String,
+    defaultValue: Float,
+    crossinline preferences: () -> SharedPreferences
+): Flow<Float> {
+  return lazyPreferencesFlow(preferences).flatMapLatest { it.floatFlow(key, defaultValue) }
+}
+
+/**
+ * Watch a SharedPreference Long for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceLongFlow(
+    key: String,
+    defaultValue: Long,
+    crossinline preferences: () -> SharedPreferences
+): Flow<Long> {
+  return lazyPreferencesFlow(preferences).flatMapLatest { it.longFlow(key, defaultValue) }
+}
+
+/**
+ * Watch a SharedPreference String Set for changes as a Flow
+ *
+ * Lazily initialize SharedPreferences to avoid a main-thread ANR
+ */
+@CheckResult
+@OptIn(ExperimentalCoroutinesApi::class)
+public inline fun preferenceStringSetFlow(
+    key: String,
+    defaultValue: Set<String>,
+    crossinline preferences: () -> SharedPreferences
+): Flow<Set<String>> {
+  return lazyPreferencesFlow(preferences).flatMapLatest { it.stringSetFlow(key, defaultValue) }
 }

@@ -47,11 +47,13 @@ internal constructor(
   internal fun bind(
       scope: CoroutineScope,
   ) {
-    scope.launch(context = Dispatchers.Main) {
-      interactor.listenForPolicyAcceptedChanges().collect { accepted ->
-        state.isAccepted.value =
-            if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED
-            else DataPolicyViewState.AcceptedState.REJECTED
+    interactor.listenForPolicyAcceptedChanges().also { f ->
+      scope.launch(context = Dispatchers.IO) {
+        f.collect { accepted ->
+          state.isAccepted.value =
+              if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED
+              else DataPolicyViewState.AcceptedState.REJECTED
+        }
       }
     }
   }

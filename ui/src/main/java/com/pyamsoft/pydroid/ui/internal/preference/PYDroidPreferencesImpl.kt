@@ -31,11 +31,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
-import com.pyamsoft.pydroid.util.booleanFlow
-import com.pyamsoft.pydroid.util.intFlow
-import com.pyamsoft.pydroid.util.stringFlow
+import com.pyamsoft.pydroid.util.preferenceBooleanFlow
+import com.pyamsoft.pydroid.util.preferenceIntFlow
+import com.pyamsoft.pydroid.util.preferenceStringFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
@@ -59,15 +60,6 @@ internal constructor(
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
-  private suspend fun listenForThreshold(
-      key: String,
-      defaultValue: Int,
-      threshold: Int,
-  ): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) {
-        prefs.intFlow(key, defaultValue).map { it >= threshold }
-      }
-
   private suspend fun incrementToThreshold(
       key: String,
       defaultValue: Int,
@@ -80,27 +72,29 @@ internal constructor(
         }
       }
 
-  override suspend fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) {
-        prefs.booleanFlow(
-            KEY_IN_APP_DEBUGGING,
-            DEFAULT_IN_APP_DEBUGGING_ENABLED,
-        )
-      }
+  override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
+      preferenceBooleanFlow(
+              KEY_IN_APP_DEBUGGING,
+              DEFAULT_IN_APP_DEBUGGING_ENABLED,
+          ) {
+            prefs
+          }
+          .flowOn(context = Dispatchers.IO)
 
   override suspend fun setInAppDebuggingEnabled(enabled: Boolean) =
       withContext(context = Dispatchers.IO) {
         prefs.edit { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
       }
 
-  override suspend fun listenForBillingUpsellChanges(): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) {
-        listenForThreshold(
-            KEY_BILLING_SHOW_UPSELL_COUNT,
-            DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-            VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
-        )
-      }
+  override fun listenForBillingUpsellChanges(): Flow<Boolean> =
+      preferenceIntFlow(
+              KEY_BILLING_SHOW_UPSELL_COUNT,
+              DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+          ) {
+            prefs
+          }
+          .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
+          .flowOn(context = Dispatchers.IO)
 
   override suspend fun maybeShowBillingUpsell() =
       withContext(context = Dispatchers.IO) {
@@ -121,22 +115,22 @@ internal constructor(
         }
       }
 
-  override suspend fun listenForShowChangelogChanges(): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) {
-        prefs
-            .intFlow(
-                LAST_SHOWN_CHANGELOG,
-                DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
-            )
-            .onEach { lastShown ->
-              // Upon the first time seeing it, update to our current version code
-              if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
-                Logger.d("Initialize changelog for a newly installed app!")
-                markChangeLogShown()
-              }
+  override fun listenForShowChangelogChanges(): Flow<Boolean> =
+      preferenceIntFlow(
+              LAST_SHOWN_CHANGELOG,
+              DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
+          ) {
+            prefs
+          }
+          .onEach { lastShown ->
+            // Upon the first time seeing it, update to our current version code
+            if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
+              Logger.d("Initialize changelog for a newly installed app!")
+              markChangeLogShown()
             }
-            .map { it in 1 until versionCode }
-      }
+          }
+          .map { it in 1 until versionCode }
+          .flowOn(context = Dispatchers.IO)
 
   override suspend fun markChangeLogShown() =
       withContext(context = Dispatchers.IO) {
@@ -144,33 +138,24 @@ internal constructor(
         prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
       }
 
-  override suspend fun listenForDarkModeChanges(): Flow<Mode> =
-      withContext(context = Dispatchers.IO) {
-        if (!prefs.contains(darkModeKey)) {
-          // Initialize this key here so the preference screen can be populated
-          prefs.edit {
-            Logger.d("Initialize dark mode with defaults")
-            putString(darkModeKey, DEFAULT_DARK_MODE)
-          }
-        }
-
-        return@withContext prefs.stringFlow(darkModeKey, DEFAULT_DARK_MODE).map {
-          it.toThemingMode()
-        }
-      }
+  override fun listenForDarkModeChanges(): Flow<Mode> =
+      preferenceStringFlow(darkModeKey, DEFAULT_DARK_MODE) { prefs }
+          .map { it.toThemingMode() }
+          .flowOn(context = Dispatchers.IO)
 
   override suspend fun setDarkMode(mode: Mode) =
       withContext(context = Dispatchers.IO) {
         prefs.edit { putString(darkModeKey, mode.toRawString()) }
       }
 
-  override suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
-      withContext(context = Dispatchers.IO) {
-        prefs.booleanFlow(
-            KEY_DATA_POLICY_CONSENTED,
-            DEFAULT_DATA_POLICY_CONSENTED,
-        )
-      }
+  override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
+      preferenceBooleanFlow(
+              KEY_DATA_POLICY_CONSENTED,
+              DEFAULT_DATA_POLICY_CONSENTED,
+          ) {
+            prefs
+          }
+          .flowOn(context = Dispatchers.IO)
 
   override suspend fun respondToPolicy(accepted: Boolean) =
       withContext(context = Dispatchers.IO) {

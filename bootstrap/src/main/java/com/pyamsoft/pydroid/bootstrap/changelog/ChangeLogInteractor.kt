@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 public interface ChangeLogInteractor : AppInteractor {
 
   /** Show a changelog if allowed. */
-  @CheckResult public suspend fun listenShowChangeLogChanges(): Flow<Boolean>
+  @CheckResult public fun listenShowChangeLogChanges(): Flow<Boolean>
 
   /** Mark change log as shown. */
   public suspend fun markChangeLogShown()

@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
 public interface DataPolicyInteractor : AppInteractor {
 
   /** Has the user consented */
-  @CheckResult public suspend fun listenForPolicyAcceptedChanges(): Flow<Boolean>
+  @CheckResult public fun listenForPolicyAcceptedChanges(): Flow<Boolean>
 
   /** User has given consent */
   public suspend fun acceptPolicy()

@@ -28,15 +28,13 @@ internal constructor(
     context: Context,
     private val preferences: ChangeLogPreferences,
     private val isFakeChangeLogAvailable: Boolean,
-) : AppInteractorImpl(context), ChangeLogInteractor {
+) : ChangeLogInteractor, AppInteractorImpl(context) {
 
-  override suspend fun listenShowChangeLogChanges(): Flow<Boolean> =
-      withContext(context = Dispatchers.Default) {
-        return@withContext preferences.listenForShowChangelogChanges().map { show ->
+  override fun listenShowChangeLogChanges(): Flow<Boolean> =
+      preferences
+          .listenForShowChangelogChanges()
           // Force to show if this is faked
-          return@map show || isFakeChangeLogAvailable
-        }
-      }
+          .map { it || isFakeChangeLogAvailable }
 
   override suspend fun markChangeLogShown() =
       withContext(context = Dispatchers.Default) { preferences.markChangeLogShown() }

@@ -55,7 +55,14 @@ public final class com/pyamsoft/pydroid/util/SharedPreferencesKt {
 	public static final fun booleanFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Z)Lkotlinx/coroutines/flow/Flow;
 	public static final fun floatFlow (Landroid/content/SharedPreferences;Ljava/lang/String;F)Lkotlinx/coroutines/flow/Flow;
 	public static final fun intFlow (Landroid/content/SharedPreferences;Ljava/lang/String;I)Lkotlinx/coroutines/flow/Flow;
+	public static final fun lazyPreferencesFlow (Lkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun longFlow (Landroid/content/SharedPreferences;Ljava/lang/String;J)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceBooleanFlow (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceFloatFlow (Ljava/lang/String;FLkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceIntFlow (Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceLongFlow (Ljava/lang/String;JLkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceStringFlow (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun preferenceStringSetFlow (Ljava/lang/String;Ljava/util/Set;Lkotlin/jvm/functions/Function0;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun stringFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun stringSetFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Ljava/util/Set;)Lkotlinx/coroutines/flow/Flow;
 }

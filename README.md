@@ -15,11 +15,13 @@ such is not meant for use outside of pyamsoft projects.
 [autopsy](https://github.com/pyamsoft/pydroid/tree/main/autopsy)
 [billing](https://github.com/pyamsoft/pydroid/tree/main/billing)
 [bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap)
-[bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 [core](https://github.com/pyamsoft/pydroid/tree/main/core)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
 [ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
 [util](https://github.com/pyamsoft/pydroid/tree/main/util)
+
+#### Deprecated
+[bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 
 ## Contributions
 

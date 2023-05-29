@@ -23,12 +23,12 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
 internal class InAppDebugLoggerImpl
@@ -43,7 +43,10 @@ internal constructor(
   private var heldApplication: Application? = application
   private var isLoggingEnabled = false
 
-  private val scope by lazy(NONE) { MainScope() }
+  @OptIn(DelicateCoroutinesApi::class)
+  private val scope by lazy {
+    CoroutineScope(context = newSingleThreadContext(this::class.java.name))
+  }
 
   @CheckResult
   private fun getPYDroid(application: Application): PYDroid? {
@@ -68,7 +71,7 @@ internal constructor(
 
         // Should only launch once if we are injected correctly
         prefs.listenForInAppDebuggingEnabled().also { f ->
-          scope.launch(context = Dispatchers.IO) {
+          scope.launch {
             f.collect { enabled ->
               isLoggingEnabled = enabled
 
@@ -95,7 +98,7 @@ internal constructor(
         // Record the timestamp before the coroutine launched as this is immediate
         val timestamp = System.nanoTime()
 
-        scope.launch(context = Dispatchers.IO) {
+        scope.launch {
           b.update { lines ->
             if (isLoggingEnabled) {
               // This can potentially be a huge list that can affect performance.

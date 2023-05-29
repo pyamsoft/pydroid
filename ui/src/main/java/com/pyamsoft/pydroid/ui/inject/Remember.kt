@@ -35,12 +35,15 @@ public fun <I : ComposableInjector> rememberComposableInjector(create: () -> I):
   // for any reason.
   //
   // Make sure your DI graph is resolved before calling create()
-  val injector = remember {
-    handleCreate().apply {
-      // We inject immediately because a composable may expect the Injector data to be present
-      inject(activity)
-    }
-  }
+  //
+  // We only pass the Activity to ensure an Activity change causes a recomposition to avoid mem leak
+  val injector =
+      remember(activity) {
+        handleCreate().apply {
+          // We inject immediately because a composable may expect the Injector data to be present
+          inject(activity)
+        }
+      }
 
   // Set up to dispose when we leave scope
   DisposableEffect(injector) { onDispose { injector.dispose() } }

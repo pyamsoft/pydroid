@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.util
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -26,6 +27,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 @CheckResult
 private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
@@ -99,7 +102,9 @@ public fun SharedPreferences.stringSetFlow(
 internal inline fun lazyPreferencesFlow(
     crossinline preferences: () -> SharedPreferences
 ): Flow<SharedPreferences> {
-  return callbackFlow { trySendBlocking(preferences()) }
+  return flow { emit(preferences()) }
+      // Flow on I/O to avoid ANR on main
+      .flowOn(context = Dispatchers.IO)
 }
 
 /**

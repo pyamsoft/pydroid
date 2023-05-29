@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.util.preferenceStringFlow
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -63,7 +64,9 @@ internal constructor(
   }
 
   private val scope by lazy {
-    CoroutineScope(context = Dispatchers.IO + CoroutineName(this::class.java.name))
+    CoroutineScope(
+        context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
+    )
   }
 
   override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =

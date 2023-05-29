@@ -50,14 +50,16 @@ internal constructor(
   }
 
   internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
-      // Decide based on preference (have we seen the current version changelog)
-      val show = interactor.listenShowChangeLogChanges().first()
-      state.isShowUpsell.value = show
+    interactor.listenShowChangeLogChanges().also { f ->
+      scope.launch(context = Dispatchers.Main) {
+        // Decide based on preference (have we seen the current version changelog)
+        val show = f.first()
+        state.isShowUpsell.value = show
 
-      // If we can show, mark as shown so that in the future we do not show.
-      if (show) {
-        interactor.markChangeLogShown()
+        // If we can show, mark as shown so that in the future we do not show.
+        if (show) {
+          interactor.markChangeLogShown()
+        }
       }
     }
   }
@@ -70,11 +72,11 @@ internal constructor(
     state.isShowingDialog.value = false
   }
 
-  internal fun handleDismissUpsell(scope: CoroutineScope) {
+  internal fun handleDismissUpsell() {
     state.isShowUpsell.value = false
 
     // mark as shown so that in the future we do not show.
-    scope.launch(context = Dispatchers.Main) { interactor.markChangeLogShown() }
+    interactor.markChangeLogShown()
   }
 
   companion object {

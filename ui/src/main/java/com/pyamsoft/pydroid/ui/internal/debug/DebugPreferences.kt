@@ -26,5 +26,5 @@ internal interface DebugPreferences {
   @CheckResult fun listenForInAppDebuggingEnabled(): Flow<Boolean>
 
   /** Mark the debugging on or off */
-  suspend fun setInAppDebuggingEnabled(enabled: Boolean)
+  fun setInAppDebuggingEnabled(enabled: Boolean)
 }

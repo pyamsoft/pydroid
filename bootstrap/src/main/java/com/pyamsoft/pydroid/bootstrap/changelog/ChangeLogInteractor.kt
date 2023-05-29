@@ -27,5 +27,5 @@ public interface ChangeLogInteractor : AppInteractor {
   @CheckResult public fun listenShowChangeLogChanges(): Flow<Boolean>
 
   /** Mark change log as shown. */
-  public suspend fun markChangeLogShown()
+  public fun markChangeLogShown()
 }

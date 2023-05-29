@@ -26,5 +26,5 @@ public interface DataPolicyPreferences {
   @CheckResult public fun listenForPolicyAcceptedChanges(): Flow<Boolean>
 
   /** User has given consent */
-  public suspend fun respondToPolicy(accepted: Boolean)
+  public fun respondToPolicy(accepted: Boolean)
 }

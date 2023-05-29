@@ -79,14 +79,14 @@ internal constructor(
     state.isShowingDialog.value = false
   }
 
-  internal fun handleDismissUpsell(scope: CoroutineScope) {
+  internal fun handleDismissUpsell() {
     Logger.d("Dismissing Billing upsell")
     state.isShowingUpsell.value = false
-    scope.launch(context = Dispatchers.Main) { preferences.resetBillingShown() }
+    preferences.resetBillingShown()
   }
 
-  internal fun handleMaybeShowUpsell(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) { preferences.maybeShowBillingUpsell() }
+  internal fun handleMaybeShowUpsell() {
+    preferences.maybeShowBillingUpsell()
   }
 
   companion object {

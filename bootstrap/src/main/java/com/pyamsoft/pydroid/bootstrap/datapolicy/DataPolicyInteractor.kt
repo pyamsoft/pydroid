@@ -27,8 +27,8 @@ public interface DataPolicyInteractor : AppInteractor {
   @CheckResult public fun listenForPolicyAcceptedChanges(): Flow<Boolean>
 
   /** User has given consent */
-  public suspend fun acceptPolicy()
+  public fun acceptPolicy()
 
   /** User has given consent */
-  public suspend fun rejectPolicy()
+  public fun rejectPolicy()
 }

@@ -22,7 +22,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
@@ -84,7 +83,6 @@ internal fun DataPolicyDisclosureDialog(
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
 
-  val scope = rememberCoroutineScope()
   val uriHandler = LocalUriHandler.current
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
@@ -114,13 +112,11 @@ internal fun DataPolicyDisclosureDialog(
         onNavigationErrorDismissed = { handleHideNavigationError() },
         onAccept = {
           viewModel.handleAccept(
-              scope = scope,
               onAccepted = onDismiss,
           )
         },
         onReject = {
           viewModel.handleReject(
-              scope = scope,
               onRejected = { activity.finishAndRemoveTask() },
           )
         },

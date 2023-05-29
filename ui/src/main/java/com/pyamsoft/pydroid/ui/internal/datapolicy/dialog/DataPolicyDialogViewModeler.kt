@@ -42,24 +42,14 @@ internal constructor(
     }
   }
 
-  internal fun handleAccept(
-      scope: CoroutineScope,
-      onAccepted: () -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      interactor.acceptPolicy()
-      onAccepted()
-    }
+  internal fun handleAccept(onAccepted: () -> Unit) {
+    interactor.acceptPolicy()
+    onAccepted()
   }
 
-  internal fun handleReject(
-      scope: CoroutineScope,
-      onRejected: () -> Unit,
-  ) {
-    scope.launch(context = Dispatchers.Main) {
-      interactor.rejectPolicy()
-      onRejected()
-    }
+  internal fun handleReject(onRejected: () -> Unit) {
+    interactor.rejectPolicy()
+    onRejected()
   }
 
   internal fun handleNavigationFailed(throwable: Throwable) {

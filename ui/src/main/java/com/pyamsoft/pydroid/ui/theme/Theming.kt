@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 /** Handles getting current dark mode state and setting dark mode state */
@@ -39,7 +40,7 @@ public interface Theming {
   @CheckResult public fun listenForModeChanges(): Flow<Mode>
 
   /** Set application wide dark mode */
-  public suspend fun setDarkTheme(mode: Mode)
+  public fun setDarkTheme(scope: CoroutineScope, mode: Mode)
 
   /** Dark mode enum */
   @Stable

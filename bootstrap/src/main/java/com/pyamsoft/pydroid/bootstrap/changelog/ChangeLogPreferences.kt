@@ -26,5 +26,5 @@ public interface ChangeLogPreferences {
   @CheckResult public fun listenForShowChangelogChanges(): Flow<Boolean>
 
   /** Mark the changelog as shown for the current application state */
-  public suspend fun markChangeLogShown()
+  public fun markChangeLogShown()
 }

@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -84,12 +83,7 @@ internal constructor(
 
           // Do on each start
           override fun onStart(owner: LifecycleOwner) {
-            super.onStart(owner)
-            viewModel
-                .requireNotNull()
-                .handleMaybeShowUpsell(
-                    scope = activity.lifecycleScope,
-                )
+            viewModel.requireNotNull().handleMaybeShowUpsell()
           }
         }
 
@@ -142,15 +136,13 @@ internal constructor(
         state = state,
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
-      val scope = rememberCoroutineScope()
-
       content(
           state = state,
           onShow = {
-            vm.handleDismissUpsell(scope = scope)
+            vm.handleDismissUpsell()
             vm.handleOpenDialog()
           },
-          onDismiss = { vm.handleDismissUpsell(scope = scope) },
+          onDismiss = { vm.handleDismissUpsell() },
       )
     }
   }

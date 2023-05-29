@@ -27,5 +27,5 @@ internal interface ThemingPreferences {
   @CheckResult fun listenForDarkModeChanges(): Flow<Mode>
 
   /** Set application dark mode preference */
-  suspend fun setDarkMode(mode: Mode)
+  fun setDarkMode(mode: Mode)
 }

@@ -152,7 +152,7 @@ public fun SettingsPage(
             mode = it,
         )
       },
-      onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled(scope = scope) },
+      onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled() },
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
       extraDebugContent = extraDebugContent,

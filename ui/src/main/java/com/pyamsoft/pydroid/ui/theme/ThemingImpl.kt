@@ -21,9 +21,11 @@ import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** Handles getting current dark mode state and setting dark mode state */
@@ -32,12 +34,19 @@ internal constructor(
     private val preferences: ThemingPreferences,
 ) : Theming {
 
-  override suspend fun init() =
+  override suspend fun init() {
+    listenForModeChanges().also { f ->
       withContext(context = Dispatchers.IO) {
         // Make sure we set the AppCompatDelegate from the saved preference mode
-        val mode = listenForModeChanges().first()
-        applyDarkTheme(mode)
+        val mode = f.first()
+
+        withContext(context = Dispatchers.Main) {
+          // Needs to run on main thread
+          applyDarkTheme(mode)
+        }
       }
+    }
+  }
 
   /** Is activity dark mode */
   override fun isDarkTheme(activity: Activity): Boolean {
@@ -49,15 +58,17 @@ internal constructor(
   override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForDarkModeChanges()
 
   /** Set application wide dark mode */
-  override suspend fun setDarkTheme(mode: Theming.Mode) =
-      withContext(context = Dispatchers.IO) {
-        preferences.setDarkMode(mode)
-        applyDarkTheme(mode)
-      }
+  override fun setDarkTheme(scope: CoroutineScope, mode: Theming.Mode) {
+    preferences.setDarkMode(mode)
+
+    scope.launch(context = Dispatchers.Main) {
+      // Needs to run on main thread
+      applyDarkTheme(mode)
+    }
+  }
 
   private suspend fun applyDarkTheme(mode: Theming.Mode) =
       withContext(context = Dispatchers.Main) {
-        // Needs to run on main thread
         val appCompatMode = mode.toAppCompatMode()
         AppCompatDelegate.setDefaultNightMode(appCompatMode)
       }

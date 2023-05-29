@@ -18,10 +18,8 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 internal class ChangeLogInteractorImpl
 internal constructor(
@@ -36,6 +34,7 @@ internal constructor(
           // Force to show if this is faked
           .map { it || isFakeChangeLogAvailable }
 
-  override suspend fun markChangeLogShown() =
-      withContext(context = Dispatchers.Default) { preferences.markChangeLogShown() }
+  override fun markChangeLogShown() {
+    preferences.markChangeLogShown()
+  }
 }

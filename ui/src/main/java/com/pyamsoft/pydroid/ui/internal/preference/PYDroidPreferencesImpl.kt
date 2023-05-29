@@ -34,16 +34,18 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.util.preferenceBooleanFlow
 import com.pyamsoft.pydroid.util.preferenceIntFlow
 import com.pyamsoft.pydroid.util.preferenceStringFlow
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 internal class PYDroidPreferencesImpl
 internal constructor(
-    enforcer: ThreadEnforcer,
+    private val enforcer: ThreadEnforcer,
     context: Context,
     private val versionCode: Int,
 ) :
@@ -60,17 +62,9 @@ internal constructor(
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
   }
 
-  private suspend fun incrementToThreshold(
-      key: String,
-      defaultValue: Int,
-      threshold: Int,
-  ) =
-      withContext(context = Dispatchers.IO) {
-        val currentCount = prefs.getInt(key, defaultValue)
-        if (currentCount < threshold) {
-          prefs.edit { putInt(key, currentCount + 1) }
-        }
-      }
+  private val scope by lazy {
+    CoroutineScope(context = Dispatchers.IO + CoroutineName(this::class.java.name))
+  }
 
   override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
       preferenceBooleanFlow(
@@ -81,10 +75,12 @@ internal constructor(
           }
           .flowOn(context = Dispatchers.IO)
 
-  override suspend fun setInAppDebuggingEnabled(enabled: Boolean) =
-      withContext(context = Dispatchers.IO) {
-        prefs.edit { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
-      }
+  override fun setInAppDebuggingEnabled(enabled: Boolean) {
+    scope.launch {
+      enforcer.assertOffMainThread()
+      prefs.edit { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
+    }
+  }
 
   override fun listenForBillingUpsellChanges(): Flow<Boolean> =
       preferenceIntFlow(
@@ -96,24 +92,30 @@ internal constructor(
           .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
           .flowOn(context = Dispatchers.IO)
 
-  override suspend fun maybeShowBillingUpsell() =
-      withContext(context = Dispatchers.IO) {
-        incrementToThreshold(
+  override fun maybeShowBillingUpsell() {
+    scope.launch {
+      enforcer.assertOffMainThread()
+
+      val currentCount =
+          prefs.getInt(KEY_BILLING_SHOW_UPSELL_COUNT, DEFAULT_BILLING_SHOW_UPSELL_COUNT)
+      if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
+        prefs.edit { putInt(KEY_BILLING_SHOW_UPSELL_COUNT, currentCount + 1) }
+      }
+    }
+  }
+
+  override fun resetBillingShown() {
+    scope.launch {
+      enforcer.assertOffMainThread()
+
+      prefs.edit {
+        putInt(
             KEY_BILLING_SHOW_UPSELL_COUNT,
             DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-            VALUE_BILLING_SHOW_UPSELL_THRESHOLD,
         )
       }
-
-  override suspend fun resetBillingShown() =
-      withContext(context = Dispatchers.IO) {
-        prefs.edit {
-          putInt(
-              KEY_BILLING_SHOW_UPSELL_COUNT,
-              DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-          )
-        }
-      }
+    }
+  }
 
   override fun listenForShowChangelogChanges(): Flow<Boolean> =
       preferenceIntFlow(
@@ -132,21 +134,25 @@ internal constructor(
           .map { it in 1 until versionCode }
           .flowOn(context = Dispatchers.IO)
 
-  override suspend fun markChangeLogShown() =
-      withContext(context = Dispatchers.IO) {
-        // Mark the changelog as shown for this version
-        prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
-      }
+  override fun markChangeLogShown() {
+    scope.launch {
+      enforcer.assertOffMainThread()
+      // Mark the changelog as shown for this version
+      prefs.edit { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
+    }
+  }
 
   override fun listenForDarkModeChanges(): Flow<Mode> =
       preferenceStringFlow(darkModeKey, DEFAULT_DARK_MODE) { prefs }
           .map { it.toThemingMode() }
           .flowOn(context = Dispatchers.IO)
 
-  override suspend fun setDarkMode(mode: Mode) =
-      withContext(context = Dispatchers.IO) {
-        prefs.edit { putString(darkModeKey, mode.toRawString()) }
-      }
+  override fun setDarkMode(mode: Mode) {
+    scope.launch {
+      enforcer.assertOffMainThread()
+      prefs.edit { putString(darkModeKey, mode.toRawString()) }
+    }
+  }
 
   override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
       preferenceBooleanFlow(
@@ -157,10 +163,12 @@ internal constructor(
           }
           .flowOn(context = Dispatchers.IO)
 
-  override suspend fun respondToPolicy(accepted: Boolean) =
-      withContext(context = Dispatchers.IO) {
-        prefs.edit { putBoolean(KEY_DATA_POLICY_CONSENTED, accepted) }
-      }
+  override fun respondToPolicy(accepted: Boolean) {
+    scope.launch {
+      enforcer.assertOffMainThread()
+      prefs.edit { putBoolean(KEY_DATA_POLICY_CONSENTED, accepted) }
+    }
+  }
 
   companion object {
 

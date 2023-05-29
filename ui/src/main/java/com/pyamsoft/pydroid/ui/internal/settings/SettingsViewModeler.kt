@@ -134,21 +134,17 @@ internal constructor(
     }
   }
 
-  internal fun handleChangeInAppDebugEnabled(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
-      val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { !it }
-      debugPreferences.setInAppDebuggingEnabled(newEnabled)
-    }
+  internal fun handleChangeInAppDebugEnabled() {
+    val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { !it }
+    debugPreferences.setInAppDebuggingEnabled(newEnabled)
   }
 
   internal fun handleChangeDarkMode(
       scope: CoroutineScope,
       mode: Theming.Mode,
   ) {
-    scope.launch(context = Dispatchers.Main) {
-      state.darkMode.value = mode
-      theming.setDarkTheme(mode)
-    }
+    state.darkMode.value = mode
+    theming.setDarkTheme(scope, mode)
   }
 
   internal fun handleOpenDataPolicyDialog() {

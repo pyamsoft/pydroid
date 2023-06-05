@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version.play
 import android.app.Activity
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
@@ -76,7 +77,9 @@ internal constructor(
       withContext(context = Dispatchers.Main) {
         return@withContext try {
           Logger.d("Begin update flow $requestCode $info")
-          if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
+
+          val options = AppUpdateOptions.defaultOptions(type)
+          if (manager.startUpdateFlowForResult(info, activity, options, requestCode)) {
             Logger.d("Update flow has started")
             if (manager is FakeAppUpdateManager) {
               manager.fakeUpdate()

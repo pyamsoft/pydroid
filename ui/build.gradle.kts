@@ -44,7 +44,7 @@ dependencies {
   //  implementation("androidx.compose.material:material-icons-extended:1.3.1")
 
   // Compose Image loading
-  implementation("io.coil-kt:coil-compose-base:2.3.0")
+  implementation("io.coil-kt:coil-compose-base:2.4.0")
 
   // Accompanist
   implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist"]}")

@@ -15,14 +15,19 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application>
 
+        <!--
+        Compose Handles config changes
+
+        https://www.reddit.com/r/androiddev/comments/qwu12a/activity_recreation_problem_is_solved_with/
+        -->
         <activity
             android:name=".CrashActivity"
             android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:enabled="true"
             android:excludeFromRecents="true"
             android:exported="false"

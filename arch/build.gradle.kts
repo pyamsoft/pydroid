@@ -22,17 +22,13 @@ android {
   buildFeatures { compose = true }
 
   composeOptions {
-    kotlinCompilerExtensionVersion = rootProject.extra["compose_compiler_version"] as? String
+    kotlinCompilerExtensionVersion = rootProject.extra["composeCompiler"] as? String
   }
 }
 
 dependencies {
   // Compose
-  implementation(
-      "androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
-  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
-  implementation(
-      "androidx.compose.runtime:runtime-saveable:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.runtime:runtime-saveable:${rootProject.extra["compose"]}")
 
   api(project(":bus"))
   api(project(":util"))

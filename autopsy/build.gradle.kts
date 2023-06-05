@@ -21,20 +21,18 @@ android {
 
   buildFeatures { compose = true }
 
-  composeOptions {
-    kotlinCompilerExtensionVersion = "${rootProject.extra["compose_compiler_version"]}"
-  }
+  composeOptions { kotlinCompilerExtensionVersion = "${rootProject.extra["composeCompiler"]}" }
 }
 
 dependencies {
   // Compose
-  implementation(
-      "androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
   implementation("androidx.activity:activity-compose:${rootProject.extra["composeActivity"]}")
-  implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
   implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
-  implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose_version"]}")
-  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
+
+  // Compose Preview
+  compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
+  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
 
   // Accompanist
   implementation(

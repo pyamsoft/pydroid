@@ -21,9 +21,7 @@ android {
 
   buildFeatures { compose = true }
 
-  composeOptions {
-    kotlinCompilerExtensionVersion = "${rootProject.extra["compose_compiler_version"]}"
-  }
+  composeOptions { kotlinCompilerExtensionVersion = "${rootProject.extra["composeCompiler"]}" }
 }
 
 dependencies {
@@ -36,14 +34,13 @@ dependencies {
   api("androidx.preference:preference:1.2.0")
 
   // Compose
-  implementation(
-      "androidx.compose.compiler:compiler:${rootProject.extra["compose_compiler_version"]}")
-  implementation("androidx.activity:activity-compose:${rootProject.extra["composeActivity"]}")
-  implementation("androidx.compose.ui:ui:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
   implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
-  implementation("androidx.compose.animation:animation:${rootProject.extra["compose_version"]}")
-  implementation("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose_version"]}")
-  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose_version"]}")
+  implementation("androidx.compose.animation:animation:${rootProject.extra["compose"]}")
+
+  // Compose Preview
+  compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
+  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
   //  implementation("androidx.compose.material:material-icons-extended:1.3.1")
 
   // Compose Image loading

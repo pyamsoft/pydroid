@@ -23,7 +23,9 @@ android {
 dependencies {
   implementation("androidx.appcompat:appcompat:1.6.1")
   implementation("com.android.billingclient:billing:6.0.0")
-  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose_version"]}")
+
+  // Compose Annotations
+  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose"]}")
 
   api(project(":bus"))
   api(project(":util"))

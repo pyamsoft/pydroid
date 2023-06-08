@@ -92,15 +92,29 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "The core PYDroid library, providing the building blocks for extension libraries",
     )
+
+    add(
+        "Kotlin",
+        "https://github.com/JetBrains/kotlin",
+        "The Kotlin Programming Language.",
+    )
+
+    add(
+        "Kotlin Coroutines",
+        "https://github.com/Kotlin/kotlinx.coroutines",
+        "Library support for Kotlin coroutines with multiplatform support.",
+    )
+
     add(
         "Android SDK",
         "https://source.android.com",
         "The Android SDK, which powers everything about the devices we all love.",
     )
+
     add(
-        "Kotlin",
-        "https://github.com/JetBrains/kotlin",
-        "The Kotlin Programming Language.",
+        "AndroidX Annotations",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/annotation/",
+        "Annotation library offers a set of Java annotations that are useful for Android application and library development.",
     )
 
     addBuildLibraries()
@@ -121,6 +135,18 @@ public object OssLibraries {
         "AndroidX Core",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
         "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android.",
+    )
+
+    add(
+        "AndroidX Lifecycle",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
+        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
+    )
+
+    add(
+        "AndroidX Fragment",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
+        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
     )
 
     addCoreLibraries()
@@ -180,21 +206,13 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid reference implementation for various UI components",
     )
-    add(
-        "AndroidX Core KTX",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
-        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
-    )
+
     add(
         "AndroidX Vector Drawable",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/vectordrawable/",
         "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics.",
     )
-    add(
-        "Material Components Android",
-        "https://github.com/material-components/material-components-android",
-        "Modular and customizable Material Design UI components for Android.",
-    )
+
     add(
         "Coil Compose",
         "https://github.com/coil-kt/Coil",
@@ -240,19 +258,6 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid standard architecture for an MVVM UI design pattern",
     )
-
-    add(
-        "Kotlin Coroutines",
-        "https://github.com/Kotlin/kotlinx.coroutines",
-        "Library support for Kotlin coroutines with multiplatform support.",
-    )
-
-    add(
-        "AndroidX Lifecycle",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
-    )
-
     addComposeArchLibraries()
     addBusLibraries()
     addUtilLibraries()

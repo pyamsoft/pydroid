@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
+import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
@@ -35,6 +36,9 @@ public interface Theming {
 
   /** Is activity dark mode */
   @CheckResult public fun isDarkTheme(activity: Activity): Boolean
+
+  /** Is activity dark mode */
+  @CheckResult public fun isDarkTheme(configuration: Configuration): Boolean
 
   /** Get current mode */
   @CheckResult public fun listenForModeChanges(): Flow<Mode>

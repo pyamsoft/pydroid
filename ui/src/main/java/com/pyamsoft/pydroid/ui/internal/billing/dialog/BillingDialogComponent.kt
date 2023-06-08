@@ -21,7 +21,6 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface BillingDialogComponent {
 
@@ -36,7 +35,6 @@ internal interface BillingDialogComponent {
         internal val state: MutableBillingDialogViewState,
         internal val changeLogModule: ChangeLogModule,
         internal val billingModule: BillingModule,
-        internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
     )
   }

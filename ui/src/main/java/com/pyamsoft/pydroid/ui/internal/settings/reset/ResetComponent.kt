@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface ResetComponent {
 
@@ -31,7 +30,6 @@ internal interface ResetComponent {
     data class Parameters
     internal constructor(
         internal val module: SettingsModule,
-        internal val composeTheme: ComposeThemeFactory,
     )
   }
 

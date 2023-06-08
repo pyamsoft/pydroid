@@ -49,7 +49,6 @@ internal constructor(
                       privacyPolicyUrl = params.privacyPolicyUrl,
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
-                      theme = params.theme,
                       logger = params.logger,
                       debug =
                           PYDroid.DebugParameters(

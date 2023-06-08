@@ -20,7 +20,6 @@ import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.ui.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface DataPolicyDialogComponent {
 
@@ -37,7 +36,6 @@ internal interface DataPolicyDialogComponent {
     internal constructor(
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
         internal val module: DataPolicyModule,
     )

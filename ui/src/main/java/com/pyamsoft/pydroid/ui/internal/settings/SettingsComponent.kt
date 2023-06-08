@@ -20,7 +20,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
@@ -47,7 +46,6 @@ internal interface SettingsComponent {
         internal val viewSourceUrl: String,
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val composeTheme: ComposeThemeFactory,
         internal val theming: Theming,
         internal val versionModule: VersionModule,
         internal val changeLogModule: ChangeLogModule,

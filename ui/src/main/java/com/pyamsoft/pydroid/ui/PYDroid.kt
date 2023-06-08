@@ -16,33 +16,10 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
-import androidx.compose.runtime.Composable
 import com.pyamsoft.pydroid.core.PYDroidLogger
-import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
-import com.pyamsoft.pydroid.ui.internal.app.NoopTheme
-import com.pyamsoft.pydroid.ui.internal.app.invoke
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.theme.ThemeProvider
-
-/**
- * A Compose theme provider which does nothing
- *
- * Can't use object literal or we lose @Composable context
- */
-private object NoopThemeProvider : ComposeThemeProvider {
-
-  @Composable
-  override fun Render(
-      activity: Activity,
-      themeProvider: ThemeProvider,
-      content: @Composable () -> Unit,
-  ) {
-    NoopTheme(activity, content)
-  }
-}
 
 /** PYDroid library entry point */
 public class PYDroid
@@ -89,9 +66,6 @@ internal constructor(
 
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
-
-      /** Theme for Composables */
-      internal val theme: ComposeThemeProvider = NoopThemeProvider,
 
       /** Debug options */
       internal val debug: DebugParameters? = null,

@@ -20,7 +20,6 @@ import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface ChangeLogDialogComponent {
 
@@ -34,7 +33,6 @@ internal interface ChangeLogDialogComponent {
     internal constructor(
         internal val state: MutableChangeLogDialogViewState,
         internal val changeLogModule: ChangeLogModule,
-        internal val composeTheme: ComposeThemeFactory,
         internal val imageLoader: ImageLoader,
         internal val version: Int,
     )

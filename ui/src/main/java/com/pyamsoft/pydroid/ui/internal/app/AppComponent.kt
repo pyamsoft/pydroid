@@ -104,7 +104,6 @@ internal interface AppComponent {
         internal val viewSourceUrl: String,
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val composeTheme: ComposeThemeFactory,
         internal val billingErrorBus: EventBus<Throwable>,
         internal val imageLoader: ImageLoader,
         internal val version: Int,
@@ -162,7 +161,6 @@ internal interface AppComponent {
         BillingDialogComponent.Factory.Parameters(
             billingModule = billingModule,
             changeLogModule = params.changeLogModule,
-            composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
             state = MutableBillingDialogViewState(),
         )
@@ -183,7 +181,6 @@ internal interface AppComponent {
             privacyPolicyUrl = params.privacyPolicyUrl,
             viewSourceUrl = params.viewSourceUrl,
             changeLogModule = params.changeLogModule,
-            composeTheme = params.composeTheme,
             theming = params.theming,
             versionCheckState = versionCheckState,
             state = MutableSettingsViewState(),
@@ -203,7 +200,6 @@ internal interface AppComponent {
     private val changeLogDialogParams =
         ChangeLogDialogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
-            composeTheme = params.composeTheme,
             imageLoader = params.imageLoader,
             version = params.version,
             state = MutableChangeLogDialogViewState(),
@@ -212,7 +208,6 @@ internal interface AppComponent {
     private val versionCheckParams =
         VersionCheckComponent.Factory.Parameters(
             module = versionModule,
-            composeTheme = params.composeTheme,
             state = versionCheckState,
         )
 

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 
 internal interface AboutComponent {
 
@@ -31,7 +30,6 @@ internal interface AboutComponent {
 
     data class Parameters
     internal constructor(
-        internal val composeTheme: ComposeThemeFactory,
         internal val module: AboutModule,
     )
   }

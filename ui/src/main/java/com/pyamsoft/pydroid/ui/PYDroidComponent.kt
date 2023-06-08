@@ -29,10 +29,8 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
-import com.pyamsoft.pydroid.ui.app.ComposeThemeProvider
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
-import com.pyamsoft.pydroid.ui.internal.app.ComposeThemeFactory
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
 import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractorImpl
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
@@ -78,7 +76,6 @@ internal interface PYDroidComponent {
         override val version: Int,
         override val logger: PYDroidLogger?,
         internal val application: Application,
-        internal val theme: ComposeThemeProvider,
         internal val debug: PYDroid.DebugParameters,
     ) : PYDroid.BaseParameters
   }
@@ -92,11 +89,6 @@ internal interface PYDroidComponent {
 
     private val context: Context = params.application
 
-    // Must be Lazy since ImageLoader calls getSystemService() internally.
-    // Since we override Application.getSystemService() for PYDroid.getSystemService()
-    // this can lead to StackOverflow errors unless initialization is done in a very specific order.
-    //
-    // This setup system is not perfect and we are looking to hopefully have something better soon.
     private val imageLoader: ImageLoader by lazy(NONE) { ImageLoader(params.application) }
 
     private val theming: Theming by lazy(NONE) { ThemingImpl(preferences) }
@@ -112,8 +104,6 @@ internal interface PYDroidComponent {
 
     private val logLinesBus by lazy(NONE) { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
 
-    private val composeTheme by lazy(NONE) { ComposeThemeFactory(theming, params.theme) }
-
     private val debugInteractor by
         lazy(NONE) {
           DebugInteractorImpl(
@@ -121,6 +111,8 @@ internal interface PYDroidComponent {
               context = params.application,
           )
         }
+
+    private val aboutModule by lazy(NONE) { AboutModule() }
 
     private val dataPolicyModule by
         lazy(NONE) {
@@ -151,7 +143,6 @@ internal interface PYDroidComponent {
               theming = theming,
               billingErrorBus = DefaultEventBus(),
               changeLogModule = changeLogModule,
-              composeTheme = composeTheme,
               imageLoader = imageLoader,
               version = params.version,
               dataPolicyModule = dataPolicyModule,
@@ -170,15 +161,13 @@ internal interface PYDroidComponent {
     private val aboutParams by
         lazy(NONE) {
           AboutComponent.Factory.Parameters(
-              composeTheme = composeTheme,
-              module = AboutModule(),
+              module = aboutModule,
           )
         }
 
     private val dataPolicyParams by
         lazy(NONE) {
           DataPolicyDialogComponent.Factory.Parameters(
-              composeTheme = composeTheme,
               imageLoader = imageLoader,
               module = dataPolicyModule,
               privacyPolicyUrl = params.privacyPolicyUrl,
@@ -195,7 +184,6 @@ internal interface PYDroidComponent {
                           context = context,
                       ),
                   ),
-              composeTheme = composeTheme,
           )
         }
 

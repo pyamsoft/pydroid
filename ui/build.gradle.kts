@@ -46,13 +46,7 @@ dependencies {
   // Compose Image loading
   implementation("io.coil-kt:coil-compose-base:2.4.0")
 
-  // Accompanist
-  implementation("com.google.accompanist:accompanist-insets:${rootProject.extra["accompanist"]}")
-
   implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
-
-  // Material Design
-  implementation("com.google.android.material:material:1.9.0")
 
   api(project(":arch"))
   api(project(":billing"))

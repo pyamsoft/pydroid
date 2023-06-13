@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.billing
 
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 
 /** Abstracts the Play Store Billing client */
 public interface BillingConnector {
@@ -26,5 +26,5 @@ public interface BillingConnector {
    *
    * Will automatically manage connections
    */
-  public fun bind(activity: FragmentActivity)
+  public fun bind(activity: ComponentActivity)
 }

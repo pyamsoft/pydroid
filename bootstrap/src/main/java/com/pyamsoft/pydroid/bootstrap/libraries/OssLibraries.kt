@@ -339,6 +339,12 @@ public object OssLibraries {
     )
 
     add(
+        "AndroidX Activity",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/",
+        "Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.",
+    )
+
+    add(
         "Google Play In-App Billing Library",
         "https://developers.google.com/android/",
         "In-App Billing management for Android Applications",

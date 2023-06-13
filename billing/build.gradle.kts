@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-  implementation("androidx.appcompat:appcompat:1.6.1")
+  implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
   implementation("com.android.billingclient:billing:6.0.0")
 
   // Compose Annotations

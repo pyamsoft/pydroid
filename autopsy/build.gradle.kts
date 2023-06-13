@@ -26,7 +26,7 @@ android {
 
 dependencies {
   // Compose
-  implementation("androidx.activity:activity-compose:1.7.2")
+  implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
   implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
 

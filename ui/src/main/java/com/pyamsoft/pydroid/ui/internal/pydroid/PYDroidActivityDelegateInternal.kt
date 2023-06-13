@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.pydroid
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
@@ -34,7 +34,7 @@ internal class PYDroidActivityDelegateInternal
 internal constructor(
     component: AppComponent,
     provider: ChangeLogProvider,
-    activity: FragmentActivity,
+    activity: ComponentActivity,
 ) : PYDroidActivityDelegate {
 
   private var appComponent: AppComponent? = component

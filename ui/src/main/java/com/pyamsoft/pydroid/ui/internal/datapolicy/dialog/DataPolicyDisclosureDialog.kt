@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -26,7 +27,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
-import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
@@ -43,11 +43,11 @@ internal class DataPolicyInjector : ComposableInjector() {
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getChangelogProvider(activity: FragmentActivity): ChangeLogProvider {
+  private fun getChangelogProvider(activity: ComponentActivity): ChangeLogProvider {
     return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
   }
 
-  override fun onInject(activity: FragmentActivity) {
+  override fun onInject(activity: ComponentActivity) {
     ObjectGraph.ApplicationScope.retrieve(activity.application)
         .injector()
         .plusDataPolicyDialog()

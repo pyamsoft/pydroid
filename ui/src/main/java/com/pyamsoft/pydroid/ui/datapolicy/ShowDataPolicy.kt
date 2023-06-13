@@ -16,13 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.datapolicy
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -46,11 +46,11 @@ public typealias OnDismissDataPolicy = () -> Unit
  */
 public class ShowDataPolicy
 internal constructor(
-    activity: FragmentActivity,
+    activity: ComponentActivity,
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: FragmentActivity? = activity
+  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: DataPolicyViewModeler? = null
 
   init {
@@ -120,7 +120,7 @@ internal constructor(
     @CheckResult
     @JvmOverloads
     public fun create(
-        activity: FragmentActivity,
+        activity: ComponentActivity,
         disabled: Boolean = false,
     ): ShowDataPolicy {
       return ShowDataPolicy(activity, disabled)

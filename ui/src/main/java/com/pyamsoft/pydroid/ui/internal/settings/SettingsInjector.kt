@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
@@ -32,7 +32,7 @@ internal class SettingsInjector internal constructor() : ComposableInjector() {
   internal var changeLogViewModel: ChangeLogViewModeler? = null
   internal var billingViewModel: BillingViewModeler? = null
 
-  override fun onInject(activity: FragmentActivity) {
+  override fun onInject(activity: ComponentActivity) {
     ObjectGraph.ActivityScope.retrieve(activity).injector().plusSettings().create().inject(this)
   }
 

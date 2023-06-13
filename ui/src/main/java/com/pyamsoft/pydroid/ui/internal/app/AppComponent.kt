@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.app
 
 import android.content.Context
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import androidx.fragment.app.FragmentActivity
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
@@ -68,7 +68,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 internal interface AppComponent {
 
-  @CheckResult fun create(activity: FragmentActivity): PYDroidActivityComponents
+  @CheckResult fun create(activity: ComponentActivity): PYDroidActivityComponents
 
   @CheckResult fun plusBillingDialog(): BillingDialogComponent.Factory
 
@@ -232,7 +232,7 @@ internal interface AppComponent {
             interactor = params.debugInteractor,
         )
 
-    private fun connectBilling(activity: FragmentActivity) {
+    private fun connectBilling(activity: ComponentActivity) {
       if (options.disableBilling) {
         Logger.w("Application has disabled the billing component")
       } else {
@@ -241,7 +241,7 @@ internal interface AppComponent {
       }
     }
 
-    override fun create(activity: FragmentActivity): PYDroidActivityComponents {
+    override fun create(activity: ComponentActivity): PYDroidActivityComponents {
       // Create rating here since we may use it to try force show an in-app rating
       val rating =
           RatingDelegate(

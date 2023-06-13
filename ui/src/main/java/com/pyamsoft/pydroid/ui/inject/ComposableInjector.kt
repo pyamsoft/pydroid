@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.inject
 
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.core.Logger
 
 /** Base class implementing a simple DI lifecycle */
@@ -25,7 +25,7 @@ public abstract class ComposableInjector {
   private var isInjected = false
 
   /** Inject DI objects from the graph to this object */
-  internal fun inject(activity: FragmentActivity) {
+  internal fun inject(activity: ComponentActivity) {
     if (isInjected) {
       Logger.w("$this is already injected")
       return
@@ -47,7 +47,7 @@ public abstract class ComposableInjector {
   }
 
   /** Called to inject from the DI graph */
-  protected abstract fun onInject(activity: FragmentActivity)
+  protected abstract fun onInject(activity: ComponentActivity)
 
   /** Called to dispose of injected data */
   protected abstract fun onDispose()

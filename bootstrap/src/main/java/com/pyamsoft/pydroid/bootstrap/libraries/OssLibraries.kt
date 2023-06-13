@@ -43,7 +43,7 @@ public object OssLibraries {
   /** Using pydroid-bus library */
   public var usingBus: Boolean = false
 
-  /** Using pydroid-biling library */
+  /** Using pydroid-billing library */
   public var usingBilling: Boolean = false
 
   /** Using pydroid-util library */
@@ -55,8 +55,6 @@ public object OssLibraries {
   private var addedCore: Boolean = false
   private var addedBootstrap: Boolean = false
   private var addedArch: Boolean = false
-  private var addedArchCompose: Boolean = false
-  private var addedUiCompose: Boolean = false
   private var addedAutopsy: Boolean = false
   private var addedNotify: Boolean = false
   private var addedUi: Boolean = false
@@ -78,6 +76,26 @@ public object OssLibraries {
         "Gradle Spotless Plugin",
         "https://github.com/diffplug/spotless/tree/master/plugin-gradle",
         "Keep your code Spotless with Gradle",
+    )
+    add(
+        "Dokka",
+        "https://github.com/Kotlin/dokka",
+        "API documentation engine for Kotlin",
+    )
+    add(
+        "Binary Compatibility Validator",
+        "https://github.com/Kotlin/binary-compatibility-validator",
+        "Public API management tool",
+    )
+    add(
+        "Android Cache Fix Gradle Plugin",
+        "https://github.com/gradle/android-cache-fix-gradle-plugin",
+        "Gradle plugin that fixes Android build caching problems.",
+    )
+    add(
+        "Gradle Doctor",
+        "https://runningcode.github.io/gradle-doctor/",
+        "The right prescription for your Gradle build.",
     )
   }
 
@@ -132,18 +150,6 @@ public object OssLibraries {
         "PYDroid util extensions for easier data manipulation",
     )
     add(
-        "AndroidX Core",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
-        "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android.",
-    )
-
-    add(
-        "AndroidX Lifecycle",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
-        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles.",
-    )
-
-    add(
         "AndroidX Fragment",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
         "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
@@ -187,9 +193,9 @@ public object OssLibraries {
     )
 
     add(
-        "AndroidX Core KTX",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
-        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
+        "Jetpack Compose Runtime",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime",
+        "Jetpack Compose runtime annotations",
     )
 
     addUtilLibraries()
@@ -208,12 +214,6 @@ public object OssLibraries {
     )
 
     add(
-        "AndroidX Vector Drawable",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/vectordrawable/",
-        "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics.",
-    )
-
-    add(
         "Coil Compose",
         "https://github.com/coil-kt/Coil",
         "An image loading library for Android backed by Kotlin Coroutines.",
@@ -224,7 +224,41 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
         "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
     )
-    addComposeUiLibraries()
+
+    add(
+        "AndroidX Fragment",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
+        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
+    )
+
+    add(
+        "AndroidX Core KTX",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
+        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
+    )
+
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
+        "Jetpack Compose support for UI widgets",
+    )
+    add(
+        "Jetpack Compose Animation",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/animation",
+        "Jetpack Compose support for animations",
+    )
+    add(
+        "Jetpack Compose Material",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
+        "Jetpack Compose support for the Material Design system",
+    )
+
+    add(
+        "Jetpack Compose UI Tooling",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling",
+        "Jetpack Compose support buildtime UI tooling",
+    )
+
     addArchLibraries()
     addBillingLibraries()
     addBootstrapLibraries()
@@ -244,6 +278,17 @@ public object OssLibraries {
         "PYDroid extensions for MaterialTheme",
     )
 
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
+        "Jetpack Compose support for UI widgets",
+    )
+    add(
+        "Jetpack Compose Material",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
+        "Jetpack Compose support for the Material Design system",
+    )
+
     addCoreLibraries()
   }
 
@@ -258,57 +303,15 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid standard architecture for an MVVM UI design pattern",
     )
-    addComposeArchLibraries()
+
+    add(
+        "Jetpack Compose Runtime Saveable",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime-saveable",
+        "Jetpack Compose runtime support for Saveable state",
+    )
+
     addBusLibraries()
     addUtilLibraries()
-  }
-
-  private fun addComposeArchLibraries() {
-    if (addedArchCompose) {
-      return
-    }
-    addedArchCompose = true
-
-    add(
-        "Jetpack Compose Compiler",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Runtime",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-  }
-
-  private fun addComposeUiLibraries() {
-    if (addedUiCompose) {
-      return
-    }
-    addedUiCompose = true
-
-    add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Animation",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose Material",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-    add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose",
-        "Jetpack Compose is Android’s modern toolkit for building native UI",
-    )
-
-    addComposeArchLibraries()
   }
 
   private fun addBusLibraries() {
@@ -355,6 +358,12 @@ public object OssLibraries {
             ),
     )
 
+    add(
+        "Jetpack Compose Runtime",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime",
+        "Jetpack Compose runtime annotations",
+    )
+
     addBusLibraries()
     addUtilLibraries()
   }
@@ -371,7 +380,14 @@ public object OssLibraries {
         "PYDroid notification management abstraction library",
     )
 
+    add(
+        "AndroidX Core",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
+        "AndroidX Core Libraries",
+    )
+
     addCoreLibraries()
+    addUtilLibraries()
   }
 
   private fun addAutopsyLibraries() {
@@ -385,13 +401,36 @@ public object OssLibraries {
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/",
         "Helps with Application initialization",
     )
+
     add(
         "PYDroid Autopsy",
         "https://github.com/pyamsoft/pydroid",
         "PYDroid development crash reporting screen",
     )
 
-    addComposeUiLibraries()
+    add(
+        "Jetpack Compose UI",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui",
+        "Jetpack Compose support for UI widgets",
+    )
+    add(
+        "Jetpack Compose Material",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
+        "Jetpack Compose support for the Material Design system",
+    )
+
+    add(
+        "Jetpack Compose UI Tooling",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling",
+        "Jetpack Compose support buildtime UI tooling",
+    )
+
+    add(
+        "Accompanist System UI Controller",
+        "https://google.github.io/accompanist/systemuicontroller/",
+        "System UI Controller provides easy-to-use utilities for updating the System UI bar colors within Jetpack Compose.",
+    )
+
     addCoreLibraries()
     addThemeLibraries()
   }
@@ -423,6 +462,7 @@ public object OssLibraries {
   @JvmStatic
   @CheckResult
   public fun libraries(): Set<OssLibrary> {
+    // Since we are in the bootstrap module, this always happens
     addBootstrapLibraries()
 
     if (usingUtil) {

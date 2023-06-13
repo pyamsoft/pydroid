@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.util
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,7 +31,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlinx.coroutines.flow.StateFlow
@@ -51,9 +51,9 @@ public fun <T : Any> rememberNotNull(anything: T?, lazyMessage: () -> String): T
 }
 
 @CheckResult
-private fun resolveActivity(context: Context): FragmentActivity {
+private fun resolveActivity(context: Context): ComponentActivity {
   return when (context) {
-    is Activity -> context as? FragmentActivity
+    is Activity -> context as? ComponentActivity
     is ContextWrapper -> resolveActivity(context.baseContext)
     else -> {
       Logger.w("Provided Context is not an Activity or a ContextWrapper: $context")
@@ -72,7 +72,7 @@ private fun resolveActivity(context: Context): FragmentActivity {
  */
 @Composable
 @CheckResult
-public fun rememberActivity(): FragmentActivity {
+public fun rememberActivity(): ComponentActivity {
   val context = LocalContext.current
   return remember(context) { resolveActivity(context) }
 }

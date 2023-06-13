@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import android.app.Application
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -48,10 +48,10 @@ internal object ObjectGraph {
 
   internal object ActivityScope {
 
-    private val trackingMap = mutableMapOf<FragmentActivity, PYDroidActivityDelegateInternal>()
+    private val trackingMap = mutableMapOf<ComponentActivity, PYDroidActivityDelegateInternal>()
 
     fun install(
-        activity: FragmentActivity,
+        activity: ComponentActivity,
         internals: PYDroidActivityDelegateInternal,
     ) {
       trackingMap[activity] = internals
@@ -64,7 +64,7 @@ internal object ObjectGraph {
     }
 
     @CheckResult
-    fun retrieve(activity: FragmentActivity): PYDroidActivityDelegateInternal {
+    fun retrieve(activity: ComponentActivity): PYDroidActivityDelegateInternal {
       return trackingMap[activity].requireNotNull {
         "Could not find PYDroidActivity internals for Activity: $activity"
       }

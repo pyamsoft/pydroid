@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.util
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.util.internal.DefaultPermissionRequester
 
 /** Handles permission requesting */
@@ -27,7 +27,7 @@ public interface PermissionRequester {
   /** Request permission from an Activity */
   @CheckResult
   public fun registerRequester(
-      activity: FragmentActivity,
+      activity: ComponentActivity,
       onResponse: (Boolean) -> Unit,
   ): Requester
 

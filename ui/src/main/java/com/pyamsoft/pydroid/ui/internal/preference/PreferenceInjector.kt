@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.preference
 
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 
@@ -24,7 +24,7 @@ internal class PreferenceInjector internal constructor() : ComposableInjector() 
 
   internal var viewModel: PreferenceViewModeler? = null
 
-  override fun onInject(activity: FragmentActivity) {
+  override fun onInject(activity: ComponentActivity) {
     ObjectGraph.ActivityScope.retrieve(activity).injector().plusPreferences().create().inject(this)
   }
 

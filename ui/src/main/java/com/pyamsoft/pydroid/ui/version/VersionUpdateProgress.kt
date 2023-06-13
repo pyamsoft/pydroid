@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
@@ -41,11 +41,11 @@ public typealias VersionUpdateProgressWidget =
  */
 public class VersionUpdateProgress
 internal constructor(
-    activity: FragmentActivity,
+    activity: ComponentActivity,
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: FragmentActivity? = activity
+  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
@@ -106,7 +106,7 @@ internal constructor(
     @JvmStatic
     @CheckResult
     public fun create(
-        activity: FragmentActivity,
+        activity: ComponentActivity,
         disabled: Boolean = false,
     ): VersionUpdateProgress {
       return VersionUpdateProgress(activity, disabled)

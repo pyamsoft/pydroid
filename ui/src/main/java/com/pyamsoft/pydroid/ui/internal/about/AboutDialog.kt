@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,7 +26,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
@@ -37,7 +37,7 @@ internal class AboutDialogInjector : ComposableInjector() {
 
   internal var viewModel: AboutViewModeler? = null
 
-  override fun onInject(activity: FragmentActivity) {
+  override fun onInject(activity: ComponentActivity) {
     ObjectGraph.ApplicationScope.retrieve(activity.application)
         .injector()
         .plusAbout()

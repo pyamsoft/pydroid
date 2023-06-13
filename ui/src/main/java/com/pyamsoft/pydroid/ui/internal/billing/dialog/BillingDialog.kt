@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -23,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -50,11 +50,11 @@ internal class BillingDialogInjector : ComposableInjector() {
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getApplicationProvider(activity: FragmentActivity): AppProvider {
+  private fun getApplicationProvider(activity: ComponentActivity): AppProvider {
     return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
   }
 
-  override fun onInject(activity: FragmentActivity) {
+  override fun onInject(activity: ComponentActivity) {
     ObjectGraph.ActivityScope.retrieve(activity)
         .injector()
         .plusBillingDialog()

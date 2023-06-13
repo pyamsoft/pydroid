@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.util.internal
 
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.PermissionRequester
 
@@ -76,7 +76,7 @@ internal constructor(
   }
 
   override fun registerRequester(
-      activity: FragmentActivity,
+      activity: ComponentActivity,
       onResponse: (Boolean) -> Unit
   ): PermissionRequester.Requester {
     val launcher =

@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -56,10 +56,10 @@ public typealias VersionUpgradeWidget =
  */
 public class VersionUpgradeAvailable
 internal constructor(
-    activity: FragmentActivity,
+    activity: ComponentActivity,
     private val disabled: Boolean,
 ) {
-  private var hostingActivity: FragmentActivity? = activity
+  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
@@ -173,7 +173,7 @@ internal constructor(
     @CheckResult
     @JvmOverloads
     public fun create(
-        activity: FragmentActivity,
+        activity: ComponentActivity,
         disabled: Boolean = false,
     ): VersionUpgradeAvailable {
       return VersionUpgradeAvailable(activity, disabled)

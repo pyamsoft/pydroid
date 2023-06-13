@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
  * Due to internal implementation details, this call may not actually do anything, as it is up to
  * Google to decide when this dialog bit actually shows up. Quality API, Android.
  */
-public fun showInAppRatingFlow(activity: FragmentActivity) {
+public fun showInAppRatingFlow(activity: ComponentActivity) {
   ObjectGraph.ActivityScope.retrieve(activity).loadInAppRating()
 }
 

@@ -101,14 +101,14 @@ public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
+	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
+	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
 }
 
 public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
+	public final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
+	public final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;Landroidx/activity/ComponentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/billing/BillingViewState : com/pyamsoft/pydroid/arch/UiViewState {
@@ -142,28 +142,28 @@ public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
 
 public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;Landroidx/activity/ComponentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
 
 public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;
 	public final fun Render (Landroidx/compose/runtime/Composer;I)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 }
 
 public final class com/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy$Companion;Landroidx/activity/ComponentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/datapolicy/ShowDataPolicy;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/debug/InAppDebugLogger {
@@ -256,7 +256,7 @@ public abstract class com/pyamsoft/pydroid/ui/inject/ComposableInjector {
 	public static final field $stable I
 	public fun <init> ()V
 	protected abstract fun onDispose ()V
-	protected abstract fun onInject (Landroidx/fragment/app/FragmentActivity;)V
+	protected abstract fun onInject (Landroidx/activity/ComponentActivity;)V
 }
 
 public final class com/pyamsoft/pydroid/ui/inject/RememberKt {
@@ -456,7 +456,7 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
 
 public final class com/pyamsoft/pydroid/ui/rating/RatingLauncherKt {
 	public static final fun LaunchShowInAppRatingFlow (Landroidx/compose/runtime/Composer;I)V
-	public static final fun showInAppRatingFlow (Landroidx/fragment/app/FragmentActivity;)V
+	public static final fun showInAppRatingFlow (Landroidx/activity/ComponentActivity;)V
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/rating/RatingViewState : com/pyamsoft/pydroid/arch/UiViewState {
@@ -534,7 +534,7 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
 	public static final fun collectAsStateList (Lkotlinx/coroutines/flow/StateFlow;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
-	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/fragment/app/FragmentActivity;
+	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/activity/ComponentActivity;
 	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun rememberAsStateMap (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
@@ -563,12 +563,12 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;Landroidx/activity/ComponentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
@@ -576,14 +576,14 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
 	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
-	public static final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 
 public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion {
-	public final fun create (Landroidx/fragment/app/FragmentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
-	public final fun create (Landroidx/fragment/app/FragmentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
-	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;Landroidx/fragment/app/FragmentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
+	public static synthetic fun create$default (Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;Landroidx/activity/ComponentActivity;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/BillingUpsellWidgetKt {

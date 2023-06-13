@@ -22,7 +22,6 @@ android {
 
 dependencies {
   implementation("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
-  implementation("androidx.core:core:${rootProject.extra["core"]}")
-  implementation("androidx.lifecycle:lifecycle-common:2.6.1")
+
   api(project(":core"))
 }

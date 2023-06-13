@@ -22,7 +22,6 @@ android {
 
 dependencies {
   implementation("androidx.core:core:${rootProject.extra["core"]}")
-  implementation("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
 
   api(project(":core"))
   api(project(":util"))

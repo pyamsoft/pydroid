@@ -1,5 +1,5 @@
 public abstract interface class com/pyamsoft/pydroid/billing/BillingConnector {
-	public abstract fun bind (Landroidx/fragment/app/FragmentActivity;)V
+	public abstract fun bind (Landroidx/activity/ComponentActivity;)V
 }
 
 public abstract interface class com/pyamsoft/pydroid/billing/BillingInteractor {

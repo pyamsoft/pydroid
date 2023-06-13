@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.Logger
@@ -26,12 +26,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingDelegate(
-    activity: FragmentActivity,
+    activity: ComponentActivity,
     viewModel: RatingViewModeler,
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: FragmentActivity? = activity
+  private var hostingActivity: ComponentActivity? = activity
   private var ratingViewModel: RatingViewModeler? = viewModel
 
   init {
@@ -48,7 +48,7 @@ internal class RatingDelegate(
   }
 
   private fun showRating(
-      activity: FragmentActivity,
+      activity: ComponentActivity,
       launcher: AppRatingLauncher,
   ) {
     // Enforce that we do this on the Main thread

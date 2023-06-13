@@ -97,6 +97,11 @@ public object OssLibraries {
         "https://runningcode.github.io/gradle-doctor/",
         "The right prescription for your Gradle build.",
     )
+    add(
+        "Core Library Desugaring",
+        "https://github.com/google/desugar_jdk_libs",
+        "This project contains a small subset of OpenJDK libraries simplified for use on older runtimes.",
+    )
   }
 
   private fun addCoreLibraries() {

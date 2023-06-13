@@ -415,7 +415,7 @@ public object OssLibraries {
 
     add(
         "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui",
+        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
         "Jetpack Compose support for UI widgets",
     )
     add(

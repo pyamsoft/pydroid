@@ -16,24 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.theme
 
-import android.app.Activity
-import androidx.annotation.CheckResult
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-/** Determines current dark mode status */
-public fun interface ThemeProvider {
+/** Zero space */
+public val ZeroSize: Dp = 0.dp
 
-  /** Is activity currently in dark mode */
-  @CheckResult public fun isDarkTheme(): Boolean
-}
-
-/** Convert activity as theme provider */
-@CheckResult
-public fun Activity.asThemeProvider(theming: Theming): ThemeProvider {
-  return ThemeProvider { theming.isDarkTheme(this) }
-}
-
-/** Convert theming as theme provider */
-@CheckResult
-public fun Theming.asThemeProvider(activity: Activity): ThemeProvider {
-  return ThemeProvider { this.isDarkTheme(activity) }
-}
+/** Thinnest possible spacing */
+public val HairlineSize: Dp = 1.dp

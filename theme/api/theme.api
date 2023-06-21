@@ -40,8 +40,3 @@ public final class com/pyamsoft/pydroid/theme/MaterialThemeKt {
 	public static final fun getWarning (Landroidx/compose/material/Colors;)J
 }
 
-public final class com/pyamsoft/pydroid/theme/SizesKt {
-	public static final fun getHairlineSize ()F
-	public static final fun getZeroSize ()F
-}
-

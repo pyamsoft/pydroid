@@ -472,13 +472,9 @@ public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {
 	public static final fun getZeroElevation ()F
 }
 
-public abstract interface class com/pyamsoft/pydroid/ui/theme/ThemeProvider {
-	public abstract fun isDarkTheme ()Z
-}
-
-public final class com/pyamsoft/pydroid/ui/theme/ThemeProviderKt {
-	public static final fun asThemeProvider (Landroid/app/Activity;Lcom/pyamsoft/pydroid/ui/theme/Theming;)Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;
-	public static final fun asThemeProvider (Lcom/pyamsoft/pydroid/ui/theme/Theming;Landroid/app/Activity;)Lcom/pyamsoft/pydroid/ui/theme/ThemeProvider;
+public final class com/pyamsoft/pydroid/ui/theme/SizesKt {
+	public static final fun getHairlineSize ()F
+	public static final fun getZeroSize ()F
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/Theming {

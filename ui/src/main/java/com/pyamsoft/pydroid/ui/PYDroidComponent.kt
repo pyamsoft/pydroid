@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.ThemingImpl
+import com.pyamsoft.pydroid.ui.internal.theme.ThemingImpl
 import com.pyamsoft.pydroid.util.isDebugMode
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers

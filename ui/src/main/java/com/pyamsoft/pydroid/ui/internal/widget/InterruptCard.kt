@@ -27,7 +27,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.pyamsoft.pydroid.theme.HairlineSize
+import com.pyamsoft.pydroid.ui.theme.HairlineSize
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable

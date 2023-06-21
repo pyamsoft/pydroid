@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.theme
+package com.pyamsoft.pydroid.ui.internal.theme
 
 import android.app.Activity
 import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
+import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

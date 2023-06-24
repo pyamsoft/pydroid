@@ -34,7 +34,7 @@ public inline fun FragmentManager.commit(
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  return this.commit(owner.lifecycle, immediate, transaction)
+  @Suppress("DEPRECATION") return this.commit(owner.lifecycle, immediate, transaction)
 }
 
 /**
@@ -68,7 +68,7 @@ public inline fun FragmentManager.commitNow(
     owner: LifecycleOwner,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  return this.commitNow(owner.lifecycle, transaction)
+  @Suppress("DEPRECATION") return this.commitNow(owner.lifecycle, transaction)
 }
 
 /**

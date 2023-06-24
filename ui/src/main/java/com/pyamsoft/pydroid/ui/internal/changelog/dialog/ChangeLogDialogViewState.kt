@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import kotlinx.coroutines.flow.MutableStateFlow

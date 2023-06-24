@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.util.doOnStart
  * Guaranteed safe via lifecycle
  */
 @JvmOverloads
+@Deprecated("We are fully Compose now so we do not use FragmentManager anymore.")
 public inline fun FragmentManager.commit(
     owner: LifecycleOwner,
     immediate: Boolean = false,
@@ -42,6 +43,7 @@ public inline fun FragmentManager.commit(
  * Guaranteed safe via lifecycle
  */
 @JvmOverloads
+@Deprecated("We are fully Compose now so we do not use FragmentManager anymore.")
 public inline fun FragmentManager.commit(
     lifecycle: Lifecycle,
     immediate: Boolean = false,
@@ -61,6 +63,7 @@ public inline fun FragmentManager.commit(
  *
  * Guaranteed safe via lifecycle
  */
+@Deprecated("We are fully Compose now so we do not use FragmentManager anymore.")
 public inline fun FragmentManager.commitNow(
     owner: LifecycleOwner,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
@@ -73,6 +76,7 @@ public inline fun FragmentManager.commitNow(
  *
  * Guaranteed safe via lifecycle
  */
+@Deprecated("We are fully Compose now so we do not use FragmentManager anymore.")
 public inline fun FragmentManager.commitNow(
     lifecycle: Lifecycle,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction

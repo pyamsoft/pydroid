@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

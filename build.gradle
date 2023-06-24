@@ -88,7 +88,7 @@ subprojects {
   }
 
   android {
-    compileSdk = 33
+    compileSdk = 34
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
@@ -148,7 +148,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "26.6.0"
+          version "26.6.1"
         }
       }
     }

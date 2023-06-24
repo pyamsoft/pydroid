@@ -18,8 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.about
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import kotlinx.coroutines.flow.MutableStateFlow

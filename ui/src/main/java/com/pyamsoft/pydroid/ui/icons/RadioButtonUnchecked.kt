@@ -21,7 +21,8 @@ import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
 import androidx.compose.ui.graphics.vector.ImageVector
 
-@Suppress("unused")
+/** Copied from material-icons-extended since the library itself is too large */
+@Suppress("UnusedReceiverParameter")
 public val Icons.Filled.RadioButtonUnchecked: ImageVector
   get() {
     if (_radioButtonUnchecked != null) {

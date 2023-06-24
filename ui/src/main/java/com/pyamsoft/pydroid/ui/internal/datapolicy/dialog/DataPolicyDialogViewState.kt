@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.pyamsoft.pydroid.ui.internal.app.AppViewState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.util.doOnResume
  *
  * Because of doOnResume this also guarantees that any children fragments are also ready
  */
+@Deprecated("We are fully Compose now so we do not use FragmentManager anymore.")
 public fun DialogFragment.show(activity: FragmentActivity, tag: String) {
   require(tag.isNotBlank()) { "Cannot use blank tag" }
 

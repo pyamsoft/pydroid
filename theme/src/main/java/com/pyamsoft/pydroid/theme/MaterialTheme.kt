@@ -29,27 +29,25 @@ private val GREEN = Color(0xFF4CAF50)
 private val AMBER = Color(0xFFFFC107)
 
 /** Provide a Theme color for Success */
-@Suppress("unused", "UnusedReceiverParameter")
+@Suppress("UnusedReceiverParameter")
 public val Colors.success: Color
   get() = GREEN
 
 /** Provide a Theme color for OnSuccess */
-@Suppress("unused")
 public val Colors.onSuccess: Color
   get() = this.onError
 
 /** Provide a Theme color for Warning */
-@Suppress("unused", "UnusedReceiverParameter")
+@Suppress("UnusedReceiverParameter")
 public val Colors.warning: Color
   get() = AMBER
 
 /** Provide a Theme color for OnWarning */
-@Suppress("unused")
 public val Colors.onWarning: Color
   get() = this.onError
 
 /** A Spacing extension on the Material theme */
-@Suppress("unused", "UnusedReceiverParameter")
+@Suppress("UnusedReceiverParameter")
 public val MaterialTheme.keylines: Keylines
   @Composable @ReadOnlyComposable get() = LocalKeylines.current
 

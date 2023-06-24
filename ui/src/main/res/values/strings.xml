@@ -22,10 +22,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_conditions">Terms &amp; Conditions</string>
 
-    <string name="more_apps_from_pyamsoft">More apps from pyamsoft</string>
     <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
-    <string name="open_store">Play Store</string>
-    <string name="view_source">Source Code</string>
     <string name="close">Close</string>
 
     <string name="dpd_accept">I Accept the Data Policy Terms</string>

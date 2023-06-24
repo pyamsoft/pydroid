@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.app
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 
@@ -32,7 +31,6 @@ import androidx.compose.ui.window.SecureFlagPolicy
  */
 @Composable
 @CheckResult
-@OptIn(ExperimentalComposeUiApi::class)
 public fun rememberDialogProperties(
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,

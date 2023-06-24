@@ -22,7 +22,7 @@ import androidx.compose.material.icons.materialPath
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /** Copied from material-icons-extended since the library itself is too large */
-@Suppress("unused")
+@Suppress("UnusedReceiverParameter")
 public val Icons.Outlined.Terminal: ImageVector
   get() {
     if (_terminal != null) {

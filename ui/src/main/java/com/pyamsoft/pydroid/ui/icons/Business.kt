@@ -22,7 +22,7 @@ import androidx.compose.material.icons.materialPath
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /** Copied from material-icons-extended since the library itself is too large */
-@Suppress("unused")
+@Suppress("UnusedReceiverParameter")
 public val Icons.Outlined.Business: ImageVector
   get() {
     if (_business != null) {

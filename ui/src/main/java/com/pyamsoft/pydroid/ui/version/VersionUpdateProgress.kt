@@ -83,8 +83,7 @@ internal constructor(
     }
 
     val viewModel = rememberNotNull(viewModel)
-    val state = viewModel.state
-    content(state)
+    content(viewModel)
   }
 
   /** Render into a composable the default version check screen upsell */

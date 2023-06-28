@@ -23,8 +23,8 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
  */
 public abstract class AbstractViewModeler<S : UiViewState>
 protected constructor(
-    override val state: S,
-) : ViewModeler<S> {
+    protected open val state: S,
+) : ViewModeler {
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}
 

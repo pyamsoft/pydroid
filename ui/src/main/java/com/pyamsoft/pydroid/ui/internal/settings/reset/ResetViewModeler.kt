@@ -25,11 +25,9 @@ import kotlinx.coroutines.launch
 
 internal class ResetViewModeler
 internal constructor(
-    state: MutableResetViewState,
+    override val state: MutableResetViewState,
     private val interactor: SettingsInteractor,
-) : AbstractViewModeler<ResetViewState>(state) {
-
-  private val vmState = state
+) : ResetViewState by state, AbstractViewModeler<ResetViewState>(state) {
 
   internal fun handleFullReset(scope: CoroutineScope) {
     if (state.reset.value) {
@@ -37,7 +35,7 @@ internal constructor(
       return
     }
 
-    vmState.reset.value = true
+    state.reset.value = true
     scope.launch(context = Dispatchers.Default) {
       Logger.d("Completely reset application")
       interactor.wipeData()

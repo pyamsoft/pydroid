@@ -95,7 +95,7 @@ internal fun InAppDebugDialog(
 
   InAppDebugScreen(
       modifier = modifier,
-      state = viewModel.state,
+      state = viewModel,
       extraContent = extraContent,
       onDismiss = onDismiss,
       onCopy = { viewModel.handleCopy(scope = scope) },

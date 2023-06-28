@@ -22,7 +22,7 @@ import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
 
 /** Connect a [ViewModeler] to the local saved state registry for save/restore hooks */
 @Composable
-public fun SaveStateDisposableEffect(viewModeler: ViewModeler<*>) {
+public fun SaveStateDisposableEffect(viewModeler: ViewModeler) {
   // Attach to save state registry
   val registry = LocalSaveableStateRegistry.current
   if (registry != null) {

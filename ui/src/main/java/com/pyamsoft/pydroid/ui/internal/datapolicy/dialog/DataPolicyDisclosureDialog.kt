@@ -107,7 +107,7 @@ internal fun DataPolicyDisclosureDialog(
   ) {
     DataPolicyDisclosureScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state,
+        state = viewModel,
         imageLoader = imageLoader,
         onNavigationErrorDismissed = { handleHideNavigationError() },
         onAccept = {

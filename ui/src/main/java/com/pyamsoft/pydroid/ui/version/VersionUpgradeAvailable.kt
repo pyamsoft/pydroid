@@ -113,10 +113,9 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state
 
     content(
-        state,
+        vm,
         { launcher ->
           // We expect to have an Activity mounted here
           val a = hostingActivity.requireNotNull()

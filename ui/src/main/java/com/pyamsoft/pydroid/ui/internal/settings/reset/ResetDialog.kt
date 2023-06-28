@@ -64,7 +64,7 @@ internal fun ResetDialog(
   ) {
     ResetScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state,
+        state = viewModel,
         onReset = {
           viewModel.handleFullReset(
               scope = scope,

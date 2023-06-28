@@ -27,11 +27,9 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogViewModeler
 internal constructor(
-    state: MutableChangeLogViewState,
+    override val state: MutableChangeLogViewState,
     private val interactor: ChangeLogInteractor,
-) : AbstractViewModeler<ChangeLogViewState>(state) {
-
-  private val vmState = state
+) : ChangeLogViewState by state, AbstractViewModeler<ChangeLogViewState>(state) {
 
   override fun registerSaveState(
       registry: SaveableStateRegistry
@@ -43,7 +41,7 @@ internal constructor(
       }
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
-    val s = vmState
+    val s = state
 
     registry
         .consumeRestored(KEY_SHOW_DIALOG)
@@ -56,7 +54,7 @@ internal constructor(
       scope.launch(context = Dispatchers.Default) {
         // Decide based on preference (have we seen the current version changelog)
         val show = f.first()
-        vmState.isShowUpsell.value = show
+        state.isShowUpsell.value = show
 
         // If we can show, mark as shown so that in the future we do not show.
         if (show) {
@@ -67,15 +65,15 @@ internal constructor(
   }
 
   internal fun handleShowDialog() {
-    vmState.isShowingDialog.value = true
+    state.isShowingDialog.value = true
   }
 
   internal fun handleCloseDialog() {
-    vmState.isShowingDialog.value = false
+    state.isShowingDialog.value = false
   }
 
   internal fun handleDismissUpsell() {
-    vmState.isShowUpsell.value = false
+    state.isShowUpsell.value = false
 
     // mark as shown so that in the future we do not show.
     interactor.markChangeLogShown()

@@ -108,9 +108,9 @@ public fun SettingsPage(
   SettingsContent(
       modifier = modifier,
       shape = shape,
-      state = viewModel.state,
-      billingState = billingViewModel.state,
-      changeLogState = changeLogViewModel.state,
+      state = viewModel,
+      billingState = billingViewModel,
+      changeLogState = changeLogViewModel,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,

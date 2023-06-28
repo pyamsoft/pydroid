@@ -26,12 +26,10 @@ import kotlinx.coroutines.launch
 
 internal class BillingViewModeler
 internal constructor(
-    state: MutableBillingViewState,
+    override val state: MutableBillingViewState,
     private val preferences: BillingPreferences,
     private val isFakeUpsell: Boolean,
-) : AbstractViewModeler<BillingViewState>(state) {
-
-  private val vmState = state
+) : BillingViewState by state, AbstractViewModeler<BillingViewState>(state) {
 
   override fun registerSaveState(
       registry: SaveableStateRegistry
@@ -43,7 +41,7 @@ internal constructor(
       }
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
-    val s = vmState
+    val s = state
 
     registry
         .consumeRestored(KEY_SHOW_DIALOG)
@@ -52,7 +50,7 @@ internal constructor(
   }
 
   internal fun bind(scope: CoroutineScope) {
-    val s = vmState
+    val s = state
 
     preferences.listenForBillingUpsellChanges().also { f ->
       scope.launch(context = Dispatchers.Default) {
@@ -74,16 +72,16 @@ internal constructor(
   }
 
   internal fun handleOpenDialog() {
-    vmState.isShowingDialog.value = true
+    state.isShowingDialog.value = true
   }
 
   internal fun handleCloseDialog() {
-    vmState.isShowingDialog.value = false
+    state.isShowingDialog.value = false
   }
 
   internal fun handleDismissUpsell() {
     Logger.d("Dismissing Billing upsell")
-    vmState.isShowingUpsell.value = false
+    state.isShowingUpsell.value = false
     preferences.resetBillingShown()
   }
 

@@ -16,8 +16,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
-
 /**
  * A ViewModel
  *
@@ -48,8 +46,4 @@ import androidx.annotation.CheckResult
  * This ViewModeler class is a proper VM in the MVVM architecture as it owns and manages a state
  * object which is then passed to the view for drawing.
  */
-public interface ViewModeler<S : UiViewState> : StateSaver, StateRestorer {
-
-  /** Get the current state */
-  @get:CheckResult public val state: S
-}
+public interface ViewModeler : StateSaver, StateRestorer

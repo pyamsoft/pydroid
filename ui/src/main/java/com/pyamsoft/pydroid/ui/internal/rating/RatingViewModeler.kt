@@ -27,17 +27,15 @@ import kotlinx.coroutines.launch
 
 internal class RatingViewModeler
 internal constructor(
-    state: MutableRatingViewState,
+    override val state: MutableRatingViewState,
     private val interactor: RatingInteractor,
-) : AbstractViewModeler<RatingViewState>(state) {
-
-  private val vmState = state
+) : RatingViewState by state, AbstractViewModeler<RatingViewState>(state) {
 
   internal fun loadInAppRating(
       scope: CoroutineScope,
       onLaunchInAppRating: (AppRatingLauncher) -> Unit
   ) {
-    val s = vmState
+    val s = state
     if (s.isInAppRatingShown.value || s.isLoading.value) {
       return
     }

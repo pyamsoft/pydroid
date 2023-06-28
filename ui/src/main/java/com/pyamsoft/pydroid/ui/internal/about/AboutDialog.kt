@@ -96,7 +96,7 @@ internal fun AboutDialog(
   ) {
     AboutScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state,
+        state = viewModel,
         onViewHomePage = { handleOpenPage(it.libraryUrl) },
         onViewLicense = { handleOpenPage(it.licenseUrl) },
         onNavigationErrorDismissed = { handleDismissFailedNavigation() },

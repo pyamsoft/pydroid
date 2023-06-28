@@ -24,20 +24,18 @@ import kotlinx.coroutines.launch
 
 internal class AboutViewModeler
 internal constructor(
-    state: MutableAboutViewState,
+    override val state: MutableAboutViewState,
     private val interactor: AboutInteractor,
-) : AbstractViewModeler<AboutViewState>(state) {
-
-  private val vmState = state
+) : AboutViewState by state, AbstractViewModeler<AboutViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
-    if (vmState.loadingState.value != AboutViewState.LoadingState.NONE) {
+    if (state.loadingState.value != AboutViewState.LoadingState.NONE) {
       return
     }
 
-    vmState.loadingState.value = AboutViewState.LoadingState.LOADING
+    state.loadingState.value = AboutViewState.LoadingState.LOADING
     scope.launch(context = Dispatchers.Default) {
-      vmState.apply {
+      state.apply {
         try {
           licenses.value = interactor.loadLicenses()
         } finally {
@@ -48,10 +46,10 @@ internal constructor(
   }
 
   internal fun handleFailedNavigation(e: Throwable) {
-    vmState.navigationError.value = e
+    state.navigationError.value = e
   }
 
   internal fun handleDismissFailedNavigation() {
-    vmState.navigationError.value = null
+    state.navigationError.value = null
   }
 }

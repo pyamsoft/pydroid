@@ -100,13 +100,12 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state
 
     LaunchedEffect(vm) { vm.bind(scope = this) }
     SaveStateDisposableEffect(vm)
 
     RenderContent(
-        state = state,
+        state = vm,
         onDismissDialog = {
           Logger.d("DPD accepted, this will be dismissed once the Preferences update")
         },

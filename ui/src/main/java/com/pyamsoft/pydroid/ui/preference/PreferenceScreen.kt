@@ -65,7 +65,7 @@ public fun PreferenceScreen(
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       preferences = preferences,
-      state = viewModel.state,
+      state = viewModel,
       onOpenDialog = { viewModel.handleShowDialog(it) },
       onCloseDialog = { viewModel.handleDismissDialog(it) },
   )

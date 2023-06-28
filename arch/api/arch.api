@@ -3,7 +3,7 @@ public abstract class com/pyamsoft/pydroid/arch/AbstractViewModeler : com/pyamso
 	public static final field Companion Lcom/pyamsoft/pydroid/arch/AbstractViewModeler$Companion;
 	protected fun <init> (Lcom/pyamsoft/pydroid/arch/UiViewState;)V
 	public fun consumeRestoredState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)V
-	public fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
+	protected fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
 	public fun registerSaveState (Landroidx/compose/runtime/saveable/SaveableStateRegistry;)Ljava/util/List;
 }
 
@@ -26,6 +26,5 @@ public abstract interface class com/pyamsoft/pydroid/arch/UiViewState {
 }
 
 public abstract interface class com/pyamsoft/pydroid/arch/ViewModeler : com/pyamsoft/pydroid/arch/StateRestorer, com/pyamsoft/pydroid/arch/StateSaver {
-	public abstract fun getState ()Lcom/pyamsoft/pydroid/arch/UiViewState;
 }
 

@@ -94,7 +94,7 @@ internal fun ChangeLogDialog(
   ) {
     ChangeLogScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state,
+        state = viewModel,
         imageLoader = imageLoader,
         onRateApp = { uriHandler.openUri(MarketLinker.getStorePageLink(activity)) },
         onClose = onDismiss,

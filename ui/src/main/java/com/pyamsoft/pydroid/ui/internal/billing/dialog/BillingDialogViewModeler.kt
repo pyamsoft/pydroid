@@ -27,18 +27,16 @@ import kotlinx.coroutines.launch
 
 internal class BillingDialogViewModeler
 internal constructor(
-    state: MutableBillingDialogViewState,
+    override val state: MutableBillingDialogViewState,
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     private val provider: AppProvider,
-) : AbstractViewModeler<BillingDialogViewState>(state) {
-
-  private val vmState = state
+) : BillingDialogViewState by state, AbstractViewModeler<BillingDialogViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Default) {
       val displayName = changeLogInteractor.getDisplayName()
-      vmState.apply {
+      state.apply {
         name.value = displayName
         icon.value = provider.applicationIcon
       }
@@ -50,7 +48,7 @@ internal constructor(
           val status = snapshot.status
           val list = snapshot.skus
           Logger.d("SKU list updated: $status $list")
-          vmState.apply {
+          state.apply {
             connected.value = status
             skuList.value = list.sortedBy { it.price }
           }
@@ -62,14 +60,14 @@ internal constructor(
       scope.launch(context = Dispatchers.Default) {
         f.collect { err ->
           Logger.e(err, "Billing error received")
-          vmState.error.value = err
+          state.error.value = err
         }
       }
     }
   }
 
   internal fun handleClearError() {
-    vmState.error.value = null
+    state.error.value = null
   }
 
   internal fun handleRefresh(scope: CoroutineScope) {
@@ -77,12 +75,12 @@ internal constructor(
       return
     }
 
-    vmState.isRefreshing.value = true
+    state.isRefreshing.value = true
     scope.launch(context = Dispatchers.Default) {
       try {
         interactor.refresh()
       } finally {
-        vmState.isRefreshing.value = false
+        state.isRefreshing.value = false
       }
     }
   }

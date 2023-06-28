@@ -121,16 +121,15 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
-    val state = vm.state
 
     SaveStateDisposableEffect(vm)
 
     RenderContent(
-        state = state,
+        state = vm,
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
       content(
-          state = state,
+          state = vm,
           onShow = {
             vm.handleDismissUpsell()
             vm.handleShowDialog()

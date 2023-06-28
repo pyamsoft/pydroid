@@ -26,17 +26,15 @@ import kotlinx.coroutines.launch
 
 internal class VersionCheckViewModeler
 internal constructor(
-    state: MutableVersionCheckViewState,
+    override val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
-) : AbstractViewModeler<VersionCheckViewState>(state) {
-
-  private val vmState = state
+) : VersionCheckViewState by state, AbstractViewModeler<VersionCheckViewState>(state) {
 
   internal fun bind(
       scope: CoroutineScope,
       onUpgradeReady: () -> Unit,
   ) {
-    val s = vmState
+    val s = state
     scope.launch(context = Dispatchers.Default) {
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
@@ -61,7 +59,7 @@ internal constructor(
       scope: CoroutineScope,
       force: Boolean,
   ) {
-    val s = vmState
+    val s = state
 
     if (s.isUpdateReadyToInstall.value) {
       Logger.d("Update is already ready to install, do not check for update again")
@@ -106,7 +104,7 @@ internal constructor(
       return
     }
 
-    vmState.isUpgraded.value = true
+    state.isUpgraded.value = true
     scope.launch(context = Dispatchers.Default) {
       Logger.d("Updating app, restart via update manager!")
       interactor.completeUpdate()

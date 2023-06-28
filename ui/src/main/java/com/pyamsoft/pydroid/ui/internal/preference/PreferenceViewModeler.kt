@@ -22,10 +22,8 @@ import kotlinx.coroutines.flow.update
 
 internal class PreferenceViewModeler
 internal constructor(
-    state: MutablePreferenceViewState,
-) : AbstractViewModeler<PreferenceViewState>(state) {
-
-  private val vmState = state
+    override val state: MutablePreferenceViewState,
+) : PreferenceViewState by state, AbstractViewModeler<PreferenceViewState>(state) {
 
   override fun registerSaveState(
       registry: SaveableStateRegistry
@@ -54,7 +52,7 @@ internal constructor(
         ?.split(" ")
         ?.also { ids ->
           // Add the ids back into the map
-          vmState.dialogStates.update { map ->
+          state.dialogStates.update { map ->
             var r = map
             for (id in ids) {
               r = r + (id to true)
@@ -66,11 +64,11 @@ internal constructor(
   }
 
   fun handleShowDialog(preferenceId: String) {
-    vmState.dialogStates.update { it + (preferenceId.trim() to true) }
+    state.dialogStates.update { it + (preferenceId.trim() to true) }
   }
 
   fun handleDismissDialog(preferenceId: String) {
-    vmState.dialogStates.update { it + (preferenceId.trim() to false) }
+    state.dialogStates.update { it + (preferenceId.trim() to false) }
   }
 
   companion object {

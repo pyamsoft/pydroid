@@ -111,7 +111,7 @@ internal fun BillingDialog(
   ) {
     BillingScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        state = viewModel.state,
+        state = viewModel,
         imageLoader = imageLoader,
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google

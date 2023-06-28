@@ -103,8 +103,8 @@ internal inline fun lazyPreferencesFlow(
     crossinline preferences: () -> SharedPreferences
 ): Flow<SharedPreferences> {
   return flow { emit(preferences()) }
-      // Flow on I/O to avoid ANR on main
-      .flowOn(context = Dispatchers.IO)
+      // Flow on background thread avoid ANR on main
+      .flowOn(context = Dispatchers.Default)
 }
 
 /**

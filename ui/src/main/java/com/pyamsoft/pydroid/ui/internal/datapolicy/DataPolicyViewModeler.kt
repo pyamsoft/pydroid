@@ -48,7 +48,7 @@ internal constructor(
       scope: CoroutineScope,
   ) {
     interactor.listenForPolicyAcceptedChanges().also { f ->
-      scope.launch(context = Dispatchers.IO) {
+      scope.launch(context = Dispatchers.Default) {
         f.collect { accepted ->
           state.isAccepted.value =
               if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED

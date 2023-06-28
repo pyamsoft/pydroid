@@ -140,10 +140,8 @@ internal constructor(
   override fun onProductDetailsResponse(result: BillingResult, skuDetails: List<ProductDetails>) {
     if (result.isOk()) {
       Logger.d("Sku response: $skuDetails")
-      billingScope.launch(context = Dispatchers.IO) {
-        val skuList = skuDetails.map { PlayBillingSku(it) }
-        skuFlow.value = State(BillingState.CONNECTED, skuList)
-      }
+      val skuList = skuDetails.map { PlayBillingSku(it) }
+      skuFlow.value = State(BillingState.CONNECTED, skuList)
     } else {
       Logger.w("SKU response not OK: ${result.debugMessage}")
       skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
@@ -257,7 +255,7 @@ internal constructor(
       if (result.isUserCancelled()) {
         Logger.d("User has cancelled purchase flow.")
       } else {
-        billingScope.launch(context = Dispatchers.IO) {
+        billingScope.launch(context = Dispatchers.Default) {
           Logger.w("Purchase response not OK: ${result.debugMessage}")
           errorBus.emit(RuntimeException(result.debugMessage))
         }

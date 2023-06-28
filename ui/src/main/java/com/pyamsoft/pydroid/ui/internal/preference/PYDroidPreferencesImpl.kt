@@ -65,7 +65,7 @@ internal constructor(
 
   private val scope by lazy {
     CoroutineScope(
-        context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
+        context = SupervisorJob() + Dispatchers.Default + CoroutineName(this::class.java.name),
     )
   }
 
@@ -76,7 +76,7 @@ internal constructor(
           ) {
             prefs
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = Dispatchers.Default)
 
   override fun setInAppDebuggingEnabled(enabled: Boolean) {
     scope.launch {
@@ -93,7 +93,7 @@ internal constructor(
             prefs
           }
           .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = Dispatchers.Default)
 
   override fun maybeShowBillingUpsell() {
     scope.launch {
@@ -135,7 +135,7 @@ internal constructor(
             }
           }
           .map { it in 1 until versionCode }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = Dispatchers.Default)
 
   override fun markChangeLogShown() {
     scope.launch {
@@ -148,7 +148,7 @@ internal constructor(
   override fun listenForDarkModeChanges(): Flow<Mode> =
       preferenceStringFlow(darkModeKey, DEFAULT_DARK_MODE) { prefs }
           .map { it.toThemingMode() }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = Dispatchers.Default)
 
   override fun setDarkMode(mode: Mode) {
     scope.launch {
@@ -164,7 +164,7 @@ internal constructor(
           ) {
             prefs
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = Dispatchers.Default)
 
   override fun respondToPolicy(accepted: Boolean) {
     scope.launch {

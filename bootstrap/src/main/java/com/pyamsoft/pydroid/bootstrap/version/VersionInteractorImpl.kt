@@ -30,7 +30,7 @@ internal constructor(
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit
   ) =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = Dispatchers.Default) {
         return@withContext networkInteractor.watchDownloadStatus(
             onDownloadProgress = onDownloadProgress,
             onDownloadCompleted = onDownloadCompleted,
@@ -43,7 +43,7 @@ internal constructor(
       }
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = Dispatchers.Default) {
         return@withContext networkInteractor.checkVersion()
       }
 }

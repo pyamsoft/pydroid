@@ -43,7 +43,7 @@ internal constructor(
     }
 
     interactor.watchSkuList().also { f ->
-      scope.launch(context = Dispatchers.IO) {
+      scope.launch(context = Dispatchers.Default) {
         f.collect { snapshot ->
           val status = snapshot.status
           val list = snapshot.skus
@@ -57,7 +57,7 @@ internal constructor(
     }
 
     interactor.watchBillingErrors().also { f ->
-      scope.launch(context = Dispatchers.IO) {
+      scope.launch(context = Dispatchers.Default) {
         f.collect { err ->
           Logger.e(err, "Billing error received")
           state.error.value = err

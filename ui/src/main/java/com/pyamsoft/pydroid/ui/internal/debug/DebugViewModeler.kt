@@ -32,12 +32,14 @@ internal constructor(
     val s = state
 
     preferences.listenForInAppDebuggingEnabled().also { f ->
-      scope.launch(context = Dispatchers.IO) { f.collect { s.isInAppDebuggingEnabled.value = it } }
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { s.isInAppDebuggingEnabled.value = it }
+      }
     }
   }
 
   internal fun handleCopy(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       val lines = state.inAppDebuggingLogLines.value
       interactor.copyInAppDebugMessagesToClipboard(lines)
     }

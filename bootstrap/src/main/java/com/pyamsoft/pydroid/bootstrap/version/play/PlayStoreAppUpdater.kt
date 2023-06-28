@@ -79,7 +79,7 @@ internal constructor(
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit
   ) =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = Dispatchers.Default) {
         suspendCancellableCoroutine<Unit> { continuation ->
           val listener =
               createStatusListener(

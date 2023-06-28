@@ -53,7 +53,7 @@ internal constructor(
     val s = state
 
     preferences.listenForBillingUpsellChanges().also { f ->
-      scope.launch(context = Dispatchers.IO) {
+      scope.launch(context = Dispatchers.Default) {
         f.collect { show ->
           if (show) {
             Logger.d("Showing Billing upsell")
@@ -64,7 +64,7 @@ internal constructor(
     }
 
     if (isFakeUpsell) {
-      scope.launch(context = Dispatchers.Main) {
+      scope.launch(context = Dispatchers.Default) {
         Logger.d("Fake a billing upsell, force show")
         s.isShowingUpsell.value = true
       }

@@ -58,7 +58,7 @@ internal constructor(
   }
 
   override suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>) =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = Dispatchers.Default) {
         clipboardManager.setPrimaryClip(
             ClipData.newPlainText(
                 "Developer Messages", """```

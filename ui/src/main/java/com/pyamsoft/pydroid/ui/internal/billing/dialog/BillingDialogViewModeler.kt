@@ -36,7 +36,7 @@ internal constructor(
   private val vmState = state
 
   internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       val displayName = changeLogInteractor.getDisplayName()
       vmState.apply {
         name.value = displayName
@@ -78,7 +78,7 @@ internal constructor(
     }
 
     vmState.isRefreshing.value = true
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       try {
         interactor.refresh()
       } finally {

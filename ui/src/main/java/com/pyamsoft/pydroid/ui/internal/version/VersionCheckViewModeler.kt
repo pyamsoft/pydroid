@@ -37,7 +37,7 @@ internal constructor(
       onUpgradeReady: () -> Unit,
   ) {
     val s = vmState
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
             if (!s.isUpdateReadyToInstall.value) {
@@ -79,7 +79,7 @@ internal constructor(
     }
 
     Logger.d("Begin check for updates")
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
         Logger.d("We are already checking for an update.")
         return@launch
@@ -107,7 +107,7 @@ internal constructor(
     }
 
     vmState.isUpgraded.value = true
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       Logger.d("Updating app, restart via update manager!")
       interactor.completeUpdate()
       onUpgradeCompleted()

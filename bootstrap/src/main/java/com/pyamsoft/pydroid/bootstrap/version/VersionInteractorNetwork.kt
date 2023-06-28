@@ -41,7 +41,7 @@ internal constructor(
       }
 
   override suspend fun completeUpdate() =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = Dispatchers.Default) {
         Logger.d("GOING DOWN FOR UPDATE")
         updater.complete()
       }

@@ -53,7 +53,7 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     interactor.listenShowChangeLogChanges().also { f ->
-      scope.launch(context = Dispatchers.Main) {
+      scope.launch(context = Dispatchers.Default) {
         // Decide based on preference (have we seen the current version changelog)
         val show = f.first()
         vmState.isShowUpsell.value = show

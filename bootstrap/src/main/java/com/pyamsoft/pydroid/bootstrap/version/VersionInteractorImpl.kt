@@ -38,7 +38,7 @@ internal constructor(
       }
 
   override suspend fun completeUpdate() =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = Dispatchers.Default) {
         return@withContext networkInteractor.completeUpdate()
       }
 

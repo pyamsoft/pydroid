@@ -35,7 +35,7 @@ internal constructor(
   private val vmState = state
 
   internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       val displayName = interactor.getDisplayName()
       vmState.apply {
         name.value = displayName

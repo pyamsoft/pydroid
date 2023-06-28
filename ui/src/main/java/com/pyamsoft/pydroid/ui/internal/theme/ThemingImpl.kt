@@ -40,7 +40,7 @@ internal constructor(
         // Make sure we set the AppCompatDelegate from the saved preference mode
         val mode = f.first()
 
-        withContext(context = Dispatchers.Main) {
+        withContext(context = Dispatchers.Default) {
           // Needs to run on main thread
           applyDarkTheme(mode)
         }
@@ -66,7 +66,7 @@ internal constructor(
   override fun setDarkTheme(scope: CoroutineScope, mode: Theming.Mode) {
     preferences.setDarkMode(mode)
 
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       // Needs to run on main thread
       applyDarkTheme(mode)
     }

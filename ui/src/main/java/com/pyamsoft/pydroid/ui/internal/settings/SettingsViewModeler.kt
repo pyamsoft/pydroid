@@ -103,7 +103,7 @@ internal constructor(
     val config = LoadConfig()
     s.loadingState.value = SettingsViewState.LoadingState.LOADING
 
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       val name = changeLogInteractor.getDisplayName()
       s.applicationName.value = name
 
@@ -113,7 +113,7 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       debugPreferences.listenForInAppDebuggingEnabled().collect { enabled ->
         s.isInAppDebuggingEnabled.value = enabled
 
@@ -124,7 +124,7 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       theming.listenForModeChanges().collect {
         s.darkMode.value = it
 

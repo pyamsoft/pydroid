@@ -38,7 +38,7 @@ internal constructor(
     }
 
     vmState.reset.value = true
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       Logger.d("Completely reset application")
       interactor.wipeData()
     }

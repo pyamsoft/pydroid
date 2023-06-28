@@ -36,7 +36,7 @@ internal constructor(
     }
 
     vmState.loadingState.value = AboutViewState.LoadingState.LOADING
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       vmState.apply {
         try {
           licenses.value = interactor.loadLicenses()

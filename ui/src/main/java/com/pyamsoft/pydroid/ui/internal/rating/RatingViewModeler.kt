@@ -43,7 +43,7 @@ internal constructor(
     }
 
     s.isLoading.value = true
-    scope.launch(context = Dispatchers.Main) {
+    scope.launch(context = Dispatchers.Default) {
       interactor
           .askForRating()
           .onSuccess { Logger.d("Launch in-app rating: $it") }

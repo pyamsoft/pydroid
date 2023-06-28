@@ -23,13 +23,15 @@ import kotlinx.coroutines.launch
 
 internal class DebugViewModeler
 internal constructor(
-    override val state: MutableDebugViewState,
+    state: MutableDebugViewState,
     private val interactor: DebugInteractor,
     private val preferences: DebugPreferences,
 ) : AbstractViewModeler<DebugViewState>(state) {
 
+  private val vmState = state
+
   internal fun bind(scope: CoroutineScope) {
-    val s = state
+    val s = vmState
 
     preferences.listenForInAppDebuggingEnabled().also { f ->
       scope.launch(context = Dispatchers.Default) {

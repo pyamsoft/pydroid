@@ -25,16 +25,18 @@ import kotlinx.coroutines.launch
 
 internal class ChangeLogDialogViewModeler
 internal constructor(
-    override val state: MutableChangeLogDialogViewState,
+    state: MutableChangeLogDialogViewState,
     private val interactor: ChangeLogInteractor,
     private val provider: ChangeLogProvider,
     private val version: Int,
 ) : AbstractViewModeler<ChangeLogDialogViewState>(state) {
 
+  private val vmState = state
+
   fun bind(scope: CoroutineScope) {
     scope.launch(context = Dispatchers.Main) {
       val displayName = interactor.getDisplayName()
-      state.apply {
+      vmState.apply {
         name.value = displayName
         icon.value = provider.applicationIcon
         applicationVersionCode.value = version

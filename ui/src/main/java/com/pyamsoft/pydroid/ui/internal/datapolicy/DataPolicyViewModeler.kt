@@ -25,9 +25,11 @@ import kotlinx.coroutines.launch
 
 internal class DataPolicyViewModeler
 internal constructor(
-    override val state: MutableDataPolicyViewState,
+    state: MutableDataPolicyViewState,
     private val interactor: DataPolicyInteractor,
 ) : AbstractViewModeler<DataPolicyViewState>(state) {
+
+  private val vmState = state
 
   override fun registerSaveState(
       registry: SaveableStateRegistry
@@ -41,7 +43,7 @@ internal constructor(
         .consumeRestored(KEY_SHOW_DIALOG)
         ?.let { it as String }
         ?.let { DataPolicyViewState.AcceptedState.valueOf(it) }
-        ?.also { state.isAccepted.value = it }
+        ?.also { vmState.isAccepted.value = it }
   }
 
   internal fun bind(
@@ -50,7 +52,7 @@ internal constructor(
     interactor.listenForPolicyAcceptedChanges().also { f ->
       scope.launch(context = Dispatchers.Default) {
         f.collect { accepted ->
-          state.isAccepted.value =
+          vmState.isAccepted.value =
               if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED
               else DataPolicyViewState.AcceptedState.REJECTED
         }

@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 
 internal class SettingsViewModeler
 internal constructor(
-    override val state: MutableSettingsViewState,
+    state: MutableSettingsViewState,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
     private val privacyPolicyUrl: String,
@@ -38,6 +38,8 @@ internal constructor(
     private val debugPreferences: DebugPreferences,
 ) : AbstractViewModeler<SettingsViewState>(state) {
 
+  private val vmState = state
+
   private data class LoadConfig(
       var name: Boolean = false,
       var inAppDebug: Boolean = false,
@@ -46,7 +48,7 @@ internal constructor(
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
     if (loadConfig.darkMode && loadConfig.inAppDebug && loadConfig.name) {
-      state.loadingState.value = SettingsViewState.LoadingState.DONE
+      vmState.loadingState.value = SettingsViewState.LoadingState.DONE
     }
   }
 
@@ -74,23 +76,23 @@ internal constructor(
     registry
         .consumeRestored(KEY_SHOW_ABOUT_DIALOG)
         ?.let { it as Boolean }
-        ?.also { state.isShowingAboutDialog.value = it }
+        ?.also { vmState.isShowingAboutDialog.value = it }
     registry
         .consumeRestored(KEY_SHOW_RESET_DIALOG)
         ?.let { it as Boolean }
-        ?.also { state.isShowingResetDialog.value = it }
+        ?.also { vmState.isShowingResetDialog.value = it }
     registry
         .consumeRestored(KEY_SHOW_DATA_POLICY_DIALOG)
         ?.let { it as Boolean }
-        ?.also { state.isShowingDataPolicyDialog.value = it }
+        ?.also { vmState.isShowingDataPolicyDialog.value = it }
     registry
         .consumeRestored(KEY_SHOW_IN_APP_DEBUG_DIALOG)
         ?.let { it as Boolean }
-        ?.also { state.isInAppDebuggingEnabled.value = it }
+        ?.also { vmState.isInAppDebuggingEnabled.value = it }
   }
 
   internal fun bind(scope: CoroutineScope) {
-    val s = state
+    val s = vmState
 
     // Done loading or already loading
     if (s.loadingState.value != SettingsViewState.LoadingState.NONE) {
@@ -103,7 +105,7 @@ internal constructor(
 
     scope.launch(context = Dispatchers.Main) {
       val name = changeLogInteractor.getDisplayName()
-      state.applicationName.value = name
+      s.applicationName.value = name
 
       if (!config.name) {
         config.name = true
@@ -113,7 +115,7 @@ internal constructor(
 
     scope.launch(context = Dispatchers.Main) {
       debugPreferences.listenForInAppDebuggingEnabled().collect { enabled ->
-        state.isInAppDebuggingEnabled.value = enabled
+        s.isInAppDebuggingEnabled.value = enabled
 
         if (!config.inAppDebug) {
           config.inAppDebug = true
@@ -135,7 +137,7 @@ internal constructor(
   }
 
   internal fun handleChangeInAppDebugEnabled() {
-    val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { !it }
+    val newEnabled = vmState.isInAppDebuggingEnabled.updateAndGet { !it }
     debugPreferences.setInAppDebuggingEnabled(newEnabled)
   }
 
@@ -143,37 +145,35 @@ internal constructor(
       scope: CoroutineScope,
       mode: Theming.Mode,
   ) {
-    state.darkMode.value = mode
+    vmState.darkMode.value = mode
     theming.setDarkTheme(scope, mode)
   }
 
   internal fun handleOpenDataPolicyDialog() {
-    state.isShowingDataPolicyDialog.value = true
+    vmState.isShowingDataPolicyDialog.value = true
   }
 
   internal fun handleCloseDataPolicyDialog() {
-    state.isShowingDataPolicyDialog.value = false
+    vmState.isShowingDataPolicyDialog.value = false
   }
 
   internal fun handleOpenAboutDialog() {
-    state.isShowingAboutDialog.value = true
+    vmState.isShowingAboutDialog.value = true
   }
 
   internal fun handleCloseAboutDialog() {
-    state.isShowingAboutDialog.value = false
+    vmState.isShowingAboutDialog.value = false
   }
 
   internal fun handleOpenResetDialog() {
-    state.isShowingResetDialog.value = true
+    vmState.isShowingResetDialog.value = true
   }
 
   internal fun handleCloseResetDialog() {
-    state.isShowingResetDialog.value = false
+    vmState.isShowingResetDialog.value = false
   }
 
-  internal fun handleViewSocialMedia(
-      onOpenUrl: (String) -> Unit,
-  ) {
+  internal fun handleViewSocialMedia(onOpenUrl: (String) -> Unit) {
     onOpenUrl(FACEBOOK)
   }
 
@@ -198,11 +198,11 @@ internal constructor(
   }
 
   fun handleCloseInAppDebuggingDialog() {
-    state.isShowingInAppDebugDialog.value = false
+    vmState.isShowingInAppDebugDialog.value = false
   }
 
   fun handleOpenInAppDebuggingDialog() {
-    state.isShowingInAppDebugDialog.value = true
+    vmState.isShowingInAppDebugDialog.value = true
   }
 
   companion object {

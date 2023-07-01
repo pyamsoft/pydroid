@@ -18,12 +18,26 @@ android {
   namespace = "com.pyamsoft.pydroid.core"
 
   kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
+
+  defaultConfig {
+    // Android Testing
+    // https://developer.android.com/training/testing/instrumented-tests
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
 }
 
 dependencies {
   // Expose annotations
   api("androidx.annotation:annotation:1.6.0")
 
-  // Expose coroutines
-  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+  // Expose Coroutines
+  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines"]}")
+
+  // Testing
+  testImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
+  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
+
+  androidTestImplementation("androidx.test:runner:${rootProject.extra["testRunner"]}")
+  androidTestImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
+  androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
 }

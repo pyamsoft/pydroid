@@ -18,7 +18,7 @@
 
 buildscript {
   ext {
-    kotlin = "1.8.21"
+    kotlin = "1.8.22"
     coroutines = "1.7.2"
 
     // Compose

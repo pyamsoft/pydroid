@@ -60,9 +60,7 @@ internal constructor(
     state.navigationError.value = null
   }
 
-  internal fun handleViewTermsOfService(
-      onOpenUrl: (String) -> Unit,
-  ) {
+  internal fun handleViewTermsOfService(onOpenUrl: (String) -> Unit) {
     onOpenUrl(termsConditionsUrl)
   }
 

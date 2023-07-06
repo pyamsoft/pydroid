@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
 import com.pyamsoft.pydroid.ui.icons.Terminal
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -34,6 +35,7 @@ import com.pyamsoft.pydroid.ui.preference.switchPreference
 @Composable
 @CheckResult
 internal fun rememberDangerZonePreferencesGroup(
+    hapticManager: HapticManager,
     hideClearAll: Boolean,
     isInAppDebugChecked: Boolean,
     onResetClicked: () -> Unit,
@@ -48,6 +50,7 @@ internal fun rememberDangerZonePreferencesGroup(
 
   val developerModePreference =
       rememberDeveloperModePreference(
+          hapticManager = hapticManager,
           checked = isInAppDebugChecked,
           onClick = onInAppDebuggingClicked,
           onChange = onInAppDebuggingChanged,
@@ -107,6 +110,7 @@ private fun rememberResetPreference(
 @Composable
 @CheckResult
 private fun rememberDeveloperModePreference(
+    hapticManager: HapticManager,
     checked: Boolean,
     onClick: () -> Unit,
     onChange: () -> Unit,
@@ -129,7 +133,14 @@ private fun rememberDeveloperModePreference(
         icon = Icons.Outlined.Terminal,
         checked = checked,
         onClick = { handleClick() },
-        onCheckedChanged = { handleChange() },
+        onCheckedChanged = {
+          if (checked) {
+            hapticManager.toggleOff()
+          } else {
+            hapticManager.toggleOn()
+          }
+          handleChange()
+        },
     )
   }
 }

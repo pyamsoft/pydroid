@@ -38,6 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -79,6 +81,8 @@ internal fun SettingsScreen(
   val darkMode by state.darkMode.collectAsState()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsState()
 
+  val hapticManager = rememberHapticManager()
+
   Surface(
       modifier = modifier,
       elevation = elevation,
@@ -94,6 +98,7 @@ internal fun SettingsScreen(
         }
         SettingsViewState.LoadingState.DONE -> {
           SettingsList(
+              hapticManager = hapticManager,
               applicationName = applicationName,
               darkMode = darkMode,
               options = options,
@@ -146,6 +151,7 @@ private fun Loading() {
 @Composable
 private fun SettingsList(
     options: PYDroidActivityOptions,
+    hapticManager: HapticManager,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     customPreContent: SnapshotStateList<Preferences>,
@@ -211,6 +217,7 @@ private fun SettingsList(
 
   val dangerZonePreferences =
       rememberDangerZonePreferencesGroup(
+          hapticManager = hapticManager,
           isInAppDebugChecked = isInAppDebugChecked,
           hideClearAll = hideClearAll,
           onResetClicked = onResetClicked,

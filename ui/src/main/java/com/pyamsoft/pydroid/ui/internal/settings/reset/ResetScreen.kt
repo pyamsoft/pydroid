@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 
 private enum class ResetScreenContentTypes {
   TITLE,
@@ -51,6 +53,8 @@ internal fun ResetScreen(
     onClose: () -> Unit,
 ) {
   val reset by state.reset.collectAsState()
+
+  val hapticManager = rememberHapticManager()
 
   Surface(
       modifier = modifier,
@@ -83,6 +87,7 @@ internal fun ResetScreen(
           contentType = ResetScreenContentTypes.ACTIONS,
       ) {
         Actions(
+            hapticManager = hapticManager,
             isReset = reset,
             onReset = onReset,
             onClose = onClose,
@@ -130,6 +135,7 @@ private fun Message() {
 
 @Composable
 private fun Actions(
+    hapticManager: HapticManager,
     isReset: Boolean,
     onReset: () -> Unit,
     onClose: () -> Unit,
@@ -139,8 +145,11 @@ private fun Actions(
         modifier = Modifier.weight(1F),
     )
     TextButton(
-        onClick = onClose,
         enabled = !isReset,
+        onClick = {
+          hapticManager.cancelButtonPress()
+          onClose()
+        },
     ) {
       Text(
           text = "Cancel",
@@ -150,9 +159,12 @@ private fun Actions(
         modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
     ) {
       TextButton(
-          onClick = onReset,
           enabled = !isReset,
           colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.error),
+          onClick = {
+            hapticManager.confirmButtonPress()
+            onReset()
+          },
       ) {
         Text(
             text = "Reset",

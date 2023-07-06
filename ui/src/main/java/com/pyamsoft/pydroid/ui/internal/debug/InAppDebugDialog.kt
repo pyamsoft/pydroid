@@ -51,6 +51,7 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.theme.warning
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
@@ -113,6 +114,7 @@ private fun InAppDebugScreen(
   val isEnabled by state.isInAppDebuggingEnabled.collectAsState()
   val lines = state.inAppDebuggingLogLines.collectAsStateList()
 
+  val hapticManager = rememberHapticManager()
   val snackbarHostState = remember { SnackbarHostState() }
   val (copied, setCopied) = remember { mutableStateOf(false) }
 
@@ -133,6 +135,7 @@ private fun InAppDebugScreen(
       DialogToolbar(
           modifier = Modifier.fillMaxWidth(),
           title = "Debug Logging",
+          hapticManager = hapticManager,
           onClose = onDismiss,
       )
       Surface(

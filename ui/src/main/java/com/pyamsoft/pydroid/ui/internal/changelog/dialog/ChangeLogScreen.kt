@@ -35,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
@@ -55,6 +57,8 @@ internal fun ChangeLogScreen(
   val icon by state.icon.collectAsState()
   val name by state.name.collectAsState()
   val versionCode by state.applicationVersionCode.collectAsState()
+
+  val hapticManager = rememberHapticManager()
 
   AppHeaderDialog(
       modifier = modifier.fullScreenDialog(),
@@ -78,6 +82,7 @@ internal fun ChangeLogScreen(
     ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),
+          hapticManager = hapticManager,
           applicationVersionCode = versionCode,
           onRateApp = onRateApp,
           onClose = onClose,
@@ -89,6 +94,7 @@ internal fun ChangeLogScreen(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     applicationVersionCode: Int,
     onRateApp: () -> Unit,
     onClose: () -> Unit,
@@ -110,7 +116,10 @@ private fun Actions(
       horizontalArrangement = Arrangement.Start,
   ) {
     TextButton(
-        onClick = onRateApp,
+        onClick = {
+          hapticManager.confirmButtonPress()
+          onRateApp()
+        },
     ) {
       Text(
           text = stringResource(R.string.rate_app),
@@ -127,7 +136,10 @@ private fun Actions(
     Spacer(modifier = Modifier.weight(1F))
 
     TextButton(
-        onClick = onClose,
+        onClick = {
+          hapticManager.cancelButtonPress()
+          onClose()
+        },
     ) {
       Text(
           text = stringResource(R.string.close),

@@ -48,4 +48,7 @@ public interface HapticManager {
 
   /** A clock tick on a time picker UI */
   public fun clockTick()
+
+  /** A long press */
+  public fun longPress()
 }

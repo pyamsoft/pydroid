@@ -44,6 +44,7 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
@@ -65,6 +66,7 @@ internal fun BillingScreen(
   val name by state.name.collectAsState()
   val error by state.error.collectAsState()
 
+  val hapticManager = rememberHapticManager()
   val snackbarHostState = remember { SnackbarHostState() }
 
   // Remember computed value
@@ -137,7 +139,10 @@ internal fun BillingScreen(
             modifier = Modifier.weight(1F),
         )
         TextButton(
-            onClick = onClose,
+            onClick = {
+              hapticManager.cancelButtonPress()
+              onClose()
+            },
         ) {
           Text(
               text = stringResource(R.string.close),

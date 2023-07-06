@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
@@ -43,6 +44,8 @@ internal fun VersionUpgradeCompleteScreen(
 ) {
   val launcher by state.launcher.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
+
+  val hapticManager = rememberHapticManager()
 
   val isUpdateAvailable =
       remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
@@ -89,7 +92,10 @@ internal fun VersionUpgradeCompleteScreen(
 
       OutlinedButton(
           modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-          onClick = onCompleteUpdate,
+          onClick = {
+            hapticManager.confirmButtonPress()
+            onCompleteUpdate()
+          },
       ) {
         Text(
             text = "Complete Update",

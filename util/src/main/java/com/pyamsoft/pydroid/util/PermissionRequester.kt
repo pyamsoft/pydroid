@@ -50,7 +50,7 @@ public interface PermissionRequester {
   public companion object {
 
     /** An empty requester than handles no permissions */
-    public val NONE: PermissionRequester = create(emptyArray())
+    @JvmField public val NONE: PermissionRequester = create(emptyArray())
 
     /** Create a new instance of a default PermissionRequester */
     @CheckResult

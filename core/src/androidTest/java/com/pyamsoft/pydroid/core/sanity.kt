@@ -1,3 +1,5 @@
+package com.pyamsoft.pydroid.core
+
 import androidx.test.filters.SmallTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

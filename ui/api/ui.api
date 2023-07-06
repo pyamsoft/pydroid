@@ -204,6 +204,20 @@ public final class com/pyamsoft/pydroid/ui/defaults/ListItemDefaults {
 	public final fun getLeadingSize-D9Ej5fM ()F
 }
 
+public abstract interface class com/pyamsoft/pydroid/ui/haptics/HapticManager {
+	public abstract fun actionButtonPress ()V
+	public abstract fun cancelButtonPress ()V
+	public abstract fun clockTick ()V
+	public abstract fun confirmButtonPress ()V
+	public abstract fun longPress ()V
+	public abstract fun toggleOff ()V
+	public abstract fun toggleOn ()V
+}
+
+public final class com/pyamsoft/pydroid/ui/haptics/HapticsKt {
+	public static final fun rememberHapticManager (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/haptics/HapticManager;
+}
+
 public final class com/pyamsoft/pydroid/ui/icons/BugReportKt {
 	public static final fun getBugReport (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }

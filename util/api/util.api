@@ -36,6 +36,7 @@ public final class com/pyamsoft/pydroid/util/MarketLinker {
 
 public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester {
 	public static final field Companion Lcom/pyamsoft/pydroid/util/PermissionRequester$Companion;
+	public static final field NONE Lcom/pyamsoft/pydroid/util/PermissionRequester;
 	public abstract fun registerRequester (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Requester;
 	public abstract fun registerRequester (Landroidx/fragment/app/Fragment;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Requester;
 }
@@ -43,7 +44,6 @@ public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester {
 public final class com/pyamsoft/pydroid/util/PermissionRequester$Companion {
 	public final fun create (Ljava/lang/String;)Lcom/pyamsoft/pydroid/util/PermissionRequester;
 	public final fun create ([Ljava/lang/String;)Lcom/pyamsoft/pydroid/util/PermissionRequester;
-	public final fun getNONE ()Lcom/pyamsoft/pydroid/util/PermissionRequester;
 }
 
 public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester$Requester {

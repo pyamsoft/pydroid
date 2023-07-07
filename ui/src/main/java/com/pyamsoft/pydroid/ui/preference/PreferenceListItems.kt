@@ -244,7 +244,12 @@ internal fun PreferenceDialog(
             contentType = PreferenceContentTypes.DIALOG_TITLE,
         ) {
           PreferenceDialogTitle(
-              modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .padding(
+                          horizontal = MaterialTheme.keylines.content,
+                          vertical = MaterialTheme.keylines.baseline,
+                      ),
               title = title,
           )
         }
@@ -255,7 +260,12 @@ internal fun PreferenceDialog(
             contentType = { PreferenceContentTypes.DIALOG_ITEM },
         ) { item ->
           PreferenceDialogItem(
-              modifier = Modifier.fillMaxWidth(),
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .padding(
+                          horizontal = MaterialTheme.keylines.content,
+                          vertical = MaterialTheme.keylines.typography,
+                      ),
               name = item.key,
               value = item.value,
               current = currentValue,
@@ -272,7 +282,9 @@ internal fun PreferenceDialog(
         ) {
           PreferenceDialogActions(
               modifier =
-                  Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
+                  Modifier.fillMaxWidth()
+                      .padding(horizontal = MaterialTheme.keylines.baseline)
+                      .padding(bottom = MaterialTheme.keylines.typography),
               onDismiss = {
                 hapticManager.cancelButtonPress()
                 onDismiss()
@@ -320,15 +332,11 @@ private fun PreferenceDialogItem(
 
   Row(
       modifier =
-          modifier
-              .selectable(
+          Modifier.selectable(
                   selected = isSelected,
                   onClick = { handleClick() },
               )
-              .padding(
-                  horizontal = MaterialTheme.keylines.content,
-                  vertical = MaterialTheme.keylines.typography,
-              ),
+              .then(modifier),
       verticalAlignment = Alignment.CenterVertically,
   ) {
     RadioButton(

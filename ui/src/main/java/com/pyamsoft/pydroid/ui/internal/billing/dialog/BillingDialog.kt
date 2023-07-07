@@ -22,10 +22,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
-import com.pyamsoft.pydroid.ui.util.LifecycleEffect
+import com.pyamsoft.pydroid.ui.util.LifecycleEventEffect
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -79,13 +79,11 @@ private fun MountHooks(
     viewModel.bind(scope = this)
   }
 
-  LifecycleEffect {
-    object : DefaultLifecycleObserver {
-
-      override fun onResume(owner: LifecycleOwner) {
-        viewModel.handleRefresh(owner.lifecycleScope)
-      }
-    }
+  val scope = rememberCoroutineScope()
+  LifecycleEventEffect(
+      event = Lifecycle.Event.ON_RESUME,
+  ) {
+    viewModel.handleRefresh(scope = scope)
   }
 }
 

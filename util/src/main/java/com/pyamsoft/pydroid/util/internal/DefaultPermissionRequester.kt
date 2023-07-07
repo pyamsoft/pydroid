@@ -20,7 +20,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CheckResult
-import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.PermissionRequester
 
@@ -81,18 +80,6 @@ internal constructor(
   ): PermissionRequester.Requester {
     val launcher =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-          handlePermissionResults(onResponse, it)
-        }
-
-    return createRequester(launcher, onResponse)
-  }
-
-  override fun registerRequester(
-      fragment: Fragment,
-      onResponse: (Boolean) -> Unit
-  ): PermissionRequester.Requester {
-    val launcher =
-        fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
           handlePermissionResults(onResponse, it)
         }
 

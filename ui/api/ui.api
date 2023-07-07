@@ -62,18 +62,6 @@ public final class com/pyamsoft/pydroid/ui/app/DialogKt {
 	public static final fun rememberDialogProperties (ZZLandroidx/compose/ui/window/SecureFlagPolicy;Landroidx/compose/runtime/Composer;II)Landroidx/compose/ui/window/DialogProperties;
 }
 
-public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
-	public static final fun makeFullHeight (Landroidx/fragment/app/DialogFragment;)V
-	public static final fun makeFullHeight (Landroidx/fragment/app/DialogFragment;Z)V
-	public static synthetic fun makeFullHeight$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
-	public static final fun makeFullWidth (Landroidx/fragment/app/DialogFragment;)V
-	public static final fun makeFullWidth (Landroidx/fragment/app/DialogFragment;Z)V
-	public static synthetic fun makeFullWidth$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
-	public static final fun makeFullscreen (Landroidx/fragment/app/DialogFragment;)V
-	public static final fun makeFullscreen (Landroidx/fragment/app/DialogFragment;Z)V
-	public static synthetic fun makeFullscreen$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
-}
-
 public final class com/pyamsoft/pydroid/ui/app/LocalActivityKt {
 	public static final field LocalActivity Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
@@ -530,23 +518,9 @@ public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
 	public static final fun isPortrait (Landroid/content/res/Configuration;)Z
 }
 
-public final class com/pyamsoft/pydroid/ui/util/DialogFragmentKt {
-	public static final fun show (Landroidx/fragment/app/DialogFragment;Landroidx/fragment/app/FragmentActivity;Ljava/lang/String;)V
-}
-
 public final class com/pyamsoft/pydroid/ui/util/EffectsKt {
 	public static final fun LifecycleEffect (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
-}
-
-public final class com/pyamsoft/pydroid/ui/util/FragmentManagerKt {
-	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
-	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;ZLkotlin/jvm/functions/Function1;)V
-	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
-	public static final fun commit (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;ZLkotlin/jvm/functions/Function1;)V
-	public static synthetic fun commit$default (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static synthetic fun commit$default (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun commitNow (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/Lifecycle;Lkotlin/jvm/functions/Function1;)V
-	public static final fun commitNow (Landroidx/fragment/app/FragmentManager;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function1;)V
+	public static final fun LifecycleEventEffect (Landroidx/lifecycle/Lifecycle$Event;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {

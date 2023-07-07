@@ -154,10 +154,17 @@ public object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid util extensions for easier data manipulation",
     )
+
     add(
-        "AndroidX Fragment",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
-        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
+        "AndroidX Activity",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/",
+        "Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.",
+    )
+
+    add(
+        "AndroidX Lifecycle Common",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common",
+        "Lifecycle library provides support for Android component lifecycle.",
     )
 
     addCoreLibraries()
@@ -231,15 +238,21 @@ public object OssLibraries {
     )
 
     add(
-        "AndroidX Fragment",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
-        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
-    )
-
-    add(
         "AndroidX Core KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
         "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
+    )
+
+    add(
+        "AndroidX Lifecycle Common",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common",
+        "Lifecycle library provides support for Android component lifecycle.",
+    )
+
+    add(
+        "AndroidX Lifecycle Compose",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-runtime-compose",
+        "Lifecycle library provides support for Android component lifecycle, with Compose runtime support",
     )
 
     add(

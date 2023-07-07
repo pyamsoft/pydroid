@@ -25,13 +25,14 @@ android {
 }
 
 dependencies {
-  // These need to be API since they are used as base classes for Activity and Fragment
-  api("androidx.fragment:fragment-ktx:${rootProject.extra["fragment"]}")
+  // Lifecycle support
+  implementation("androidx.lifecycle:lifecycle-common:${rootProject.extra["lifecycle"]}")
+  implementation("androidx.lifecycle:lifecycle-runtime-compose:${rootProject.extra["lifecycle"]}")
 
   // Needed just for androidx.preference.PreferenceManager
   // Eventually, big G may push for DataStore being a requirement, which will be pain
   // This pulls in all the UI bits too, which is a little lame.
-  api("androidx.preference:preference:1.2.0")
+  implementation("androidx.preference:preference:1.2.0")
 
   // Compose
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")

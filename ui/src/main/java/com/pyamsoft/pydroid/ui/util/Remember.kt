@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
@@ -53,14 +52,14 @@ public fun <T : Any> rememberNotNull(anything: T?, lazyMessage: () -> String): T
 @CheckResult
 private fun resolveActivity(context: Context): ComponentActivity {
   return when (context) {
-    is Activity -> context as? ComponentActivity
+    is ComponentActivity -> context
     is ContextWrapper -> resolveActivity(context.baseContext)
     else -> {
-      Logger.w("Provided Context is not an Activity or a ContextWrapper: $context")
+      Logger.w("Provided Context is not a ComponentActivity or a ContextWrapper: $context")
       null
     }
   }
-      ?: throw IllegalStateException("Could not resolve FragmentActivity from Context: $context")
+      ?: throw IllegalStateException("Could not resolve ComponentActivity from Context: $context")
 }
 
 /**

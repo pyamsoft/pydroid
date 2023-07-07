@@ -53,6 +53,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 
 private enum class PreferenceContentTypes {
@@ -126,6 +127,7 @@ internal fun InAppPreferenceItem(
 @Composable
 internal fun CheckBoxPreferenceItem(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.CheckBoxPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -146,7 +148,14 @@ internal fun CheckBoxPreferenceItem(
         Checkbox(
             checked = checked,
             enabled = enabled,
-            onCheckedChange = onCheckedChanged,
+            onCheckedChange = { c ->
+              if (c) {
+                hapticManager.toggleOff()
+              } else {
+                hapticManager.toggleOn()
+              }
+              onCheckedChanged(c)
+            },
         )
       },
   )
@@ -155,6 +164,7 @@ internal fun CheckBoxPreferenceItem(
 @Composable
 internal fun SwitchPreferenceItem(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.SwitchPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -175,7 +185,14 @@ internal fun SwitchPreferenceItem(
         Switch(
             checked = checked,
             enabled = enabled,
-            onCheckedChange = onCheckedChanged,
+            onCheckedChange = { c ->
+              if (c) {
+                hapticManager.toggleOff()
+              } else {
+                hapticManager.toggleOn()
+              }
+              onCheckedChanged(c)
+            },
         )
       },
   )
@@ -204,6 +221,7 @@ internal fun ListPreferenceItem(
 @Composable
 internal fun PreferenceDialog(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.ListPreference,
     onDismiss: () -> Unit
 ) {
@@ -242,9 +260,11 @@ internal fun PreferenceDialog(
               value = item.value,
               current = currentValue,
               onClick = { k, v ->
+                hapticManager.actionButtonPress()
                 onPreferenceSelected(k, v)
                 onDismiss()
-              })
+              },
+          )
         }
 
         item(
@@ -253,7 +273,10 @@ internal fun PreferenceDialog(
           PreferenceDialogActions(
               modifier =
                   Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.baseline),
-              onDismiss = onDismiss,
+              onDismiss = {
+                hapticManager.cancelButtonPress()
+                onDismiss()
+              },
           )
         }
       }

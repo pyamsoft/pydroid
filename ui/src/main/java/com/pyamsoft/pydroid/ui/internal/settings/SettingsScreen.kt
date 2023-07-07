@@ -38,8 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -75,13 +73,13 @@ internal fun SettingsScreen(
     onOpenMarketPage: () -> Unit,
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
+    onHapticsChanged: (Boolean) -> Unit,
 ) {
   val loadingState by state.loadingState.collectAsState()
   val applicationName by state.applicationName.collectAsState()
   val darkMode by state.darkMode.collectAsState()
+  val isHapticsEnabled by state.isHapticsEnabled.collectAsState()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsState()
-
-  val hapticManager = rememberHapticManager()
 
   Surface(
       modifier = modifier,
@@ -98,7 +96,6 @@ internal fun SettingsScreen(
         }
         SettingsViewState.LoadingState.DONE -> {
           SettingsList(
-              hapticManager = hapticManager,
               applicationName = applicationName,
               darkMode = darkMode,
               options = options,
@@ -107,6 +104,7 @@ internal fun SettingsScreen(
               customPreContent = customPreContent,
               customPostContent = customPostContent,
               isInAppDebugChecked = isInAppDebugEnabled,
+              isHapticsEnabled = isHapticsEnabled,
               hideClearAll = hideClearAll,
               hideUpgradeInformation = hideUpgradeInformation,
               onDarkModeChanged = onDarkModeChanged,
@@ -125,6 +123,7 @@ internal fun SettingsScreen(
               onOpenMarketPage = onOpenMarketPage,
               onInAppDebuggingClicked = onInAppDebuggingClicked,
               onInAppDebuggingChanged = onInAppDebuggingChanged,
+              onHapticsChanged = onHapticsChanged,
           )
         }
       }
@@ -151,7 +150,6 @@ private fun Loading() {
 @Composable
 private fun SettingsList(
     options: PYDroidActivityOptions,
-    hapticManager: HapticManager,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     customPreContent: SnapshotStateList<Preferences>,
@@ -159,9 +157,11 @@ private fun SettingsList(
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     isInAppDebugChecked: Boolean,
+    isHapticsEnabled: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
+    onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
@@ -181,9 +181,11 @@ private fun SettingsList(
   val applicationPrefs =
       rememberApplicationPreferencesGroup(
           options = options,
+          isHapticsEnabled = isHapticsEnabled,
           hideUpgradeInformation = hideUpgradeInformation,
           applicationName = applicationName,
           darkMode = darkMode,
+          onHapticsChanged = onHapticsChanged,
           onDarkModeChanged = onDarkModeChanged,
           onLicensesClicked = onLicensesClicked,
           onCheckUpdateClicked = onCheckUpdateClicked,
@@ -217,7 +219,6 @@ private fun SettingsList(
 
   val dangerZonePreferences =
       rememberDangerZonePreferencesGroup(
-          hapticManager = hapticManager,
           isInAppDebugChecked = isInAppDebugChecked,
           hideClearAll = hideClearAll,
           onResetClicked = onResetClicked,
@@ -287,6 +288,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       onViewBlogClicked = {},
       onInAppDebuggingClicked = {},
       onInAppDebuggingChanged = {},
+      onHapticsChanged = {},
   )
 }
 

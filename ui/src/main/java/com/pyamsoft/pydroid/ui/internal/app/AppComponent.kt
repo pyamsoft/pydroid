@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
+import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
@@ -94,6 +95,7 @@ internal interface AppComponent {
 
     data class Parameters
     internal constructor(
+        internal val hapticPreferences: HapticPreferences,
         internal val debugPreferences: DebugPreferences,
         internal val logLinesBus: StateFlow<List<InAppDebugLogLine>>,
         internal val debugInteractor: DebugInteractor,
@@ -189,6 +191,7 @@ internal interface AppComponent {
             isFakeBillingUpsell = params.debug.showBillingUpsell,
             changeLogState = changeLogState,
             debugPreferences = params.debugPreferences,
+            hapticPreferences = params.hapticPreferences,
         )
 
     private val changeLogParams =

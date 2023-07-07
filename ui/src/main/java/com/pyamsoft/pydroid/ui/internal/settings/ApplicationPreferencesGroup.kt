@@ -28,12 +28,14 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.icons.Download
 import com.pyamsoft.pydroid.ui.icons.LibraryBooks
+import com.pyamsoft.pydroid.ui.icons.Vibration
 import com.pyamsoft.pydroid.ui.icons.Visibility
 import com.pyamsoft.pydroid.ui.icons.Whatshot
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.listPreference
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
+import com.pyamsoft.pydroid.ui.preference.switchPreference
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
@@ -42,10 +44,12 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 @CheckResult
 internal fun rememberApplicationPreferencesGroup(
     options: PYDroidActivityOptions,
+    isHapticsEnabled: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     onDarkModeChanged: (Theming.Mode) -> Unit,
+    onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
@@ -72,6 +76,12 @@ internal fun rememberApplicationPreferencesGroup(
           onClick = onShowChangeLogClicked,
       )
 
+  val hapticPreferences =
+      rememberHapticPreference(
+          checked = isHapticsEnabled,
+          onChange = onHapticsChanged,
+      )
+
   val preferences =
       remember(
           options.disableChangeLog,
@@ -81,9 +91,11 @@ internal fun rememberApplicationPreferencesGroup(
           licensePreference,
           updatePreference,
           changeLogPreference,
+          hapticPreferences,
       ) {
         mutableListOf<Preferences.Item>().apply {
           add(darkThemePreference)
+          add(hapticPreferences)
           add(licensePreference)
           if (!options.disableVersionCheck) {
             add(updatePreference)
@@ -209,6 +221,36 @@ private fun rememberChangeLogPreference(
         summary = summary,
         icon = Icons.Outlined.Whatshot,
         onClick = { handleClick() },
+    )
+  }
+}
+
+@Composable
+@CheckResult
+private fun rememberHapticPreference(
+    checked: Boolean,
+    onChange: (Boolean) -> Unit,
+): Preferences.Item {
+  val name = stringResource(R.string.haptics_title)
+  val summaryOff = stringResource(R.string.haptics_summary_off)
+  val summaryOn = stringResource(R.string.haptics_summary_on)
+
+  val handleClick by rememberUpdatedState { onChange(!checked) }
+
+  return remember(
+      name,
+      checked,
+      summaryOff,
+      summaryOn,
+  ) {
+    switchPreference(
+        id = "haptic_feedback",
+        name = name,
+        summary = if (checked) summaryOn else summaryOff,
+        icon = Icons.Outlined.Vibration,
+        checked = checked,
+        onClick = { handleClick() },
+        onCheckedChanged = { handleClick() },
     )
   }
 }

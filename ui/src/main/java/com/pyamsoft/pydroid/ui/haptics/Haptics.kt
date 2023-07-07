@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.haptics
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
@@ -38,5 +39,11 @@ public fun rememberHapticManager(): HapticManager {
   }
 
   val view = LocalView.current
-  return remember(view) { AndroidViewHapticManager(view) }
+  val scope = rememberCoroutineScope()
+  return remember(view, scope) {
+    AndroidViewHapticManager(
+        scope = scope,
+        view = view,
+    )
+  }
 }

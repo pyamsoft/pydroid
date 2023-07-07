@@ -41,7 +41,7 @@ dependencies {
   // Compose Preview
   compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
   debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
-  //  implementation("androidx.compose.material:material-icons-extended:1.3.1")
+  // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
   // Compose Image loading
   implementation("io.coil-kt:coil-compose-base:2.4.0")

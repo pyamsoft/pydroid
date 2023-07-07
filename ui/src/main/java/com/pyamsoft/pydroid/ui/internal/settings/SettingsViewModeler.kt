@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
@@ -36,16 +37,21 @@ internal constructor(
     private val theming: Theming,
     private val changeLogInteractor: ChangeLogInteractor,
     private val debugPreferences: DebugPreferences,
+    private val hapticPreferences: HapticPreferences,
 ) : SettingsViewState by state, AbstractViewModeler<SettingsViewState>(state) {
 
   private data class LoadConfig(
       var name: Boolean = false,
       var inAppDebug: Boolean = false,
       var darkMode: Boolean = false,
+      var isHapticsEnabled: Boolean = false,
   )
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
-    if (loadConfig.darkMode && loadConfig.inAppDebug && loadConfig.name) {
+    if (loadConfig.darkMode &&
+        loadConfig.inAppDebug &&
+        loadConfig.name &&
+        loadConfig.isHapticsEnabled) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }
   }
@@ -132,6 +138,17 @@ internal constructor(
         }
       }
     }
+
+    scope.launch(context = Dispatchers.Default) {
+      hapticPreferences.listenForHapticsChanges().collect {
+        s.isHapticsEnabled.value = it
+
+        if (!config.isHapticsEnabled) {
+          config.isHapticsEnabled = true
+          markConfigLoaded(config)
+        }
+      }
+    }
   }
 
   internal fun handleChangeInAppDebugEnabled() {
@@ -201,6 +218,15 @@ internal constructor(
 
   fun handleOpenInAppDebuggingDialog() {
     state.isShowingInAppDebugDialog.value = true
+  }
+
+  fun handleHapticsChanged(enabled: Boolean) {
+    state.isHapticsEnabled.value = enabled
+    if (enabled) {
+      hapticPreferences.enableHaptics()
+    } else {
+      hapticPreferences.disableHaptics()
+    }
   }
 
   companion object {

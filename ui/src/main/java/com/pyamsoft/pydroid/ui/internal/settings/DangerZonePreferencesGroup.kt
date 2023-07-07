@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
 import com.pyamsoft.pydroid.ui.icons.Terminal
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -35,7 +34,6 @@ import com.pyamsoft.pydroid.ui.preference.switchPreference
 @Composable
 @CheckResult
 internal fun rememberDangerZonePreferencesGroup(
-    hapticManager: HapticManager,
     hideClearAll: Boolean,
     isInAppDebugChecked: Boolean,
     onResetClicked: () -> Unit,
@@ -50,7 +48,6 @@ internal fun rememberDangerZonePreferencesGroup(
 
   val developerModePreference =
       rememberDeveloperModePreference(
-          hapticManager = hapticManager,
           checked = isInAppDebugChecked,
           onClick = onInAppDebuggingClicked,
           onChange = onInAppDebuggingChanged,
@@ -110,13 +107,12 @@ private fun rememberResetPreference(
 @Composable
 @CheckResult
 private fun rememberDeveloperModePreference(
-    hapticManager: HapticManager,
     checked: Boolean,
     onClick: () -> Unit,
     onChange: () -> Unit,
 ): Preferences.Item {
-  val name = "Debug Mode"
-  val summary = "Enables a mode to view development information. THIS WILL IMPACT PERFORMANCE."
+  val name = stringResource(R.string.dev_mode_title)
+  val summary = stringResource(R.string.dev_mode_summary)
 
   val handleClick by rememberUpdatedState(onClick)
   val handleChange by rememberUpdatedState(onChange)
@@ -133,14 +129,7 @@ private fun rememberDeveloperModePreference(
         icon = Icons.Outlined.Terminal,
         checked = checked,
         onClick = { handleClick() },
-        onCheckedChanged = {
-          if (checked) {
-            hapticManager.toggleOff()
-          } else {
-            hapticManager.toggleOn()
-          }
-          handleChange()
-        },
+        onCheckedChanged = { handleChange() },
     )
   }
 }

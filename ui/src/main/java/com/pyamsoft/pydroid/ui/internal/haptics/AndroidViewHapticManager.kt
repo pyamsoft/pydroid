@@ -16,17 +16,48 @@
 
 package com.pyamsoft.pydroid.ui.internal.haptics
 
+import android.app.Application
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.View
 import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
+import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal class AndroidViewHapticManager
 internal constructor(
+    private val scope: CoroutineScope,
     private val view: View,
 ) : HapticManager {
 
+  private var isHapticsEnabled = false
+  internal var preferences: HapticPreferences? = null
+
+  init {
+    injectAndBeginWatchingPreferences()
+  }
+
+  private fun injectAndBeginWatchingPreferences() {
+    if (preferences == null) {
+      val context = view.context.applicationContext
+      if (context is Application) {
+        ObjectGraph.ApplicationScope.retrieve(context).injector().inject(this)
+      }
+    }
+
+    preferences?.listenForHapticsChanges()?.also { f ->
+      scope.launch(context = Dispatchers.Default) { f.collect { isHapticsEnabled = it } }
+    }
+  }
+
   override fun toggleOff() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     if (Build.VERSION.SDK_INT >= 34) {
       view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_OFF)
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -37,6 +68,10 @@ internal constructor(
   }
 
   override fun toggleOn() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     if (Build.VERSION.SDK_INT >= 34) {
       view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_ON)
     } else {
@@ -50,6 +85,10 @@ internal constructor(
   }
 
   override fun cancelButtonPress() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -60,6 +99,10 @@ internal constructor(
   }
 
   override fun actionButtonPress() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
     } else {
@@ -68,10 +111,18 @@ internal constructor(
   }
 
   override fun clockTick() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
   }
 
   override fun longPress() {
+    if (!isHapticsEnabled) {
+      return
+    }
+
     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
   }
 }

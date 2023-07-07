@@ -15,6 +15,9 @@
   -->
 
 <resources>
+    <string name="haptics_title">Enable Haptic Feedback</string>
+    <string name="haptics_summary_off">Haptic feedback will not trigger for most interactions.</string>
+    <string name="haptics_summary_on">Haptic feedback will trigger on supported interactions.</string>
 
     <string name="clear_all_title">Reset All Settings</string>
     <string name="clear_all_summary">Reset all application settings</string>
@@ -57,6 +60,9 @@
     <string name="dark_mode_key">dark_mode_v2</string>
     <string name="dark_mode_title">Theme</string>
     <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
+
+    <string name="dev_mode_title">Debug Mode</string>
+    <string name="dev_mode_summary">Enables a mode to view development information. THIS WILL IMPACT PERFORMANCE.</string>
 
     <string-array name="dark_mode_names_v1">
         <item name="light">Light Theme</item>

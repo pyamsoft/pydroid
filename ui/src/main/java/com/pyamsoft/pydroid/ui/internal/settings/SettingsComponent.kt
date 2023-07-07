@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
@@ -52,6 +53,7 @@ internal interface SettingsComponent {
         internal val options: PYDroidActivityOptions,
         internal val billingPreferences: BillingPreferences,
         internal val debugPreferences: DebugPreferences,
+        internal val hapticPreferences: HapticPreferences,
         internal val billingState: MutableBillingViewState,
         internal val changeLogState: MutableChangeLogViewState,
         internal val isFakeBillingUpsell: Boolean,
@@ -75,6 +77,7 @@ internal interface SettingsComponent {
               theming = params.theming,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
               debugPreferences = params.debugPreferences,
+              hapticPreferences = params.hapticPreferences,
           )
       injector.versionViewModel =
           VersionCheckViewModeler(

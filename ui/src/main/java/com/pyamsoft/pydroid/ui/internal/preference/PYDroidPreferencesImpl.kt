@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingPreferences
@@ -54,7 +55,8 @@ internal constructor(
     BillingPreferences,
     ChangeLogPreferences,
     DataPolicyPreferences,
-    DebugPreferences {
+    DebugPreferences,
+    HapticPreferences {
 
   private val darkModeKey = context.getString(R.string.dark_mode_key)
 
@@ -67,6 +69,13 @@ internal constructor(
     CoroutineScope(
         context = SupervisorJob() + Dispatchers.Default + CoroutineName(this::class.java.name),
     )
+  }
+
+  private fun setHapticsEnabled(enabled: Boolean) {
+    scope.launch {
+      enforcer.assertOffMainThread()
+      prefs.edit { putBoolean(KEY_HAPTICS_ENABLED, enabled) }
+    }
   }
 
   override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
@@ -173,9 +182,29 @@ internal constructor(
     }
   }
 
+  override fun listenForHapticsChanges(): Flow<Boolean> =
+      preferenceBooleanFlow(
+              KEY_HAPTICS_ENABLED,
+              DEFAULT_HAPTICS_ENABLED,
+          ) {
+            prefs
+          }
+          .flowOn(context = Dispatchers.Default)
+
+  override fun enableHaptics() {
+    setHapticsEnabled(true)
+  }
+
+  override fun disableHaptics() {
+    setHapticsEnabled(false)
+  }
+
   companion object {
 
     private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
+
+    private const val DEFAULT_HAPTICS_ENABLED = true
+    private const val KEY_HAPTICS_ENABLED = "haptic_manager_v1"
 
     private const val DEFAULT_LAST_SHOWN_CHANGELOG_CODE = -1
     private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"

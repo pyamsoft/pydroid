@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogCompon
 import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractorImpl
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
+import com.pyamsoft.pydroid.ui.internal.haptics.AndroidViewHapticManager
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingImpl
@@ -57,6 +58,8 @@ internal interface PYDroidComponent {
   @CheckResult fun plusReset(): ResetComponent.Factory
 
   fun inject(logger: InAppDebugLoggerImpl)
+
+  fun inject(hapticManager: AndroidViewHapticManager)
 
   interface Factory {
 
@@ -155,6 +158,7 @@ internal interface PYDroidComponent {
               debugPreferences = preferences,
               logLinesBus = logLinesBus,
               debugInteractor = debugInteractor,
+              hapticPreferences = preferences,
           )
         }
 
@@ -244,6 +248,10 @@ internal interface PYDroidComponent {
     override fun inject(logger: InAppDebugLoggerImpl) {
       logger.bus = logLinesBus
       logger.preferences = preferences
+    }
+
+    override fun inject(hapticManager: AndroidViewHapticManager) {
+      hapticManager.preferences = preferences
     }
 
     class FactoryImpl internal constructor() : Factory {

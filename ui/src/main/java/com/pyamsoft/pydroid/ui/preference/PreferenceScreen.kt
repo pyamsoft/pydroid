@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
+import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
@@ -58,10 +60,13 @@ public fun PreferenceScreen(
   val component = rememberComposableInjector { PreferenceInjector() }
   val viewModel = rememberNotNull(component.viewModel)
 
+  val hapticManager = rememberHapticManager()
+
   SaveStateDisposableEffect(viewModel)
 
   PreferenceScreenInternal(
       modifier = modifier,
+      hapticManager = hapticManager,
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       preferences = preferences,
@@ -75,6 +80,7 @@ public fun PreferenceScreen(
 private fun PreferenceScreenInternal(
     modifier: Modifier = Modifier,
     state: PreferenceViewState,
+    hapticManager: HapticManager,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     preferences: SnapshotStateList<Preferences>,
@@ -131,12 +137,14 @@ private fun PreferenceScreenInternal(
         is Preferences.Group ->
             renderGroupInScope(
                 modifier = Modifier.fillMaxWidth(),
+                hapticManager = hapticManager,
                 preference = preference,
                 onOpenDialog = onOpenDialog,
             )
         is Preferences.Item ->
             renderItemInScope(
                 modifier = Modifier.fillMaxWidth(),
+                hapticManager = hapticManager,
                 preference = preference,
                 onOpenDialog = onOpenDialog,
             )
@@ -157,6 +165,7 @@ private fun PreferenceScreenInternal(
   // Hold dialogs outside of the LazyColumn so that they will mount immediately
   for (pref in dialogPreferences) {
     PreferenceDialog(
+        hapticManager = hapticManager,
         modifier = Modifier.fullScreenDialog(),
         preference = pref,
         onDismiss = { onCloseDialog(pref.id) },
@@ -166,6 +175,7 @@ private fun PreferenceScreenInternal(
 
 private fun LazyListScope.renderGroupInScope(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.Group,
     onOpenDialog: (String) -> Unit,
 ) {
@@ -192,6 +202,7 @@ private fun LazyListScope.renderGroupInScope(
     ) {
       RenderItem(
           modifier = modifier,
+          hapticManager = hapticManager,
           preference = item,
           onOpenDialog = onOpenDialog,
       )
@@ -201,6 +212,7 @@ private fun LazyListScope.renderGroupInScope(
 
 private fun LazyListScope.renderItemInScope(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.Item,
     onOpenDialog: (String) -> Unit,
 ) {
@@ -209,6 +221,7 @@ private fun LazyListScope.renderItemInScope(
   ) {
     RenderItem(
         modifier = modifier,
+        hapticManager = hapticManager,
         preference = preference,
         onOpenDialog = onOpenDialog,
     )
@@ -218,6 +231,7 @@ private fun LazyListScope.renderItemInScope(
 @Composable
 private fun RenderItem(
     modifier: Modifier = Modifier,
+    hapticManager: HapticManager,
     preference: Preferences.Item,
     onOpenDialog: (String) -> Unit,
 ) {
@@ -232,11 +246,13 @@ private fun RenderItem(
     is Preferences.SwitchPreference ->
         SwitchPreferenceItem(
             modifier = modifier,
+            hapticManager = hapticManager,
             preference = preference,
         )
     is Preferences.CheckBoxPreference ->
         CheckBoxPreferenceItem(
             modifier = modifier,
+            hapticManager = hapticManager,
             preference = preference,
         )
     is Preferences.ListPreference ->

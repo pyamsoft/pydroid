@@ -245,11 +245,7 @@ internal fun PreferenceDialog(
         ) {
           PreferenceDialogTitle(
               modifier =
-                  Modifier.fillMaxWidth()
-                      .padding(
-                          horizontal = MaterialTheme.keylines.content,
-                          vertical = MaterialTheme.keylines.baseline,
-                      ),
+                  Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
               title = title,
           )
         }
@@ -283,8 +279,8 @@ internal fun PreferenceDialog(
           PreferenceDialogActions(
               modifier =
                   Modifier.fillMaxWidth()
-                      .padding(horizontal = MaterialTheme.keylines.baseline)
-                      .padding(bottom = MaterialTheme.keylines.typography),
+                      .padding(horizontal = MaterialTheme.keylines.content)
+                      .padding(bottom = MaterialTheme.keylines.baseline),
               onDismiss = {
                 hapticManager.cancelButtonPress()
                 onDismiss()

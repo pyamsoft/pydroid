@@ -58,6 +58,7 @@ public fun PreferenceScreen(
     preferences: SnapshotStateList<Preferences>,
 ) {
   val component = rememberComposableInjector { PreferenceInjector() }
+
   val viewModel = rememberNotNull(component.viewModel)
 
   val hapticManager = rememberHapticManager()
@@ -328,7 +329,8 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
                           ),
                   ),
               )
-              .rememberAsStateList())
+              .rememberAsStateList(),
+  )
 }
 
 @Preview

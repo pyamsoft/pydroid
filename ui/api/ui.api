@@ -214,6 +214,12 @@ public abstract interface class com/pyamsoft/pydroid/ui/haptics/HapticManager {
 	public abstract fun toggleOn ()V
 }
 
+public abstract interface class com/pyamsoft/pydroid/ui/haptics/HapticPreferences {
+	public abstract fun disableHaptics ()V
+	public abstract fun enableHaptics ()V
+	public abstract fun listenForHapticsChanges ()Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/pyamsoft/pydroid/ui/haptics/HapticsKt {
 	public static final fun rememberHapticManager (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/haptics/HapticManager;
 }
@@ -256,6 +262,10 @@ public final class com/pyamsoft/pydroid/ui/icons/RedeemKt {
 
 public final class com/pyamsoft/pydroid/ui/icons/TerminalKt {
 	public static final fun getTerminal (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
+}
+
+public final class com/pyamsoft/pydroid/ui/icons/VibrationKt {
+	public static final fun getVibration (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }
 
 public final class com/pyamsoft/pydroid/ui/icons/VisibilityKt {

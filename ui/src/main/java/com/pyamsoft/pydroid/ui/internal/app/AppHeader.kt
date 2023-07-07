@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -140,7 +142,7 @@ internal fun AppHeaderDialog(
         val c = LocalDialogColor.current
 
         Surface(
-            modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.content),
+            modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
             elevation = elevation,
             color = c,
             shape =
@@ -155,25 +157,81 @@ internal fun AppHeaderDialog(
   }
 }
 
+@Composable
+private inline fun RenderDialogContent(
+    modifier: Modifier,
+    crossinline content: @Composable () -> Unit,
+) {
+  val elevation = LocalDialogElevation.current
+  val color = LocalDialogColor.current
+
+  Surface(
+      modifier = modifier,
+      elevation = elevation,
+      color = color,
+      shape = RectangleShape,
+  ) {
+    content()
+  }
+}
+
 /** Wraps a LazyListScope.item in a Surface so it appears in the Dialog correctly */
 internal inline fun LazyListScope.dialogItem(
     modifier: Modifier = Modifier,
+    contentType: Any = AppHeaderContentTypes.ITEM,
     crossinline content: @Composable () -> Unit
 ) {
   val self = this
   self.item(
-      contentType = AppHeaderContentTypes.ITEM,
+      contentType = contentType,
   ) {
-    val elevation = LocalDialogElevation.current
-    val color = LocalDialogColor.current
-
-    Surface(
+    RenderDialogContent(
         modifier = modifier,
-        elevation = elevation,
-        color = color,
-        shape = RectangleShape,
+        content = content,
+    )
+  }
+}
+
+/** Wraps a LazyListScope.item in a Surface so it appears in the Dialog correctly */
+internal inline fun <T> LazyListScope.dialogItems(
+    modifier: Modifier = Modifier,
+    items: List<T>,
+    noinline key: ((item: T) -> Any)? = null,
+    noinline contentType: (item: T) -> Any? = { AppHeaderContentTypes.ITEM },
+    crossinline itemContent: @Composable LazyItemScope.(item: T) -> Unit
+) {
+  val self = this
+  self.items(
+      items = items,
+      key = key,
+      contentType = contentType,
+  ) { item ->
+    RenderDialogContent(
+        modifier = modifier,
     ) {
-      content()
+      itemContent(item)
+    }
+  }
+}
+
+/** Wraps a LazyListScope.item in a Surface so it appears in the Dialog correctly */
+internal inline fun <T> LazyListScope.dialogItems(
+    modifier: Modifier = Modifier,
+    items: Array<T>,
+    noinline key: ((item: T) -> Any)? = null,
+    noinline contentType: (item: T) -> Any? = { AppHeaderContentTypes.ITEM },
+    crossinline itemContent: @Composable LazyItemScope.(item: T) -> Unit
+) {
+  val self = this
+  self.items(
+      items = items,
+      key = key,
+      contentType = contentType,
+  ) { item ->
+    RenderDialogContent(
+        modifier = modifier,
+    ) {
+      itemContent(item)
     }
   }
 }

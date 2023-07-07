@@ -20,10 +20,6 @@ import androidx.activity.ComponentActivity
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 
-private fun noLocalProvidedFor(name: String): Nothing {
-  error("CompositionLocal $name not present")
-}
-
 /**
  * The Activity held as a Local
  *
@@ -32,5 +28,5 @@ private fun noLocalProvidedFor(name: String): Nothing {
  */
 @JvmField
 public val LocalActivity: ProvidableCompositionLocal<ComponentActivity?> = compositionLocalOf {
-  noLocalProvidedFor("LocalActivity")
+  null
 }

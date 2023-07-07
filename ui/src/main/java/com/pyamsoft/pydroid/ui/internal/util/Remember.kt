@@ -19,14 +19,19 @@ package com.pyamsoft.pydroid.ui.internal.util
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.app.LocalActivity
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 
 /** Grab the PYDroidActivity delegate from the current activity */
 @Composable
 @CheckResult
 internal fun rememberPYDroidDelegate(): PYDroidActivityDelegateInternal {
-  val activity = rememberActivity()
-  return remember(activity) { ObjectGraph.ActivityScope.retrieve(activity) }
+  val activity = LocalActivity.current
+  return remember(activity) {
+    ObjectGraph.ActivityScope.retrieve(
+        activity.requireNotNull { "PYDroidDelegate expected a ComponentActivity" },
+    )
+  }
 }

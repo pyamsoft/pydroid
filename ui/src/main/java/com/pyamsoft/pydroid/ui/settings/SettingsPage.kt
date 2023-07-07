@@ -29,6 +29,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
@@ -52,7 +53,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.util.fullScreenDialog
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -77,9 +77,9 @@ public fun SettingsPage(
     customElevation: Dp = ZeroElevation,
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
-  val activity = rememberActivity()
   val scope = rememberCoroutineScope()
   val uriHandler = LocalUriHandler.current
+  val context = LocalContext.current
 
   val component = rememberComposableInjector { SettingsInjector() }
   val options = rememberNotNull(component.options)
@@ -140,7 +140,7 @@ public fun SettingsPage(
       onViewTermsOfServiceClicked = { viewModel.handleViewTermsOfService(handleOpenPage) },
       onViewSocialMediaClicked = { viewModel.handleViewSocialMedia(handleOpenPage) },
       onViewBlogClicked = { viewModel.handleViewBlog(handleOpenPage) },
-      onOpenMarketPage = { handleOpenPage(MarketLinker.getStorePageLink(activity)) },
+      onOpenMarketPage = { handleOpenPage(MarketLinker.getStorePageLink(context)) },
       onDismissDataPolicyDialog = { viewModel.handleCloseDataPolicyDialog() },
       onDismissResetDialog = { viewModel.handleCloseResetDialog() },
       onDismissAboutDialog = { viewModel.handleCloseAboutDialog() },

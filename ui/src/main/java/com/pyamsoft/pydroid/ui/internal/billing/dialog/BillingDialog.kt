@@ -33,12 +33,12 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.ui.app.LocalActivity
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.LifecycleEffect
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -95,8 +95,7 @@ internal fun BillingDialog(
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { BillingDialogInjector() }
-
-  val activity = rememberActivity()
+  val activity = LocalActivity.current
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
   val purchaseClient = rememberNotNull(component.purchaseClient)
@@ -115,9 +114,10 @@ internal fun BillingDialog(
         imageLoader = imageLoader,
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google
-          activity.lifecycleScope.launch(context = Dispatchers.Main) {
+          val a = activity.requireNotNull { "In-App Purchases require an Activity: $sku" }
+          a.lifecycleScope.launch(context = Dispatchers.Main) {
             Logger.d("Start purchase flow for $sku")
-            purchaseClient.requireNotNull().purchase(activity, sku)
+            purchaseClient.purchase(a, sku)
           }
         },
         onBillingErrorDismissed = { viewModel.handleClearError() },

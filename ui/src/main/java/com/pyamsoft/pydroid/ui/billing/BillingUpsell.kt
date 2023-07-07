@@ -58,7 +58,6 @@ internal constructor(
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: BillingViewModeler? = null
 
   init {
@@ -91,7 +90,6 @@ internal constructor(
     activity.doOnDestroy {
       activity.lifecycle.removeObserver(repeatedActions)
 
-      hostingActivity = null
       viewModel = null
     }
   }

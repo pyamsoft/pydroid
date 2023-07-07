@@ -69,9 +69,12 @@ private fun resolveActivity(context: Context): ComponentActivity {
  * This should basically always work, given that all ComposeViews are held inside of Activities
  *
  * In the future, if we use Compose in a RemoteView context, this will not work.
+ *
+ * Callers generally want to use LocalActivity.current unless they have a good reason not to.
  */
 @Composable
 @CheckResult
+@Deprecated("Move to LocalActivity.current which is more performant.")
 public fun rememberActivity(): ComponentActivity {
   val context = LocalContext.current
   return remember(context) { resolveActivity(context) }

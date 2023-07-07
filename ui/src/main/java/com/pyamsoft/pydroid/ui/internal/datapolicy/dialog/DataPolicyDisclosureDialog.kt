@@ -28,13 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.app.LocalActivity
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class DataPolicyInjector : ComposableInjector() {
@@ -79,11 +80,16 @@ internal fun DataPolicyDisclosureDialog(
 ) {
   val component = rememberComposableInjector { DataPolicyInjector() }
 
-  val activity = rememberActivity()
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
 
   val uriHandler = LocalUriHandler.current
+  val activity = LocalActivity.current
+
+  val handleRejected by rememberUpdatedState {
+    val a = activity.requireNotNull { "Rejecting the DPD expects an Activity to close!" }
+    a.finishAndRemoveTask()
+  }
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
 
@@ -117,7 +123,7 @@ internal fun DataPolicyDisclosureDialog(
         },
         onReject = {
           viewModel.handleReject(
-              onRejected = { activity.finishAndRemoveTask() },
+              onRejected = { handleRejected() },
           )
         },
         onPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy(openPage) },

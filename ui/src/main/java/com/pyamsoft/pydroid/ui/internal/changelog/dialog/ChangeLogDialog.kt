@@ -23,6 +23,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
@@ -32,7 +33,6 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -78,10 +78,10 @@ internal fun ChangeLogDialog(
 ) {
   val component = rememberComposableInjector { ChangeLogDialogInjector() }
 
-  val activity = rememberActivity()
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
 
+  val context = LocalContext.current
   val uriHandler = LocalUriHandler.current
 
   MountHooks(
@@ -96,7 +96,7 @@ internal fun ChangeLogDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel,
         imageLoader = imageLoader,
-        onRateApp = { uriHandler.openUri(MarketLinker.getStorePageLink(activity)) },
+        onRateApp = { uriHandler.openUri(MarketLinker.getStorePageLink(context)) },
         onClose = onDismiss,
     )
   }

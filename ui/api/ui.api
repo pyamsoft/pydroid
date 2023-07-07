@@ -74,6 +74,10 @@ public final class com/pyamsoft/pydroid/ui/app/DialogsKt {
 	public static synthetic fun makeFullscreen$default (Landroidx/fragment/app/DialogFragment;ZILjava/lang/Object;)V
 }
 
+public final class com/pyamsoft/pydroid/ui/app/LocalActivityKt {
+	public static final field LocalActivity Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
 public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate {
 	public abstract fun loadInAppRating ()V
 }

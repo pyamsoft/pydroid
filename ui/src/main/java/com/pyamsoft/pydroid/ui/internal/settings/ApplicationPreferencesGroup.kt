@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.icons.Download
 import com.pyamsoft.pydroid.ui.icons.LibraryBooks
 import com.pyamsoft.pydroid.ui.icons.Vibration
@@ -82,8 +83,12 @@ internal fun rememberApplicationPreferencesGroup(
           onChange = onHapticsChanged,
       )
 
+  val hapticManager = LocalHapticManager.current
+  val isUsingHapticManager = remember(hapticManager) { hapticManager != null }
+
   val preferences =
       remember(
+          isUsingHapticManager,
           options.disableChangeLog,
           options.disableVersionCheck,
           hideUpgradeInformation,
@@ -95,7 +100,9 @@ internal fun rememberApplicationPreferencesGroup(
       ) {
         mutableListOf<Preferences.Item>().apply {
           add(darkThemePreference)
-          add(hapticPreferences)
+          if (isUsingHapticManager) {
+            add(hapticPreferences)
+          }
           add(licensePreference)
           if (!options.disableVersionCheck) {
             add(updatePreference)

@@ -33,17 +33,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
 internal fun DialogToolbar(
     modifier: Modifier = Modifier,
     title: String,
-    hapticManager: HapticManager,
     onClose: () -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
+
   Surface(
       modifier = modifier,
       color = MaterialTheme.colors.primary,
@@ -55,10 +55,13 @@ internal fun DialogToolbar(
               bottomStart = ZeroCornerSize,
           ),
   ) {
+    // Must be inside the Surface, since it changes the content color
+    val contentColor = LocalContentColor.current
+
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = Color.Transparent,
-        contentColor = LocalContentColor.current,
+        contentColor = contentColor,
         elevation = ZeroElevation,
         title = {
           Text(
@@ -68,7 +71,7 @@ internal fun DialogToolbar(
         navigationIcon = {
           IconButton(
               onClick = {
-                hapticManager.cancelButtonPress()
+                hapticManager?.cancelButtonPress()
                 onClose()
               },
           ) {
@@ -87,7 +90,6 @@ internal fun DialogToolbar(
 private fun PreviewDialogToolbar() {
   DialogToolbar(
       title = "TEST",
-      hapticManager = rememberHapticManager(),
       onClose = {},
   )
 }

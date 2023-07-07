@@ -20,6 +20,7 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 
 /** The local spacing construct */
+@JvmField
 public val LocalKeylines: ProvidableCompositionLocal<Keylines> = staticCompositionLocalOf {
   Keylines(
       baseline = KeylineDefaults.Baseline,

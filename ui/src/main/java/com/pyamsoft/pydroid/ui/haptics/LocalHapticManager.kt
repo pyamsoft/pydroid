@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.preference
+package com.pyamsoft.pydroid.ui.haptics
 
+import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 
-/** Preference is enabled local */
+private fun noLocalProvidedFor(name: String): Nothing {
+  error("CompositionLocal $name not present")
+}
+
+/**
+ * The HapticManager instance tied to the LocalView
+ *
+ * We use a composositionLocal because even though our backing LocalView is static, I have no idea
+ * how likely rememberCoroutineScope() is to recompose, so we play it safe.
+ */
 @JvmField
-internal val LocalPreferenceEnabledStatus = compositionLocalOf { true }
+public val LocalHapticManager: ProvidableCompositionLocal<HapticManager?> = compositionLocalOf {
+  noLocalProvidedFor("LocalHapticManager")
+}

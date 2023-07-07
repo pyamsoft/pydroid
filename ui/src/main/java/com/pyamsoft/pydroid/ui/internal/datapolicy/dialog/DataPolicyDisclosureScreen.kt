@@ -44,8 +44,7 @@ import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
@@ -68,8 +67,6 @@ internal fun DataPolicyDisclosureScreen(
   val icon by state.icon.collectAsState()
   val name by state.name.collectAsState()
   val navigationError by state.navigationError.collectAsState()
-
-  val hapticManager = rememberHapticManager()
 
   AppHeaderDialog(
       modifier = modifier.fullScreenDialog(),
@@ -112,7 +109,6 @@ internal fun DataPolicyDisclosureScreen(
     ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),
-          hapticManager = hapticManager,
           onAccept = onAccept,
           onReject = onReject,
       )
@@ -203,10 +199,11 @@ private fun Disclosure(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
-    hapticManager: HapticManager,
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
+
   Column(
       modifier =
           modifier
@@ -217,7 +214,7 @@ private fun Actions(
   ) {
     Button(
         onClick = {
-          hapticManager.confirmButtonPress()
+          hapticManager?.confirmButtonPress()
           onAccept()
         },
     ) {
@@ -228,7 +225,7 @@ private fun Actions(
     TextButton(
         modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
         onClick = {
-          hapticManager.cancelButtonPress()
+          hapticManager?.cancelButtonPress()
           onReject()
         },
     ) {

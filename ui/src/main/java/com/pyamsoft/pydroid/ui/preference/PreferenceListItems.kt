@@ -53,7 +53,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
 
 private enum class PreferenceContentTypes {
@@ -127,7 +127,6 @@ internal fun InAppPreferenceItem(
 @Composable
 internal fun CheckBoxPreferenceItem(
     modifier: Modifier = Modifier,
-    hapticManager: HapticManager,
     preference: Preferences.CheckBoxPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -137,6 +136,8 @@ internal fun CheckBoxPreferenceItem(
   val onClick = preference.onClick
   val onCheckedChanged = preference.onCheckedChanged
   val checked = preference.checked
+
+  val hapticManager = LocalHapticManager.current
 
   PreferenceItem(
       modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
@@ -148,13 +149,13 @@ internal fun CheckBoxPreferenceItem(
         Checkbox(
             checked = checked,
             enabled = enabled,
-            onCheckedChange = { c ->
-              if (c) {
-                hapticManager.toggleOff()
+            onCheckedChange = { newChecked ->
+              if (newChecked) {
+                hapticManager?.toggleOn()
               } else {
-                hapticManager.toggleOn()
+                hapticManager?.toggleOff()
               }
-              onCheckedChanged(c)
+              onCheckedChanged(newChecked)
             },
         )
       },
@@ -164,7 +165,6 @@ internal fun CheckBoxPreferenceItem(
 @Composable
 internal fun SwitchPreferenceItem(
     modifier: Modifier = Modifier,
-    hapticManager: HapticManager,
     preference: Preferences.SwitchPreference,
 ) {
   val isEnabled = preference.isEnabled
@@ -174,6 +174,8 @@ internal fun SwitchPreferenceItem(
   val checked = preference.checked
   val onClick = preference.onClick
   val onCheckedChanged = preference.onCheckedChanged
+
+  val hapticManager = LocalHapticManager.current
 
   PreferenceItem(
       modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
@@ -185,13 +187,13 @@ internal fun SwitchPreferenceItem(
         Switch(
             checked = checked,
             enabled = enabled,
-            onCheckedChange = { c ->
-              if (c) {
-                hapticManager.toggleOff()
+            onCheckedChange = { newChecked ->
+              if (newChecked) {
+                hapticManager?.toggleOn()
               } else {
-                hapticManager.toggleOn()
+                hapticManager?.toggleOff()
               }
-              onCheckedChanged(c)
+              onCheckedChanged(newChecked)
             },
         )
       },
@@ -221,7 +223,6 @@ internal fun ListPreferenceItem(
 @Composable
 internal fun PreferenceDialog(
     modifier: Modifier = Modifier,
-    hapticManager: HapticManager,
     preference: Preferences.ListPreference,
     onDismiss: () -> Unit
 ) {
@@ -229,6 +230,8 @@ internal fun PreferenceDialog(
   val currentValue = preference.value
   val entries = preference.entries
   val onPreferenceSelected = preference.onPreferenceSelected
+
+  val hapticManager = LocalHapticManager.current
 
   Dialog(
       properties = rememberDialogProperties(),
@@ -266,7 +269,7 @@ internal fun PreferenceDialog(
               value = item.value,
               current = currentValue,
               onClick = { k, v ->
-                hapticManager.actionButtonPress()
+                hapticManager?.actionButtonPress()
                 onPreferenceSelected(k, v)
                 onDismiss()
               },
@@ -282,7 +285,7 @@ internal fun PreferenceDialog(
                       .padding(horizontal = MaterialTheme.keylines.content)
                       .padding(bottom = MaterialTheme.keylines.baseline),
               onDismiss = {
-                hapticManager.cancelButtonPress()
+                hapticManager?.cancelButtonPress()
                 onDismiss()
               },
           )
@@ -380,7 +383,8 @@ private fun PreferenceItem(
     badge: (@Composable () -> Unit)? = null,
     customContent: (@Composable (isEnabled: Boolean) -> Unit)? = null,
 ) {
-  val enabled = LocalPreferenceEnabledStatus.current && isEnabled
+  val isGroupEnabled = LocalPreferenceEnabledStatus.current
+  val enabled = isGroupEnabled && isEnabled
 
   PreferenceAlphaWrapper(
       isEnabled = enabled,

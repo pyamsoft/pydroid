@@ -45,8 +45,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.util.collectAsStateList
 
@@ -66,7 +64,6 @@ internal fun AboutScreen(
   val snackbarHostState = remember { SnackbarHostState() }
   val loadingState by state.loadingState.collectAsState()
   val navigationError by state.navigationError.collectAsState()
-  val hapticManager = rememberHapticManager()
 
   Column(
       modifier = modifier,
@@ -74,7 +71,6 @@ internal fun AboutScreen(
     DialogToolbar(
         modifier = Modifier.fillMaxWidth(),
         title = "Open Source Licenses",
-        hapticManager = hapticManager,
         onClose = onClose,
     )
     Surface(
@@ -100,7 +96,6 @@ internal fun AboutScreen(
             AboutViewState.LoadingState.DONE -> {
               AboutList(
                   modifier = Modifier.fillMaxSize(),
-                  hapticManager = hapticManager,
                   state = state,
                   onViewHomePage = onViewHomePage,
                   onViewLicense = onViewLicense,
@@ -133,7 +128,6 @@ private fun Loading() {
 private fun AboutList(
     modifier: Modifier = Modifier,
     state: AboutViewState,
-    hapticManager: HapticManager,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
 ) {
@@ -152,7 +146,6 @@ private fun AboutList(
       AboutListItem(
           modifier = Modifier.fillMaxWidth(),
           library = item,
-          hapticManager = hapticManager,
           onViewHomePage = { onViewHomePage(item) },
           onViewLicense = { onViewLicense(item) },
       )

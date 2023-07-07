@@ -35,17 +35,17 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.CardDefaults
-import com.pyamsoft.pydroid.ui.haptics.HapticManager
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 @Composable
 internal fun AboutListItem(
     modifier: Modifier = Modifier,
     library: OssLibrary,
-    hapticManager: HapticManager,
     onViewHomePage: (OssLibrary) -> Unit,
     onViewLicense: (OssLibrary) -> Unit
 ) {
+  val hapticManager = LocalHapticManager.current
+
   Card(
       modifier = modifier,
       shape = MaterialTheme.shapes.medium,
@@ -69,13 +69,13 @@ internal fun AboutListItem(
       ) {
         ViewLicense(
             onClick = {
-              hapticManager.confirmButtonPress()
+              hapticManager?.confirmButtonPress()
               onViewLicense(library)
             },
         )
         VisitHomepage(
             onClick = {
-              hapticManager.confirmButtonPress()
+              hapticManager?.confirmButtonPress()
               onViewHomePage(library)
             },
         )
@@ -144,7 +144,6 @@ private fun VisitHomepage(onClick: () -> Unit) {
 private fun PreviewAboutListItem() {
   Surface {
     AboutListItem(
-        hapticManager = rememberHapticManager(),
         library = OssLibraries.libraries().first(),
         onViewLicense = {},
         onViewHomePage = {},

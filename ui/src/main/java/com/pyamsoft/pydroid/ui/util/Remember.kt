@@ -74,7 +74,6 @@ private fun resolveActivity(context: Context): ComponentActivity {
  */
 @Composable
 @CheckResult
-@Deprecated("Move to LocalActivity.current which is more performant.")
 public fun rememberActivity(): ComponentActivity {
   val context = LocalContext.current
   return remember(context) { resolveActivity(context) }

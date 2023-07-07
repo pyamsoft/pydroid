@@ -28,14 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.theme.LocalActivity
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class DataPolicyInjector : ComposableInjector() {
@@ -84,12 +83,9 @@ internal fun DataPolicyDisclosureDialog(
   val imageLoader = rememberNotNull(component.imageLoader)
 
   val uriHandler = LocalUriHandler.current
-  val activity = LocalActivity.current
+  val activity = rememberResolvedActivity()
 
-  val handleRejected by rememberUpdatedState {
-    val a = activity.requireNotNull { "Rejecting the DPD expects an Activity to close!" }
-    a.finishAndRemoveTask()
-  }
+  val handleRejected by rememberUpdatedState { activity.finishAndRemoveTask() }
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
 

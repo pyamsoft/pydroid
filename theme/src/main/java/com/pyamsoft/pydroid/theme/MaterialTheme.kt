@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.theme
 
-import androidx.activity.ComponentActivity
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
@@ -52,24 +51,29 @@ public val Colors.onWarning: Color
 public val MaterialTheme.keylines: Keylines
   @Composable @ReadOnlyComposable get() = LocalKeylines.current
 
-/** A Material Theme that also knows about Spacing support */
+/**
+ * A Material Theme that also knows about Spacing support
+ *
+ * For additional features you can optionally provider CompositionLocals for:
+ *
+ * LocalHapticManager - enables PYDroid support for Haptic Feedback
+ *
+ * LocalActivity - speed up Activity resolution in PYDroid internals
+ */
 @Composable
-public fun ComponentActivity.PYDroidTheme(
+public fun PYDroidTheme(
     colors: Colors = MaterialTheme.colors,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
     keylines: Keylines = MaterialTheme.keylines,
     content: @Composable () -> Unit
 ) {
-  val self = this
-
   MaterialTheme(
       colors = colors,
       typography = typography,
       shapes = shapes,
   ) {
     CompositionLocalProvider(
-        LocalActivity provides self,
         LocalKeylines provides keylines,
         content = content,
     )

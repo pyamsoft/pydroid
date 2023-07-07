@@ -30,17 +30,17 @@ import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.theme.LocalActivity
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.LifecycleEffect
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 
 internal class BillingDialogInjector : ComposableInjector() {
@@ -95,7 +95,7 @@ internal fun BillingDialog(
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { BillingDialogInjector() }
-  val activity = LocalActivity.current
+  val activity = rememberResolvedActivity()
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
   val purchaseClient = rememberNotNull(component.purchaseClient)
@@ -114,10 +114,10 @@ internal fun BillingDialog(
         imageLoader = imageLoader,
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google
-          val a = activity.requireNotNull { "In-App Purchases require an Activity: $sku" }
-          a.lifecycleScope.launch(context = Dispatchers.Main) {
+          // Use the Activity scope so that we are not randomly cancelled mid purchase
+          activity.lifecycleScope.launch(context = Dispatchers.Main + NonCancellable) {
             Logger.d("Start purchase flow for $sku")
-            purchaseClient.purchase(a, sku)
+            purchaseClient.purchase(activity, sku)
           }
         },
         onBillingErrorDismissed = { viewModel.handleClearError() },

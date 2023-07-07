@@ -22,17 +22,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.theme.LocalActivity
+import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 
 /** Gets the provided ComposableInjector in the current Composable scope and holds it around */
 @Composable
 @CheckResult
 public fun <I : ComposableInjector> rememberComposableInjector(create: () -> I): I {
-  val activity =
-      LocalActivity.current.requireNotNull {
-        "ComposableInjector expects a LocalActivity to be provided."
-      }
+  val activity = rememberResolvedActivity()
   val handleCreate by rememberUpdatedState(create)
 
   // Don't use any keys because we want this evaluated only once and then never again

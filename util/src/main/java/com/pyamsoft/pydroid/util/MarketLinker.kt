@@ -25,6 +25,11 @@ public object MarketLinker {
   private const val MARKET_URL = "market://details?id="
   private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=8240502725675466993"
 
+  /**
+   * Resolves the URL to the Play Store for the given App
+   *
+   * Please pass an Activity Context to this function for the best user experience
+   */
   @JvmStatic
   @CheckResult
   @JvmOverloads

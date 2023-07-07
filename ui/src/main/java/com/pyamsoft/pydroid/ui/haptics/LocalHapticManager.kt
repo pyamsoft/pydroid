@@ -19,10 +19,6 @@ package com.pyamsoft.pydroid.ui.haptics
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 
-private fun noLocalProvidedFor(name: String): Nothing {
-  error("CompositionLocal $name not present")
-}
-
 /**
  * The HapticManager instance tied to the LocalView
  *
@@ -31,5 +27,5 @@ private fun noLocalProvidedFor(name: String): Nothing {
  */
 @JvmField
 public val LocalHapticManager: ProvidableCompositionLocal<HapticManager?> = compositionLocalOf {
-  noLocalProvidedFor("LocalHapticManager")
+  null
 }

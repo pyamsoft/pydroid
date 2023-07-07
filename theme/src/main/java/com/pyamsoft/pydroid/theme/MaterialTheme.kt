@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.theme
 
+import androidx.activity.ComponentActivity
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes
@@ -53,19 +54,22 @@ public val MaterialTheme.keylines: Keylines
 
 /** A Material Theme that also knows about Spacing support */
 @Composable
-public fun PYDroidTheme(
+public fun ComponentActivity.PYDroidTheme(
     colors: Colors = MaterialTheme.colors,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
     keylines: Keylines = MaterialTheme.keylines,
     content: @Composable () -> Unit
 ) {
+  val self = this
+
   MaterialTheme(
       colors = colors,
       typography = typography,
       shapes = shapes,
   ) {
     CompositionLocalProvider(
+        LocalActivity provides self,
         LocalKeylines provides keylines,
         content = content,
     )

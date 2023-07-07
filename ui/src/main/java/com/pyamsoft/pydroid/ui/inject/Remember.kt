@@ -23,7 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.LocalActivity
+import com.pyamsoft.pydroid.theme.LocalActivity
 
 /** Gets the provided ComposableInjector in the current Composable scope and holds it around */
 @Composable

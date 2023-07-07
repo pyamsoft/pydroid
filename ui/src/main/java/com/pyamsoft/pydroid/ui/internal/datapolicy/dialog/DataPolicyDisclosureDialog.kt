@@ -29,8 +29,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.theme.LocalActivity
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.app.LocalActivity
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector

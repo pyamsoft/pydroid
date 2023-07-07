@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.pyamsoft.pydroid.core.requireNotNull
-import com.pyamsoft.pydroid.ui.app.LocalActivity
+import com.pyamsoft.pydroid.theme.LocalActivity
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.app
+package com.pyamsoft.pydroid.theme
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.ProvidableCompositionLocal

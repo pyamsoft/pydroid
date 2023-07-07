@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -46,7 +47,7 @@ internal constructor(
   private var isLoggingEnabled = false
 
   @CheckResult
-  @OptIn(DelicateCoroutinesApi::class)
+  @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
   private fun scope(): CoroutineScope {
     return CoroutineScope(
         context =

@@ -28,7 +28,7 @@ public final class com/pyamsoft/pydroid/theme/Keylines {
 }
 
 public final class com/pyamsoft/pydroid/theme/LocalKeylinesKt {
-	public static final fun getLocalKeylines ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final field LocalKeylines Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
 public final class com/pyamsoft/pydroid/theme/MaterialThemeKt {

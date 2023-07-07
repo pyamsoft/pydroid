@@ -19,5 +19,4 @@ package com.pyamsoft.pydroid.ui.preference
 import androidx.compose.runtime.compositionLocalOf
 
 /** Preference is enabled local */
-@JvmField
-internal val LocalPreferenceEnabledStatus = compositionLocalOf { true }
+@JvmField internal val LocalPreferenceEnabledStatus = compositionLocalOf { true }

@@ -224,6 +224,10 @@ public final class com/pyamsoft/pydroid/ui/haptics/HapticsKt {
 	public static final fun rememberHapticManager (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/haptics/HapticManager;
 }
 
+public final class com/pyamsoft/pydroid/ui/haptics/LocalHapticManagerKt {
+	public static final field LocalHapticManager Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
 public final class com/pyamsoft/pydroid/ui/icons/BugReportKt {
 	public static final fun getBugReport (Landroidx/compose/material/icons/Icons$Outlined;)Landroidx/compose/ui/graphics/vector/ImageVector;
 }

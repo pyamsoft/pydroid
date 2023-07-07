@@ -32,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.haptics.rememberHapticManager
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 @Composable
 internal fun DismissableInterruptCard(
@@ -43,7 +43,7 @@ internal fun DismissableInterruptCard(
     onButtonClicked: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-  val hapticManager = rememberHapticManager()
+  val hapticManager = LocalHapticManager.current
 
   InterruptCard(
       modifier = modifier,
@@ -66,7 +66,7 @@ internal fun DismissableInterruptCard(
 
         IconButton(
             onClick = {
-              hapticManager.cancelButtonPress()
+              hapticManager?.cancelButtonPress()
               onDismiss()
             },
         ) {
@@ -81,7 +81,7 @@ internal fun DismissableInterruptCard(
       OutlinedButton(
           modifier = Modifier.padding(MaterialTheme.keylines.content),
           onClick = {
-            hapticManager.confirmButtonPress()
+            hapticManager?.confirmButtonPress()
             onButtonClicked()
           },
       ) {

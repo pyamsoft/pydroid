@@ -24,9 +24,11 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
@@ -41,7 +43,11 @@ internal fun VersionUpgradeAvailableScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onBeginInAppUpdate: (AppUpdateLauncher) -> Unit,
+    onShow: () -> Unit,
+    onHide: () -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
+
   val launcher by state.launcher.collectAsState()
   val progress by state.updateProgressPercent.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
@@ -49,12 +55,30 @@ internal fun VersionUpgradeAvailableScreen(
   val isUpdateAvailable =
       remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
 
-  val hapticManager = LocalHapticManager.current
+  val isVisible =
+      remember(
+          isReady,
+          progress,
+          isUpdateAvailable,
+      ) {
+        !isReady && progress <= 0 && isUpdateAvailable
+      }
+
+  val handleShow by rememberUpdatedState(onShow)
+  val handleHide by rememberUpdatedState(onHide)
+
+  LaunchedEffect(isVisible) {
+    if (isVisible) {
+      handleShow()
+    } else {
+      handleHide()
+    }
+  }
 
   // Show if we have a launcher but its not done downloading the update yet
   InterruptCard(
       modifier = modifier,
-      visible = !isReady && progress <= 0 && isUpdateAvailable,
+      visible = isVisible,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -102,6 +126,8 @@ private fun PreviewVersionUpgradeAvailableScreen(
     VersionUpgradeAvailableScreen(
         state = state,
         onBeginInAppUpdate = {},
+        onShow = {},
+        onHide = {},
     )
   }
 }

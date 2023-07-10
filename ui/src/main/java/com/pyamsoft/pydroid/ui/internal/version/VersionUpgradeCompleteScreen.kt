@@ -25,9 +25,11 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
@@ -41,6 +43,8 @@ internal fun VersionUpgradeCompleteScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onCompleteUpdate: () -> Unit,
+    onShow: () -> Unit,
+    onHide: () -> Unit,
 ) {
   val launcher by state.launcher.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
@@ -50,10 +54,29 @@ internal fun VersionUpgradeCompleteScreen(
   val isUpdateAvailable =
       remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
 
+  val isVisible =
+      remember(
+          isReady,
+          isUpdateAvailable,
+      ) {
+        isReady && isUpdateAvailable
+      }
+
+  val handleShow by rememberUpdatedState(onShow)
+  val handleHide by rememberUpdatedState(onHide)
+
+  LaunchedEffect(isVisible) {
+    if (isVisible) {
+      handleShow()
+    } else {
+      handleHide()
+    }
+  }
+
   // Show once the upgrade is ready
   InterruptCard(
       modifier = modifier,
-      visible = isReady && isUpdateAvailable,
+      visible = isVisible,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -113,6 +136,8 @@ private fun PreviewVersionUpgradeCompleteScreen(
     VersionUpgradeCompleteScreen(
         state = state,
         onCompleteUpdate = {},
+        onShow = {},
+        onHide = {},
     )
   }
 }

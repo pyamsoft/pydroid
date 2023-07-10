@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 /** A Composable that can display version update progress */
 public typealias VersionUpdateProgressWidget =
     (
-        VersionCheckViewState,
+        state: VersionCheckViewState,
     ) -> Unit
 
 /**
@@ -79,18 +79,24 @@ internal constructor(
     }
 
     val viewModel = rememberNotNull(viewModel)
-    content(viewModel)
+    content(
+        state = viewModel,
+    )
   }
 
   /** Render into a composable the default version check screen upsell */
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
+      onShow: () -> Unit = {},
+      onHide: () -> Unit = {},
   ) {
     Render { state ->
       VersionUpdateProgressScreen(
           modifier = modifier,
           state = state,
+          onShow = onShow,
+          onHide = onHide,
       )
     }
   }

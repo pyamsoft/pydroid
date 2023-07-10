@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.ShowBillingUpsell
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -47,7 +48,7 @@ public typealias OnDismissBilling = () -> Unit
 public typealias ShowBillingWidget =
     (
         state: BillingViewState,
-        onShow: OnShowBilling,
+        onShowBilling: OnShowBilling,
         onDismiss: OnDismissBilling,
     ) -> Unit
 
@@ -125,7 +126,7 @@ internal constructor(
       return
     }
 
-    val vm = viewModel.requireNotNull()
+    val vm = rememberNotNull(viewModel)
     SaveStateDisposableEffect(vm)
 
     RenderContent(
@@ -134,7 +135,7 @@ internal constructor(
     ) {
       content(
           state = vm,
-          onShow = {
+          onShowBilling = {
             vm.handleDismissUpsell()
             vm.handleOpenDialog()
           },
@@ -147,13 +148,17 @@ internal constructor(
   @Composable
   public fun RenderBillingUpsellWidget(
       modifier: Modifier = Modifier,
+      onShow: () -> Unit = {},
+      onHide: () -> Unit = {},
   ) {
-    Render { state, onShow, onDismiss ->
+    Render { state, onShowBilling, onDismiss ->
       ShowBillingUpsell(
           modifier = modifier,
           state = state,
-          onShowBilling = onShow,
+          onShowBilling = onShowBilling,
           onDismiss = onDismiss,
+          onShow = onShow,
+          onHide = onHide,
       )
     }
   }

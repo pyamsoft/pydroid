@@ -17,8 +17,10 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -30,8 +32,21 @@ internal fun ShowChangeLogScreen(
     state: ChangeLogViewState,
     onShowChangeLog: () -> Unit,
     onDismiss: () -> Unit,
+    onShow: () -> Unit,
+    onHide: () -> Unit,
 ) {
   val isShowingUpsell by state.isShowUpsell.collectAsState()
+
+  val handleShow by rememberUpdatedState(onShow)
+  val handleHide by rememberUpdatedState(onHide)
+
+  LaunchedEffect(isShowingUpsell) {
+    if (isShowingUpsell) {
+      handleShow()
+    } else {
+      handleHide()
+    }
+  }
 
   DismissableInterruptCard(
       modifier = modifier,
@@ -50,5 +65,7 @@ private fun PreviewShowChangeLogScreen() {
       state = MutableChangeLogViewState().apply { isShowUpsell.value = true },
       onDismiss = {},
       onShowChangeLog = {},
+      onShow = {},
+      onHide = {},
   )
 }

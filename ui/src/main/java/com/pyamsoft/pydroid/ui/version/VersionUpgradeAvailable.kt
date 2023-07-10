@@ -40,7 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /** Upon download action started, this callback will run */
-public typealias OnUpdateDownloadStartedCallback = (AppUpdateLauncher) -> Unit
+public typealias OnUpdateDownloadStartedCallback = (launcher: AppUpdateLauncher) -> Unit
 
 /** Upon upgrade action started, this callback will run */
 public typealias OnUpgradeStartedCallback = () -> Unit
@@ -48,9 +48,9 @@ public typealias OnUpgradeStartedCallback = () -> Unit
 /** A Composable that can display version upgrade availability */
 public typealias VersionUpgradeWidget =
     (
-        VersionCheckViewState,
-        OnUpdateDownloadStartedCallback,
-        OnUpgradeStartedCallback,
+        state: VersionCheckViewState,
+        onDownloadStarted: OnUpdateDownloadStartedCallback,
+        onUpgradeStarted: OnUpgradeStartedCallback,
     ) -> Unit
 
 /**
@@ -146,9 +146,9 @@ internal constructor(
     }
 
     content(
-        vm,
-        { handleDownloadStarted(it) },
-        { handleUpgradeStarted() },
+        state = vm,
+        onDownloadStarted = { handleDownloadStarted(it) },
+        onUpgradeStarted = { handleUpgradeStarted() },
     )
   }
 
@@ -156,18 +156,24 @@ internal constructor(
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
+      onShow: () -> Unit = {},
+      onHide: () -> Unit = {},
   ) {
     Render { state, onDownloadStarted, onUpgradeStarted ->
       VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,
           onBeginInAppUpdate = onDownloadStarted,
+          onShow = onShow,
+          onHide = onHide,
       )
 
       VersionUpgradeCompleteScreen(
           modifier = modifier,
           state = state,
           onCompleteUpdate = onUpgradeStarted,
+          onShow = onShow,
+          onHide = onHide,
       )
     }
   }

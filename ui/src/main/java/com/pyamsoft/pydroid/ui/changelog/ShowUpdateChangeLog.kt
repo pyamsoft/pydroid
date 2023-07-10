@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -45,7 +46,7 @@ public typealias OnDismissChangeLog = () -> Unit
 public typealias ShowUpdateChangeLogWidget =
     (
         state: ChangeLogViewState,
-        onShow: OnShowChangeLog,
+        onShowChangeLog: OnShowChangeLog,
         onDismiss: OnDismissChangeLog,
     ) -> Unit
 
@@ -116,8 +117,7 @@ internal constructor(
       return
     }
 
-    val vm = viewModel.requireNotNull()
-
+    val vm = rememberNotNull(viewModel)
     SaveStateDisposableEffect(vm)
 
     RenderContent(
@@ -126,7 +126,7 @@ internal constructor(
     ) {
       content(
           state = vm,
-          onShow = {
+          onShowChangeLog = {
             vm.handleDismissUpsell()
             vm.handleShowDialog()
           },
@@ -139,13 +139,17 @@ internal constructor(
   @Composable
   public fun RenderChangeLogWidget(
       modifier: Modifier = Modifier,
+      onShow: () -> Unit,
+      onHide: () -> Unit,
   ) {
-    Render { state, onShow, onDismiss ->
+    Render { state, onShowChangeLog, onDismiss ->
       ShowChangeLogScreen(
           modifier = modifier,
           state = state,
-          onShowChangeLog = onShow,
+          onShowChangeLog = onShowChangeLog,
           onDismiss = onDismiss,
+          onShow = onShow,
+          onHide = onHide,
       )
     }
   }

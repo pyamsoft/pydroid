@@ -25,11 +25,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
@@ -40,8 +38,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 internal fun VersionUpdateProgressScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
-    onShow: () -> Unit,
-    onHide: () -> Unit,
+    onShown: () -> Unit,
+    onHidden: () -> Unit,
 ) {
   val isUpgradeReady by state.isUpdateReadyToInstall.collectAsState()
   val progress by state.updateProgressPercent.collectAsState()
@@ -57,20 +55,11 @@ internal fun VersionUpdateProgressScreen(
         !isUpgradeReady && validProgress > 0 && validProgress <= 1
       }
 
-  val handleShow by rememberUpdatedState(onShow)
-  val handleHide by rememberUpdatedState(onHide)
-
-  LaunchedEffect(isVisible) {
-    if (isVisible) {
-      handleShow()
-    } else {
-      handleHide()
-    }
-  }
-
   InterruptCard(
       modifier = modifier,
       visible = isVisible,
+      onShown = onShown,
+      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -102,8 +91,8 @@ private fun PreviewVersionUpdateProgress(
   Surface {
     VersionUpdateProgressScreen(
         state = state,
-        onShow = {},
-        onHide = {},
+        onShown = {},
+        onHidden = {},
     )
   }
 }

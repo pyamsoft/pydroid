@@ -24,11 +24,9 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
@@ -43,8 +41,8 @@ internal fun VersionUpgradeAvailableScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onBeginInAppUpdate: (AppUpdateLauncher) -> Unit,
-    onShow: () -> Unit,
-    onHide: () -> Unit,
+    onShown: () -> Unit,
+    onHidden: () -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
 
@@ -64,21 +62,12 @@ internal fun VersionUpgradeAvailableScreen(
         !isReady && progress <= 0 && isUpdateAvailable
       }
 
-  val handleShow by rememberUpdatedState(onShow)
-  val handleHide by rememberUpdatedState(onHide)
-
-  LaunchedEffect(isVisible) {
-    if (isVisible) {
-      handleShow()
-    } else {
-      handleHide()
-    }
-  }
-
   // Show if we have a launcher but its not done downloading the update yet
   InterruptCard(
       modifier = modifier,
       visible = isVisible,
+      onShown = onShown,
+      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -126,8 +115,8 @@ private fun PreviewVersionUpgradeAvailableScreen(
     VersionUpgradeAvailableScreen(
         state = state,
         onBeginInAppUpdate = {},
-        onShow = {},
-        onHide = {},
+        onShown = {},
+        onHidden = {},
     )
   }
 }

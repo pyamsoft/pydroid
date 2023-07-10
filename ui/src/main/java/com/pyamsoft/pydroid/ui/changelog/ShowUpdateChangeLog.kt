@@ -139,8 +139,8 @@ internal constructor(
   @Composable
   public fun RenderChangeLogWidget(
       modifier: Modifier = Modifier,
-      onShow: () -> Unit,
-      onHide: () -> Unit,
+      onShown: () -> Unit,
+      onHidden: () -> Unit,
   ) {
     Render { state, onShowChangeLog, onDismiss ->
       ShowChangeLogScreen(
@@ -148,8 +148,8 @@ internal constructor(
           state = state,
           onShowChangeLog = onShowChangeLog,
           onDismiss = onDismiss,
-          onShow = onShow,
-          onHide = onHide,
+          onShown = onShown,
+          onHidden = onHidden,
       )
     }
   }

@@ -30,8 +30,8 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 @Composable
 public fun NewVersionWidget(
     modifier: Modifier = Modifier,
-    onShow: () -> Unit = {},
-    onHide: () -> Unit = {},
+    onShown: () -> Unit = {},
+    onHidden: () -> Unit = {},
 ) {
   // If isEditMode, we don't render nothing
   if (LocalInspectionMode.current) {
@@ -43,7 +43,7 @@ public fun NewVersionWidget(
 
   versionUpgrader.RenderVersionCheckWidget(
       modifier = modifier,
-      onShow = onShow,
-      onHide = onHide,
+      onShown = onShown,
+      onHidden = onHidden,
   )
 }

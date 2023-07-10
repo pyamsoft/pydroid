@@ -17,10 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,21 +32,10 @@ internal fun ShowBillingUpsell(
     state: BillingViewState,
     onShowBilling: () -> Unit,
     onDismiss: () -> Unit,
-    onShow: () -> Unit,
-    onHide: () -> Unit,
+    onShown: () -> Unit,
+    onHidden: () -> Unit,
 ) {
   val isShowingUpsell by state.isShowingUpsell.collectAsState()
-
-  val handleShow by rememberUpdatedState(onShow)
-  val handleHide by rememberUpdatedState(onHide)
-
-  LaunchedEffect(isShowingUpsell) {
-    if (isShowingUpsell) {
-      handleShow()
-    } else {
-      handleHide()
-    }
-  }
 
   DismissableInterruptCard(
       modifier = modifier,
@@ -57,6 +44,8 @@ internal fun ShowBillingUpsell(
       buttonText = stringResource(R.string.donate_title),
       onDismiss = onDismiss,
       onButtonClicked = onShowBilling,
+      onShown = onShown,
+      onHidden = onHidden,
   )
 }
 
@@ -67,7 +56,7 @@ private fun PreviewShowBillingUpsell() {
       state = MutableBillingViewState().apply { isShowingUpsell.value = true },
       onDismiss = {},
       onShowBilling = {},
-      onShow = {},
-      onHide = {},
+      onShown = {},
+      onHidden = {},
   )
 }

@@ -50,7 +50,6 @@ internal constructor(
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: DataPolicyViewModeler? = null
 
   init {
@@ -68,10 +67,7 @@ internal constructor(
       }
     }
 
-    activity.doOnDestroy {
-      hostingActivity = null
-      viewModel = null
-    }
+    activity.doOnDestroy { viewModel = null }
   }
 
   @Composable

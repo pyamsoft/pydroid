@@ -45,7 +45,6 @@ internal constructor(
     private val disabled: Boolean,
 ) {
 
-  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
@@ -63,10 +62,7 @@ internal constructor(
       }
     }
 
-    activity.doOnDestroy {
-      hostingActivity = null
-      viewModel = null
-    }
+    activity.doOnDestroy { viewModel = null }
   }
 
   /**

@@ -20,6 +20,8 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -28,6 +30,7 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeAvailableScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeCompleteScreen
@@ -59,7 +62,6 @@ internal constructor(
     activity: ComponentActivity,
     private val disabled: Boolean,
 ) {
-  private var hostingActivity: ComponentActivity? = activity
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
@@ -78,6 +80,15 @@ internal constructor(
         val observer =
             object : DefaultLifecycleObserver {
 
+              override fun onCreate(owner: LifecycleOwner) {
+                viewModel
+                    .requireNotNull()
+                    .bind(
+                        scope = owner.lifecycleScope,
+                        onUpgradeReady = { Logger.d("A new upgrade it ready!") },
+                    )
+              }
+
               override fun onStart(owner: LifecycleOwner) {
                 viewModel
                     .requireNotNull()
@@ -93,10 +104,7 @@ internal constructor(
       }
     }
 
-    activity.doOnDestroy {
-      hostingActivity = null
-      viewModel = null
-    }
+    activity.doOnDestroy { viewModel = null }
   }
 
   /**
@@ -113,35 +121,34 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
+    val activity = rememberResolvedActivity()
+
+    val handleDownloadStarted by rememberUpdatedState { launcher: AppUpdateLauncher ->
+      // Don't use scope since if this leaves Composition it would die
+      // Enforce that we do this on the Main thread
+      activity.lifecycleScope.launch(context = Dispatchers.Main) {
+        launcher
+            .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
+            .onSuccess { Logger.d("Launched an in-app update flow") }
+            .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
+      }
+    }
+
+    val handleUpgradeStarted by rememberUpdatedState {
+      // Fire the upgrade (in prod, this closes the app)
+      vm.handleCompleteUpgrade(
+          scope = activity.lifecycleScope,
+          onUpgradeCompleted = {
+            Logger.d("Upgrade completed, finish Activity")
+            activity.finishAndRemoveTask()
+          },
+      )
+    }
 
     content(
         vm,
-        { launcher ->
-          // We expect to have an Activity mounted here
-          val a = hostingActivity.requireNotNull()
-
-          // Don't use scope since if this leaves Composition it would die
-          // Enforce that we do this on the Main thread
-          a.lifecycleScope.launch(context = Dispatchers.Main) {
-            launcher
-                .update(a, VersionCheckViewModeler.RC_APP_UPDATE)
-                .onSuccess { Logger.d("Launched an in-app update flow") }
-                .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
-          }
-        },
-        {
-          // We expect to have an Activity mounted here
-          val a = hostingActivity.requireNotNull()
-
-          // Fire the upgrade (in prod, this closes the app)
-          vm.handleCompleteUpgrade(
-              scope = a.lifecycleScope,
-              onUpgradeCompleted = {
-                Logger.d("Upgrade completed, finish Activity")
-                a.finish()
-              },
-          )
-        },
+        { handleDownloadStarted(it) },
+        { handleUpgradeStarted() },
     )
   }
 

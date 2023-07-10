@@ -73,9 +73,9 @@ internal fun VersionUpgradeAvailableScreen(
             launcher.let { l ->
               if (l == null) {
                 // Should basically never happen
-                "A new in-app update is available!"
+                "An update is available!"
               } else {
-                "A new in-app update to version ${l.availableUpdateVersion()} is available!"
+                "An update to version ${l.availableUpdateVersion()} is available!"
               }
             }
           }

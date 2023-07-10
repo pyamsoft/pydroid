@@ -33,8 +33,8 @@
 
     <string name="rating_summary">Liking the App? Leave a Review!</string>
 
-    <string name="donate_title">Say Thanks</string>
-    <string name="donate_summary">pyamsoft works hard to bring you open-source Android applications. Show your support for my work with a tip!</string>
+    <string name="donate_title">Tip Jar</string>
+    <string name="donate_summary">pyamsoft works hard to bring you open-source applications. Show your support with a tip!</string>
 
     <string name="bugreport_title">Submit a Bug Report</string>
     <string name="bugreport_summary">Something not working right? Help me help you!</string>
@@ -62,7 +62,7 @@
     <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
 
     <string name="dev_mode_title">Debug Mode</string>
-    <string name="dev_mode_summary">Enables a mode to view development information. THIS WILL IMPACT PERFORMANCE.</string>
+    <string name="dev_mode_summary">Enables a mode to view debugging information. THIS WILL IMPACT PERFORMANCE.</string>
 
     <string-array name="dark_mode_names_v1">
         <item name="light">Light Theme</item>

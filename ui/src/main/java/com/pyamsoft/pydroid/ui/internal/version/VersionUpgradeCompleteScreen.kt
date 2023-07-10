@@ -71,9 +71,9 @@ internal fun VersionUpgradeCompleteScreen(
             launcher.let { l ->
               if (l == null) {
                 // Should basically never happen
-                "Your in-app update is ready!"
+                "Your upgrade is ready!"
               } else {
-                "Your in-app update to version ${l.availableUpdateVersion()} is ready!"
+                "Your upgrade to version ${l.availableUpdateVersion()} is ready!"
               }
             }
           }
@@ -88,7 +88,7 @@ internal fun VersionUpgradeCompleteScreen(
 
       Text(
           modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
-          text = "Completing the in-app update will close and restart this app.",
+          text = "Completing the upgrade will close and restart this app.",
           style =
               MaterialTheme.typography.caption.copy(
                   color =
@@ -106,7 +106,7 @@ internal fun VersionUpgradeCompleteScreen(
           },
       ) {
         Text(
-            text = "Complete Update",
+            text = "Upgrade",
         )
       }
     }

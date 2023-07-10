@@ -28,7 +28,7 @@
     <string name="dpd_accept">I Accept the Data Policy Terms</string>
     <string name="dpd_reject">I Do Not Accept the Data Policy Terms</string>
 
-    <string name="in_app_badge">IN-APP</string>
+    <string name="in_app_badge">IN-APP PURCHASE</string>
     <string name="billing_error_message">Sorry, there was an error connecting to the In-App Billing service. Please try again later.</string>
     <string name="rate_app">Rate App</string>
 

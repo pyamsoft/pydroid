@@ -385,6 +385,15 @@ public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSin
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
+public final class com/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function3;
+	public static field lambda-2 Lkotlin/jvm/functions/Function3;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
 public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
@@ -513,6 +522,17 @@ public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {
 	public static fun values ()[Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
 }
 
+public abstract interface class com/pyamsoft/pydroid/ui/uri/ExternalUriHandler : androidx/compose/ui/platform/UriHandler {
+}
+
+public final class com/pyamsoft/pydroid/ui/uri/ExternalUriHandlerKt {
+	public static final fun ExternalUriPortal (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/pyamsoft/pydroid/ui/uri/LocalExternalUriHandlerKt {
+	public static final field LocalExternalUriHandler Landroidx/compose/runtime/ProvidableCompositionLocal;
+}
+
 public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
 	public static final fun isLandscape (Landroid/content/res/Configuration;)Z
 	public static final fun isPortrait (Landroid/content/res/Configuration;)Z
@@ -525,6 +545,7 @@ public final class com/pyamsoft/pydroid/ui/util/EffectsKt {
 
 public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
 	public static final fun fillUpToPortraitHeight (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+	public static final fun fillUpToPortraitSize (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fillUpToPortraitWidth (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fullScreenDialog (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 }

@@ -78,6 +78,12 @@ public fun Modifier.fillUpToPortraitHeight(): Modifier {
   }
 }
 
+/** Enforces that the size of the screen fills up to the portrait dimensions */
+@CheckResult
+public fun Modifier.fillUpToPortraitSize(): Modifier {
+  return this.fillUpToPortraitWidth().fillUpToPortraitHeight()
+}
+
 /**
  * Apply some modifiers to a Dialog
  *
@@ -85,6 +91,13 @@ public fun Modifier.fillUpToPortraitHeight(): Modifier {
  * will occupy less space if not needed
  */
 @CheckResult
+@Deprecated(
+    message = "Use fillUpToPortraitSize",
+    replaceWith =
+        ReplaceWith(
+            expression = "fillUpToPortraitSize()",
+        ),
+)
 public fun Modifier.fullScreenDialog(): Modifier {
-  return this.fillUpToPortraitWidth().fillUpToPortraitHeight()
+  return this.fillUpToPortraitSize()
 }

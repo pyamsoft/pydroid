@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.ShowBillingUpsell
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -107,7 +107,7 @@ internal constructor(
 
     if (showDialog) {
       BillingDialog(
-          modifier = Modifier.fullScreenDialog(),
+          modifier = Modifier.fillUpToPortraitSize(),
           onDismiss = onDismissDialog,
       )
     }

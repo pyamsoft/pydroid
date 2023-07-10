@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -98,7 +98,7 @@ internal constructor(
 
     if (showDialog) {
       ChangeLogDialog(
-          modifier = Modifier.fullScreenDialog(),
+          modifier = Modifier.fillUpToPortraitSize(),
           onDismiss = onDismissDialog,
       )
     }

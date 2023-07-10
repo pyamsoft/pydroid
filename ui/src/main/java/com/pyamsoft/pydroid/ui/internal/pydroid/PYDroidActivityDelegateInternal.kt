@@ -26,6 +26,8 @@ import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
+import com.pyamsoft.pydroid.ui.internal.uri.ExternalUriHandlerBridge
+import com.pyamsoft.pydroid.ui.internal.uri.PYDroidExternalUriHandler
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -47,6 +49,7 @@ internal constructor(
   private var showUpdateChangeLog: ShowUpdateChangeLog?
   private var showDataPolicy: ShowDataPolicy?
   private var billingUpsell: BillingUpsell?
+  private var externalUriHandler: PYDroidExternalUriHandler?
 
   init {
     val components = component.create(activity)
@@ -59,6 +62,10 @@ internal constructor(
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
     showDataPolicy = components.dataPolicy
+    externalUriHandler = components.externalUriHandler
+
+    // Fun bridging hack
+    ExternalUriHandlerBridge.setLocalExternalUriHandlerProvider(components.externalUriHandler)
 
     activity.doOnDestroy {
       appComponent = null
@@ -69,6 +76,7 @@ internal constructor(
       versionUpdateProgress = null
       billingUpsell = null
       showDataPolicy = null
+      externalUriHandler = null
     }
   }
 
@@ -116,6 +124,12 @@ internal constructor(
   @CheckResult
   internal fun billingUpsell(): BillingUpsell {
     return billingUpsell.requireNotNull { "BillingUpsell is NULL, was this destroyed?" }
+  }
+
+  /** Used in ExternalUriPortal */
+  @CheckResult
+  internal fun externalUriHandler(): PYDroidExternalUriHandler {
+    return externalUriHandler.requireNotNull { "ExternalUriHandler is NULL, was this destroyed?" }
   }
 
   /**

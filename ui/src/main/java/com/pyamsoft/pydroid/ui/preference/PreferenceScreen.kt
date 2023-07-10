@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.util.collectAsStateMap
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
@@ -158,7 +158,7 @@ private fun PreferenceScreenInternal(
   // Hold dialogs outside of the LazyColumn so that they will mount immediately
   for (pref in dialogPreferences) {
     PreferenceDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         preference = pref,
         onDismiss = { onCloseDialog(pref.id) },
     )

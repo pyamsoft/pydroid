@@ -24,13 +24,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class AboutDialogInjector : ComposableInjector() {
@@ -70,7 +70,7 @@ internal fun AboutDialog(
 
   val viewModel = rememberNotNull(component.viewModel)
 
-  val uriHandler = LocalUriHandler.current
+  val uriHandler = LocalExternalUriHandler.current
 
   val handleDismissFailedNavigation by rememberUpdatedState {
     viewModel.handleDismissFailedNavigation()

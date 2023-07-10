@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -80,7 +80,7 @@ internal constructor(
     if (acceptedState != DataPolicyViewState.AcceptedState.NONE &&
         acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED) {
       DataPolicyDisclosureDialog(
-          modifier = Modifier.fullScreenDialog(),
+          modifier = Modifier.fillUpToPortraitSize(),
           onDismiss = onDismissDialog,
       )
     }

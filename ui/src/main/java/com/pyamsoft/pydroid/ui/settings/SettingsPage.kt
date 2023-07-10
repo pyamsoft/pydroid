@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
@@ -52,7 +51,8 @@ import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
-import com.pyamsoft.pydroid.ui.util.fullScreenDialog
+import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
+import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -78,7 +78,7 @@ public fun SettingsPage(
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   val scope = rememberCoroutineScope()
-  val uriHandler = LocalUriHandler.current
+  val uriHandler = LocalExternalUriHandler.current
   val context = LocalContext.current
 
   val component = rememberComposableInjector { SettingsInjector() }
@@ -89,13 +89,7 @@ public fun SettingsPage(
   val changeLogViewModel = rememberNotNull(component.changeLogViewModel)
   val billingViewModel = rememberNotNull(component.billingViewModel)
 
-  val handleOpenPage by rememberUpdatedState { url: String ->
-    try {
-      uriHandler.openUri(url)
-    } catch (e: Throwable) {
-      Logger.e(e, "Unable to open Activity for URL: $url")
-    }
-  }
+  val handleOpenPage by rememberUpdatedState { url: String -> uriHandler.openUri(url) }
 
   MountHooks(
       viewModel = viewModel,
@@ -241,42 +235,42 @@ private fun SettingsContent(
 
   if (showDataPolicyDialog) {
     DataPolicyDisclosureDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissDataPolicyDialog,
     )
   }
 
   if (showResetDialog) {
     ResetDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissResetDialog,
     )
   }
 
   if (showAboutDialog) {
     AboutDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissAboutDialog,
     )
   }
 
   if (showBillingDialog) {
     BillingDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissBillingDialog,
     )
   }
 
   if (showChangeLogDialog) {
     ChangeLogDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissChangeLogDialog,
     )
   }
 
   if (showInAppDebuggingDialog) {
     InAppDebugDialog(
-        modifier = Modifier.fullScreenDialog(),
+        modifier = Modifier.fillUpToPortraitSize(),
         onDismiss = onDismissInAppDebuggingDialog,
         extraContent = extraDebugContent,
     )

@@ -20,6 +20,7 @@ import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
+import com.pyamsoft.pydroid.ui.internal.uri.PYDroidExternalUriHandler
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
@@ -31,4 +32,5 @@ internal constructor(
     internal val versionUpgrader: VersionUpgradeAvailable,
     internal val versionUpdateProgress: VersionUpdateProgress,
     internal val showUpdateChangeLog: ShowUpdateChangeLog,
+    internal val externalUriHandler: PYDroidExternalUriHandler,
 )

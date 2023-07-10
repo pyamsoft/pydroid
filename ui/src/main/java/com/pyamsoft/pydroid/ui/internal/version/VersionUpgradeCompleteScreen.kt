@@ -41,8 +41,6 @@ internal fun VersionUpgradeCompleteScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onCompleteUpdate: () -> Unit,
-    onShown: () -> Unit,
-    onHidden: () -> Unit,
 ) {
   val launcher by state.launcher.collectAsState()
   val isReady by state.isUpdateReadyToInstall.collectAsState()
@@ -64,8 +62,6 @@ internal fun VersionUpgradeCompleteScreen(
   InterruptCard(
       modifier = modifier,
       visible = isVisible,
-      onShown = onShown,
-      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -125,8 +121,6 @@ private fun PreviewVersionUpgradeCompleteScreen(
     VersionUpgradeCompleteScreen(
         state = state,
         onCompleteUpdate = {},
-        onShown = {},
-        onHidden = {},
     )
   }
 }

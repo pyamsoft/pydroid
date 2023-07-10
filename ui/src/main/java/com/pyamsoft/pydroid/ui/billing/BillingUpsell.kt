@@ -148,8 +148,6 @@ internal constructor(
   @Composable
   public fun RenderBillingUpsellWidget(
       modifier: Modifier = Modifier,
-      onShown: () -> Unit = {},
-      onHidden: () -> Unit = {},
   ) {
     Render { state, onShowBilling, onDismiss ->
       ShowBillingUpsell(
@@ -157,8 +155,6 @@ internal constructor(
           state = state,
           onShowBilling = onShowBilling,
           onDismiss = onDismiss,
-          onShown = onShown,
-          onHidden = onHidden,
       )
     }
   }

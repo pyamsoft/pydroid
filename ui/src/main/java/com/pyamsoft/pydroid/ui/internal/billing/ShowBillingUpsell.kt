@@ -32,8 +32,6 @@ internal fun ShowBillingUpsell(
     state: BillingViewState,
     onShowBilling: () -> Unit,
     onDismiss: () -> Unit,
-    onShown: () -> Unit,
-    onHidden: () -> Unit,
 ) {
   val isShowingUpsell by state.isShowingUpsell.collectAsState()
 
@@ -44,8 +42,6 @@ internal fun ShowBillingUpsell(
       buttonText = stringResource(R.string.donate_title),
       onDismiss = onDismiss,
       onButtonClicked = onShowBilling,
-      onShown = onShown,
-      onHidden = onHidden,
   )
 }
 
@@ -56,7 +52,5 @@ private fun PreviewShowBillingUpsell() {
       state = MutableBillingViewState().apply { isShowingUpsell.value = true },
       onDismiss = {},
       onShowBilling = {},
-      onShown = {},
-      onHidden = {},
   )
 }

@@ -156,24 +156,18 @@ internal constructor(
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
-      onShown: () -> Unit = {},
-      onHidden: () -> Unit = {},
   ) {
     Render { state, onDownloadStarted, onUpgradeStarted ->
       VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,
           onBeginInAppUpdate = onDownloadStarted,
-          onShown = onShown,
-          onHidden = onHidden,
       )
 
       VersionUpgradeCompleteScreen(
           modifier = modifier,
           state = state,
           onCompleteUpdate = onUpgradeStarted,
-          onShown = onShown,
-          onHidden = onHidden,
       )
     }
   }

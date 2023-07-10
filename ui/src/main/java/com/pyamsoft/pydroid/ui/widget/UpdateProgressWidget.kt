@@ -30,8 +30,6 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 @Composable
 public fun UpdateProgressWidget(
     modifier: Modifier = Modifier,
-    onShown: () -> Unit = {},
-    onHidden: () -> Unit = {},
 ) {
   // If isEditMode, we don't render nothing
   if (LocalInspectionMode.current) {
@@ -43,7 +41,5 @@ public fun UpdateProgressWidget(
 
   updateProgress.RenderVersionCheckWidget(
       modifier = modifier,
-      onShown = onShown,
-      onHidden = onHidden,
   )
 }

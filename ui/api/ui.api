@@ -92,7 +92,7 @@ public final class com/pyamsoft/pydroid/ui/billing/BillingUpsell {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
-	public final fun RenderBillingUpsellWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public final fun RenderBillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
 	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/billing/BillingUpsell;
 }
@@ -133,7 +133,7 @@ public final class com/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
-	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public final fun RenderChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/changelog/ShowUpdateChangeLog;
 }
@@ -564,7 +564,7 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpdateProgress {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;I)V
-	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpdateProgress;
 }
 
@@ -577,7 +577,7 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable {
 	public static final field $stable I
 	public static final field Companion Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Companion;
 	public final fun Render (Lkotlin/jvm/functions/Function5;Landroidx/compose/runtime/Composer;I)V
-	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public final fun RenderVersionCheckWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 	public static final fun create (Landroidx/activity/ComponentActivity;)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 	public static final fun create (Landroidx/activity/ComponentActivity;Z)Lcom/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable;
 }
@@ -589,11 +589,11 @@ public final class com/pyamsoft/pydroid/ui/version/VersionUpgradeAvailable$Compa
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/BillingUpsellWidgetKt {
-	public static final fun BillingUpsellWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public static final fun BillingUpsellWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {
-	public static final fun ShowChangeLogWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ShowChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt {
@@ -604,7 +604,7 @@ public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefr
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
-	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ShowDataPolicyDialogKt {
@@ -616,6 +616,6 @@ public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/UpdateProgressWidgetKt {
-	public static final fun UpdateProgressWidget (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public static final fun UpdateProgressWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 

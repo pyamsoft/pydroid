@@ -38,8 +38,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 internal fun VersionUpdateProgressScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
-    onShown: () -> Unit,
-    onHidden: () -> Unit,
 ) {
   val isUpgradeReady by state.isUpdateReadyToInstall.collectAsState()
   val progress by state.updateProgressPercent.collectAsState()
@@ -58,8 +56,6 @@ internal fun VersionUpdateProgressScreen(
   InterruptCard(
       modifier = modifier,
       visible = isVisible,
-      onShown = onShown,
-      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -91,8 +87,6 @@ private fun PreviewVersionUpdateProgress(
   Surface {
     VersionUpdateProgressScreen(
         state = state,
-        onShown = {},
-        onHidden = {},
     )
   }
 }

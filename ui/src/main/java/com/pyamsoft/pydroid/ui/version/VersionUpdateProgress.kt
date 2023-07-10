@@ -88,15 +88,11 @@ internal constructor(
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
-      onShown: () -> Unit = {},
-      onHidden: () -> Unit = {},
   ) {
     Render { state ->
       VersionUpdateProgressScreen(
           modifier = modifier,
           state = state,
-          onShown = onShown,
-          onHidden = onHidden,
       )
     }
   }

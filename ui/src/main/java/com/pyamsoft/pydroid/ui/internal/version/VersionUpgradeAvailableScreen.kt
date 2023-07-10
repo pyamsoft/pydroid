@@ -41,8 +41,6 @@ internal fun VersionUpgradeAvailableScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
     onBeginInAppUpdate: (AppUpdateLauncher) -> Unit,
-    onShown: () -> Unit,
-    onHidden: () -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
 
@@ -66,8 +64,6 @@ internal fun VersionUpgradeAvailableScreen(
   InterruptCard(
       modifier = modifier,
       visible = isVisible,
-      onShown = onShown,
-      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
@@ -115,8 +111,6 @@ private fun PreviewVersionUpgradeAvailableScreen(
     VersionUpgradeAvailableScreen(
         state = state,
         onBeginInAppUpdate = {},
-        onShown = {},
-        onHidden = {},
     )
   }
 }

@@ -42,16 +42,12 @@ internal fun DismissableInterruptCard(
     show: Boolean,
     onButtonClicked: () -> Unit,
     onDismiss: () -> Unit,
-    onShown: () -> Unit = {},
-    onHidden: () -> Unit = {}
 ) {
   val hapticManager = LocalHapticManager.current
 
   InterruptCard(
       modifier = modifier,
       visible = show,
-      onShown = onShown,
-      onHidden = onHidden,
   ) {
     Column(
         modifier = Modifier.fillMaxWidth(),

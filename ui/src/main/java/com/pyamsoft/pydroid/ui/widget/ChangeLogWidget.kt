@@ -32,8 +32,6 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 @Composable
 public fun ShowChangeLogWidget(
     modifier: Modifier = Modifier,
-    onShown: () -> Unit = {},
-    onHidden: () -> Unit = {},
 ) {
   // If isEditMode, we don't render nothing
   if (LocalInspectionMode.current) {
@@ -45,7 +43,5 @@ public fun ShowChangeLogWidget(
 
   changeLog.RenderChangeLogWidget(
       modifier = modifier,
-      onShown = onShown,
-      onHidden = onHidden,
   )
 }

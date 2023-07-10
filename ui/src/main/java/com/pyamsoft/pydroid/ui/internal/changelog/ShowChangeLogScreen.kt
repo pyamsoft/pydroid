@@ -30,8 +30,6 @@ internal fun ShowChangeLogScreen(
     state: ChangeLogViewState,
     onShowChangeLog: () -> Unit,
     onDismiss: () -> Unit,
-    onShown: () -> Unit,
-    onHidden: () -> Unit,
 ) {
   val isShowingUpsell by state.isShowUpsell.collectAsState()
 
@@ -42,8 +40,6 @@ internal fun ShowChangeLogScreen(
       buttonText = "View Changes",
       onButtonClicked = onShowChangeLog,
       onDismiss = onDismiss,
-      onShown = onShown,
-      onHidden = onHidden,
   )
 }
 
@@ -54,7 +50,5 @@ private fun PreviewShowChangeLogScreen() {
       state = MutableChangeLogViewState().apply { isShowUpsell.value = true },
       onDismiss = {},
       onShowChangeLog = {},
-      onShown = {},
-      onHidden = {},
   )
 }

@@ -27,5 +27,6 @@ dependencies {
 
 ## How to Use
 
-Create an `EventBus` using `EventBus.create()`. Publish events to it via `send`
-and listen for events via `onEvent`
+Create an `EventBus<T>` using `DefaultEventBus<T>`. An `EventBus` is currently just
+an interface alias to `SharedFlow<T>`, with it's implementation in `DefaultEventBus<T>`
+being a `MutableSharedFlow<T>`

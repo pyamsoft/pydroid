@@ -29,8 +29,10 @@ dependencies {
 
 Contains UI for:
 
-A basic "Open Source Libraries" screen
-Play Store suggested app upgrades
-Play Store app review suggestions
-Application Settings
-An "Other Applications by developer" upsell - marked as advertisement
+- A basic "Open Source Libraries" screen  
+- Play Store suggested app upgrades  
+- Play Store app review suggestions  
+- Change Log dialog display  
+- In-App purchase dialog display  
+- Confirmation dialog before navigating to External URI destinations  
+- Application Settings  

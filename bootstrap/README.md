@@ -33,7 +33,6 @@ pydroid-bootstrap includes pre-built data layer logic for creating:
 - An "About This Application" or "Open Source Libraries" screen
 - Play Store app upgrade suggestions
 - Play Store app review suggestions
-- Linking to "Other Applications" made by the developer
 
 This module only provides the data models and use case layer. It does not provide presentation
 logic or UI on its own.

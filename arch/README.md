@@ -2,10 +2,6 @@
 
 PYDroid standard architecture for an MVVM UI design pattern
 
-## What is this
-
-The strict MVI based architecture framework for PYDroid applications
-
 ## Install
 
 In your module's `build.gradle`:
@@ -31,133 +27,88 @@ dependencies {
 
 ### What
 
-First, the mindset. pydroid-arch is a strict MVI framework, meaning its job is to take whatever you
-tell it to think of as `state` and provide it to one or more views. It is entirely written in Kotlin
-and powered by coroutines. Basic understanding of other MVI frameworks like `MvRx` or `React` will
-help.
+PYDroid-Arch is an MVVM framework that is built for Jetpack Compose first applications.
+The idea is split into 3 parts, the `UiViewState`, `ViewModeler`, and `SaveStateDisposableEffect`.
 
-### How
+First, the `UiViewState`. `UiViewState` is a simple interface with zero contract requirements,
+though the reference implementations will exclusively expose `StateFlow<*>` fields in a `UiViewState`
+interface. The reference implementation exposes individual `StateFlow<*>` per state variable instead
+of the MVI style of representing the whole state as a single flow to avoid Compose recompositions
+in Composables which consume only individual fields of the `UiViewState`.
 
-Usage is simple, and you can adopt some or all of PYDroid-Arch when building your applications.
-PYDroid-Arch works using the mental model of a `Component`, which are three separate pieces
-connected
-together. These pieces are the `UiView`, the `UiViewModel` and the `UiController`.
+Second, the `ViewModeler`. `ViewModeler` classes are just like the `AndroidX ViewModel`, but without the
+weird Factory requirement. We break away from `AndroidX ViewModel` because it has a bunch of code in
+the Factory so that it can handle configuration changes, but seeing as Compose handles configuration
+changes itself, we don't need to whole ceremony around ViewModel providers and factories, though you
+can easily create your own implementation of a `ViewModeler` backed by an `AndroidX ViewModel`.
+The default implementation of `ViewModeler` is the `AbstractViewModeler`, which expects to be passed a
+`MutableUiViewState` implementation.
 
-Let's start at the top. The `User` interacts with your application. They send their interactions to
-the stuff on screen - which are `UiView` objects. A `UiView` is a simple class which implements the
-`Renderable` interface and knows how to draw a given `UiViewState`. A `UiView` class can be
-anything,
-just because the name contains the word View does not mean that a `UiView` must be an Android View.
-In fact, in PYDroid, `UiView` objects are usually a collection of related Android Views, such as a
-group of buttons, or a list of items. `UiViews` are able to render `UiViewState` payloads into
-content
-on the screen, and they are able to publish `UiViewEvents` to the `UiViewModel`.
-These `UiViewEvents`
-tell the `UiViewModel` about what actions the user has taken when interacting with the application.
+A `MutableUiViewState` implementation is a `UiViewState` class which exposes `MutableStateFlow<*>` fields,
+as this keeps the `UiViewState` contract of exposing `StateFlow<*>` fields, but also allows a `ViewModeler`
+implementation to mutate the flows. This keeps mutation of data exclusive to `ViewModeler` classes,
+and the state can then be consumed in composables by using the standard
+`val data by state.data.collectAsState()` extension.
 
-The `UiViewModel` manages and updates the model which determines what the current `UiViewState`
-represents. A `UiViewModel` can only hold one single `UiViewState` object, but that state can be as
-complex or as simple as you need it to be. A `UiViewModel` is able to retrieve the current `state`
-immediately with a synchronous operation, or can mutate the existing state via an asynchronous
-`setState` method which updates the entire `state` at once atomically. This helps guarantee that the
-`UiViewState` which is modeled is always consistent. A `UiViewModel` can receive `UiViewEvents` from
-the `UiView`, by calling
-`UiViewModel.bindViews(CoroutineScope, UiSavedStateReader, Array<UiView<S, V>>, onViewEvent: (V) -> Unit)`
-.
-This method binds a `UiViewModel` to one or more `UiView` objects, and will receive
-their `UiViewEvent`
-data when it is published by the view. It can then react to those events via the `onViewEvent`
-callback, and respond to user interactions. The `UiViewModel` can also drive the navigation of the
-application by publishing `UiControllerEvent` payloads. The `UiControllerEvent` is handled by a
-`UiController`, which usually responds by navigating to a different screen or showing a dialog. A
-`UiViewModel` can bind itself to a `UiController` via the
-`UiViewModel.bindController(CoroutineScope, UiController<V>)` method. This method binds
-a `UiViewModel`
-to a single `UiController`, which allows the controller to receive `UiControllerEvents` published by
-the `UiViewModel` and react to them accordingly.
+Finally, the `SaveStateDisposableEffect`. This effect connects the `ViewModeler` passed to it to the
+Compose instance state restoration hooks, and allows a `ViewModeler` to register and consumed saved
+instance state.
 
-The `UiController` is the piece of the component which handles events outside of the current screen,
-such as navigation and dialogs. These are generally one-off events and are not permanently
-represented
-in the view state of the current screen. PYDroid generally thinks of Android's `Activity`
-classes as `UiController` classes.
+Sharing state in this way is simple because you only need to keep the `MutableUiViewState` at the share level,
+you can create as many ViewModeler instances as you want, as long as they are all backed by the same
+`MutableUiViewState` instance.
 
-### Getting Started
-
-You can use PYDroid-Arch however you like. Nothing is stopping you from constructing your `UiView`
-objects and a `UiViewModel` and binding them together. Nothing is stopping you from connecting a
-`UiViewModel` to a `UiController`. But if you want a slightly easier way, and the way PYDroid uses
-internally to implement it's UI, you're looking for `Components`.
-
-To simplify the creation of these `Components`, library consumers can call the
-`createComponent(Bundle?, LifecycleOwner, UiViewModel<S, C>, UiController<C>, Array<UiView<S, V>>, onViewEvent: (V) -> Unit)`
-method. This is a convenience method which takes all of the inputs, and sets up a `Component` by
-binding the `UiViewModel` to the provided `UiController` and associated `UiView` objects, and
-registers
-it to the current `LifecycleOwner`, automatically cleaning itself up when the lifecycle ends.
-This function is generally used in the `onCreate` of `Activity` classes to enter the
-`Component` world from the Android world. PYDroid recommends you set up `Components` as soon as
-possible, in `Activity` classes this is in `onCreate`.
-
-For `ListView` and `RecyclerView` items which use a `ViewHolder` style, the method
-`createViewBinder(Array<UiView<S, V>>, onViewEvent: (V) -> Unit)` exists, which can simplify binding
-one or more `UiView` objects to a `ViewHolder` instance. This allows you to reap the same benefits
-of the `UiView` structure, while delegating the handling of `UiViewEvent` payloads up to the
-`UiController` which owns the actual list parent.
-
-To get a working `UiViewModel` instance, PYDroid recommends some form of dependency injection.
-
+A minimal implementation is as follows:
 ```kotlin
-class MyActivity : AppCompatActivity(), UiController<MyEvent> {
 
-    var factory: ViewModelProvider.Factory? = null
-    val viewModel by viewModels<MyViewModel> { factory.requireNotNull() }
+class MyViewModeler(
+  override val state: MutableMyViewState,
+): MyViewState by state, AbstractViewModeler<MyViewState>(state) {
 
-    var stateSaver: StateSaver? = null
+  // We inherit from the base ViewModeler implementation.
+  // For convenience, we delegate the ViewModeler to be the
+  // readonly contract for MyViewState
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        // ...
-        stateSaver = createComponent(
-            savedInstanceState,
-            owner = this,
-            viewModel = viewModel,
-            controller = this,
-            MyView1(),
-            MyView2()
-        ) { viewEvent ->
-            return@createComponent when (viewEevnt) {
-                // ...
-            }
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        // ...
-        stateSaver?.saveState(outState)
-    }
+  fun handleUpdateSomeData(someData: SomeData) {
+    // State can only be mutated from inside the ViewModeler via the 
+    // state member variable
+    state.someData.value = someData
+  }
 
 }
 
-```
-
-By providing a `ViewModelProvider.Factory` which knows how to construct your `MyViewModel` class,
-the `fromViewModelFactory` extension function can help you initialize your `UiViewModel` lazily.
-
-To get a `UiViewModel` which also understands the AndroidX `SavedStateHandle`, you can use
-the `UiSavedStateViewModelProvider<*>` class along with the `asFactory`
-extension function.
-
-```kotlin
-class MyActivity : AppCompatActivity(), UiController<MyEvent> {
-
-    var provider: UiSavedStateViewModelProvider<MySavedStateViewModel>? = null
-    val viewModel by viewModels<MySavedStateViewModel> {
-        provider.requireNotNull().asFactory(this)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        // ...
-    }
+@Composable
+fun MyEntryPoint(
+  modifier: Modifier = Modifier,
+  // Inject or get the ViewModeler however you want
+  viewModeler: MyViewModeler,
+) {
+  MyComposable(
+    modifier = modifier,
+    state = viewModeler,
+    onUpdateSomeData = { viewModeler.handleUpdateSomeData(it) },
+  )
 }
 
+@Composable
+private fun MyComposable(
+  modifier: Modifier = Modifier,
+  state: MyViewState,
+  onUpdateSomeData: (SomeData) -> Unit,
+) {
+  val someData by state.someData.collectAsState()
+  val otherData by state.otherData.collectAsState()
+
+  RenderSomeData(
+    someData = someData,
+    onUpdateSomeData = onUpdateSomeData,
+  )
+  RenderOtherData(
+    otherData = otherData,
+  )
+}
 ```
+
+You can take a look at the reference architecture implementation inside of the
+[bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap) and
+[ui](https://github.com/pyamsoft/pydroid/tree/main/ui) modules.

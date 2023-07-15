@@ -83,21 +83,3 @@ public fun Modifier.fillUpToPortraitHeight(): Modifier {
 public fun Modifier.fillUpToPortraitSize(): Modifier {
   return this.fillUpToPortraitWidth().fillUpToPortraitHeight()
 }
-
-/**
- * Apply some modifiers to a Dialog
- *
- * This allows the dialog to stretch to fill a space which is at max the width in Portrait mode but
- * will occupy less space if not needed
- */
-@CheckResult
-@Deprecated(
-    message = "Use fillUpToPortraitSize",
-    replaceWith =
-        ReplaceWith(
-            expression = "fillUpToPortraitSize()",
-        ),
-)
-public fun Modifier.fullScreenDialog(): Modifier {
-  return this.fillUpToPortraitSize()
-}

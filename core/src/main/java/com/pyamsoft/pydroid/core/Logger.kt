@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.core
 
 import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 
 private val IGNORE_NAMES =
     listOf(
@@ -76,6 +77,13 @@ public object Logger {
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   public fun setLogger(logger: PYDroidLogger) {
     this.logger = logger
+  }
+
+  /** Set the logger for the rest of the library */
+  @VisibleForTesting
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+  internal fun resetLogger() {
+    this.logger = null
   }
 }
 

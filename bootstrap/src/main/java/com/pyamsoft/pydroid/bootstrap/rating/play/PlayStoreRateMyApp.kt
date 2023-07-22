@@ -56,25 +56,21 @@ internal constructor(
         return@withContext suspendCancellableCoroutine { continuation ->
           manager
               .requestReviewFlow()
+              .addOnCanceledListener {
+                Logger.w("Review task has been cancelled")
+                continuation.cancel()
+              }
               .addOnFailureListener { error ->
                 Logger.e(error, "Failed to resolve app review info task")
                 continuation.resume(AppRatingLauncher.empty())
               }
-              .addOnCompleteListener { request ->
-                Logger.d("App Review info received: $request")
-                if (request.isSuccessful) {
-                  val info = request.result
-
-                  // Always false in play-core 1.10.3, but nullable in rating 2.0.0
-                  if (info == null) {
-                    Logger.w("Successful request had NULL review info")
-                    continuation.resume(AppRatingLauncher.empty())
-                  } else {
-                    continuation.resume(PlayStoreAppRatingLauncher(manager, info))
-                  }
-                } else {
-                  Logger.d("Review is not available")
+              .addOnSuccessListener { info ->
+                // Always false in play-core 1.10.3, but nullable in rating 2.0.0
+                if (info == null) {
+                  Logger.w("Successful request had NULL review info")
                   continuation.resume(AppRatingLauncher.empty())
+                } else {
+                  continuation.resume(PlayStoreAppRatingLauncher(manager, info))
                 }
               }
         }

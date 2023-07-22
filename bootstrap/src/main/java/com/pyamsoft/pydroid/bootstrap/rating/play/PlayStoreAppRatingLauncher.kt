@@ -38,6 +38,10 @@ internal constructor(
         return@withContext suspendCancellableCoroutine { continuation ->
           manager
               .launchReviewFlow(activity, info)
+              .addOnCanceledListener {
+                Logger.w("In-app review was cancelled")
+                continuation.cancel()
+              }
               .addOnSuccessListener {
                 Logger.d("In-app Review was a success")
                 continuation.resume(ResultWrapper.success(Unit))

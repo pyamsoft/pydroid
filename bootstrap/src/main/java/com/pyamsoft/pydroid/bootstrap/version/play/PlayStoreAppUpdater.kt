@@ -64,6 +64,10 @@ internal constructor(
           Logger.d("Now completing update...")
           manager
               .completeUpdate()
+              .addOnCanceledListener {
+                Logger.w("UPDATE CANCELLED")
+                continuation.cancel()
+              }
               .addOnFailureListener { err ->
                 Logger.e(err, "UPDATE ERROR")
                 continuation.resumeWithException(err)
@@ -106,6 +110,10 @@ internal constructor(
 
         return@withContext suspendCancellableCoroutine { continuation ->
           manager.appUpdateInfo
+              .addOnCanceledListener {
+                Logger.w("In-App update cancelled")
+                continuation.cancel()
+              }
               .addOnFailureListener { error ->
                 Logger.e(error, "Failed to resolve app update info task")
                 continuation.resume(AppUpdateLauncher.empty())

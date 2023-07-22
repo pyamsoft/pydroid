@@ -44,4 +44,17 @@ public class RequireNotNullTest {
       assertIs<IllegalArgumentException>(e)
     }
   }
+
+  @Test
+  public fun rnn_nullThrowsWithMessage(): Unit = runTest {
+    val i: String? = null
+    try {
+      i.requireNotNull { "MY MESSAGE" }
+      throw AssertionError("Expected to throw")
+    } catch (e: Throwable) {
+      assertIsNot<AssertionError>(e)
+      assertIs<IllegalArgumentException>(e)
+      assertEquals(e.message, "MY MESSAGE")
+    }
+  }
 }

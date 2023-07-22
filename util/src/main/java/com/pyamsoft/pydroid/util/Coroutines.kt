@@ -29,8 +29,8 @@ private val neverEndingFlow = MutableSharedFlow<Nothing>()
 /**
  * Hold the coroutine "forever" until it is cancelled
  *
- * Useful for start-stop work like such, where start is controlled
- * by launching the Coroutine and stop is controlled by cancelling i
+ * Useful for start-stop work like such, where start is controlled by launching the Coroutine and
+ * stop is controlled by cancelling i
  *
  * ```kotlin
  * launch {

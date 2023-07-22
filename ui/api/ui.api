@@ -547,7 +547,6 @@ public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
 	public static final fun fillUpToPortraitHeight (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fillUpToPortraitSize (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fillUpToPortraitWidth (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
-	public static final fun fullScreenDialog (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 }
 
 public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {

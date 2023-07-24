@@ -5,6 +5,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider {
 public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider$Modules {
 	public abstract fun enforcer ()Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
 	public abstract fun imageLoader ()Lcoil/ImageLoader;
+	public abstract fun inAppDebugStatus ()Lcom/pyamsoft/pydroid/ui/debug/InAppDebugStatus;
 	public abstract fun theming ()Lcom/pyamsoft/pydroid/ui/theme/Theming;
 }
 
@@ -166,6 +167,10 @@ public abstract interface class com/pyamsoft/pydroid/ui/debug/InAppDebugLogger {
 
 public final class com/pyamsoft/pydroid/ui/debug/InAppDebugLogger$Companion {
 	public final fun createInAppDebugLogger (Landroid/app/Application;)Lcom/pyamsoft/pydroid/ui/debug/InAppDebugLogger;
+}
+
+public abstract interface class com/pyamsoft/pydroid/ui/debug/InAppDebugStatus {
+	public abstract fun listenForInAppDebuggingEnabled ()Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {

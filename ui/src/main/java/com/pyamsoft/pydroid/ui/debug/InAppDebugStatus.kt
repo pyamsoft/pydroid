@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.debug
+package com.pyamsoft.pydroid.ui.debug
 
-import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
+import androidx.annotation.CheckResult
+import kotlinx.coroutines.flow.Flow
 
-/** In-App Debugging preferences */
-internal interface DebugPreferences : InAppDebugStatus {
+public interface InAppDebugStatus {
 
-  /** Mark the debugging on or off */
-  fun setInAppDebuggingEnabled(enabled: Boolean)
+  /** Return if the debugging is on */
+  @CheckResult public fun listenForInAppDebuggingEnabled(): Flow<Boolean>
 }

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 import androidx.annotation.CheckResult
 import coil.ImageLoader
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 /** Provide constructed objects from PYDroid to outside consumers */
@@ -38,5 +39,8 @@ public interface ModuleProvider {
 
     /** Thread Enforcer */
     @CheckResult public fun enforcer(): ThreadEnforcer
+
+    /** In-App Debug Status */
+    @CheckResult public fun inAppDebugStatus(): InAppDebugStatus
   }
 }

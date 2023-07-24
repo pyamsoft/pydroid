@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.PYDroidLogger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
+import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDialogComponent
@@ -105,7 +106,7 @@ internal interface PYDroidComponent {
           )
         }
 
-    private val logLinesBus by lazy(NONE) { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
+    private val inAppLogLines by lazy(NONE) { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
 
     private val debugInteractor by
         lazy(NONE) {
@@ -156,7 +157,7 @@ internal interface PYDroidComponent {
               debug = params.debug,
               billingPreferences = preferences,
               debugPreferences = preferences,
-              logLinesBus = logLinesBus,
+              logLinesBus = inAppLogLines,
               debugInteractor = debugInteractor,
               hapticPreferences = preferences,
           )
@@ -210,6 +211,10 @@ internal interface PYDroidComponent {
                     override fun enforcer(): ThreadEnforcer {
                       return enforcer
                     }
+
+                    override fun inAppDebugStatus(): InAppDebugStatus {
+                      return preferences
+                    }
                   }
                 }
 
@@ -246,8 +251,8 @@ internal interface PYDroidComponent {
     }
 
     override fun inject(logger: InAppDebugLoggerImpl) {
-      logger.bus = logLinesBus
-      logger.preferences = preferences
+      logger.logLines = inAppLogLines
+      logger.status = preferences
     }
 
     override fun inject(hapticManager: AndroidViewHapticManager) {

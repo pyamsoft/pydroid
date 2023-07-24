@@ -30,7 +30,7 @@ internal class SettingsInteractorImpl internal constructor(context: Context) : S
   }
 
   override suspend fun wipeData() {
-    Logger.d("Resetting all application user data")
+    Logger.d { "Resetting all application user data" }
     activityManager.clearApplicationUserData()
   }
 }

@@ -35,7 +35,7 @@ internal object ObjectGraph {
         internals: PYDroid,
     ) {
       trackingMap[application] = internals
-      Logger.d("Track PYDroid.Application install: $application $internals")
+      Logger.d { "Track PYDroid.Application install: $application $internals" }
     }
 
     @CheckResult
@@ -55,10 +55,10 @@ internal object ObjectGraph {
         internals: PYDroidActivityDelegateInternal,
     ) {
       trackingMap[activity] = internals
-      Logger.d("Track PYDroid.Activity install: $activity $internals")
+      Logger.d { "Track PYDroid.Activity install: $activity $internals" }
 
       activity.doOnDestroy {
-        Logger.d("Remove PYDroid.Activity internals on Destroy")
+        Logger.d { "Remove PYDroid.Activity internals on Destroy" }
         trackingMap.remove(activity)
       }
     }

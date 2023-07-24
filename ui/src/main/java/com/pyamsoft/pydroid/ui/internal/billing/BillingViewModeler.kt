@@ -56,7 +56,7 @@ internal constructor(
       scope.launch(context = Dispatchers.Default) {
         f.collect { show ->
           if (show) {
-            Logger.d("Showing Billing upsell")
+            Logger.d { "Showing Billing upsell" }
             s.isShowingUpsell.value = true
           }
         }
@@ -65,7 +65,7 @@ internal constructor(
 
     if (isFakeUpsell) {
       scope.launch(context = Dispatchers.Default) {
-        Logger.d("Fake a billing upsell, force show")
+        Logger.d { "Fake a billing upsell, force show" }
         s.isShowingUpsell.value = true
       }
     }
@@ -80,7 +80,7 @@ internal constructor(
   }
 
   internal fun handleDismissUpsell() {
-    Logger.d("Dismissing Billing upsell")
+    Logger.d { "Dismissing Billing upsell" }
     state.isShowingUpsell.value = false
     preferences.resetBillingShown()
   }

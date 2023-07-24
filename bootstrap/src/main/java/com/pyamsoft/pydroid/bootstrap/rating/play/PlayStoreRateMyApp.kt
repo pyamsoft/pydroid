@@ -49,7 +49,7 @@ internal constructor(
   override suspend fun startRating(): AppRatingLauncher =
       withContext(context = Dispatchers.IO) {
         if (manager is FakeReviewManager) {
-          Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+          Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
           delay(2000L)
         }
 
@@ -57,17 +57,17 @@ internal constructor(
           manager
               .requestReviewFlow()
               .addOnCanceledListener {
-                Logger.w("Review task has been cancelled")
+                Logger.w { "Review task has been cancelled" }
                 continuation.cancel()
               }
               .addOnFailureListener { error ->
-                Logger.e(error, "Failed to resolve app review info task")
+                Logger.e(error) { "Failed to resolve app review info task" }
                 continuation.resume(AppRatingLauncher.empty())
               }
               .addOnSuccessListener { info ->
                 // Always false in play-core 1.10.3, but nullable in rating 2.0.0
                 if (info == null) {
-                  Logger.w("Successful request had NULL review info")
+                  Logger.w { "Successful request had NULL review info" }
                   continuation.resume(AppRatingLauncher.empty())
                 } else {
                   continuation.resume(PlayStoreAppRatingLauncher(manager, info))

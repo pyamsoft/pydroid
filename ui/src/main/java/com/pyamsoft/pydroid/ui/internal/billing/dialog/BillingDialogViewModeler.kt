@@ -47,7 +47,7 @@ internal constructor(
         f.collect { snapshot ->
           val status = snapshot.status
           val list = snapshot.skus
-          Logger.d("SKU list updated: $status $list")
+          Logger.d { "SKU list updated: $status $list" }
           state.apply {
             connected.value = status
             skuList.value = list.sortedBy { it.price }
@@ -59,7 +59,7 @@ internal constructor(
     interactor.watchBillingErrors().also { f ->
       scope.launch(context = Dispatchers.Default) {
         f.collect { err ->
-          Logger.e(err, "Billing error received")
+          Logger.e(err) { "Billing error received" }
           state.error.value = err
         }
       }

@@ -66,7 +66,7 @@ internal constructor(
 
   init {
     if (disabled) {
-      Logger.w("Application has disabled the VersionCheck component")
+      Logger.w { "Application has disabled the VersionCheck component" }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
       // correctly set up otherwise we crash.
@@ -85,7 +85,7 @@ internal constructor(
                     .requireNotNull()
                     .bind(
                         scope = owner.lifecycleScope,
-                        onUpgradeReady = { Logger.d("A new upgrade it ready!") },
+                        onUpgradeReady = { Logger.d { "A new upgrade it ready!" } },
                     )
               }
 
@@ -116,7 +116,7 @@ internal constructor(
   public fun Render(content: @Composable VersionUpgradeWidget) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w("Application has disabled the VersionCheck component") }
+      LaunchedEffect(Unit) { Logger.w { "Application has disabled the VersionCheck component" } }
       return
     }
 
@@ -129,8 +129,8 @@ internal constructor(
       activity.lifecycleScope.launch(context = Dispatchers.Main) {
         launcher
             .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
-            .onSuccess { Logger.d("Launched an in-app update flow") }
-            .onFailure { Logger.e(it, "Unable to launch in-app update flow") }
+            .onSuccess { Logger.d { "Launched an in-app update flow" } }
+            .onFailure { Logger.e(it) { "Unable to launch in-app update flow" } }
       }
     }
 
@@ -139,7 +139,7 @@ internal constructor(
       vm.handleCompleteUpgrade(
           scope = activity.lifecycleScope,
           onUpgradeCompleted = {
-            Logger.d("Upgrade completed, finish Activity")
+            Logger.d { "Upgrade completed, finish Activity" }
             activity.finishAndRemoveTask()
           },
       )

@@ -29,15 +29,30 @@ public class LoggerTest {
     var w = 0
     var e = 0
 
+    @Deprecated("Use the lazy form of d()")
     override fun d(tag: String, message: String, vararg args: Any) {
+      throw AssertionError("Not used")
+    }
+
+    override fun d(tag: String, message: () -> String) {
       ++d
     }
 
+    @Deprecated("Use the lazy form of d()")
     override fun w(tag: String, message: String, vararg args: Any) {
+      throw AssertionError("Not used")
+    }
+
+    override fun w(tag: String, message: () -> String) {
       ++w
     }
 
+    @Deprecated("Use the lazy form of d()")
     override fun e(tag: String, throwable: Throwable, message: String, vararg args: Any) {
+      throw AssertionError("Not used")
+    }
+
+    override fun e(tag: String, throwable: Throwable, message: () -> String) {
       ++e
     }
   }
@@ -49,24 +64,26 @@ public class LoggerTest {
 
   @Test
   public fun d_doesNothingWithoutImpl(): Unit = runTest {
-    Logger.d("Does nothing without implementation")
+    Logger.d { throw AssertionError("Does nothing without implementation") }
   }
 
   @Test
   public fun w_doesNothingWithoutImpl(): Unit = runTest {
-    Logger.w("Does nothing without implementation")
+    Logger.w { throw AssertionError("Does nothing without implementation") }
   }
 
   @Test
   public fun e_doesNothingWithoutImpl(): Unit = runTest {
-    Logger.e(RuntimeException("Test"), "Does nothing without implementation")
+    Logger.e(RuntimeException("Test")) {
+      throw AssertionError("Does nothing without implementation")
+    }
   }
 
   @Test
   public fun d_implCalled(): Unit = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
-    Logger.d("Test D")
+    Logger.d { "Test D" }
     assertEquals(t.d, 1)
     assertEquals(t.w, 0)
     assertEquals(t.e, 0)
@@ -76,7 +93,7 @@ public class LoggerTest {
   public fun w_implCalled(): Unit = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
-    Logger.w("Test W")
+    Logger.w { "Test W" }
     assertEquals(t.d, 0)
     assertEquals(t.w, 1)
     assertEquals(t.e, 0)
@@ -86,7 +103,7 @@ public class LoggerTest {
   public fun e_implCalled(): Unit = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
-    Logger.e(RuntimeException("Test"), "Test E")
+    Logger.e(RuntimeException("Test")) { "Test E" }
     assertEquals(t.d, 0)
     assertEquals(t.w, 0)
     assertEquals(t.e, 1)

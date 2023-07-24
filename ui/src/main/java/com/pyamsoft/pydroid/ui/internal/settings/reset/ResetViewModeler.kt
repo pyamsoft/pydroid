@@ -31,13 +31,13 @@ internal constructor(
 
   internal fun handleFullReset(scope: CoroutineScope) {
     if (state.reset.value) {
-      Logger.w("Already reset, do nothing")
+      Logger.w { "Already reset, do nothing" }
       return
     }
 
     state.reset.value = true
     scope.launch(context = Dispatchers.Default) {
-      Logger.d("Completely reset application")
+      Logger.d { "Completely reset application" }
       interactor.wipeData()
     }
   }

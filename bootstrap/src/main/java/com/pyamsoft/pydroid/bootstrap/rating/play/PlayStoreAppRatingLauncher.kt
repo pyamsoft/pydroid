@@ -39,15 +39,15 @@ internal constructor(
           manager
               .launchReviewFlow(activity, info)
               .addOnCanceledListener {
-                Logger.w("In-app review was cancelled")
+                Logger.w { "In-app review was cancelled" }
                 continuation.cancel()
               }
               .addOnSuccessListener {
-                Logger.d("In-app Review was a success")
+                Logger.d { "In-app Review was a success" }
                 continuation.resume(ResultWrapper.success(Unit))
               }
               .addOnFailureListener { err ->
-                Logger.e(err, "In-App review failed!")
+                Logger.e(err) { "In-App review failed!" }
                 continuation.resume(ResultWrapper.failure(err))
               }
         }

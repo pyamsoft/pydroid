@@ -41,10 +41,10 @@ internal constructor(
   private suspend fun FakeAppUpdateManager.fakeUpdate() {
     val self = this
 
-    Logger.d("User accepts fake update")
+    Logger.d { "User accepts fake update" }
     self.userAcceptsUpdate()
 
-    Logger.d("Start a fake download")
+    Logger.d { "Start a fake download" }
 
     // Mark download started (we need this first to then set bytes)
     self.downloadStarts()
@@ -61,7 +61,7 @@ internal constructor(
       self.setBytesDownloaded(downloaded)
     }
 
-    Logger.d("Complete a fake download")
+    Logger.d { "Complete a fake download" }
     self.downloadCompletes()
   }
 
@@ -76,11 +76,11 @@ internal constructor(
   override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> =
       withContext(context = Dispatchers.Main) {
         return@withContext try {
-          Logger.d("Begin update flow $requestCode $info")
+          Logger.d { "Begin update flow $requestCode $info" }
 
           val options = AppUpdateOptions.defaultOptions(type)
           if (manager.startUpdateFlowForResult(info, activity, options, requestCode)) {
-            Logger.d("Update flow has started")
+            Logger.d { "Update flow has started" }
             if (manager is FakeAppUpdateManager) {
               manager.fakeUpdate()
             }
@@ -89,7 +89,7 @@ internal constructor(
           ResultWrapper.success(Unit)
         } catch (e: Throwable) {
           e.ifNotCancellation {
-            Logger.e(e, "Failed to launch In-App update flow")
+            Logger.e(e) { "Failed to launch In-App update flow" }
             ResultWrapper.failure(e)
           }
         }

@@ -29,10 +29,10 @@ import com.pyamsoft.pydroid.core.Logger
 public fun Activity.stableLayoutHideNavigation() {
   this.window.also { w ->
     if (w != null) {
-      Logger.d("Set Activity to fitsSystemWindows=false")
+      Logger.d { "Set Activity to fitsSystemWindows=false" }
       WindowCompat.setDecorFitsSystemWindows(w, false)
     } else {
-      Logger.w("Activity is missing Window?")
+      Logger.w { "Activity is missing Window?" }
     }
   }
 }

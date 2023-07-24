@@ -114,7 +114,7 @@ internal fun BillingDialog(
           // Enforce on main thread since billing is Google
           // Use the Activity scope so that we are not randomly cancelled mid purchase
           activity.lifecycleScope.launch(context = Dispatchers.Main + NonCancellable) {
-            Logger.d("Start purchase flow for $sku")
+            Logger.d { "Start purchase flow for $sku" }
             purchaseClient.purchase(activity, sku)
           }
         },

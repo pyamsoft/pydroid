@@ -58,7 +58,7 @@ internal constructor(
                   ),
               )
 
-      Logger.d("Initializing PYDroid")
+      Logger.d { "Initializing PYDroid" }
 
       return PYDroidInitializer(impl, impl.moduleProvider())
     }

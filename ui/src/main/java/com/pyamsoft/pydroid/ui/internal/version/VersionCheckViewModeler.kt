@@ -39,15 +39,15 @@ internal constructor(
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
             if (!s.isUpdateReadyToInstall.value) {
-              Logger.d("Update progress: $percent")
+              Logger.d { "Update progress: $percent" }
               s.updateProgressPercent.value = percent
             } else {
-              Logger.w("Download marks progress, but update is ready to install: $percent")
+              Logger.w { "Download marks progress, but update is ready to install: $percent" }
               s.updateProgressPercent.value = 1F
             }
           },
           onDownloadCompleted = {
-            Logger.d("App update download ready!")
+            Logger.d { "App update download ready!" }
             s.isUpdateReadyToInstall.value = true
             onUpgradeReady()
           },
@@ -62,35 +62,35 @@ internal constructor(
     val s = state
 
     if (s.isUpdateReadyToInstall.value) {
-      Logger.d("Update is already ready to install, do not check for update again")
+      Logger.d { "Update is already ready to install, do not check for update again" }
       return
     }
 
     if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
-      Logger.d("We are already checking for an update.")
+      Logger.d { "We are already checking for an update." }
       return
     }
 
     if (s.launcher.value != null && !force) {
-      Logger.d("Launcher is already available, do not check for update again")
+      Logger.d { "Launcher is already available, do not check for update again" }
       return
     }
 
-    Logger.d("Begin check for updates")
+    Logger.d { "Begin check for updates" }
     scope.launch(context = Dispatchers.Default) {
       if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
-        Logger.d("We are already checking for an update.")
+        Logger.d { "We are already checking for an update." }
         return@launch
       }
 
       s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
       interactor
           .checkVersion()
-          .onSuccess { Logger.d("Update data found as: $it") }
+          .onSuccess { Logger.d { "Update data found as: $it" } }
           .onSuccess { s.launcher.value = it }
-          .onFailure { Logger.e(it, "Error checking for latest version") }
+          .onFailure { Logger.e(it) { "Error checking for latest version" } }
           .onFailure { s.launcher.value = null }
-          .onFinally { Logger.d("Done checking for updates") }
+          .onFinally { Logger.d { "Done checking for updates" } }
           .onFinally { s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.DONE }
     }
   }
@@ -100,13 +100,13 @@ internal constructor(
       onUpgradeCompleted: () -> Unit,
   ) {
     if (state.isUpgraded.value) {
-      Logger.w("Already upgraded, do nothing")
+      Logger.w { "Already upgraded, do nothing" }
       return
     }
 
     state.isUpgraded.value = true
     scope.launch(context = Dispatchers.Default) {
-      Logger.d("Updating app, restart via update manager!")
+      Logger.d { "Updating app, restart via update manager!" }
       interactor.completeUpdate()
       onUpgradeCompleted()
     }

@@ -36,9 +36,9 @@ internal class RatingDelegate(
 
   init {
     if (disabled) {
-      Logger.w("Application has disabled the Rating component")
+      Logger.w { "Application has disabled the Rating component" }
     } else {
-      Logger.d("In-App Rating is enabled. Awaiting manual call")
+      Logger.d { "In-App Rating is enabled. Awaiting manual call" }
     }
 
     activity.doOnDestroy {
@@ -55,8 +55,8 @@ internal class RatingDelegate(
     activity.lifecycleScope.launch(context = Dispatchers.Main) {
       launcher
           .rate(activity)
-          .onSuccess { Logger.d("Call was made for in-app rating request") }
-          .onFailure { err -> Logger.e(err, "Unable to launch in-app rating") }
+          .onSuccess { Logger.d { "Call was made for in-app rating request" } }
+          .onFailure { err -> Logger.e(err) { "Unable to launch in-app rating" } }
     }
   }
 
@@ -66,7 +66,7 @@ internal class RatingDelegate(
    */
   fun loadInAppRating() {
     if (disabled) {
-      Logger.w("Application has disabled the Rating component")
+      Logger.w { "Application has disabled the Rating component" }
       return
     }
 

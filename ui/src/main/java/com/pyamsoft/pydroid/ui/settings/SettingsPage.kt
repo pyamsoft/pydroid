@@ -116,7 +116,7 @@ public fun SettingsPage(
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = {
         if (options.disableVersionCheck) {
-          Logger.w("Application has disabled the VersionCheck component")
+          Logger.w { "Application has disabled the VersionCheck component" }
         } else {
           versionViewModel.handleCheckForUpdates(
               scope = scope,

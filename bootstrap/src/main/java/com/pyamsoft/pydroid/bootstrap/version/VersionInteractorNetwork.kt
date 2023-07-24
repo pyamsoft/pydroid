@@ -42,7 +42,7 @@ internal constructor(
 
   override suspend fun completeUpdate() =
       withContext(context = Dispatchers.Default) {
-        Logger.d("GOING DOWN FOR UPDATE")
+        Logger.d { "GOING DOWN FOR UPDATE" }
         updater.complete()
       }
 
@@ -52,7 +52,7 @@ internal constructor(
           ResultWrapper.success(updater.checkForUpdate())
         } catch (e: Throwable) {
           e.ifNotCancellation {
-            Logger.e(e, "Failed to check for updates")
+            Logger.e(e) { "Failed to check for updates" }
             ResultWrapper.failure(e)
           }
         }

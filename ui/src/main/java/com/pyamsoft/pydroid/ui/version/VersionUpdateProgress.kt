@@ -49,7 +49,7 @@ internal constructor(
 
   init {
     if (disabled) {
-      Logger.w("Application has disabled the VersionCheck component")
+      Logger.w { "Application has disabled the VersionCheck component" }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
       // correctly set up otherwise we crash.
@@ -74,7 +74,7 @@ internal constructor(
   public fun Render(content: @Composable VersionUpdateProgressWidget) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w("Application has disabled the VersionCheck component") }
+      LaunchedEffect(Unit) { Logger.w { "Application has disabled the VersionCheck component" } }
       return
     }
 

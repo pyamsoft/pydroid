@@ -238,9 +238,9 @@ internal interface AppComponent {
 
     private fun connectBilling(activity: ComponentActivity) {
       if (options.disableBilling) {
-        Logger.w("Application has disabled the billing component")
+        Logger.w { "Application has disabled the billing component" }
       } else {
-        Logger.d("Attempt Billing Connection")
+        Logger.d { "Attempt Billing Connection" }
         billingModule.provideConnector().bind(activity)
       }
     }
@@ -263,7 +263,7 @@ internal interface AppComponent {
 
       if (params.debug.tryShowInAppRating) {
         activity.doOnCreate {
-          Logger.d("Try to force-show an In-App Rating")
+          Logger.d { "Try to force-show an In-App Rating" }
           rating.loadInAppRating()
         }
       }

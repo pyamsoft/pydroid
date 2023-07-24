@@ -27,7 +27,7 @@ public abstract class ComposableInjector {
   /** Inject DI objects from the graph to this object */
   internal fun inject(activity: ComponentActivity) {
     if (isInjected) {
-      Logger.w("$this is already injected")
+      Logger.w { "$this is already injected" }
       return
     }
 
@@ -38,7 +38,7 @@ public abstract class ComposableInjector {
   /** Dispose of injected objects from the graph */
   internal fun dispose() {
     if (!isInjected) {
-      Logger.w("$this is not injected yet")
+      Logger.w { "$this is not injected yet" }
       return
     }
 

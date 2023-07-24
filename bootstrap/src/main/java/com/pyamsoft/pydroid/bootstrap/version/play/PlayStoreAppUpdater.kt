@@ -61,19 +61,19 @@ internal constructor(
   override suspend fun complete() =
       withContext(context = Dispatchers.Main) {
         suspendCancellableCoroutine { continuation ->
-          Logger.d("Now completing update...")
+          Logger.d { "Now completing update..." }
           manager
               .completeUpdate()
               .addOnCanceledListener {
-                Logger.w("UPDATE CANCELLED")
+                Logger.w { "UPDATE CANCELLED" }
                 continuation.cancel()
               }
               .addOnFailureListener { err ->
-                Logger.e(err, "UPDATE ERROR")
+                Logger.e(err) { "UPDATE ERROR" }
                 continuation.resumeWithException(err)
               }
               .addOnSuccessListener {
-                Logger.d("UPDATE COMPLETE")
+                Logger.d { "UPDATE COMPLETE" }
                 continuation.resume(Unit)
               }
         }
@@ -91,11 +91,11 @@ internal constructor(
                   onDownloadCompleted = onDownloadCompleted,
               )
 
-          Logger.d("Listen for install status")
+          Logger.d { "Listen for install status" }
           manager.registerListener(listener)
 
           continuation.invokeOnCancellation {
-            Logger.d("Stop listening for install status")
+            Logger.d { "Stop listening for install status" }
             manager.unregisterListener(listener)
           }
         }
@@ -104,32 +104,32 @@ internal constructor(
   override suspend fun checkForUpdate(): AppUpdateLauncher =
       withContext(context = Dispatchers.IO) {
         if (manager is FakeAppUpdateManager) {
-          Logger.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+          Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
           delay(2000L)
         }
 
         return@withContext suspendCancellableCoroutine { continuation ->
           manager.appUpdateInfo
               .addOnCanceledListener {
-                Logger.w("In-App update cancelled")
+                Logger.w { "In-App update cancelled" }
                 continuation.cancel()
               }
               .addOnFailureListener { error ->
-                Logger.e(error, "Failed to resolve app update info task")
+                Logger.e(error) { "Failed to resolve app update info task" }
                 continuation.resume(AppUpdateLauncher.empty())
               }
               .addOnSuccessListener { info ->
-                Logger.d("App Update info received: $info")
+                Logger.d { "App Update info received: $info" }
                 if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                   val updateType = AppUpdateType.FLEXIBLE
                   if (info.isUpdateTypeAllowed(updateType)) {
-                    Logger.d("Update is available and flexible")
+                    Logger.d { "Update is available and flexible" }
                     continuation.resume(PlayStoreAppUpdateLauncher(manager, info, updateType))
                     return@addOnSuccessListener
                   }
                 }
 
-                Logger.d("Update is not available")
+                Logger.d { "Update is not available" }
                 continuation.resume(AppUpdateLauncher.empty())
               }
         }
@@ -144,16 +144,16 @@ internal constructor(
     ): InstallStateUpdatedListener {
       return InstallStateUpdatedListener { state ->
         val status = state.installStatus()
-        Logger.d("Install state changed: $status")
+        Logger.d { "Install state changed: $status" }
         if (status == InstallStatus.DOWNLOADING) {
-          Logger.d("Download in progress")
+          Logger.d { "Download in progress" }
           val bytesDownloaded = state.bytesDownloaded()
           val totalBytes = state.totalBytesToDownload()
           val progress = (bytesDownloaded / totalBytes.toFloat())
-          Logger.d("Download status: $bytesDownloaded / $totalBytes => $progress")
+          Logger.d { "Download status: $bytesDownloaded / $totalBytes => $progress" }
           onDownloadProgress(progress)
         } else if (status == InstallStatus.DOWNLOADED) {
-          Logger.d("Download completed!")
+          Logger.d { "Download completed!" }
           onDownloadCompleted()
         }
       }

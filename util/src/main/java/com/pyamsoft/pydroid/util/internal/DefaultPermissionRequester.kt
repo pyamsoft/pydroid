@@ -41,7 +41,7 @@ internal constructor(
       override fun requestPermissions() {
         // If this is already unregistered, this does nothing
         if (permissions.isEmpty()) {
-          Logger.d("No permissions requested, API level differences? Fallback => true")
+          Logger.d { "No permissions requested, API level differences? Fallback => true" }
           responseCallback?.invoke(true)
         } else {
           theLauncher?.launch(permissions)
@@ -66,9 +66,9 @@ internal constructor(
     val allPermissionsGranted = ungrantedPermissions.isEmpty()
 
     if (allPermissionsGranted) {
-      Logger.d("All permissions were granted $permissions")
+      Logger.d { "All permissions were granted $permissions" }
     } else {
-      Logger.w("Not all permissions were granted $ungrantedPermissions")
+      Logger.w { "Not all permissions were granted $ungrantedPermissions" }
     }
 
     onResponse(allPermissionsGranted)

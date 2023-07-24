@@ -30,8 +30,10 @@ private val IGNORE_NAMES =
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 public object Logger {
 
+  /** PublishedApi so we can inline the logger functions */
   private var logger: PYDroidLogger? = null
 
+  /** PublishedApi so we can inline the logger functions */
   @CheckResult
   private fun Any.createStackTraceTag(): String {
     return this.run {
@@ -44,33 +46,26 @@ public object Logger {
 
   /** Debug level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  public fun d(
-      message: String,
-      vararg args: Any,
-  ) {
+  public fun d(message: () -> String) {
     val tag = this.createStackTraceTag()
-    logger?.d(tag, message, args)
+    logger?.d(tag, message)
   }
 
   /** Warning level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-  public fun w(
-      message: String,
-      vararg args: Any,
-  ) {
+  public fun w(message: () -> String) {
     val tag = this.createStackTraceTag()
-    logger?.w(tag, message, args)
+    logger?.w(tag, message)
   }
 
   /** Error level log */
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   public fun e(
       throwable: Throwable,
-      message: String,
-      vararg args: Any,
+      message: () -> String,
   ) {
     val tag = this.createStackTraceTag()
-    logger?.e(tag, throwable, message, args)
+    logger?.e(tag, throwable, message)
   }
 
   /** Set the logger for the rest of the library */
@@ -79,7 +74,7 @@ public object Logger {
     this.logger = logger
   }
 
-  /** Set the logger for the rest of the library */
+  /** Clear the logger for the rest of the library */
   @VisibleForTesting
   @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   internal fun resetLogger() {
@@ -91,6 +86,7 @@ public object Logger {
 public interface PYDroidLogger {
 
   /** Debug level log */
+  @Deprecated("Use the lazy form of d()")
   public fun d(
       tag: String,
       message: String,
@@ -98,6 +94,7 @@ public interface PYDroidLogger {
   )
 
   /** Warning level log */
+  @Deprecated("Use the lazy form of w()")
   public fun w(
       tag: String,
       message: String,
@@ -105,10 +102,30 @@ public interface PYDroidLogger {
   )
 
   /** Error level log */
+  @Deprecated("Use the lazy form of e()")
   public fun e(
       tag: String,
       throwable: Throwable,
       message: String,
       vararg args: Any,
+  )
+
+  /** Debug level log */
+  public fun d(
+      tag: String,
+      message: () -> String,
+  )
+
+  /** Warning level log */
+  public fun w(
+      tag: String,
+      message: () -> String,
+  )
+
+  /** Error level log */
+  public fun e(
+      tag: String,
+      throwable: Throwable,
+      message: () -> String,
   )
 }

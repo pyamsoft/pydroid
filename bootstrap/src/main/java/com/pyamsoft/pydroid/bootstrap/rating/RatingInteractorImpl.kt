@@ -35,7 +35,7 @@ internal constructor(
           ResultWrapper.success(rateMyApp.startRating())
         } catch (e: Throwable) {
           e.ifNotCancellation {
-            Logger.e(e, "Failed to ask for rating")
+            Logger.e(e) { "Failed to ask for rating" }
             ResultWrapper.failure(e)
           }
         }

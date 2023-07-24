@@ -54,7 +54,7 @@ internal class DefaultExternalUriHandler internal constructor() : PYDroidExterna
 
     val expected = confirmUri.value
     if (uri != expected) {
-      Logger.w("Confirmation received for wrong URI! (Saw: $uri, Expected: $expected)")
+      Logger.w { "Confirmation received for wrong URI! (Saw: $uri, Expected: $expected)" }
       return
     }
 
@@ -62,7 +62,7 @@ internal class DefaultExternalUriHandler internal constructor() : PYDroidExterna
     dismiss()
 
     try {
-      Logger.d("Confirmed: attempt open external URI: $uri")
+      Logger.d { "Confirmed: attempt open external URI: $uri" }
       handler.openUri(uri)
     } catch (e: Throwable) {
       toasting =

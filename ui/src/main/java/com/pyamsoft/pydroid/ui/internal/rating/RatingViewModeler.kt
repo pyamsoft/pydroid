@@ -44,10 +44,10 @@ internal constructor(
     scope.launch(context = Dispatchers.Default) {
       interactor
           .askForRating()
-          .onSuccess { Logger.d("Launch in-app rating: $it") }
+          .onSuccess { Logger.d { "Launch in-app rating: $it" } }
           .onSuccess { s.isInAppRatingShown.value = true }
           .onSuccess { onLaunchInAppRating(it) }
-          .onFailure { Logger.e(it, "Unable to launch in-app rating") }
+          .onFailure { Logger.e(it) { "Unable to launch in-app rating" } }
           .onFinally { s.isLoading.value = false }
     }
   }

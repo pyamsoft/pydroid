@@ -139,7 +139,7 @@ internal constructor(
           .onEach { lastShown ->
             // Upon the first time seeing it, update to our current version code
             if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
-              Logger.d("Initialize changelog for a newly installed app!")
+              Logger.d { "Initialize changelog for a newly installed app!" }
               markChangeLogShown()
             }
           }

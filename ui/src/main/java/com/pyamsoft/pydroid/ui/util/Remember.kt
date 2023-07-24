@@ -55,7 +55,7 @@ private fun resolveActivity(context: Context): ComponentActivity {
     is ComponentActivity -> context
     is ContextWrapper -> resolveActivity(context.baseContext)
     else -> {
-      Logger.w("Provided Context is not a ComponentActivity or a ContextWrapper: $context")
+      Logger.w { "Provided Context is not a ComponentActivity or a ContextWrapper: $context" }
       null
     }
   }

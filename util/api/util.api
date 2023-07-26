@@ -9,7 +9,6 @@ public final class com/pyamsoft/pydroid/util/ContextKt {
 
 public final class com/pyamsoft/pydroid/util/CoroutinesKt {
 	public static final fun ifNotCancellation (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
-	public static final fun suspendUntilCancel (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/util/LifecycleKt {

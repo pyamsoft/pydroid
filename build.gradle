@@ -18,12 +18,12 @@
 
 buildscript {
   ext {
-    kotlin = "1.8.22"
-    coroutines = "1.7.2"
+    kotlin = "1.9.0"
+    coroutines = "1.7.3"
 
     // Compose
     compose = "1.4.3"
-    composeCompiler = "1.4.8"
+    composeCompiler = "1.5.1"
     composeMaterial = "1.4.3"
     accompanist = "0.30.1"
 
@@ -154,7 +154,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "26.8.1"
+          version "26.8.2"
         }
       }
     }

@@ -86,31 +86,6 @@ public object Logger {
 public interface PYDroidLogger {
 
   /** Debug level log */
-  @Deprecated("Use the lazy form of d()")
-  public fun d(
-      tag: String,
-      message: String,
-      vararg args: Any,
-  )
-
-  /** Warning level log */
-  @Deprecated("Use the lazy form of w()")
-  public fun w(
-      tag: String,
-      message: String,
-      vararg args: Any,
-  )
-
-  /** Error level log */
-  @Deprecated("Use the lazy form of e()")
-  public fun e(
-      tag: String,
-      throwable: Throwable,
-      message: String,
-      vararg args: Any,
-  )
-
-  /** Debug level log */
   public fun d(
       tag: String,
       message: () -> String,

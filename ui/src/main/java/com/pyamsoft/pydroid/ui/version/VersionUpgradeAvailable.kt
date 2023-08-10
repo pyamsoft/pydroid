@@ -48,9 +48,9 @@ public typealias OnUpgradeStartedCallback = () -> Unit
 /** A Composable that can display version upgrade availability */
 public typealias VersionUpgradeWidget =
     (
-        state: VersionCheckViewState,
-        onDownloadStarted: OnUpdateDownloadStartedCallback,
-        onUpgradeStarted: OnUpgradeStartedCallback,
+        VersionCheckViewState,
+        OnUpdateDownloadStartedCallback,
+        OnUpgradeStartedCallback,
     ) -> Unit
 
 /**
@@ -146,9 +146,9 @@ internal constructor(
     }
 
     content(
-        state = vm,
-        onDownloadStarted = { handleDownloadStarted(it) },
-        onUpgradeStarted = { handleUpgradeStarted() },
+        vm,
+        { handleDownloadStarted(it) },
+        { handleUpgradeStarted() },
     )
   }
 

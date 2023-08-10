@@ -47,9 +47,9 @@ public typealias OnDismissBilling = () -> Unit
 /** Handles Billing display in app */
 public typealias ShowBillingWidget =
     (
-        state: BillingViewState,
-        onShowBilling: OnShowBilling,
-        onDismiss: OnDismissBilling,
+        BillingViewState,
+        OnShowBilling,
+        OnDismissBilling,
     ) -> Unit
 
 /** Handles Billing related work in an Activity */
@@ -134,12 +134,12 @@ internal constructor(
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
       content(
-          state = vm,
-          onShowBilling = {
+          vm,
+          {
             vm.handleDismissUpsell()
             vm.handleOpenDialog()
           },
-          onDismiss = { vm.handleDismissUpsell() },
+          { vm.handleDismissUpsell() },
       )
     }
   }

@@ -29,27 +29,12 @@ public class LoggerTest {
     var w = 0
     var e = 0
 
-    @Deprecated("Use the lazy form of d()")
-    override fun d(tag: String, message: String, vararg args: Any) {
-      throw AssertionError("Not used")
-    }
-
     override fun d(tag: String, message: () -> String) {
       ++d
     }
 
-    @Deprecated("Use the lazy form of d()")
-    override fun w(tag: String, message: String, vararg args: Any) {
-      throw AssertionError("Not used")
-    }
-
     override fun w(tag: String, message: () -> String) {
       ++w
-    }
-
-    @Deprecated("Use the lazy form of d()")
-    override fun e(tag: String, throwable: Throwable, message: String, vararg args: Any) {
-      throw AssertionError("Not used")
     }
 
     override fun e(tag: String, throwable: Throwable, message: () -> String) {

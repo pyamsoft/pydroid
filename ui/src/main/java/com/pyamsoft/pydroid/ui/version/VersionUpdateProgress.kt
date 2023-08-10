@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 /** A Composable that can display version update progress */
 public typealias VersionUpdateProgressWidget =
     (
-        state: VersionCheckViewState,
+        VersionCheckViewState,
     ) -> Unit
 
 /**
@@ -80,7 +80,7 @@ internal constructor(
 
     val viewModel = rememberNotNull(viewModel)
     content(
-        state = viewModel,
+        viewModel,
     )
   }
 

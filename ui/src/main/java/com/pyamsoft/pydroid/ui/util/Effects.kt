@@ -26,21 +26,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-/** Add an observer to the Local Lifecycle Owner */
-@Composable
-@Deprecated("Use LifecycleEventEffect")
-public fun LifecycleEffect(observer: () -> LifecycleObserver) {
-  val createObserver by rememberUpdatedState(observer)
-  val lifecycleOwner = LocalLifecycleOwner.current
-
-  DisposableEffect(lifecycleOwner) {
-    val obs = createObserver()
-    val lifecycle = lifecycleOwner.lifecycle
-    lifecycle.addObserver(obs)
-    onDispose { lifecycle.removeObserver(obs) }
-  }
-}
-
 /**
  * Straight copied from the unreleased:
  * https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/lifecycle/lifecycle-runtime-compose/src/main/java/androidx/lifecycle/compose/LifecycleEffect.kt

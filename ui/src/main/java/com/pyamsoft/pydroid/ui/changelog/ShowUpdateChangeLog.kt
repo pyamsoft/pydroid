@@ -45,9 +45,9 @@ public typealias OnDismissChangeLog = () -> Unit
 /** Handles Change Log display in app */
 public typealias ShowUpdateChangeLogWidget =
     (
-        state: ChangeLogViewState,
-        onShowChangeLog: OnShowChangeLog,
-        onDismiss: OnDismissChangeLog,
+        ChangeLogViewState,
+        OnShowChangeLog,
+        OnDismissChangeLog,
     ) -> Unit
 
 /**
@@ -125,12 +125,12 @@ internal constructor(
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
       content(
-          state = vm,
-          onShowChangeLog = {
+          vm,
+          {
             vm.handleDismissUpsell()
             vm.handleShowDialog()
           },
-          onDismiss = { vm.handleDismissUpsell() },
+          { vm.handleDismissUpsell() },
       )
     }
   }

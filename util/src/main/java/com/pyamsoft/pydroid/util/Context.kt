@@ -46,7 +46,7 @@ private val applicationNameResolver = resolveApplicationName()
 
 /** Load the name of the Application from the package manager */
 public val Context.applicationDisplayName: String
-  @get:CheckResult
+  @CheckResult
   get() {
     return applicationNameResolver(this.applicationContext)
   }

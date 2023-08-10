@@ -86,6 +86,7 @@ internal fun AboutScreen(
           modifier = Modifier.fillMaxWidth(),
       ) {
         Crossfade(
+            label = "Open Source Licenses",
             targetState = loadingState,
         ) { loading ->
           when (loading) {

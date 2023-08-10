@@ -87,6 +87,7 @@ internal fun SettingsScreen(
       shape = shape,
   ) {
     Crossfade(
+        label = "Settings",
         targetState = loadingState,
     ) { loading ->
       when (loading) {

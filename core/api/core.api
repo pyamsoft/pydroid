@@ -11,11 +11,8 @@ public final class com/pyamsoft/pydroid/core/Logger {
 }
 
 public abstract interface class com/pyamsoft/pydroid/core/PYDroidLogger {
-	public abstract fun d (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
 	public abstract fun d (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public abstract fun e (Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;[Ljava/lang/Object;)V
 	public abstract fun e (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
-	public abstract fun w (Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
 	public abstract fun w (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
 }
 

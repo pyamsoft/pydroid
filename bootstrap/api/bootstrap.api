@@ -118,6 +118,7 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLicenses : java/l
 	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses$Companion;
 	public static final field MIT Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;
 	public static final fun custom (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/LibraryLicense;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getLicense ()Ljava/lang/String;
 	public fun getLocation ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLicenses;

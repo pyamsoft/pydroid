@@ -66,6 +66,7 @@ private fun MountHooks(
 @Composable
 public fun SettingsPage(
     modifier: Modifier = Modifier,
+    dialogModifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
@@ -100,6 +101,7 @@ public fun SettingsPage(
 
   SettingsContent(
       modifier = modifier,
+      dialogModifier = dialogModifier,
       shape = shape,
       state = viewModel,
       billingState = billingViewModel,

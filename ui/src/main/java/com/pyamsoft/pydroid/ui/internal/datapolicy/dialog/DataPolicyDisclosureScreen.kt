@@ -48,7 +48,6 @@ import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 
 private val MAX_HEIGHT_PORTRAIT = 360.dp
 
@@ -69,7 +68,7 @@ internal fun DataPolicyDisclosureScreen(
   val navigationError by state.navigationError.collectAsState()
 
   AppHeaderDialog(
-      modifier = modifier.fillUpToPortraitSize(),
+      modifier = modifier,
       icon = icon,
       name = name,
       imageLoader = imageLoader,

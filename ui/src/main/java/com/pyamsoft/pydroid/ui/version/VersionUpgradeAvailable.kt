@@ -113,7 +113,9 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(content: @Composable VersionUpgradeWidget) {
+  public fun Render(
+      content: @Composable VersionUpgradeWidget,
+  ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Application has disabled the VersionCheck component" } }

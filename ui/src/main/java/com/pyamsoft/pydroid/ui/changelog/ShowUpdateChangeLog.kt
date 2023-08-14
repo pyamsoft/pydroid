@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -88,6 +87,7 @@ internal constructor(
 
   @Composable
   private fun RenderContent(
+      modifier: Modifier,
       state: ChangeLogViewState,
       onDismissDialog: () -> Unit,
       content: @Composable () -> Unit,
@@ -98,7 +98,7 @@ internal constructor(
 
     if (showDialog) {
       ChangeLogDialog(
-          modifier = Modifier.fillUpToPortraitSize(),
+          modifier = modifier,
           onDismiss = onDismissDialog,
       )
     }
@@ -110,7 +110,10 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(content: @Composable ShowUpdateChangeLogWidget) {
+  public fun Render(
+      modifier: Modifier = Modifier,
+      content: @Composable ShowUpdateChangeLogWidget,
+  ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Application has disabled the ChangeLog component" } }
@@ -121,6 +124,7 @@ internal constructor(
     SaveStateDisposableEffect(vm)
 
     RenderContent(
+        modifier = modifier,
         state = vm,
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
@@ -139,8 +143,11 @@ internal constructor(
   @Composable
   public fun RenderChangeLogWidget(
       modifier: Modifier = Modifier,
+      dialogModifier: Modifier = Modifier,
   ) {
-    Render { state, onShowChangeLog, onDismiss ->
+    Render(
+        modifier = dialogModifier,
+    ) { state, onShowChangeLog, onDismiss ->
       ShowChangeLogScreen(
           modifier = modifier,
           state = state,

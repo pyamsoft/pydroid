@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -72,6 +71,7 @@ internal constructor(
 
   @Composable
   private fun RenderContent(
+      modifier: Modifier = Modifier,
       state: DataPolicyViewState,
       onDismissDialog: () -> Unit,
   ) {
@@ -80,7 +80,7 @@ internal constructor(
     if (acceptedState != DataPolicyViewState.AcceptedState.NONE &&
         acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED) {
       DataPolicyDisclosureDialog(
-          modifier = Modifier.fillUpToPortraitSize(),
+          modifier = modifier,
           onDismiss = onDismissDialog,
       )
     }
@@ -88,7 +88,9 @@ internal constructor(
 
   /** Render into a composable the data policy dialog */
   @Composable
-  public fun Render() {
+  public fun Render(
+      dialogModifier: Modifier = Modifier,
+  ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Application has disabled the DataPolicy component" } }
@@ -101,6 +103,7 @@ internal constructor(
     SaveStateDisposableEffect(vm)
 
     RenderContent(
+        modifier = dialogModifier,
         state = vm,
         onDismissDialog = {
           Logger.d { "DPD accepted, this will be dismissed once the Preferences update" }

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
@@ -27,7 +28,9 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
  * Must be hosted in a PYDroidActivity
  */
 @Composable
-public fun ShowDataPolicyDialog() {
+public fun ShowDataPolicyDialog(
+    dialogModifier: Modifier = Modifier,
+) {
   // If isEditMode, we don't render nothing
   if (LocalInspectionMode.current) {
     return
@@ -36,5 +39,7 @@ public fun ShowDataPolicyDialog() {
   val delegate = rememberPYDroidDelegate()
   val dataPolicy = remember(delegate) { delegate.dataPolicy() }
 
-  dataPolicy.Render()
+  dataPolicy.Render(
+      dialogModifier = dialogModifier,
+  )
 }

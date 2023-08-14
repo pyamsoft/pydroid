@@ -52,7 +52,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
-import com.pyamsoft.pydroid.ui.util.fillUpToPortraitSize
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -158,6 +157,7 @@ public fun SettingsPage(
 @Composable
 private fun SettingsContent(
     modifier: Modifier = Modifier,
+    dialogModifier: Modifier = Modifier,
     state: SettingsViewState,
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
@@ -235,42 +235,42 @@ private fun SettingsContent(
 
   if (showDataPolicyDialog) {
     DataPolicyDisclosureDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissDataPolicyDialog,
     )
   }
 
   if (showResetDialog) {
     ResetDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissResetDialog,
     )
   }
 
   if (showAboutDialog) {
     AboutDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissAboutDialog,
     )
   }
 
   if (showBillingDialog) {
     BillingDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissBillingDialog,
     )
   }
 
   if (showChangeLogDialog) {
     ChangeLogDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissChangeLogDialog,
     )
   }
 
   if (showInAppDebuggingDialog) {
     InAppDebugDialog(
-        modifier = Modifier.fillUpToPortraitSize(),
+        modifier = dialogModifier,
         onDismiss = onDismissInAppDebuggingDialog,
         extraContent = extraDebugContent,
     )

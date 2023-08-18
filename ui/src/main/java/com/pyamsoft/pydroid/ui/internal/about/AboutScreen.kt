@@ -46,7 +46,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
-import com.pyamsoft.pydroid.ui.util.collectAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
 private enum class AboutScreenContentTypes {
   LIBRARY
@@ -132,7 +132,7 @@ private fun AboutList(
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
 ) {
-  val licenses = state.licenses.collectAsStateList()
+  val licenses = state.licenses.collectAsStateListWithLifecycle()
 
   LazyColumn(
       modifier = modifier,

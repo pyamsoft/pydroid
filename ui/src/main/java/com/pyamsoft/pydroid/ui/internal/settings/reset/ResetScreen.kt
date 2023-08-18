@@ -29,11 +29,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
@@ -51,7 +51,7 @@ internal fun ResetScreen(
     onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val reset by state.reset.collectAsState()
+  val reset by state.reset.collectAsStateWithLifecycle()
 
   Surface(
       modifier = modifier,

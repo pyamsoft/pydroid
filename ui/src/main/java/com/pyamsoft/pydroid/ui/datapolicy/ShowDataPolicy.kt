@@ -20,9 +20,9 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -75,7 +75,7 @@ internal constructor(
       state: DataPolicyViewState,
       onDismissDialog: () -> Unit,
   ) {
-    val acceptedState by state.isAccepted.collectAsState()
+    val acceptedState by state.isAccepted.collectAsStateWithLifecycle()
 
     if (acceptedState != DataPolicyViewState.AcceptedState.NONE &&
         acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED) {

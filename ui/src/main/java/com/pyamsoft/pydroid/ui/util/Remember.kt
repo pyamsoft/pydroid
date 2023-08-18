@@ -30,8 +30,14 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.flow.StateFlow
 
 /** Assume not null and remember the result */
@@ -111,8 +117,10 @@ public fun <K : Any, V : Any> Map<K, V>.rememberAsStateMap(): SnapshotStateMap<K
  */
 @Composable
 @CheckResult
-public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(): SnapshotStateList<T> {
-  val state by this.collectAsState()
+public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(
+    context: CoroutineContext = EmptyCoroutineContext
+): SnapshotStateList<T> {
+  val state by this.collectAsState(context = context)
   return state.rememberAsStateList()
 }
 
@@ -122,7 +130,49 @@ public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(): SnapshotStat
  */
 @Composable
 @CheckResult
-public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(): SnapshotStateMap<K, V> {
-  val state by this.collectAsState()
+public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(
+    context: CoroutineContext = EmptyCoroutineContext
+): SnapshotStateMap<K, V> {
+  val state by this.collectAsState(context = context)
+  return state.rememberAsStateMap()
+}
+
+/**
+ * Any list in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State list into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <T : Any> StateFlow<Collection<T>>.collectAsStateListWithLifecycle(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    context: CoroutineContext = EmptyCoroutineContext
+): SnapshotStateList<T> {
+  val state by
+      this.collectAsStateWithLifecycle(
+          lifecycleOwner = lifecycleOwner,
+          minActiveState = minActiveState,
+          context = context,
+      )
+  return state.rememberAsStateList()
+}
+
+/**
+ * Any Map in Compose is unstable and will fire recompositions a ton. Use this helper to turn your
+ * data State Map into a compose ready list
+ */
+@Composable
+@CheckResult
+public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+    context: CoroutineContext = EmptyCoroutineContext
+): SnapshotStateMap<K, V> {
+  val state by
+      this.collectAsStateWithLifecycle(
+          lifecycleOwner = lifecycleOwner,
+          minActiveState = minActiveState,
+          context = context,
+      )
   return state.rememberAsStateMap()
 }

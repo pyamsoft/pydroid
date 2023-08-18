@@ -26,7 +26,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -36,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
@@ -75,11 +75,11 @@ internal fun SettingsScreen(
     onInAppDebuggingChanged: () -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
 ) {
-  val loadingState by state.loadingState.collectAsState()
-  val applicationName by state.applicationName.collectAsState()
-  val darkMode by state.darkMode.collectAsState()
-  val isHapticsEnabled by state.isHapticsEnabled.collectAsState()
-  val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsState()
+  val loadingState by state.loadingState.collectAsStateWithLifecycle()
+  val applicationName by state.applicationName.collectAsStateWithLifecycle()
+  val darkMode by state.darkMode.collectAsStateWithLifecycle()
+  val isHapticsEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
+  val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
 
   Surface(
       modifier = modifier,

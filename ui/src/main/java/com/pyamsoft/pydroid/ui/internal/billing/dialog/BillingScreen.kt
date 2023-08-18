@@ -30,7 +30,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -39,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
@@ -48,7 +48,7 @@ import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.util.collectAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
 @Composable
 internal fun BillingScreen(
@@ -59,11 +59,11 @@ internal fun BillingScreen(
     onBillingErrorDismissed: () -> Unit,
     onClose: () -> Unit,
 ) {
-  val skuList = state.skuList.collectAsStateList()
-  val connected by state.connected.collectAsState()
-  val icon by state.icon.collectAsState()
-  val name by state.name.collectAsState()
-  val error by state.error.collectAsState()
+  val skuList = state.skuList.collectAsStateListWithLifecycle()
+  val connected by state.connected.collectAsStateWithLifecycle()
+  val icon by state.icon.collectAsStateWithLifecycle()
+  val name by state.name.collectAsStateWithLifecycle()
+  val error by state.error.collectAsStateWithLifecycle()
 
   val hapticManager = LocalHapticManager.current
   val snackbarHostState = remember { SnackbarHostState() }

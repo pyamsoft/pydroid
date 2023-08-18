@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.settings
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -31,6 +30,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -197,12 +197,12 @@ private fun SettingsContent(
     onHapticsChanged: (Boolean) -> Unit,
     extraDebugContent: LazyListScope.() -> Unit,
 ) {
-  val showResetDialog by state.isShowingResetDialog.collectAsState()
-  val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsState()
-  val showAboutDialog by state.isShowingAboutDialog.collectAsState()
-  val showBillingDialog by billingState.isShowingDialog.collectAsState()
-  val showChangeLogDialog by changeLogState.isShowingDialog.collectAsState()
-  val showInAppDebuggingDialog by state.isShowingInAppDebugDialog.collectAsState()
+  val showResetDialog by state.isShowingResetDialog.collectAsStateWithLifecycle()
+  val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsStateWithLifecycle()
+  val showAboutDialog by state.isShowingAboutDialog.collectAsStateWithLifecycle()
+  val showBillingDialog by billingState.isShowingDialog.collectAsStateWithLifecycle()
+  val showChangeLogDialog by changeLogState.isShowingDialog.collectAsStateWithLifecycle()
+  val showInAppDebuggingDialog by state.isShowingInAppDebugDialog.collectAsStateWithLifecycle()
 
   SettingsScreen(
       modifier = modifier,

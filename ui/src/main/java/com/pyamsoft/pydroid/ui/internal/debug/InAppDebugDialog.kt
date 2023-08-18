@@ -35,7 +35,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.theme.warning
@@ -56,7 +56,7 @@ import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
-import com.pyamsoft.pydroid.ui.util.collectAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 private enum class InAppDebugContentTypes {
@@ -110,8 +110,8 @@ private fun InAppDebugScreen(
     onCopy: () -> Unit,
     extraContent: LazyListScope.() -> Unit = {},
 ) {
-  val isEnabled by state.isInAppDebuggingEnabled.collectAsState()
-  val lines = state.inAppDebuggingLogLines.collectAsStateList()
+  val isEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
+  val lines = state.inAppDebuggingLogLines.collectAsStateListWithLifecycle()
 
   val snackbarHostState = remember { SnackbarHostState() }
   val (copied, setCopied) = remember { mutableStateOf(false) }

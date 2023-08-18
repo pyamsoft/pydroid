@@ -20,11 +20,11 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
@@ -101,7 +101,7 @@ internal constructor(
       onDismissDialog: () -> Unit,
       content: @Composable () -> Unit,
   ) {
-    val showDialog by state.isShowingDialog.collectAsState()
+    val showDialog by state.isShowingDialog.collectAsStateWithLifecycle()
 
     content()
 

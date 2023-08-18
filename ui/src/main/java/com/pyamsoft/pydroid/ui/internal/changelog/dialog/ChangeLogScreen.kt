@@ -26,12 +26,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
@@ -40,7 +40,7 @@ import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
-import com.pyamsoft.pydroid.ui.util.collectAsStateList
+import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
 @Composable
 @JvmOverloads
@@ -51,10 +51,10 @@ internal fun ChangeLogScreen(
     onRateApp: () -> Unit,
     onClose: () -> Unit
 ) {
-  val changeLog = state.changeLog.collectAsStateList()
-  val icon by state.icon.collectAsState()
-  val name by state.name.collectAsState()
-  val versionCode by state.applicationVersionCode.collectAsState()
+  val changeLog = state.changeLog.collectAsStateListWithLifecycle()
+  val icon by state.icon.collectAsStateWithLifecycle()
+  val name by state.name.collectAsStateWithLifecycle()
+  val versionCode by state.applicationVersionCode.collectAsStateWithLifecycle()
 
   AppHeaderDialog(
       modifier = modifier,

@@ -25,11 +25,11 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
@@ -42,8 +42,8 @@ internal fun VersionUpgradeCompleteScreen(
     state: VersionCheckViewState,
     onCompleteUpdate: () -> Unit,
 ) {
-  val launcher by state.launcher.collectAsState()
-  val isReady by state.isUpdateReadyToInstall.collectAsState()
+  val launcher by state.launcher.collectAsStateWithLifecycle()
+  val isReady by state.isUpdateReadyToInstall.collectAsStateWithLifecycle()
 
   val hapticManager = LocalHapticManager.current
 

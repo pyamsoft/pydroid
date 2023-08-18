@@ -31,7 +31,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -45,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
@@ -63,7 +63,7 @@ internal fun PYDroidExternalUriPortal(
   val handler = LocalUriHandler.current
   val hapticManager = LocalHapticManager.current
 
-  val uri by uriHandler.awaitingConfirmation.collectAsState()
+  val uri by uriHandler.awaitingConfirmation.collectAsStateWithLifecycle()
 
   val show = remember(uri) { uri.isNotBlank() }
 

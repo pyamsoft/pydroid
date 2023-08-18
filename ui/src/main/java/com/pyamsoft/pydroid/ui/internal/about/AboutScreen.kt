@@ -35,12 +35,12 @@ import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
@@ -62,8 +62,8 @@ internal fun AboutScreen(
     onClose: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
-  val loadingState by state.loadingState.collectAsState()
-  val navigationError by state.navigationError.collectAsState()
+  val loadingState by state.loadingState.collectAsStateWithLifecycle()
+  val navigationError by state.navigationError.collectAsStateWithLifecycle()
 
   Column(
       modifier = modifier,

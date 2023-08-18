@@ -96,8 +96,8 @@ private fun MyComposable(
   state: MyViewState,
   onUpdateSomeData: (SomeData) -> Unit,
 ) {
-  val someData by state.someData.collectAsState()
-  val otherData by state.otherData.collectAsState()
+  val someData by state.someData.collectAsStateWithLifecycle()
+  val otherData by state.otherData.collectAsStateWithLifecycle()
 
   RenderSomeData(
     someData = someData,

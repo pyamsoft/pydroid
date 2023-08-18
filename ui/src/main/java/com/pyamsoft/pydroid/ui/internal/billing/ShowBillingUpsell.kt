@@ -17,11 +17,11 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.internal.widget.DismissableInterruptCard
@@ -33,7 +33,7 @@ internal fun ShowBillingUpsell(
     onShowBilling: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-  val isShowingUpsell by state.isShowingUpsell.collectAsState()
+  val isShowingUpsell by state.isShowingUpsell.collectAsStateWithLifecycle()
 
   DismissableInterruptCard(
       modifier = modifier,

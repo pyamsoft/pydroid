@@ -40,7 +40,6 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.LifecycleEventEffect
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 
 internal class BillingDialogInjector : ComposableInjector() {
@@ -113,7 +112,7 @@ internal fun BillingDialog(
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google
           // Use the Activity scope so that we are not randomly cancelled mid purchase
-          activity.lifecycleScope.launch(context = Dispatchers.Main + NonCancellable) {
+          activity.lifecycleScope.launch(context = Dispatchers.Main) {
             Logger.d { "Start purchase flow for $sku" }
             purchaseClient.purchase(activity, sku)
           }

@@ -189,11 +189,15 @@ internal constructor(
       val waitTime = 1000L * backoffCount
       backoffCount *= 2
 
-      Logger.d { "Wait to reconnect for $waitTime milliseconds" }
-      delay(waitTime)
+      if (backoffCount < 1024) {
+        Logger.d { "Wait to reconnect for $waitTime milliseconds" }
+        delay(waitTime)
 
-      Logger.d { "Try connecting again" }
-      connect()
+        Logger.d { "Try connecting again" }
+        connect()
+      } else {
+        Logger.w { "We have tried to connect and have been unsuccessful. Billing DISABLED" }
+      }
     }
   }
 

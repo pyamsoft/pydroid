@@ -22,10 +22,10 @@ buildscript {
     coroutines = "1.7.3"
 
     // Compose
-    compose = "1.5.0"
-    composeCompiler = "1.5.1"
-    composeMaterial = "1.5.0"
-    accompanist = "0.30.1"
+    compose = "1.5.1"
+    composeCompiler = "1.5.3"
+    composeMaterial = "1.5.1"
+    accompanist = "0.32.0"
 
     // AndroidX
     core = "1.10.1"

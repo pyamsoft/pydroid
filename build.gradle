@@ -22,13 +22,13 @@ buildscript {
     coroutines = "1.7.3"
 
     // Compose
-    compose = "1.5.1"
+    compose = "1.5.2"
     composeCompiler = "1.5.3"
-    composeMaterial = "1.5.1"
+    composeMaterial = "1.5.2"
     accompanist = "0.32.0"
 
     // AndroidX
-    core = "1.10.1"
+    core = "1.12.0"
     activity = "1.7.2"
     lifecycle = "2.6.2"
 
@@ -44,7 +44,7 @@ plugins {
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
-  id("org.gradle.android.cache-fix") version "2.8.0" apply false
+  id("org.gradle.android.cache-fix") version "2.8.1" apply false
 
   // Kotlin
   // https://developer.android.com/studio/build#top-level
@@ -154,7 +154,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "26.8.4"
+          version "26.8.5"
         }
       }
     }

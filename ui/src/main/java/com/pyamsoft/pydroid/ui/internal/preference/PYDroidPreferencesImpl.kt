@@ -214,7 +214,7 @@ internal constructor(
 
     private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
     private const val KEY_BILLING_SHOW_UPSELL_COUNT = "billing_show_upsell_v1"
-    private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 10
+    private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 20
 
     private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false
     private const val KEY_IN_APP_DEBUGGING = "in_app_debugging_v1"

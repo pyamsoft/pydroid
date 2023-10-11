@@ -163,7 +163,7 @@ public fun <T : Any> StateFlow<Collection<T>>.collectAsStateListWithLifecycle(
  */
 @Composable
 @CheckResult
-public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(
+public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMapWithLifecycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     context: CoroutineContext = EmptyCoroutineContext

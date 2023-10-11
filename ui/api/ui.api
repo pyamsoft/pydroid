@@ -562,8 +562,8 @@ public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
 	public static final fun collectAsStateList (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun collectAsStateListWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateList;
-	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
+	public static final fun collectAsStateMapWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/activity/ComponentActivity;
 	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
 	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;

@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
+import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class AboutDialogInjector : ComposableInjector() {
@@ -70,12 +70,11 @@ internal fun AboutDialog(
 
   val viewModel = rememberNotNull(component.viewModel)
 
-  val uriHandler = LocalExternalUriHandler.current
-
   val handleDismissFailedNavigation by rememberUpdatedState {
     viewModel.handleDismissFailedNavigation()
   }
 
+  val uriHandler = rememberUriHandler()
   val handleOpenPage by rememberUpdatedState { url: String ->
     handleDismissFailedNavigation()
 

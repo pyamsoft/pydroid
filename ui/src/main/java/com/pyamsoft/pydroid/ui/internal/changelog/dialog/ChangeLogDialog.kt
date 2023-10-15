@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
-import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
+import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -82,7 +82,7 @@ internal fun ChangeLogDialog(
   val imageLoader = rememberNotNull(component.imageLoader)
 
   val context = LocalContext.current
-  val uriHandler = LocalExternalUriHandler.current
+  val uriHandler = rememberUriHandler()
 
   MountHooks(
       viewModel = viewModel,

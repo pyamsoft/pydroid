@@ -51,7 +51,7 @@ import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
-import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
+import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -78,7 +78,6 @@ public fun SettingsPage(
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   val scope = rememberCoroutineScope()
-  val uriHandler = LocalExternalUriHandler.current
   val context = LocalContext.current
 
   val component = rememberComposableInjector { SettingsInjector() }
@@ -89,6 +88,7 @@ public fun SettingsPage(
   val changeLogViewModel = rememberNotNull(component.changeLogViewModel)
   val billingViewModel = rememberNotNull(component.billingViewModel)
 
+  val uriHandler = rememberUriHandler()
   val handleOpenPage by rememberUpdatedState { url: String -> uriHandler.openUri(url) }
 
   MountHooks(

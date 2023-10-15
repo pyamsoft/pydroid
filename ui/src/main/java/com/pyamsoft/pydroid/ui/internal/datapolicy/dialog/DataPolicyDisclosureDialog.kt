@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
-import com.pyamsoft.pydroid.ui.uri.LocalExternalUriHandler
+import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class DataPolicyInjector : ComposableInjector() {
@@ -82,13 +82,13 @@ internal fun DataPolicyDisclosureDialog(
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
 
-  val uriHandler = LocalExternalUriHandler.current
   val activity = rememberResolvedActivity()
 
   val handleRejected by rememberUpdatedState { activity.finishAndRemoveTask() }
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
 
+  val uriHandler = rememberUriHandler()
   val openPage by rememberUpdatedState { url: String ->
     handleHideNavigationError()
 

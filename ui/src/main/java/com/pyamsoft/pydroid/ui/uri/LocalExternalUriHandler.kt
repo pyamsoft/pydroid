@@ -16,9 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.uri
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.pyamsoft.pydroid.ui.internal.uri.ExternalUriHandlerBridge
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 
 /**
  * The ExternalUriHandler
@@ -28,7 +31,19 @@ import com.pyamsoft.pydroid.ui.internal.uri.ExternalUriHandlerBridge
  * not throw.
  */
 @JvmField
-public val LocalExternalUriHandler: ProvidableCompositionLocal<ExternalUriHandler> =
+public val LocalExternalUriHandler: ProvidableCompositionLocal<ExternalUriHandler?> =
     staticCompositionLocalOf {
-      ExternalUriHandlerBridge.provideHandler()
+      null
     }
+
+/**
+ * Returns the closest valid UriHandler implementation
+ *
+ * Prefers "external" but falls back to the default handler if no external exists
+ */
+@Composable
+public fun rememberUriHandler(): UriHandler {
+  val external = LocalExternalUriHandler.current
+  val local = LocalUriHandler.current
+  return remember(external, local) { external ?: local }
+}

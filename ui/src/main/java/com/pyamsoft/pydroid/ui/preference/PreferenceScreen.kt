@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
+import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
@@ -111,7 +112,7 @@ private fun PreferenceScreenInternal(
             .keys
             .asSequence()
             .mapNotNull { id -> allPreferences.firstOrNull { it.id == id } }
-            .mapNotNull { it as? Preferences.ListPreference }
+            .mapNotNull { it.cast<Preferences.ListPreference>() }
             .toList()
             .toMutableStateList()
       }

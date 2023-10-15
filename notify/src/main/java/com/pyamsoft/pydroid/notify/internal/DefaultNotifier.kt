@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
+import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.notify.MissingDispatcherException
 import com.pyamsoft.pydroid.notify.Notifier
 import com.pyamsoft.pydroid.notify.NotifyChannelInfo
@@ -70,14 +71,8 @@ internal constructor(
         dispatchers
             .asSequence()
             .filter { it.canShow(notification) }
-            .map {
-              // Unsafe cast but should be fine because of the above filter clause.
-              // If the dispatcher canShow function returns false truths, then this will break
-              // but that's on you.
-              @Suppress("UNCHECKED_CAST") return@map it as? NotifyDispatcher<T>
-            }
-            .firstOrNull()
-            ?: throw MissingDispatcherException(dispatchers, notification)
+            .mapNotNull { it.cast<NotifyDispatcher<T>>() }
+            .firstOrNull() ?: throw MissingDispatcherException(dispatchers, notification)
 
     return dispatcher.build(id, channelInfo, notification)
   }

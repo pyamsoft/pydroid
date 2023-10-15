@@ -59,7 +59,6 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
-import com.pyamsoft.pydroid.ui.internal.uri.DefaultExternalUriHandler
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -295,7 +294,6 @@ internal interface AppComponent {
                   activity,
                   disabled = options.disableVersionCheck,
               ),
-          externalUriHandler = DefaultExternalUriHandler(),
       )
     }
 

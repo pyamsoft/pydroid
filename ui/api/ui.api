@@ -534,6 +534,8 @@ public abstract interface class com/pyamsoft/pydroid/ui/uri/ExternalUriHandler :
 
 public final class com/pyamsoft/pydroid/ui/uri/ExternalUriHandlerKt {
 	public static final fun ExternalUriPortal (Landroidx/compose/ui/Modifier;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberExternalUriHandler (Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/ui/uri/ExternalUriHandler;
+	public static final fun rememberUriHandler (Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/platform/UriHandler;
 }
 
 public final class com/pyamsoft/pydroid/ui/uri/LocalExternalUriHandlerKt {

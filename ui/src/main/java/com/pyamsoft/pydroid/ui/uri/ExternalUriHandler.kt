@@ -16,12 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.uri
 
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
+import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.ui.internal.uri.DefaultExternalUriHandler
+import com.pyamsoft.pydroid.ui.internal.uri.PYDroidExternalUriHandler
 import com.pyamsoft.pydroid.ui.internal.uri.PYDroidExternalUriPortal
-import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
 /** A UriHandler that provides additional confirmation UI when launching external Uri views */
 public interface ExternalUriHandler : UriHandler
@@ -31,12 +35,35 @@ public fun ExternalUriPortal(
     modifier: Modifier = Modifier,
     appName: String,
 ) {
-  val delegate = rememberPYDroidDelegate()
-  val uriHandler = remember(delegate) { delegate.externalUriHandler() }
+  LocalExternalUriHandler.current?.cast<PYDroidExternalUriHandler>()?.also { handler ->
+    PYDroidExternalUriPortal(
+        modifier = modifier,
+        appName = appName,
+        uriHandler = handler,
+    )
+  }
+}
 
-  PYDroidExternalUriPortal(
-      modifier = modifier,
-      appName = appName,
-      uriHandler = uriHandler,
-  )
+/**
+ * Remembers a default external URI handler
+ *
+ * Can be used with LocalExternalUriHandler provides handler
+ */
+@Composable
+@CheckResult
+public fun rememberExternalUriHandler(): ExternalUriHandler {
+  return remember { DefaultExternalUriHandler() }
+}
+
+/**
+ * Returns the closest valid UriHandler implementation
+ *
+ * Prefers "external" but falls back to the default handler if no external exists
+ */
+@Composable
+@CheckResult
+public fun rememberUriHandler(): UriHandler {
+  val external = LocalExternalUriHandler.current
+  val local = LocalUriHandler.current
+  return remember(external, local) { external ?: local }
 }

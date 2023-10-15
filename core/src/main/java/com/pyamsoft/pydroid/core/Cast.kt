@@ -14,19 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.uri
+package com.pyamsoft.pydroid.core
 
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.staticCompositionLocalOf
-
-/**
- * The ExternalUriHandler
- *
- * A handler which, upon clicking a link, first pops a "confirmation" dialog about navigating
- * externally to an outside service.
- */
-@JvmField
-public val LocalExternalUriHandler: ProvidableCompositionLocal<ExternalUriHandler?> =
-    staticCompositionLocalOf {
-      null
-    }
+/** Casting as part of a method chain */
+public inline fun <reified T : Any> Any?.cast(): T? {
+  return this as? T
+}

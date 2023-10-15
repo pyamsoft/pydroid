@@ -72,7 +72,8 @@ internal constructor(
             .asSequence()
             .filter { it.canShow(notification) }
             .mapNotNull { it.cast<NotifyDispatcher<T>>() }
-            .firstOrNull() ?: throw MissingDispatcherException(dispatchers, notification)
+            .firstOrNull()
+            ?: throw MissingDispatcherException(dispatchers, notification)
 
     return dispatcher.build(id, channelInfo, notification)
   }

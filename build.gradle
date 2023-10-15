@@ -22,14 +22,14 @@ buildscript {
     coroutines = "1.7.3"
 
     // Compose
-    compose = "1.5.2"
+    compose = "1.5.3"
     composeCompiler = "1.5.3"
-    composeMaterial = "1.5.2"
+    composeMaterial = "1.5.3"
     accompanist = "0.32.0"
 
     // AndroidX
     core = "1.12.0"
-    activity = "1.7.2"
+    activity = "1.8.0"
     lifecycle = "2.6.2"
 
     // Test Runner
@@ -154,7 +154,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "26.8.7"
+          version "26.9.0"
         }
       }
     }

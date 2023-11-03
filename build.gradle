@@ -22,9 +22,9 @@ buildscript {
     coroutines = "1.7.3"
 
     // Compose
-    compose = "1.5.3"
+    compose = "1.5.4"
     composeCompiler = "1.5.3"
-    composeMaterial = "1.5.3"
+    composeMaterial = "1.5.4"
     accompanist = "0.32.0"
 
     // AndroidX
@@ -161,7 +161,7 @@ subprojects {
   }
 
   dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
   }
 }
 

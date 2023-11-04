@@ -154,7 +154,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "26.9.0"
+          version "26.9.1"
         }
       }
     }
@@ -186,7 +186,7 @@ allprojects {
   }
 
   // Java compile
-  tasks.withType(JavaCompile) {
+  tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
       "-Xlint:unchecked",
       "-Xlint:deprecation",

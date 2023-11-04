@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -37,12 +36,11 @@ internal constructor(
     private val context: Context,
 ) : DebugInteractor {
 
-  private val clipboardManager by
-      lazy(NONE) {
-        enforcer.assertOffMainThread()
+  private val clipboardManager by lazy {
+    enforcer.assertOnMainThread()
 
-        context.applicationContext.getSystemService<ClipboardManager>().requireNotNull()
-      }
+    context.applicationContext.getSystemService<ClipboardManager>().requireNotNull()
+  }
 
   @CheckResult
   private fun parseLine(line: InAppDebugLogLine): String {
@@ -58,7 +56,7 @@ internal constructor(
   }
 
   override suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>) =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = Dispatchers.Main) {
         clipboardManager.setPrimaryClip(
             ClipData.newPlainText(
                 "Developer Messages", """```

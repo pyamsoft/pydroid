@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.isDebugMode
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,136 +92,126 @@ internal interface PYDroidComponent {
 
     private val context: Context = params.application
 
-    private val imageLoader: ImageLoader by lazy(NONE) { ImageLoader(params.application) }
+    private val imageLoader: ImageLoader by lazy { ImageLoader(params.application) }
 
-    private val theming: Theming by lazy(NONE) { ThemingImpl(preferences) }
+    private val theming: Theming by lazy { ThemingImpl(preferences) }
 
-    private val preferences by
-        lazy(NONE) {
-          PYDroidPreferencesImpl(
-              enforcer = enforcer,
-              context = params.application,
-              versionCode = params.version,
-          )
-        }
+    private val preferences by lazy {
+      PYDroidPreferencesImpl(
+          enforcer = enforcer,
+          context = params.application,
+          versionCode = params.version,
+      )
+    }
 
-    private val inAppLogLines by lazy(NONE) { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
+    private val inAppLogLines by lazy { MutableStateFlow(emptyList<InAppDebugLogLine>()) }
 
-    private val debugInteractor by
-        lazy(NONE) {
-          DebugInteractorImpl(
-              enforcer = enforcer,
-              context = params.application,
-          )
-        }
+    private val debugInteractor by lazy {
+      DebugInteractorImpl(
+          enforcer = enforcer,
+          context = params.application,
+      )
+    }
 
-    private val aboutModule by lazy(NONE) { AboutModule() }
+    private val aboutModule by lazy { AboutModule() }
 
-    private val dataPolicyModule by
-        lazy(NONE) {
-          DataPolicyModule(
-              DataPolicyModule.Parameters(
-                  context = context,
-                  preferences = preferences,
-              ),
-          )
-        }
-
-    private val changeLogModule by
-        lazy(NONE) {
-          ChangeLogModule(
-              ChangeLogModule.Parameters(
-                  context = context,
-                  preferences = preferences,
-                  isFakeChangeLogAvailable = params.debug.changeLogAvailable,
-              ),
-          )
-        }
-
-    private val appParams by
-        lazy(NONE) {
-          AppComponent.Factory.Parameters(
-              enforcer = enforcer,
+    private val dataPolicyModule by lazy {
+      DataPolicyModule(
+          DataPolicyModule.Parameters(
               context = context,
-              theming = theming,
-              billingErrorBus = DefaultEventBus(),
-              changeLogModule = changeLogModule,
-              imageLoader = imageLoader,
-              version = params.version,
-              dataPolicyModule = dataPolicyModule,
-              bugReportUrl = params.bugReportUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              viewSourceUrl = params.viewSourceUrl,
-              debug = params.debug,
-              billingPreferences = preferences,
-              debugPreferences = preferences,
-              logLinesBus = inAppLogLines,
-              debugInteractor = debugInteractor,
-              hapticPreferences = preferences,
-          )
-        }
+              preferences = preferences,
+          ),
+      )
+    }
 
-    private val aboutParams by
-        lazy(NONE) {
-          AboutComponent.Factory.Parameters(
-              module = aboutModule,
-          )
-        }
+    private val changeLogModule by lazy {
+      ChangeLogModule(
+          ChangeLogModule.Parameters(
+              context = context,
+              preferences = preferences,
+              isFakeChangeLogAvailable = params.debug.changeLogAvailable,
+          ),
+      )
+    }
 
-    private val dataPolicyParams by
-        lazy(NONE) {
-          DataPolicyDialogComponent.Factory.Parameters(
-              imageLoader = imageLoader,
-              module = dataPolicyModule,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
-          )
-        }
+    private val appParams by lazy {
+      AppComponent.Factory.Parameters(
+          enforcer = enforcer,
+          context = context,
+          theming = theming,
+          billingErrorBus = DefaultEventBus(),
+          changeLogModule = changeLogModule,
+          imageLoader = imageLoader,
+          version = params.version,
+          dataPolicyModule = dataPolicyModule,
+          bugReportUrl = params.bugReportUrl,
+          termsConditionsUrl = params.termsConditionsUrl,
+          privacyPolicyUrl = params.privacyPolicyUrl,
+          viewSourceUrl = params.viewSourceUrl,
+          debug = params.debug,
+          billingPreferences = preferences,
+          debugPreferences = preferences,
+          logLinesBus = inAppLogLines,
+          debugInteractor = debugInteractor,
+          hapticPreferences = preferences,
+      )
+    }
 
-    private val resetParams by
-        lazy(NONE) {
-          ResetComponent.Factory.Parameters(
-              module =
-                  SettingsModule(
-                      SettingsModule.Parameters(
-                          context = context,
-                      ),
+    private val aboutParams by lazy {
+      AboutComponent.Factory.Parameters(
+          module = aboutModule,
+      )
+    }
+
+    private val dataPolicyParams by lazy {
+      DataPolicyDialogComponent.Factory.Parameters(
+          imageLoader = imageLoader,
+          module = dataPolicyModule,
+          privacyPolicyUrl = params.privacyPolicyUrl,
+          termsConditionsUrl = params.termsConditionsUrl,
+      )
+    }
+
+    private val resetParams by lazy {
+      ResetComponent.Factory.Parameters(
+          module =
+              SettingsModule(
+                  SettingsModule.Parameters(
+                      context = context,
                   ),
-          )
-        }
+              ),
+      )
+    }
 
-    private val provider by
-        lazy(NONE) {
-          object : ModuleProvider {
+    private val provider by lazy {
+      object : ModuleProvider {
 
-            private val modules by
-                lazy(NONE) {
-                  object : ModuleProvider.Modules {
+        private val modules by lazy {
+          object : ModuleProvider.Modules {
 
-                    override fun imageLoader(): ImageLoader {
-                      return imageLoader
-                    }
+            override fun imageLoader(): ImageLoader {
+              return imageLoader
+            }
 
-                    override fun theming(): Theming {
-                      return theming
-                    }
+            override fun theming(): Theming {
+              return theming
+            }
 
-                    override fun enforcer(): ThreadEnforcer {
-                      return enforcer
-                    }
+            override fun enforcer(): ThreadEnforcer {
+              return enforcer
+            }
 
-                    override fun inAppDebugStatus(): InAppDebugStatus {
-                      return preferences
-                    }
-                  }
-                }
-
-            override fun get(): ModuleProvider.Modules {
-              return modules
+            override fun inAppDebugStatus(): InAppDebugStatus {
+              return preferences
             }
           }
         }
+
+        override fun get(): ModuleProvider.Modules {
+          return modules
+        }
+      }
+    }
 
     init {
       params.logger?.also { Logger.setLogger(it) }

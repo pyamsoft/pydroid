@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.ThreadEnforcer
 
 /** Billing module */
 public class BillingModule(params: Parameters) {
@@ -27,6 +28,7 @@ public class BillingModule(params: Parameters) {
   private val impl =
       PlayStoreBillingInteractor(
           context = params.context.applicationContext,
+          enforcer = params.enforcer,
           errorBus = params.errorBus,
       )
 
@@ -51,6 +53,7 @@ public class BillingModule(params: Parameters) {
   /** Module parameters */
   public data class Parameters(
       internal val context: Context,
+      internal val enforcer: ThreadEnforcer,
       internal val errorBus: EventBus<Throwable>,
   )
 }

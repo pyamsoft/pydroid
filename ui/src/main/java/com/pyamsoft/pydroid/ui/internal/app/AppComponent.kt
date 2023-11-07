@@ -133,6 +133,7 @@ internal interface AppComponent {
         BillingModule(
             BillingModule.Parameters(
                 context = params.context.applicationContext,
+                enforcer = params.enforcer,
                 errorBus = params.billingErrorBus,
             ),
         )

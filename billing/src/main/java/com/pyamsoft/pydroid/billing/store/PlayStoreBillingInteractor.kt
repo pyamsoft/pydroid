@@ -38,8 +38,11 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -54,10 +57,11 @@ import kotlinx.coroutines.withContext
 internal class PlayStoreBillingInteractor
 internal constructor(
     context: Context,
+    private val enforcer: ThreadEnforcer,
     private val errorBus: EventBus<Throwable>,
 ) :
-    BillingInteractor,
     BillingConnector,
+    BillingInteractor,
     BillingLauncher,
     BillingClientStateListener,
     PurchasesUpdatedListener,
@@ -73,7 +77,13 @@ internal constructor(
 
   private val appSkuList: List<String>
 
-  private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
+  private val skuFlow =
+      MutableStateFlow(
+          State(
+              state = BillingState.LOADING,
+              list = emptyList(),
+          ),
+      )
 
   private val billingScope = MainScope()
 
@@ -98,6 +108,8 @@ internal constructor(
   }
 
   private fun connect() {
+    enforcer.assertOnMainThread()
+
     if (!client.isReady) {
       Logger.d { "Connect to Billing Client" }
       client.startConnection(this)
@@ -105,6 +117,8 @@ internal constructor(
   }
 
   private fun disconnect() {
+    enforcer.assertOnMainThread()
+
     Logger.d { "Disconnect from billing client" }
     client.endConnection()
 
@@ -112,6 +126,8 @@ internal constructor(
   }
 
   private fun querySkus() {
+    enforcer.assertOnMainThread()
+
     Logger.d { "Querying for SKUs $appSkuList" }
 
     // Map this here every time since we do not know if the QPDP builder carries state that cannot
@@ -130,6 +146,8 @@ internal constructor(
   }
 
   private fun handlePurchases(purchases: List<Purchase>) {
+    enforcer.assertOnMainThread()
+
     for (purchase in purchases) {
       Logger.d { "Consume purchase: $purchase" }
       val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
@@ -186,15 +204,17 @@ internal constructor(
     Logger.w { "Billing client was disconnected!" }
 
     billingScope.launch(context = Dispatchers.Default) {
-      val waitTime = 1000L * backoffCount
+      val waitTime = backoffCount
       backoffCount *= 2
 
       if (backoffCount < 1024) {
-        Logger.d { "Wait to reconnect for $waitTime milliseconds" }
-        delay(waitTime)
+        Logger.d { "Wait to reconnect for $waitTime seconds" }
+        delay(waitTime.seconds)
 
-        Logger.d { "Try connecting again" }
-        connect()
+        withContext(context = Dispatchers.Main) {
+          Logger.d { "Try connecting again" }
+          connect()
+        }
       } else {
         Logger.w { "We have tried to connect and have been unsuccessful. Billing DISABLED" }
       }
@@ -221,13 +241,17 @@ internal constructor(
 
   override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
       withContext(context = Dispatchers.Default) {
-        try {
-          val billingSku = sku as PlayBillingSku
+        val realSku = sku.cast<PlayBillingSku>()
+        if (realSku == null) {
+          errorBus.emit(IllegalArgumentException("SKU must be of type PlayBillingSku"))
+          return@withContext
+        }
 
+        try {
           val products =
               listOf(
                   BillingFlowParams.ProductDetailsParams.newBuilder()
-                      .setProductDetails(billingSku.sku)
+                      .setProductDetails(realSku.sku)
                       // Do not need to set offerToken since we are not a subscription
                       .build(),
               )
@@ -235,11 +259,11 @@ internal constructor(
           val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
 
           withContext(context = Dispatchers.Main) {
-            Logger.d { "Launch purchase flow ${sku.id}" }
+            Logger.d { "Launch purchase flow ${realSku.id}" }
             client.launchBillingFlow(activity, params)
           }
         } catch (e: Throwable) {
-          Logger.e(e) { "Failed purchase flow for SKU: $sku" }
+          Logger.e(e) { "Failed purchase flow for SKU: $realSku" }
           errorBus.emit(RuntimeException(e.message ?: "An error occurred during purchasing."))
         }
       }
@@ -267,7 +291,10 @@ internal constructor(
     }
   }
 
-  private data class State(val state: BillingState, val list: List<BillingSku>)
+  private data class State(
+      val state: BillingState,
+      val list: List<PlayBillingSku>,
+  )
 
   companion object {
 

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- ~ Copyright 2023 pyamsoft ~ ~
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- ~ Copyright 2023 pyamsoft ~ ~
   Licensed under the Apache License, Version 2.0 (the "License"); ~ you may
   not use this file except in compliance with the License. ~ You may obtain
   a copy of the License at ~ ~ http://www.apache.org/licenses/LICENSE-2.0 ~
@@ -6,7 +7,6 @@
   under the License is distributed on an "AS IS" BASIS, ~ WITHOUT WARRANTIES
   OR CONDITIONS OF ANY KIND, either express or implied. ~ See the License for
   the specific language governing permissions and ~ limitations under the License. -->
-
 <resources>
   <string name="haptics_title">Enable Haptic Feedback</string>
   <string name="haptics_summary_off">Haptic feedback will not trigger for most
@@ -21,7 +21,9 @@
   <string name="upgrade_info_summary">Show the most recent change log!</string>
 
   <string name="about_license_title">Open Source Licenses</string>
-  <string name="about_license_summary">Open Source powers pyamsoft applications!</string>
+  <string
+    name="about_license_summary"
+  >Open Source powers pyamsoft applications!</string>
 
   <string name="check_version_title">Check for Updates</string>
   <string name="check_version_summary">Always have the fanciest stuff!</string>
@@ -33,33 +35,45 @@
     applications. Show your support with a tip!</string>
 
   <string name="bugreport_title">Submit a Bug Report</string>
-  <string name="bugreport_summary">Something not working right? Help me help you!</string>
+  <string
+    name="bugreport_summary"
+  >Something not working right? Help me help you!</string>
 
   <string name="view_source_title">View Source Code</string>
-  <string name="view_source_summary">We love open source! View the source code of this
+  <string
+    name="view_source_summary"
+  >We love open source! View the source code of this
     app!</string>
 
   <string name="view_privacy_title">@string/privacy_policy</string>
   <string name="view_privacy_summary">Read our Privacy Policy!</string>
 
   <string name="view_data_policy_title">@string/data_policy</string>
-  <string name="view_data_policy_summary">Read our Data Policy Disclosure!</string>
+  <string
+    name="view_data_policy_summary"
+  >Read our Data Policy Disclosure!</string>
 
   <string name="view_terms_title">@string/terms_conditions</string>
   <string name="view_terms_summary">Read our Terms &amp; Conditions!</string>
 
   <string name="social_media_f_title">Social Media</string>
-  <string name="social_media_f_summary">Follow pyamsoft on social media!</string>
+  <string
+    name="social_media_f_summary"
+  >Follow pyamsoft on social media!</string>
 
   <string name="social_media_b_title">Blogs and Updates</string>
-  <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
+  <string
+    name="social_media_b_summary"
+  >Follow the pyamsoft official blog for updates!</string>
 
   <string name="dark_mode_key">dark_mode_v2</string>
   <string name="dark_mode_title">Theme</string>
   <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
 
   <string name="dev_mode_title">Debug Mode</string>
-  <string name="dev_mode_summary">Enables a mode to view debugging information. THIS
+  <string
+    name="dev_mode_summary"
+  >Enables a mode to view debugging information. THIS
     WILL IMPACT PERFORMANCE.</string>
 
   <string-array name="dark_mode_names_v1">

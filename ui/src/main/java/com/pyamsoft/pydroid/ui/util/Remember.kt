@@ -64,8 +64,7 @@ private fun resolveActivity(context: Context): ComponentActivity {
       Logger.w { "Provided Context is not a ComponentActivity or a ContextWrapper: $context" }
       null
     }
-  }
-      ?: throw IllegalStateException("Could not resolve ComponentActivity from Context: $context")
+  } ?: throw IllegalStateException("Could not resolve ComponentActivity from Context: $context")
 }
 
 /**

@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -44,6 +43,7 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+import com.pyamsoft.pydroid.ui.internal.widget.BetterSurface
 
 internal enum class AppHeaderContentTypes {
   HEADER,
@@ -67,7 +67,7 @@ private fun AppHeader(
   ) {
     // Behind the content
     // Space half the height and draw the header behind it
-    Surface(
+    BetterSurface(
         modifier = Modifier.fillMaxWidth().height(ImageDefaults.LargeSize / 2),
         elevation = elevation,
         color = color,
@@ -141,7 +141,7 @@ internal fun AppHeaderDialog(
         val elevation = LocalDialogElevation.current
         val c = LocalDialogColor.current
 
-        Surface(
+        BetterSurface(
             modifier = Modifier.fillMaxWidth().height(MaterialTheme.keylines.baseline),
             elevation = elevation,
             color = c,
@@ -165,7 +165,7 @@ private inline fun RenderDialogContent(
   val elevation = LocalDialogElevation.current
   val color = LocalDialogColor.current
 
-  Surface(
+  BetterSurface(
       modifier = modifier,
       elevation = elevation,
       color = color,

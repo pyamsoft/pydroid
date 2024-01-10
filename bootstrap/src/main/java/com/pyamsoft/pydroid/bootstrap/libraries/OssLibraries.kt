@@ -443,12 +443,6 @@ public object OssLibraries {
         "Jetpack Compose support buildtime UI tooling",
     )
 
-    add(
-        "Accompanist System UI Controller",
-        "https://google.github.io/accompanist/systemuicontroller/",
-        "System UI Controller provides easy-to-use utilities for updating the System UI bar colors within Jetpack Compose.",
-    )
-
     addCoreLibraries()
     addThemeLibraries()
   }

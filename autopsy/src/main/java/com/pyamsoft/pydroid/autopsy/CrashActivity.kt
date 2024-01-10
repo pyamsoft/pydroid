@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.CheckResult
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.pyamsoft.pydroid.core.requireNotNull
@@ -49,7 +50,9 @@ internal class CrashActivity internal constructor() : ComponentActivity() {
 
     setContent {
       PYDroidTheme {
-        SystemBars()
+        SystemBars(
+            isDarkMode = isSystemInDarkTheme(),
+        )
         CrashScreen(
             modifier = Modifier.fillMaxSize(),
             threadName = threadName,

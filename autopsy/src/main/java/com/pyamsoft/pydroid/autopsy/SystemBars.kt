@@ -16,23 +16,41 @@
 
 package com.pyamsoft.pydroid.autopsy
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.graphics.Color
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.res.colorResource
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
-internal fun SystemBars() {
-  val isLightStatusBar = !isSystemInDarkTheme()
-
-  val controller = rememberSystemUiController()
-  val color = colorResource(R.color.crash_background_color)
-  SideEffect {
-    controller.setSystemBarsColor(
-        color = color,
-        darkIcons = isLightStatusBar,
-        isNavigationBarContrastEnforced = false,
+internal fun ComponentActivity.SystemBars(
+    isDarkMode: Boolean,
+) {
+  val view = LocalView.current
+  val w = window
+  val controller =
+      remember(
+          w,
+          view,
+      ) {
+        WindowInsetsControllerCompat(w, view)
+      }
+  LaunchedEffect(
+      isDarkMode,
+      controller,
+  ) {
+    val style =
+        if (isDarkMode) SystemBarStyle.dark(Color.TRANSPARENT)
+        else SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+    enableEdgeToEdge(
+        statusBarStyle = style,
+        navigationBarStyle = style,
     )
+    controller.isAppearanceLightStatusBars = isDarkMode
+    controller.isAppearanceLightNavigationBars = isDarkMode
   }
 }

@@ -34,9 +34,7 @@ dependencies {
   compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
   debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
 
-  // Accompanist
-  implementation(
-      "com.google.accompanist:accompanist-systemuicontroller:${rootProject.extra["accompanist"]}")
+  implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
 
   implementation("androidx.startup:startup-runtime:1.1.1")
 

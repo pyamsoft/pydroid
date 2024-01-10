@@ -25,7 +25,6 @@ buildscript {
     compose = "1.5.4"
     composeCompiler = "1.5.7"
     composeMaterial = "1.5.4"
-    accompanist = "0.32.0"
 
     // AndroidX
     core = "1.12.0"

@@ -18,18 +18,18 @@
 
 buildscript {
   ext {
-    kotlin = "1.9.21"
+    kotlin = "1.9.22"
     coroutines = "1.7.3"
 
     // Compose
-    compose = "1.5.4"
-    composeCompiler = "1.5.7"
-    composeMaterial = "1.5.4"
+    compose = "1.6.0"
+    composeCompiler = "1.5.8"
+    composeMaterial = "1.6.0"
 
     // AndroidX
     core = "1.12.0"
     activity = "1.8.2"
-    lifecycle = "2.6.2"
+    lifecycle = "2.7.0"
 
     // Test Runner
     testRunner = "1.5.2"

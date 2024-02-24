@@ -45,7 +45,7 @@ dependencies {
   // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
   // Compose Image loading
-  implementation("io.coil-kt:coil-compose-base:2.5.0")
+  implementation("io.coil-kt:coil-compose-base:2.6.0")
 
   implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
 

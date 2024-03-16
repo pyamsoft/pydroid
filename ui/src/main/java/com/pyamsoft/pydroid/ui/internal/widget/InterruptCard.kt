@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.widget
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -31,7 +30,6 @@ import com.pyamsoft.pydroid.ui.theme.HairlineSize
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
-@OptIn(ExperimentalAnimationApi::class)
 internal fun InterruptCard(
     modifier: Modifier = Modifier,
     visible: Boolean,

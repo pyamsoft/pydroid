@@ -100,7 +100,7 @@ subprojects {
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
-      minSdk = 22
+      minSdk = 24
 
       // For vector drawables
       vectorDrawables.useSupportLibrary = true

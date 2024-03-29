@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.notify.internal
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
 import android.content.Context
@@ -77,6 +78,7 @@ internal constructor(
     return dispatcher.build(id, channelInfo, notification)
   }
 
+  @SuppressLint("MissingPermission")
   override fun <T : NotifyData> show(
       id: NotifyId,
       tag: NotifyTag,

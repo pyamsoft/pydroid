@@ -24,5 +24,11 @@ dependencies {
   implementation("androidx.lifecycle:lifecycle-common:${rootProject.extra["lifecycle"]}")
   implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
 
+  // Needed to silence warning about using ActivityResult APIs
+  //
+  // In practice, this is most likely pulled in by AndroidX Activity or others
+  // but we do it here just to be explicit.
+  implementation("androidx.fragment:fragment:1.6.2")
+
   api(project(":core"))
 }

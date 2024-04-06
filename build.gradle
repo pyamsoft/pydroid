@@ -18,13 +18,13 @@
 
 buildscript {
   ext {
-    kotlin = "1.9.22"
+    kotlin = "1.9.23"
     coroutines = "1.8.0"
 
     // Compose
-    compose = "1.6.3"
-    composeCompiler = "1.5.10"
-    composeMaterial = "1.6.3"
+    compose = "1.6.5"
+    composeCompiler = "1.5.11"
+    composeMaterial = "1.6.5"
 
     // AndroidX
     core = "1.12.0"

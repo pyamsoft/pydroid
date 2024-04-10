@@ -25,7 +25,13 @@ import com.pyamsoft.pydroid.core.Logger
  * bar.
  *
  * You must handle insets on your own.
+ *
+ * You should instead use ComponentActivity.enableEdgeToEdge. DO NOT use both this and
+ * enableEdgeToEdge or weird things will happen.
  */
+@Deprecated(
+    message =
+        "Use ComponentActivity.enableEdgeToEdge. Do not use this with edgeToEdge or bars get weird.")
 public fun Activity.stableLayoutHideNavigation() {
   this.window.also { w ->
     if (w != null) {

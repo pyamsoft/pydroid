@@ -542,9 +542,25 @@ public final class com/pyamsoft/pydroid/ui/uri/LocalExternalUriHandlerKt {
 	public static final field LocalExternalUriHandler Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
+public final class com/pyamsoft/pydroid/ui/util/BordersKt {
+	public static final fun bottomBorder-aa2Vgzc (Landroidx/compose/ui/Modifier;FJF)Landroidx/compose/ui/Modifier;
+	public static final fun leftBorder-H2RKhps (Landroidx/compose/ui/Modifier;FJ)Landroidx/compose/ui/Modifier;
+	public static final fun rightBorder-H2RKhps (Landroidx/compose/ui/Modifier;FJ)Landroidx/compose/ui/Modifier;
+	public static final fun sideBorders-H2RKhps (Landroidx/compose/ui/Modifier;FJ)Landroidx/compose/ui/Modifier;
+	public static final fun topBorder-aa2Vgzc (Landroidx/compose/ui/Modifier;FJF)Landroidx/compose/ui/Modifier;
+}
+
+public final class com/pyamsoft/pydroid/ui/util/ColorsKt {
+	public static final fun surfaceColorAtElevation-DxzAY5Q (JLandroidx/compose/material/ElevationOverlay;FLandroidx/compose/runtime/Composer;II)J
+}
+
 public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
 	public static final fun isLandscape (Landroid/content/res/Configuration;)Z
 	public static final fun isPortrait (Landroid/content/res/Configuration;)Z
+}
+
+public final class com/pyamsoft/pydroid/ui/util/DensityKt {
+	public static final fun rememberPx-8Feqmps (FLandroidx/compose/runtime/Composer;I)F
 }
 
 public final class com/pyamsoft/pydroid/ui/util/EffectsKt {

@@ -161,11 +161,11 @@ public object OssLibraries {
         "Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.",
     )
 
-      add(
-          "AndroidX Fragment",
-          "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
-          "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
-      )
+    add(
+        "AndroidX Fragment",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
+        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
+    )
 
     add(
         "AndroidX Lifecycle Common",

@@ -18,9 +18,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
 >
-
   <application>
-
     <!-- Compose Handles config changes https://www.reddit.com/r/androiddev/comments/qwu12a/activity_recreation_problem_is_solved_with/ -->
     <activity
       android:name=".CrashActivity"
@@ -38,13 +36,10 @@
       android:exported="false"
       tools:node="merge"
     >
-
       <meta-data
         android:name="com.pyamsoft.pydroid.autopsy.AutopsyInitializer"
         android:value="androidx.startup"
       />
     </provider>
-
   </application>
-
 </manifest>

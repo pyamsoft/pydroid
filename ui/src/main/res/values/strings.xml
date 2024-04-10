@@ -15,7 +15,6 @@
   ~ limitations under the License.
   -->
 <resources>
-
   <string name="data_policy">Data Policy Disclosure</string>
   <string name="privacy_policy">Privacy Policy</string>
   <string name="terms_conditions">Terms &amp; Conditions</string>
@@ -34,5 +33,4 @@
   >Sorry, there was an error connecting to the In-App
     Billing service. Please try again later.</string>
   <string name="rate_app">Rate App</string>
-
 </resources>

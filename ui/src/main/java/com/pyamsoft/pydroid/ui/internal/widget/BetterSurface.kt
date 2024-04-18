@@ -45,7 +45,7 @@ import com.pyamsoft.pydroid.theme.keylines
  * We can work around that with this Composable BUT, it will not have the surface's Shadows
  */
 @Composable
-internal fun BetterSurface(
+public fun BetterSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
     color: Color = MaterialTheme.colorScheme.surface,

@@ -16,15 +16,15 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatActivity
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
 
 @CheckResult
 private fun createPYDroidDelegate(
-    activity: AppCompatActivity,
+    activity: ComponentActivity,
     provider: ChangeLogProvider,
     options: PYDroidActivityOptions,
 ): PYDroidActivityDelegateInternal {
@@ -43,7 +43,7 @@ private fun createPYDroidDelegate(
  * common functions like checking for updates or showing an in-app review dialog
  */
 @JvmOverloads
-public fun AppCompatActivity.installPYDroid(
+public fun ComponentActivity.installPYDroid(
     provider: ChangeLogProvider,
     options: PYDroidActivityOptions = PYDroidActivityOptions(),
 ): PYDroidActivityDelegate {

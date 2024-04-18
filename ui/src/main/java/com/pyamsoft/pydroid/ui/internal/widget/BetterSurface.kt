@@ -20,18 +20,24 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.contentColorFor
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.pyamsoft.pydroid.ui.util.surfaceColorAtElevation
+import com.pyamsoft.pydroid.theme.keylines
 
 /**
  * In Light Mode, surfaces at the same elevation have a very thin line between them
@@ -42,7 +48,7 @@ import com.pyamsoft.pydroid.ui.util.surfaceColorAtElevation
 internal fun BetterSurface(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
-    color: Color = MaterialTheme.colors.surface,
+    color: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(color),
     border: BorderStroke? = null,
     elevation: Dp = 0.dp,
@@ -50,15 +56,13 @@ internal fun BetterSurface(
 ) {
   CompositionLocalProvider(
       LocalContentColor provides contentColor,
-      //      val absoluteElevation = LocalAbsoluteElevation.current + elevation
-      //      LocalAbsoluteElevation provides absoluteElevation,
   ) {
     Box(
         modifier =
             modifier
                 .background(
                     color =
-                        surfaceColorAtElevation(
+                        MaterialTheme.colorScheme.surfaceColorAtElevation(
                             elevation = elevation,
                         ),
                     shape = shape,
@@ -75,6 +79,31 @@ internal fun BetterSurface(
                 },
     ) {
       content()
+    }
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewBetterSurface() {
+  Surface(
+      modifier = Modifier.background(color = Color.Red).padding(MaterialTheme.keylines.content),
+  ) {
+    Column {
+      BetterSurface(
+          modifier = Modifier.padding(MaterialTheme.keylines.content),
+      ) {
+        Text(
+            text = "Hello, World!",
+        )
+      }
+      BetterSurface(
+          modifier = Modifier.padding(MaterialTheme.keylines.content),
+      ) {
+        Text(
+            text = "Better than you!",
+        )
+      }
     }
   }
 }

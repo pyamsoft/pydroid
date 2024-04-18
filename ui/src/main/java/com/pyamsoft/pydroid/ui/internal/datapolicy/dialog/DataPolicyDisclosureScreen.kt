@@ -22,14 +22,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -131,8 +130,8 @@ private fun Links(
         modifier = Modifier.clickable { onTermsOfServiceClicked() },
         text = "View our Terms and Conditions",
         style =
-            MaterialTheme.typography.caption.copy(
-                color = MaterialTheme.colors.primary,
+            MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.primary,
             ),
     )
     Text(
@@ -141,8 +140,8 @@ private fun Links(
                 .padding(top = MaterialTheme.keylines.baseline),
         text = "View our Privacy Policy",
         style =
-            MaterialTheme.typography.caption.copy(
-                color = MaterialTheme.colors.primary,
+            MaterialTheme.typography.bodySmall.copy(
+                color = MaterialTheme.colorScheme.primary,
             ),
     )
   }
@@ -154,11 +153,8 @@ private fun Disclosure(
     name: String,
 ) {
   val disclosureStyle =
-      MaterialTheme.typography.body2.copy(
-          color =
-              MaterialTheme.colors.onSurface.copy(
-                  alpha = ContentAlpha.medium,
-              ),
+      MaterialTheme.typography.bodyMedium.copy(
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
       )
 
   Column(
@@ -166,7 +162,7 @@ private fun Disclosure(
   ) {
     Text(
         text = "$name is open source software.",
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
     )
 
     Text(

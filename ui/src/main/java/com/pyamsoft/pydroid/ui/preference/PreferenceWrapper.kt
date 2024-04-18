@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 
@@ -27,8 +27,9 @@ internal fun PreferenceAlphaWrapper(
     isEnabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+  val scheme = MaterialTheme.colorScheme
   CompositionLocalProvider(
-      LocalContentAlpha provides if (isEnabled) ContentAlpha.high else ContentAlpha.disabled,
+      LocalContentColor provides if (isEnabled) scheme.onSurface else scheme.onSurfaceVariant,
   ) {
     content()
   }

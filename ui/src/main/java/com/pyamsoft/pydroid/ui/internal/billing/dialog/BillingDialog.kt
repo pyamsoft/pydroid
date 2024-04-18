@@ -19,13 +19,14 @@ package com.pyamsoft.pydroid.ui.internal.billing.dialog
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -37,7 +38,6 @@ import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
-import com.pyamsoft.pydroid.ui.util.LifecycleEventEffect
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

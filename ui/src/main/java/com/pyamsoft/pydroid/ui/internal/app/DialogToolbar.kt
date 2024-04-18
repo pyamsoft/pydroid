@@ -18,15 +18,17 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +39,7 @@ import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun DialogToolbar(
     modifier: Modifier = Modifier,
     title: String,
@@ -46,9 +49,9 @@ internal fun DialogToolbar(
 
   Surface(
       modifier = modifier,
-      color = MaterialTheme.colors.primary,
-      contentColor = MaterialTheme.colors.onPrimary,
-      elevation = ZeroElevation,
+      color = MaterialTheme.colorScheme.primary,
+      contentColor = MaterialTheme.colorScheme.onPrimary,
+      shadowElevation = ZeroElevation,
       shape =
           MaterialTheme.shapes.medium.copy(
               bottomEnd = ZeroCornerSize,
@@ -60,9 +63,13 @@ internal fun DialogToolbar(
 
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color.Transparent,
-        contentColor = contentColor,
-        elevation = ZeroElevation,
+        colors =
+            TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                titleContentColor = contentColor,
+                navigationIconContentColor = contentColor,
+                actionIconContentColor = contentColor,
+            ),
         title = {
           Text(
               text = title,

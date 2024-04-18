@@ -66,7 +66,3 @@ public final class com/pyamsoft/pydroid/util/SharedPreferencesKt {
 	public static final fun stringSetFlow (Landroid/content/SharedPreferences;Ljava/lang/String;Ljava/util/Set;)Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class com/pyamsoft/pydroid/util/WindowInsetsKt {
-	public static final fun stableLayoutHideNavigation (Landroid/app/Activity;)V
-}
-

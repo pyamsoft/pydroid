@@ -26,13 +26,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,9 +47,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.theme.warning
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
+import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
@@ -137,7 +136,7 @@ private fun InAppDebugScreen(
       )
       Surface(
           modifier = Modifier.fillMaxWidth(),
-          elevation = DialogDefaults.Elevation,
+          shadowElevation = DialogDefaults.Elevation,
           shape =
               MaterialTheme.shapes.medium.copy(
                   topEnd = ZeroCornerSize,
@@ -160,10 +159,10 @@ private fun InAppDebugScreen(
                 Text(
                     text = "Logs",
                     style =
-                        MaterialTheme.typography.caption.copy(
+                        MaterialTheme.typography.bodySmall.copy(
                             color =
-                                MaterialTheme.colors.onSurface.copy(
-                                    alpha = ContentAlpha.disabled,
+                                MaterialTheme.colorScheme.onSurface.copy(
+                                    alpha = TypographyDefaults.ALPHA_DISABLED,
                                 ),
                         ),
                 )
@@ -182,13 +181,13 @@ private fun InAppDebugScreen(
                           return@remember "${line.line} $errorMessage"
                         },
                     style =
-                        MaterialTheme.typography.caption.copy(
+                        MaterialTheme.typography.bodySmall.copy(
                             fontFamily = FontFamily.Monospace,
                             color =
                                 when (line.level) {
-                                  DEBUG -> MaterialTheme.colors.onSurface
-                                  WARNING -> MaterialTheme.colors.warning
-                                  ERROR -> MaterialTheme.colors.error
+                                  DEBUG -> MaterialTheme.colorScheme.onSurface
+                                  WARNING -> MaterialTheme.colorScheme.tertiary
+                                  ERROR -> MaterialTheme.colorScheme.error
                                 },
                         ),
                 )
@@ -204,7 +203,7 @@ private fun InAppDebugScreen(
                   Text(
                       modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
                       text = "In-App Developer Mode is not enabled.",
-                      style = MaterialTheme.typography.h5,
+                      style = MaterialTheme.typography.headlineSmall,
                       textAlign = TextAlign.Center,
                   )
                 }

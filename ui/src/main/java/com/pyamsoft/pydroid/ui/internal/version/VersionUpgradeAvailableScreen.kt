@@ -19,10 +19,10 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -83,8 +83,8 @@ internal fun VersionUpgradeAvailableScreen(
       Text(
           text = text,
           style =
-              MaterialTheme.typography.body1.copy(
-                  color = MaterialTheme.colors.primary,
+              MaterialTheme.typography.bodyLarge.copy(
+                  color = MaterialTheme.colorScheme.primary,
               ),
       )
 
@@ -118,6 +118,18 @@ private fun PreviewVersionUpgradeAvailableScreen(
 @Preview
 @Composable
 private fun PreviewVersionCheckScreenAvailable() {
+  PreviewVersionUpgradeAvailableScreen(
+      state =
+          MutableVersionCheckViewState().apply {
+            launcher.value = AppUpdateLauncher.test(1)
+            isUpdateReadyToInstall.value = false
+          },
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewVersionCheckScreenEmpty() {
   PreviewVersionUpgradeAvailableScreen(
       state =
           MutableVersionCheckViewState().apply {

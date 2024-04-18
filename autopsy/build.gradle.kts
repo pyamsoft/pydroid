@@ -28,7 +28,7 @@ dependencies {
   // Compose
   implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
-  implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
+  implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
 
   // Compose Preview
   compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")

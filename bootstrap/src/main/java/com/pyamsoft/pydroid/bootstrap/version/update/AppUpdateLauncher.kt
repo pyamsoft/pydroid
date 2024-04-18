@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version.update
 import android.app.Activity
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.ResultWrapper
+import org.jetbrains.annotations.TestOnly
 
 /** In app update launcher */
 public interface AppUpdateLauncher {
@@ -38,6 +39,21 @@ public interface AppUpdateLauncher {
       return object : AppUpdateLauncher {
 
         override fun availableUpdateVersion(): Int = 0
+
+        override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> {
+          return ResultWrapper.success(Unit)
+        }
+      }
+    }
+
+    /** Create a test update launcher */
+    @TestOnly
+    @JvmStatic
+    @CheckResult
+    public fun test(versionCode: Int): AppUpdateLauncher {
+      return object : AppUpdateLauncher {
+
+        override fun availableUpdateVersion(): Int = versionCode
 
         override suspend fun update(activity: Activity, requestCode: Int): ResultWrapper<Unit> {
           return ResultWrapper.success(Unit)

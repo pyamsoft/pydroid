@@ -16,12 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.defaults
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+/** Typography defaults */
+public object TypographyDefaults {
 
-/** Default values for Cards */
-public object CardDefaults {
-
-  /** Elevation for a Card */
-  public val Elevation: Dp = 2.dp
+  /**
+   * This is a magic number that is recommended on the M3 migration guide
+   *
+   * https://developer.android.com/develop/ui/compose/designsystems/material2-material3#m3_16
+   *
+   * Why this is a magic hardcoded number instead of something defined in the system is beyond me.
+   * Are the Google engineers stupid or something?
+   */
+  public const val ALPHA_DISABLED: Float = 0.38F
 }

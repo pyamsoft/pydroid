@@ -26,8 +26,8 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -110,7 +110,7 @@ internal fun AppHeaderDialog(
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
-    color: Color = MaterialTheme.colors.surface,
+    color: Color = MaterialTheme.colorScheme.surface,
     content: LazyListScope.() -> Unit,
 ) {
   CompositionLocalProvider(
@@ -239,11 +239,16 @@ internal inline fun <T> LazyListScope.dialogItems(
 @Preview
 @Composable
 private fun PreviewAppHeader() {
-  AppHeader(
-      icon = 0,
-      name = "TEST",
-      imageLoader = createNewTestImageLoader(),
-  )
+  CompositionLocalProvider(
+      LocalDialogElevation provides DialogDefaults.Elevation,
+      LocalDialogColor provides MaterialTheme.colorScheme.surface,
+  ) {
+    AppHeader(
+        icon = 0,
+        name = "TEST",
+        imageLoader = createNewTestImageLoader(),
+    )
+  }
 }
 
 @Preview
@@ -256,6 +261,7 @@ private fun PreviewAppHeaderDialog() {
   ) {
     dialogItem {
       Text(
+          modifier = Modifier.fillMaxWidth(),
           text = "Just a Test",
       )
     }

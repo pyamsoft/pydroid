@@ -16,35 +16,13 @@
 
 package com.pyamsoft.pydroid.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
-import androidx.compose.material.Typography
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.ui.graphics.Color
-
-private val GREEN = Color(0xFF4CAF50)
-private val AMBER = Color(0xFFFFC107)
-
-/** Provide a Theme color for Success */
-@Suppress("UnusedReceiverParameter")
-public val Colors.success: Color
-  get() = GREEN
-
-/** Provide a Theme color for OnSuccess */
-public val Colors.onSuccess: Color
-  get() = this.onError
-
-/** Provide a Theme color for Warning */
-@Suppress("UnusedReceiverParameter")
-public val Colors.warning: Color
-  get() = AMBER
-
-/** Provide a Theme color for OnWarning */
-public val Colors.onWarning: Color
-  get() = this.onError
 
 /** A Spacing extension on the Material theme */
 @Suppress("UnusedReceiverParameter")
@@ -62,14 +40,14 @@ public val MaterialTheme.keylines: Keylines
  */
 @Composable
 public fun PYDroidTheme(
-    colors: Colors = MaterialTheme.colors,
+    colorScheme: ColorScheme = MaterialTheme.colorScheme,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
     keylines: Keylines = MaterialTheme.keylines,
     content: @Composable () -> Unit
 ) {
   MaterialTheme(
-      colors = colors,
+      colorScheme = colorScheme,
       typography = typography,
       shapes = shapes,
   ) {

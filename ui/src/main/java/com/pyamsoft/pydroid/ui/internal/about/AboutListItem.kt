@@ -20,11 +20,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,7 +35,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.defaults.CardDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 @Composable
@@ -49,7 +49,7 @@ internal fun AboutListItem(
   Card(
       modifier = modifier,
       shape = MaterialTheme.shapes.medium,
-      elevation = CardDefaults.Elevation,
+      elevation = CardDefaults.cardElevation(),
   ) {
     Column(
         modifier = Modifier.padding(MaterialTheme.keylines.baseline),
@@ -87,7 +87,7 @@ internal fun AboutListItem(
 @Composable
 private fun Name(library: OssLibrary) {
   Text(
-      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.W700),
+      style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.W700),
       text = library.name,
   )
 }
@@ -95,7 +95,7 @@ private fun Name(library: OssLibrary) {
 @Composable
 private fun License(library: OssLibrary) {
   Text(
-      style = MaterialTheme.typography.caption,
+      style = MaterialTheme.typography.bodySmall,
       text = stringResource(R.string.license_name, library.licenseName),
   )
 }
@@ -107,7 +107,7 @@ private fun Description(library: OssLibrary) {
   if (description.isNotBlank()) {
     Text(
         modifier = Modifier.padding(vertical = MaterialTheme.keylines.baseline),
-        style = MaterialTheme.typography.body2,
+        style = MaterialTheme.typography.bodyMedium,
         text = description,
     )
   }

@@ -23,11 +23,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -55,7 +55,7 @@ internal fun ResetScreen(
 
   Surface(
       modifier = modifier,
-      elevation = DialogDefaults.Elevation,
+      shadowElevation = DialogDefaults.Elevation,
   ) {
     LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth(),
@@ -97,7 +97,7 @@ internal fun ResetScreen(
 private fun Title() {
   Text(
       text = "Are you sure?",
-      style = MaterialTheme.typography.h4,
+      style = MaterialTheme.typography.headlineMedium,
   )
 }
 
@@ -106,7 +106,7 @@ private fun Message() {
   Column {
     Text(
         text = "All saved data will be cleared and all settings reset to default.",
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
     )
 
     Box(
@@ -114,7 +114,7 @@ private fun Message() {
     ) {
       Text(
           text = "The app will act as if you are launching it for the first time.",
-          style = MaterialTheme.typography.body1,
+          style = MaterialTheme.typography.bodyLarge,
       )
     }
 
@@ -123,7 +123,7 @@ private fun Message() {
     ) {
       Text(
           text = "This cannot be undone.",
-          style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.W700),
+          style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.W700),
       )
     }
   }
@@ -157,7 +157,7 @@ private fun Actions(
     ) {
       TextButton(
           enabled = !isReset,
-          colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.error),
+          colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
           onClick = {
             hapticManager?.confirmButtonPress()
             onReset()

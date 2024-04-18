@@ -21,9 +21,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -88,7 +88,7 @@ private fun Name(
   Text(
       modifier = modifier,
       text = title,
-      style = MaterialTheme.typography.body1,
+      style = MaterialTheme.typography.bodyLarge,
   )
 }
 
@@ -100,7 +100,7 @@ private fun Description(
   Text(
       modifier = modifier,
       text = sku.description,
-      style = MaterialTheme.typography.caption,
+      style = MaterialTheme.typography.bodySmall,
   )
 }
 
@@ -112,7 +112,7 @@ private fun Price(
   Text(
       modifier = modifier,
       text = sku.displayPrice,
-      style = MaterialTheme.typography.body1,
+      style = MaterialTheme.typography.bodyLarge,
   )
 }
 

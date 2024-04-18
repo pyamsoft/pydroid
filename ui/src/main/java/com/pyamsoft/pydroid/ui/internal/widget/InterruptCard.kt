@@ -22,8 +22,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.pyamsoft.pydroid.ui.theme.HairlineSize
@@ -45,11 +45,11 @@ internal fun InterruptCard(
         border =
             BorderStroke(
                 width = HairlineSize,
-                color = MaterialTheme.colors.primary,
+                color = MaterialTheme.colorScheme.primary,
             ),
-        elevation = ZeroElevation,
+        shadowElevation = ZeroElevation,
         color =
-            MaterialTheme.colors.primary.copy(
+            MaterialTheme.colorScheme.primary.copy(
                 alpha = 0.10F,
             ),
         shape = MaterialTheme.shapes.medium,

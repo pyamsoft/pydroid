@@ -19,11 +19,10 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -81,8 +80,8 @@ internal fun VersionUpgradeCompleteScreen(
       Text(
           text = text,
           style =
-              MaterialTheme.typography.body1.copy(
-                  color = MaterialTheme.colors.primary,
+              MaterialTheme.typography.bodyLarge.copy(
+                  color = MaterialTheme.colorScheme.primary,
               ),
       )
 
@@ -90,11 +89,8 @@ internal fun VersionUpgradeCompleteScreen(
           modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
           text = "Completing the upgrade will close and restart this app.",
           style =
-              MaterialTheme.typography.caption.copy(
-                  color =
-                      MaterialTheme.colors.primary.copy(
-                          alpha = ContentAlpha.medium,
-                      ),
+              MaterialTheme.typography.bodySmall.copy(
+                  color = MaterialTheme.colorScheme.primary,
               ),
       )
 

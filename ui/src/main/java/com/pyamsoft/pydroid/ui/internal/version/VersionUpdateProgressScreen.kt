@@ -19,11 +19,10 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -64,17 +63,14 @@ internal fun VersionUpdateProgressScreen(
           modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
           text = "Downloading Update...",
           style =
-              MaterialTheme.typography.body2.copy(
-                  color =
-                      MaterialTheme.colors.primary.copy(
-                          alpha = ContentAlpha.medium,
-                      ),
+              MaterialTheme.typography.bodyMedium.copy(
+                  color = MaterialTheme.colorScheme.primary,
               ),
       )
 
       LinearProgressIndicator(
           modifier = Modifier.fillMaxWidth(),
-          progress = validProgress,
+          progress = { validProgress },
       )
     }
   }

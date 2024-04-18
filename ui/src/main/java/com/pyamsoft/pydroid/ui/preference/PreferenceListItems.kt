@@ -28,23 +28,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.Checkbox
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentColor
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Surface
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
@@ -239,7 +237,7 @@ internal fun PreferenceDialog(
   ) {
     Surface(
         modifier = modifier.padding(MaterialTheme.keylines.content),
-        elevation = DialogDefaults.Elevation,
+        shadowElevation = DialogDefaults.Elevation,
         shape = MaterialTheme.shapes.medium,
     ) {
       LazyColumn {
@@ -303,7 +301,7 @@ private fun PreferenceDialogTitle(
   Text(
       modifier = modifier.padding(MaterialTheme.keylines.content),
       text = title,
-      style = MaterialTheme.typography.h6,
+      style = MaterialTheme.typography.titleLarge,
   )
 }
 
@@ -345,7 +343,7 @@ private fun PreferenceDialogItem(
     )
     Text(
         text = name,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
     )
   }
 }
@@ -427,11 +425,10 @@ private fun DefaultPreferenceItem(
         contentAlignment = Alignment.Center,
     ) {
       if (icon != null) {
-        val imageTintColor = if (MaterialTheme.colors.isLight) Color.Black else Color.White
         Icon(
             imageVector = icon,
             contentDescription = text,
-            tint = imageTintColor,
+            tint = textColor,
         )
       }
     }
@@ -447,11 +444,8 @@ private fun DefaultPreferenceItem(
         Text(
             text = text,
             style =
-                MaterialTheme.typography.body1.copy(
-                    color =
-                        textColor.copy(
-                            alpha = if (enabled) ContentAlpha.high else ContentAlpha.medium,
-                        ),
+                MaterialTheme.typography.bodyLarge.copy(
+                    color = textColor,
                 ),
         )
         badge?.let { compose ->
@@ -474,11 +468,8 @@ private fun DefaultPreferenceItem(
           Text(
               text = summary,
               style =
-                  MaterialTheme.typography.caption.copy(
-                      color =
-                          textColor.copy(
-                              alpha = if (enabled) ContentAlpha.medium else ContentAlpha.disabled,
-                          ),
+                  MaterialTheme.typography.bodySmall.copy(
+                      color = textColor,
                   ),
           )
         }

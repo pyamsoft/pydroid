@@ -21,9 +21,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,7 +67,7 @@ internal fun ChangeLogListItem(
 private fun Type(line: ChangeLogLine) {
   Text(
       text = line.type.name,
-      style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.W700),
+      style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.W700),
   )
 }
 
@@ -75,7 +75,7 @@ private fun Type(line: ChangeLogLine) {
 private fun Line(line: ChangeLogLine) {
   Text(
       text = line.line,
-      style = MaterialTheme.typography.body1,
+      style = MaterialTheme.typography.bodyLarge,
   )
 }
 

@@ -21,10 +21,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
 import com.pyamsoft.pydroid.ui.internal.app.dialogItem
@@ -95,10 +95,10 @@ private fun Actions(
 ) {
   val hapticManager = LocalHapticManager.current
   val versionStyle =
-      MaterialTheme.typography.overline.copy(
+      MaterialTheme.typography.bodySmall.copy(
           color =
-              MaterialTheme.colors.onSurface.copy(
-                  alpha = ContentAlpha.disabled,
+              MaterialTheme.colorScheme.onSurface.copy(
+                  alpha = TypographyDefaults.ALPHA_DISABLED,
               ),
       )
 

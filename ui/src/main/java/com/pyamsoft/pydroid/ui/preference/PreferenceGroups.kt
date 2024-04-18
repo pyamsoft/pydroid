@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.ui.preference
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,8 +43,8 @@ internal fun PreferenceGroupHeader(
     Text(
         text = name,
         style =
-            MaterialTheme.typography.body2.copy(
-                color = MaterialTheme.colors.secondary,
+            MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.W700,
             ),
     )

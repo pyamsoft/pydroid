@@ -22,13 +22,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ContentAlpha
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -105,7 +104,7 @@ internal fun PYDroidExternalUriPortal(
     ) {
       Surface(
           modifier = modifier.padding(MaterialTheme.keylines.content),
-          elevation = DialogDefaults.Elevation,
+          shadowElevation = DialogDefaults.Elevation,
           shape = MaterialTheme.shapes.medium,
       ) {
         Column(
@@ -113,25 +112,22 @@ internal fun PYDroidExternalUriPortal(
         ) {
           Text(
               modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
-              style = MaterialTheme.typography.body1,
+              style = MaterialTheme.typography.bodyLarge,
               text = "You're going to a link outside $appName",
               fontWeight = FontWeight.W700,
           )
 
           Text(
               modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
-              style = MaterialTheme.typography.body2,
+              style = MaterialTheme.typography.bodyMedium,
               text = confirmation,
           )
 
           Text(
               modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
               style =
-                  MaterialTheme.typography.caption.copy(
-                      color =
-                          MaterialTheme.colors.onSurface.copy(
-                              alpha = ContentAlpha.medium,
-                          ),
+                  MaterialTheme.typography.bodySmall.copy(
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
                   ),
               text =
                   "pyamsoft does not control this link and is not responsible for any of the content displayed.",
@@ -149,10 +145,7 @@ internal fun PYDroidExternalUriPortal(
                 onClick = { handleDismiss() },
                 colors =
                     ButtonDefaults.textButtonColors(
-                        contentColor =
-                            MaterialTheme.colors.onSurface.copy(
-                                alpha = ContentAlpha.medium,
-                            ),
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
             ) {
               Text(

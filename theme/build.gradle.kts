@@ -29,7 +29,7 @@ dependencies {
 
   // Compose
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
-  implementation("androidx.compose.material:material:${rootProject.extra["composeMaterial"]}")
+  implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
 
   api(project(":core"))
 }

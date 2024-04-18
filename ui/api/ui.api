@@ -72,9 +72,9 @@ public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDeleg
 }
 
 public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityKt {
-	public static final fun installPYDroid (Landroidx/appcompat/app/AppCompatActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
-	public static final fun installPYDroid (Landroidx/appcompat/app/AppCompatActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
-	public static synthetic fun installPYDroid$default (Landroidx/appcompat/app/AppCompatActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
+	public static final fun installPYDroid (Landroidx/activity/ComponentActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
+	public static final fun installPYDroid (Landroidx/activity/ComponentActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
+	public static synthetic fun installPYDroid$default (Landroidx/activity/ComponentActivity;Lcom/pyamsoft/pydroid/ui/changelog/ChangeLogProvider;Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityOptions;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate;
 }
 
 public final class com/pyamsoft/pydroid/ui/app/PYDroidActivityOptions {
@@ -173,12 +173,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/debug/InAppDebugStatus {
 	public abstract fun listenForInAppDebuggingEnabled ()Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class com/pyamsoft/pydroid/ui/defaults/CardDefaults {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/CardDefaults;
-	public final fun getElevation-D9Ej5fM ()F
-}
-
 public final class com/pyamsoft/pydroid/ui/defaults/DialogDefaults {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/DialogDefaults;
@@ -199,6 +193,12 @@ public final class com/pyamsoft/pydroid/ui/defaults/ListItemDefaults {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/ListItemDefaults;
 	public final fun getDefaultSize-D9Ej5fM ()F
 	public final fun getLeadingSize-D9Ej5fM ()F
+}
+
+public final class com/pyamsoft/pydroid/ui/defaults/TypographyDefaults {
+	public static final field $stable I
+	public static final field ALPHA_DISABLED F
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/defaults/TypographyDefaults;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/haptics/HapticManager {
@@ -304,10 +304,12 @@ public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$App
 	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public static field lambda-2 Lkotlin/jvm/functions/Function2;
 	public static field lambda-3 Lkotlin/jvm/functions/Function3;
+	public static field lambda-4 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
@@ -412,6 +414,17 @@ public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$BetterSurfaceKt {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$BetterSurfaceKt;
+	public static field lambda-1 Lkotlin/jvm/functions/Function2;
+	public static field lambda-2 Lkotlin/jvm/functions/Function2;
+	public static field lambda-3 Lkotlin/jvm/functions/Function2;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/widget/ComposableSingletons$DismissableInterruptCardKt {
@@ -550,10 +563,6 @@ public final class com/pyamsoft/pydroid/ui/util/BordersKt {
 	public static final fun topBorder-aa2Vgzc (Landroidx/compose/ui/Modifier;FJF)Landroidx/compose/ui/Modifier;
 }
 
-public final class com/pyamsoft/pydroid/ui/util/ColorsKt {
-	public static final fun surfaceColorAtElevation-DxzAY5Q (JLandroidx/compose/material/ElevationOverlay;FLandroidx/compose/runtime/Composer;II)J
-}
-
 public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
 	public static final fun isLandscape (Landroid/content/res/Configuration;)Z
 	public static final fun isPortrait (Landroid/content/res/Configuration;)Z
@@ -561,10 +570,6 @@ public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {
 
 public final class com/pyamsoft/pydroid/ui/util/DensityKt {
 	public static final fun rememberPx-8Feqmps (FLandroidx/compose/runtime/Composer;I)F
-}
-
-public final class com/pyamsoft/pydroid/ui/util/EffectsKt {
-	public static final fun LifecycleEventEffect (Landroidx/lifecycle/Lifecycle$Event;Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
@@ -643,23 +648,12 @@ public final class com/pyamsoft/pydroid/ui/widget/ChangeLogWidgetKt {
 	public static final fun ShowChangeLogWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
-public final class com/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/widget/ComposableSingletons$SwipeRefreshKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-}
-
 public final class com/pyamsoft/pydroid/ui/widget/NewVersionWidgetKt {
 	public static final fun NewVersionWidget (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/ShowDataPolicyDialogKt {
 	public static final fun ShowDataPolicyDialog (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/pyamsoft/pydroid/ui/widget/SwipeRefreshKt {
-	public static final fun SwipeRefresh (Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/widget/UpdateProgressWidgetKt {

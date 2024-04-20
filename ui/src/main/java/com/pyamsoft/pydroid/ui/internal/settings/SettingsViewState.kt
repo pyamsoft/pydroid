@@ -29,6 +29,8 @@ internal interface SettingsViewState : UiViewState {
   val applicationName: StateFlow<CharSequence>
 
   val darkMode: StateFlow<Theming.Mode>
+  val isMaterialYou: StateFlow<Boolean>
+
   val isHapticsEnabled: StateFlow<Boolean>
   val isInAppDebuggingEnabled: StateFlow<Boolean>
 
@@ -52,6 +54,8 @@ internal class MutableSettingsViewState internal constructor() : SettingsViewSta
   override val applicationName = MutableStateFlow("")
 
   override val darkMode = MutableStateFlow(Theming.Mode.SYSTEM)
+  override val isMaterialYou = MutableStateFlow(false)
+
   override val isHapticsEnabled = MutableStateFlow(false)
   override val isInAppDebuggingEnabled = MutableStateFlow(false)
 

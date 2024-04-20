@@ -49,6 +49,8 @@ internal fun rememberApplicationPreferencesGroup(
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
+    isMaterialYou: Boolean,
+    onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -59,7 +61,9 @@ internal fun rememberApplicationPreferencesGroup(
   val darkThemePreference =
       rememberDarkThemePreference(
           darkMode = darkMode,
-          onChange = onDarkModeChanged,
+          isMaterialYou = isMaterialYou,
+          onModeChange = onDarkModeChanged,
+          onMaterialYouChange = onMaterialYouChange,
       )
 
   val licensePreference =
@@ -127,11 +131,15 @@ internal fun rememberApplicationPreferencesGroup(
   }
 }
 
+private const val MATERIAL_YOU = "Enable Material You"
+
 @Composable
 @CheckResult
 private fun rememberDarkThemePreference(
     darkMode: Theming.Mode,
-    onChange: (Theming.Mode) -> Unit,
+    isMaterialYou: Boolean,
+    onModeChange: (Theming.Mode) -> Unit,
+    onMaterialYouChange: (Boolean) -> Unit,
 ): Preferences.Item {
   val name = stringResource(R.string.dark_mode_title)
   val summary = stringResource(R.string.dark_mode_summary)
@@ -139,7 +147,11 @@ private fun rememberDarkThemePreference(
   val values = stringArrayResource(R.array.dark_mode_values_v1)
   val rawValue = remember(darkMode) { darkMode.toRawString() }
 
-  val handleChange by rememberUpdatedState(onChange)
+  val handleModeChange by rememberUpdatedState(onModeChange)
+  val handleMaterialYouChange by rememberUpdatedState(onMaterialYouChange)
+
+  val materialYouCheckboxes =
+      remember(isMaterialYou) { mapOf(MATERIAL_YOU to isMaterialYou.toString()) }
 
   return remember(
       name,
@@ -155,7 +167,14 @@ private fun rememberDarkThemePreference(
         icon = Icons.Outlined.Visibility,
         value = rawValue,
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
-        onPreferenceSelected = { _, value -> handleChange(value.toThemingMode()) },
+        checkboxes = materialYouCheckboxes,
+        onPreferenceSelected = { key, value ->
+          if (key == MATERIAL_YOU) {
+            handleMaterialYouChange(value.toBooleanStrict())
+          } else {
+            handleModeChange(value.toThemingMode())
+          }
+        },
     )
   }
 }

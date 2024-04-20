@@ -229,6 +229,11 @@ internal constructor(
     }
   }
 
+  fun handleMaterialYouChange(enabled: Boolean) {
+    state.isMaterialYou.value = enabled
+    theming.setMaterialYou(enabled)
+  }
+
   companion object {
 
     private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"

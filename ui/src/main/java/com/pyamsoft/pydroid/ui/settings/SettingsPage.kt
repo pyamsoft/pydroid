@@ -140,6 +140,7 @@ public fun SettingsPage(
             mode = it,
         )
       },
+      onMaterialYouChange = { viewModel.handleMaterialYouChange(it) },
       onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled() },
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
@@ -163,6 +164,7 @@ private fun SettingsContent(
     customPostPreferences: SnapshotStateList<Preferences>,
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
+    onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -205,6 +207,7 @@ private fun SettingsContent(
       bottomItemMargin = customBottomItemMargin,
       customPreContent = customPrePreferences,
       customPostContent = customPostPreferences,
+      onMaterialYouChange = onMaterialYouChange,
       onDarkModeChanged = onDarkModeChanged,
       onLicensesClicked = onLicensesClicked,
       onCheckUpdateClicked = onCheckUpdateClicked,

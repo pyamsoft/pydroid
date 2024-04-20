@@ -53,11 +53,19 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
+import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.CHECKBOX
+import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.RADIO
 
 private enum class PreferenceContentTypes {
+  DIALOG_CHECKBOXES,
   DIALOG_ITEM,
   DIALOG_TITLE,
   DIALOG_ACTION,
+}
+
+private enum class PreferenceDialogItemStyle {
+  RADIO,
+  CHECKBOX,
 }
 
 @Composable
@@ -267,12 +275,40 @@ internal fun PreferenceDialog(
               name = item.key,
               value = item.value,
               current = currentValue,
+              style = RADIO,
               onClick = { k, v ->
                 hapticManager?.actionButtonPress()
                 onPreferenceSelected(k, v)
                 onDismiss()
               },
           )
+        }
+
+        preference.checkboxes?.let { checkboxes ->
+          items(
+              items = checkboxes,
+              key = { it.value },
+              contentType = { PreferenceContentTypes.DIALOG_CHECKBOXES },
+          ) { item ->
+            PreferenceDialogItem(
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(
+                            horizontal = MaterialTheme.keylines.content,
+                            vertical = MaterialTheme.keylines.typography,
+                        ),
+                name = item.key,
+                value = item.value,
+                current = currentValue,
+                style = CHECKBOX,
+                onClick = { k, v ->
+                  val boolValue = v.toBooleanStrict()
+                  hapticManager?.actionButtonPress()
+                  onPreferenceSelected(k, boolValue.not().toString())
+                  onDismiss()
+                },
+            )
+          }
         }
 
         item(
@@ -312,6 +348,7 @@ private fun PreferenceDialogItem(
     name: String,
     value: String,
     current: String,
+    style: PreferenceDialogItemStyle,
     onClick: (name: String, value: String) -> Unit,
 ) {
   val isSelected =
@@ -337,11 +374,22 @@ private fun PreferenceDialogItem(
               .then(modifier),
       verticalAlignment = Alignment.CenterVertically,
   ) {
-    RadioButton(
-        modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-        selected = isSelected,
-        onClick = { handleClick() },
-    )
+    when (style) {
+      RADIO -> {
+        RadioButton(
+            modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+            selected = isSelected,
+            onClick = { handleClick() },
+        )
+      }
+      CHECKBOX -> {
+        Checkbox(
+            modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+            checked = isSelected,
+            onCheckedChange = { handleClick() },
+        )
+      }
+    }
     Text(
         text = name,
         style = MaterialTheme.typography.bodyLarge,

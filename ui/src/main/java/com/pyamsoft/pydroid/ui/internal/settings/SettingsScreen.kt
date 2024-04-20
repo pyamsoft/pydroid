@@ -52,6 +52,7 @@ internal fun SettingsScreen(
     hideUpgradeInformation: Boolean,
     customPreContent: SnapshotStateList<Preferences>,
     customPostContent: SnapshotStateList<Preferences>,
+    onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -72,7 +73,10 @@ internal fun SettingsScreen(
 ) {
   val loadingState by state.loadingState.collectAsStateWithLifecycle()
   val applicationName by state.applicationName.collectAsStateWithLifecycle()
+
   val darkMode by state.darkMode.collectAsStateWithLifecycle()
+  val isMaterialYou by state.isMaterialYou.collectAsStateWithLifecycle()
+
   val isHapticsEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
 
@@ -90,6 +94,7 @@ internal fun SettingsScreen(
         SettingsList(
             applicationName = applicationName,
             darkMode = darkMode,
+            isMaterialYou = isMaterialYou,
             options = options,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
@@ -100,6 +105,7 @@ internal fun SettingsScreen(
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
             onDarkModeChanged = onDarkModeChanged,
+            onMaterialYouChange = onMaterialYouChange,
             onLicensesClicked = onLicensesClicked,
             onCheckUpdateClicked = onCheckUpdateClicked,
             onShowChangeLogClicked = onShowChangeLogClicked,
@@ -151,6 +157,8 @@ private fun SettingsList(
     isHapticsEnabled: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
+    isMaterialYou: Boolean,
+    onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -176,7 +184,9 @@ private fun SettingsList(
           hideUpgradeInformation = hideUpgradeInformation,
           applicationName = applicationName,
           darkMode = darkMode,
+          isMaterialYou = isMaterialYou,
           onHapticsChanged = onHapticsChanged,
+          onMaterialYouChange = onMaterialYouChange,
           onDarkModeChanged = onDarkModeChanged,
           onLicensesClicked = onLicensesClicked,
           onCheckUpdateClicked = onCheckUpdateClicked,
@@ -278,6 +288,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       onInAppDebuggingClicked = {},
       onInAppDebuggingChanged = {},
       onHapticsChanged = {},
+      onMaterialYouChange = {},
   )
 }
 

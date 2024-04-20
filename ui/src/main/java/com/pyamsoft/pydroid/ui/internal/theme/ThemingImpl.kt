@@ -36,67 +36,67 @@ internal constructor(
     private val preferences: ThemingPreferences,
 ) : Theming {
 
-    override suspend fun init() {
-        listenForModeChanges().also { f ->
-            withContext(context = Dispatchers.IO) {
-                // Make sure we set the AppCompatDelegate from the saved preference mode
-                val mode = f.first()
+  override suspend fun init() {
+    listenForModeChanges().also { f ->
+      withContext(context = Dispatchers.IO) {
+        // Make sure we set the AppCompatDelegate from the saved preference mode
+        val mode = f.first()
 
-                withContext(context = Dispatchers.Default) {
-                    // Needs to run on main thread
-                    applyDarkTheme(mode)
-                }
-            }
+        withContext(context = Dispatchers.Default) {
+          // Needs to run on main thread
+          applyDarkTheme(mode)
         }
+      }
     }
+  }
 
-    /** Is activity dark mode */
-    override fun isDarkTheme(activity: Activity): Boolean {
-        return isDarkTheme(activity.resources.configuration)
+  /** Is activity dark mode */
+  override fun isDarkTheme(activity: Activity): Boolean {
+    return isDarkTheme(activity.resources.configuration)
+  }
+
+  /** Is activity dark mode */
+  override fun isDarkTheme(configuration: Configuration): Boolean {
+    val uiMode = configuration.uiMode
+    return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+  }
+
+  /** Which mode are we in right now? */
+  override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForDarkModeChanges()
+
+  /** Set application wide dark mode */
+  override fun setDarkTheme(scope: CoroutineScope, mode: Theming.Mode) {
+    preferences.setDarkMode(mode)
+
+    scope.launch(context = Dispatchers.Default) {
+      // Needs to run on main thread
+      applyDarkTheme(mode)
     }
+  }
 
-    /** Is activity dark mode */
-    override fun isDarkTheme(configuration: Configuration): Boolean {
-        val uiMode = configuration.uiMode
-        return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    }
+  override fun listenForMaterialYouChanges(): Flow<Boolean> =
+      preferences.listenForMaterialYouChanges()
 
-    /** Which mode are we in right now? */
-    override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForDarkModeChanges()
+  override fun setMaterialYou(enabled: Boolean) {
+    preferences.setMaterialYou(enabled)
+  }
 
-    /** Set application wide dark mode */
-    override fun setDarkTheme(scope: CoroutineScope, mode: Theming.Mode) {
-        preferences.setDarkMode(mode)
+  @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
+  override fun canUseMaterialYou(): Boolean {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+  }
 
-        scope.launch(context = Dispatchers.Default) {
-            // Needs to run on main thread
-            applyDarkTheme(mode)
-        }
-    }
+  private suspend fun applyDarkTheme(mode: Theming.Mode) =
+      withContext(context = Dispatchers.Main) {
+        val appCompatMode = mode.toAppCompatMode()
+        AppCompatDelegate.setDefaultNightMode(appCompatMode)
+      }
 
-    override fun listenForMaterialYouChanges(): Flow<Boolean> =
-        preferences.listenForMaterialYouChanges()
-
-    override fun setMaterialYou(enabled: Boolean) {
-        preferences.setMaterialYou(enabled)
-    }
-
-    @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
-    override fun canUseMaterialYou(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-    }
-
-    private suspend fun applyDarkTheme(mode: Theming.Mode) =
-        withContext(context = Dispatchers.Main) {
-            val appCompatMode = mode.toAppCompatMode()
-            AppCompatDelegate.setDefaultNightMode(appCompatMode)
-        }
-
-    @CheckResult
-    private fun Theming.Mode.toAppCompatMode(): Int =
-        when (this) {
-            Theming.Mode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-            Theming.Mode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
-            Theming.Mode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-        }
+  @CheckResult
+  private fun Theming.Mode.toAppCompatMode(): Int =
+      when (this) {
+        Theming.Mode.LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        Theming.Mode.DARK -> AppCompatDelegate.MODE_NIGHT_YES
+        Theming.Mode.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+      }
 }

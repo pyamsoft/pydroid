@@ -461,10 +461,11 @@ public final class com/pyamsoft/pydroid/ui/preference/PreferencesKt {
 	public static final fun inAppPreference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static synthetic fun inAppPreference$default (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/util/Map;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Lkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun listPreference (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLkotlin/jvm/functions/Function2;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
-	public static synthetic fun listPreference$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
+	public static synthetic fun listPreference$default (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ZLjava/lang/String;Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/util/Map;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun preference (Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun preference (Ljava/lang/String;Ljava/lang/String;Z)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
 	public static final fun preference (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Item;
@@ -506,11 +507,14 @@ public final class com/pyamsoft/pydroid/ui/theme/SizesKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/Theming {
+	public abstract fun canUseMaterialYou ()Z
 	public abstract fun init (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun isDarkTheme (Landroid/app/Activity;)Z
 	public abstract fun isDarkTheme (Landroid/content/res/Configuration;)Z
+	public abstract fun listenForMaterialYouChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun listenForModeChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun setDarkTheme (Lkotlinx/coroutines/CoroutineScope;Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;)V
+	public abstract fun setMaterialYou (Z)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/Theming$Mode : java/lang/Enum {

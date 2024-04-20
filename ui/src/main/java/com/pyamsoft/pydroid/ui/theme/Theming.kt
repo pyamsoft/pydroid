@@ -54,9 +54,7 @@ public interface Theming {
   /** Get current material-you preference */
   public fun setMaterialYou(enabled: Boolean)
 
-  @CheckResult
-  @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
-  public fun canUseMaterialYou(): Boolean
+  @CheckResult @ChecksSdkIntAtLeast(Build.VERSION_CODES.S) public fun canUseMaterialYou(): Boolean
 
   /** Dark mode enum */
   @Stable

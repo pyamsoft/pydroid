@@ -26,11 +26,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,12 +44,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
-import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
@@ -57,6 +58,7 @@ import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import kotlinx.coroutines.flow.MutableStateFlow
 
 private enum class InAppDebugContentTypes {
   LINE,
@@ -134,9 +136,10 @@ private fun InAppDebugScreen(
           title = "Debug Logging",
           onClose = onDismiss,
       )
-      Surface(
+      Card(
           modifier = Modifier.fillMaxWidth(),
-          shadowElevation = DialogDefaults.Elevation,
+          elevation = CardDefaults.elevatedCardElevation(),
+          colors = CardDefaults.elevatedCardColors(),
           shape =
               MaterialTheme.shapes.medium.copy(
                   topEnd = ZeroCornerSize,
@@ -245,4 +248,18 @@ private fun LogLinesCopied(
       onSnackbarDismissed()
     }
   }
+}
+
+@Preview
+@Composable
+private fun PreviewInAppDebugScreen() {
+  InAppDebugScreen(
+      state =
+          MutableDebugViewState(
+                  logLinesBus = MutableStateFlow(emptyList()),
+              )
+              .apply {},
+      onDismiss = {},
+      onCopy = {},
+  )
 }

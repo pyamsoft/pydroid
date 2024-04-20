@@ -45,10 +45,17 @@ import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
-import com.pyamsoft.pydroid.ui.internal.app.dialogItem
+import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
+
+private enum class BillingScreenItems {
+  LOADING,
+  ERROR,
+  ITEMS,
+  ERROR_SNACK,
+  ACTIONS,
+}
 
 @Composable
 internal fun BillingScreen(
@@ -79,23 +86,23 @@ internal fun BillingScreen(
         skuList.isEmpty() || !isConnected
       }
 
-  AppHeaderDialog(
+  AppHeader(
       modifier = modifier,
       icon = icon,
       name = name,
       imageLoader = imageLoader,
   ) {
     if (isLoading) {
-      dialogItem(
-          modifier = Modifier.fillMaxWidth(),
+      item(
+          contentType = BillingScreenItems.LOADING,
       ) {
         Loading(
             modifier = Modifier.fillMaxWidth(),
         )
       }
     } else if (isError) {
-      dialogItem(
-          modifier = Modifier.fillMaxWidth(),
+      item(
+          contentType = BillingScreenItems.ERROR,
       ) {
         ErrorText(
             modifier = Modifier.fillMaxWidth(),
@@ -103,8 +110,8 @@ internal fun BillingScreen(
       }
     } else {
       skuList.forEach { item ->
-        dialogItem(
-            modifier = Modifier.fillMaxWidth(),
+        item(
+            contentType = BillingScreenItems.ITEMS,
         ) {
           BillingListItem(
               modifier = Modifier.fillMaxWidth(),
@@ -115,8 +122,8 @@ internal fun BillingScreen(
       }
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = BillingScreenItems.ERROR_SNACK,
     ) {
       BillingError(
           modifier = Modifier.fillMaxWidth(),
@@ -126,8 +133,8 @@ internal fun BillingScreen(
       )
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = BillingScreenItems.ACTIONS,
     ) {
       Row(
           modifier =

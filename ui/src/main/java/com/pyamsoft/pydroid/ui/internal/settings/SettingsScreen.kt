@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -32,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,14 +39,11 @@ import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
-    shape: Shape,
-    elevation: Dp,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     state: SettingsViewState,
@@ -81,52 +76,47 @@ internal fun SettingsScreen(
   val isHapticsEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
 
-  Surface(
+  Crossfade(
       modifier = modifier,
-      shadowElevation = elevation,
-      shape = shape,
-  ) {
-    Crossfade(
-        label = "Settings",
-        targetState = loadingState,
-    ) { loading ->
-      when (loading) {
-        SettingsViewState.LoadingState.NONE,
-        SettingsViewState.LoadingState.LOADING -> {
-          Loading()
-        }
-        SettingsViewState.LoadingState.DONE -> {
-          SettingsList(
-              applicationName = applicationName,
-              darkMode = darkMode,
-              options = options,
-              topItemMargin = topItemMargin,
-              bottomItemMargin = bottomItemMargin,
-              customPreContent = customPreContent,
-              customPostContent = customPostContent,
-              isInAppDebugChecked = isInAppDebugEnabled,
-              isHapticsEnabled = isHapticsEnabled,
-              hideClearAll = hideClearAll,
-              hideUpgradeInformation = hideUpgradeInformation,
-              onDarkModeChanged = onDarkModeChanged,
-              onLicensesClicked = onLicensesClicked,
-              onCheckUpdateClicked = onCheckUpdateClicked,
-              onShowChangeLogClicked = onShowChangeLogClicked,
-              onResetClicked = onResetClicked,
-              onDonateClicked = onDonateClicked,
-              onBugReportClicked = onBugReportClicked,
-              onViewSourceClicked = onViewSourceClicked,
-              onViewDataPolicyClicked = onViewDataPolicyClicked,
-              onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-              onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-              onViewSocialMediaClicked = onViewSocialMediaClicked,
-              onViewBlogClicked = onViewBlogClicked,
-              onOpenMarketPage = onOpenMarketPage,
-              onInAppDebuggingClicked = onInAppDebuggingClicked,
-              onInAppDebuggingChanged = onInAppDebuggingChanged,
-              onHapticsChanged = onHapticsChanged,
-          )
-        }
+      label = "Settings",
+      targetState = loadingState,
+  ) { loading ->
+    when (loading) {
+      SettingsViewState.LoadingState.NONE,
+      SettingsViewState.LoadingState.LOADING -> {
+        Loading()
+      }
+      SettingsViewState.LoadingState.DONE -> {
+        SettingsList(
+            applicationName = applicationName,
+            darkMode = darkMode,
+            options = options,
+            topItemMargin = topItemMargin,
+            bottomItemMargin = bottomItemMargin,
+            customPreContent = customPreContent,
+            customPostContent = customPostContent,
+            isInAppDebugChecked = isInAppDebugEnabled,
+            isHapticsEnabled = isHapticsEnabled,
+            hideClearAll = hideClearAll,
+            hideUpgradeInformation = hideUpgradeInformation,
+            onDarkModeChanged = onDarkModeChanged,
+            onLicensesClicked = onLicensesClicked,
+            onCheckUpdateClicked = onCheckUpdateClicked,
+            onShowChangeLogClicked = onShowChangeLogClicked,
+            onResetClicked = onResetClicked,
+            onDonateClicked = onDonateClicked,
+            onBugReportClicked = onBugReportClicked,
+            onViewSourceClicked = onViewSourceClicked,
+            onViewDataPolicyClicked = onViewDataPolicyClicked,
+            onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+            onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+            onViewSocialMediaClicked = onViewSocialMediaClicked,
+            onViewBlogClicked = onViewBlogClicked,
+            onOpenMarketPage = onOpenMarketPage,
+            onInAppDebuggingClicked = onInAppDebuggingClicked,
+            onInAppDebuggingChanged = onInAppDebuggingChanged,
+            onHapticsChanged = onHapticsChanged,
+        )
       }
     }
   }
@@ -259,7 +249,6 @@ private fun SettingsList(
 private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) {
   SettingsScreen(
       options = PYDroidActivityOptions(),
-      shape = MaterialTheme.shapes.medium,
       state =
           MutableSettingsViewState().apply {
             this.loadingState.value = loadingState
@@ -268,7 +257,6 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
           },
       hideClearAll = false,
       hideUpgradeInformation = false,
-      elevation = ZeroElevation,
       topItemMargin = ZeroSize,
       bottomItemMargin = ZeroSize,
       customPreContent = remember { mutableStateListOf() },

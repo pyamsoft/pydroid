@@ -25,7 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,8 +48,8 @@ internal fun CrashScreen(
 ) {
   Surface(
       modifier = modifier,
-      color = colorResource(R.color.crash_background_color),
-      contentColor = colorResource(R.color.crash_foreground_color),
+      color = Color(0xFF880000),
+      contentColor = Color(0xFFFFFF66),
   ) {
     LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.typography),

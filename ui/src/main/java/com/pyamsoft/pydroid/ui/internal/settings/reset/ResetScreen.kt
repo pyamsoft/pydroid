@@ -24,8 +24,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -35,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 private enum class ResetScreenContentTypes {
@@ -53,9 +53,11 @@ internal fun ResetScreen(
 ) {
   val reset by state.reset.collectAsStateWithLifecycle()
 
-  Surface(
+  Card(
       modifier = modifier,
-      shadowElevation = DialogDefaults.Elevation,
+      elevation = CardDefaults.elevatedCardElevation(),
+      colors = CardDefaults.elevatedCardColors(),
+      shape = MaterialTheme.shapes.medium,
   ) {
     LazyColumn(
         modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth(),

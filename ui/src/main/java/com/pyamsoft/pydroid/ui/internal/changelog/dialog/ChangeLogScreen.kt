@@ -36,11 +36,15 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
-import com.pyamsoft.pydroid.ui.internal.app.dialogItem
+import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
+
+private enum class ChangeLogScreenItems {
+  LOG_ITEM,
+  ACTIONS,
+}
 
 @Composable
 @JvmOverloads
@@ -56,15 +60,15 @@ internal fun ChangeLogScreen(
   val name by state.name.collectAsStateWithLifecycle()
   val versionCode by state.applicationVersionCode.collectAsStateWithLifecycle()
 
-  AppHeaderDialog(
+  AppHeader(
       modifier = modifier,
       icon = icon,
       name = name,
       imageLoader = imageLoader,
   ) {
     changeLog.forEach { line ->
-      dialogItem(
-          modifier = Modifier.fillMaxWidth(),
+      item(
+          contentType = ChangeLogScreenItems.LOG_ITEM,
       ) {
         ChangeLogListItem(
             modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
@@ -73,8 +77,8 @@ internal fun ChangeLogScreen(
       }
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = ChangeLogScreenItems.ACTIONS,
     ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),

@@ -22,8 +22,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons.Filled
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -49,6 +51,8 @@ internal fun DismissableInterruptCard(
       modifier = modifier,
       visible = show,
   ) {
+    val textColor = LocalContentColor.current
+
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -60,7 +64,7 @@ internal fun DismissableInterruptCard(
             text = text,
             style =
                 MaterialTheme.typography.bodyLarge.copy(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = textColor,
                 ),
         )
 
@@ -73,13 +77,17 @@ internal fun DismissableInterruptCard(
           Icon(
               imageVector = Filled.Close,
               contentDescription = "Close",
-              tint = MaterialTheme.colorScheme.primary,
+              tint = textColor,
           )
         }
       }
 
       OutlinedButton(
           modifier = Modifier.padding(MaterialTheme.keylines.content),
+          colors =
+              ButtonDefaults.outlinedButtonColors(
+                  contentColor = textColor,
+              ),
           onClick = {
             hapticManager?.confirmButtonPress()
             onButtonClicked()

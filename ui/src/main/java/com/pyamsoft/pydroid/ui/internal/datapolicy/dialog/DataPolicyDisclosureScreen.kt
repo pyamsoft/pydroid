@@ -44,11 +44,17 @@ import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.internal.app.AppHeaderDialog
-import com.pyamsoft.pydroid.ui.internal.app.dialogItem
+import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private val MAX_HEIGHT_PORTRAIT = 360.dp
+
+private enum class DataPolicyDisclosureScreenItems {
+  DISCLOSURE,
+  LINKS,
+  ERROR,
+  ACTIONS,
+}
 
 @Composable
 internal fun DataPolicyDisclosureScreen(
@@ -66,14 +72,14 @@ internal fun DataPolicyDisclosureScreen(
   val name by state.name.collectAsStateWithLifecycle()
   val navigationError by state.navigationError.collectAsStateWithLifecycle()
 
-  AppHeaderDialog(
+  AppHeader(
       modifier = modifier,
       icon = icon,
       name = name,
       imageLoader = imageLoader,
   ) {
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = DataPolicyDisclosureScreenItems.DISCLOSURE,
     ) {
       Disclosure(
           modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
@@ -81,8 +87,8 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = DataPolicyDisclosureScreenItems.LINKS,
     ) {
       Links(
           modifier = Modifier.fillMaxWidth(),
@@ -91,8 +97,8 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = DataPolicyDisclosureScreenItems.ERROR,
     ) {
       NavigationError(
           modifier = Modifier.fillMaxWidth(),
@@ -102,8 +108,8 @@ internal fun DataPolicyDisclosureScreen(
       )
     }
 
-    dialogItem(
-        modifier = Modifier.fillMaxWidth(),
+    item(
+        contentType = DataPolicyDisclosureScreenItems.ACTIONS,
     ) {
       Actions(
           modifier = Modifier.fillMaxWidth(),

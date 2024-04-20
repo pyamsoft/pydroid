@@ -26,8 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -49,7 +47,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
@@ -67,14 +64,12 @@ private fun MountHooks(
 public fun SettingsPage(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
     customPrePreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
     customPostPreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
     customTopItemMargin: Dp = ZeroSize,
     customBottomItemMargin: Dp = ZeroSize,
-    customElevation: Dp = ZeroElevation,
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   val scope = rememberCoroutineScope()
@@ -102,14 +97,12 @@ public fun SettingsPage(
   SettingsContent(
       modifier = modifier,
       dialogModifier = dialogModifier,
-      shape = shape,
       state = viewModel,
       billingState = billingViewModel,
       changeLogState = changeLogViewModel,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,
-      customElevation = customElevation,
       customTopItemMargin = customTopItemMargin,
       customBottomItemMargin = customBottomItemMargin,
       customPrePreferences = customPrePreferences,
@@ -164,14 +157,12 @@ private fun SettingsContent(
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
     options: PYDroidActivityOptions,
-    shape: Shape,
     hideUpgradeInformation: Boolean,
     hideClearAll: Boolean,
     customPrePreferences: SnapshotStateList<Preferences>,
     customPostPreferences: SnapshotStateList<Preferences>,
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
-    customElevation: Dp,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -206,8 +197,6 @@ private fun SettingsContent(
 
   SettingsScreen(
       modifier = modifier,
-      shape = shape,
-      elevation = customElevation,
       state = state,
       options = options,
       hideClearAll = hideClearAll,

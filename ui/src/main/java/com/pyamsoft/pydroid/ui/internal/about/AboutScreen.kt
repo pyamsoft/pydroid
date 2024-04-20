@@ -27,12 +27,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -44,7 +45,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.defaults.DialogDefaults
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
@@ -73,9 +73,10 @@ internal fun AboutScreen(
         title = "Open Source Licenses",
         onClose = onClose,
     )
-    Surface(
+    Card(
         modifier = Modifier.fillMaxWidth(),
-        shadowElevation = DialogDefaults.Elevation,
+        elevation = CardDefaults.elevatedCardElevation(),
+        colors = CardDefaults.elevatedCardColors(),
         shape =
             MaterialTheme.shapes.medium.copy(
                 topEnd = ZeroCornerSize,
@@ -184,7 +185,6 @@ private fun PreviewAboutScreen(
     loading: AboutViewState.LoadingState,
     error: Throwable?,
 ) {
-
   AboutScreen(
       state =
           MutableAboutViewState().apply {

@@ -18,7 +18,9 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import android.content.res.Configuration
+import android.os.Build
 import androidx.annotation.CheckResult
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
@@ -45,6 +47,16 @@ public interface Theming {
 
   /** Set application wide dark mode */
   public fun setDarkTheme(scope: CoroutineScope, mode: Mode)
+
+  /** Get current material-you preference */
+  @CheckResult public fun listenForMaterialYouChanges(): Flow<Boolean>
+
+  /** Get current material-you preference */
+  public fun setMaterialYou(enabled: Boolean)
+
+  @CheckResult
+  @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
+  public fun canUseMaterialYou(): Boolean
 
   /** Dark mode enum */
   @Stable

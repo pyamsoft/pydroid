@@ -304,7 +304,7 @@ internal fun PreferenceDialog(
                 onClick = { k, v ->
                   val boolValue = v.toBooleanStrict()
                   hapticManager?.actionButtonPress()
-                  onPreferenceSelected(k, boolValue.not().toString())
+                  onPreferenceSelected(k, boolValue.toString())
                   onDismiss()
                 },
             )

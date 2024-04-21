@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -131,17 +133,6 @@ internal constructor(
     }
 
     scope.launch(context = Dispatchers.Default) {
-      theming.listenForModeChanges().collect {
-        s.darkMode.value = it
-
-        if (!config.darkMode) {
-          config.darkMode = true
-          markConfigLoaded(config)
-        }
-      }
-    }
-
-    scope.launch(context = Dispatchers.Default) {
       hapticPreferences.listenForHapticsChanges().collect {
         s.isHapticsEnabled.value = it
 
@@ -156,14 +147,22 @@ internal constructor(
             theming.listenForModeChanges(),
             theming.listenForMaterialYouChanges(),
         ) { mode, isMaterialYou ->
-          emit(mode to isMaterialYou)
+          emit(listOf(mode, isMaterialYou))
         }
         .flowOn(context = Dispatchers.Default)
         .also { f ->
           scope.launch(context = Dispatchers.Default) {
-            f.collect {
-              state.darkMode.value = it.first
-              state.isMaterialYou.value = it.second
+            f.collect { list ->
+              if (!config.darkMode) {
+                config.darkMode = true
+                markConfigLoaded(config)
+              }
+
+              val mode = list[0].cast<Theming.Mode>().requireNotNull()
+              val isMaterialYou = list[1].cast<Boolean>().requireNotNull()
+
+              state.darkMode.value = mode
+              state.isMaterialYou.value = isMaterialYou
             }
           }
         }

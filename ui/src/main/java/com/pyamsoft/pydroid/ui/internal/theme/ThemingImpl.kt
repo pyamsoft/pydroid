@@ -49,14 +49,18 @@ internal constructor(
   }
 
   /** Is activity dark mode */
-  override fun isDarkTheme(activity: Activity): Boolean {
+  override fun isDarkTheme(activity: Activity): Theming.Mode {
     return isDarkTheme(activity.resources.configuration)
   }
 
   /** Is activity dark mode */
-  override fun isDarkTheme(configuration: Configuration): Boolean {
+  override fun isDarkTheme(configuration: Configuration): Theming.Mode {
     val uiMode = configuration.uiMode
-    return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+    return when (uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+      Configuration.UI_MODE_NIGHT_YES -> Theming.Mode.DARK
+      Configuration.UI_MODE_NIGHT_NO -> Theming.Mode.LIGHT
+      else -> Theming.Mode.SYSTEM
+    }
   }
 
   /** Which mode are we in right now? */

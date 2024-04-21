@@ -35,10 +35,10 @@ public interface Theming {
   public suspend fun init()
 
   /** Is activity dark mode */
-  @CheckResult public fun isDarkTheme(activity: Activity): Boolean
+  @CheckResult public fun isDarkTheme(activity: Activity): Mode
 
   /** Is activity dark mode */
-  @CheckResult public fun isDarkTheme(configuration: Configuration): Boolean
+  @CheckResult public fun isDarkTheme(configuration: Configuration): Mode
 
   /** Get current mode */
   @CheckResult public fun listenForModeChanges(): Flow<Mode>

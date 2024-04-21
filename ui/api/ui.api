@@ -508,8 +508,8 @@ public final class com/pyamsoft/pydroid/ui/theme/SizesKt {
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/Theming {
 	public abstract fun init (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun isDarkTheme (Landroid/app/Activity;)Z
-	public abstract fun isDarkTheme (Landroid/content/res/Configuration;)Z
+	public abstract fun isDarkTheme (Landroid/app/Activity;)Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
+	public abstract fun isDarkTheme (Landroid/content/res/Configuration;)Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;
 	public abstract fun listenForMaterialYouChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun listenForModeChanges ()Lkotlinx/coroutines/flow/Flow;
 	public abstract fun setDarkTheme (Lkotlinx/coroutines/CoroutineScope;Lcom/pyamsoft/pydroid/ui/theme/Theming$Mode;)V

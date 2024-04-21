@@ -153,8 +153,7 @@ internal constructor(
           .flowOn(context = Dispatchers.IO)
 
   override fun setDarkMode(mode: Mode) {
-    setPreference {
-        putString(darkModeKey, mode.toRawString()) }
+    setPreference { putString(darkModeKey, mode.toRawString()) }
   }
 
   override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =

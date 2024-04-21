@@ -21,10 +21,6 @@ import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
-import com.pyamsoft.pydroid.ui.theme.Theming.Mode
-import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
-import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
-import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -68,19 +64,19 @@ public interface Theming {
 }
 
 @CheckResult
-internal fun String.toThemingMode(): Mode {
+internal fun String.toThemingMode(): Theming.Mode {
   return when (this) {
-    "light" -> LIGHT
-    "dark" -> DARK
-    "system" -> SYSTEM
-    else -> SYSTEM
+    "light" -> Theming.Mode.LIGHT
+    "dark" -> Theming.Mode.DARK
+    "system" -> Theming.Mode.SYSTEM
+    else -> Theming.Mode.SYSTEM
   }
 }
 
 @CheckResult
-internal fun Mode.toRawString(): String =
+internal fun Theming.Mode.toRawString(): String =
     when (this) {
-      LIGHT -> "light"
-      DARK -> "dark"
-      SYSTEM -> "system"
+      Theming.Mode.LIGHT -> "light"
+      Theming.Mode.DARK -> "dark"
+      Theming.Mode.SYSTEM -> "system"
     }

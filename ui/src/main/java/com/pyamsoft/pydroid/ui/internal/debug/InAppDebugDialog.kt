@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -66,6 +67,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 private enum class InAppDebugContentTypes {
   LINE,
   TITLE,
+  SPACER,
   DISABLED,
 }
 
@@ -153,10 +155,7 @@ private fun InAppDebugScreen(
             modifier = Modifier.padding(MaterialTheme.keylines.content),
             contentAlignment = Alignment.BottomCenter,
         ) {
-          LazyColumn(
-              // Padding to offset so the copy button doesn't cover
-              modifier = Modifier.padding(bottom = MaterialTheme.keylines.content * 3),
-          ) {
+          LazyColumn {
             if (isEnabled) {
               extraContent()
 
@@ -199,6 +198,15 @@ private fun InAppDebugScreen(
                         ),
                 )
               }
+
+                item(
+                    contentType = InAppDebugContentTypes.SPACER,
+                ) {
+                    // Padding to offset so the copy button doesn't cover
+                    Spacer(
+                        modifier = Modifier.height(MaterialTheme.keylines.content * 3),
+                    )
+                }
             } else {
               item(
                   contentType = InAppDebugContentTypes.DISABLED,

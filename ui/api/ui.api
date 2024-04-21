@@ -374,10 +374,12 @@ public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$I
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public static field lambda-3 Lkotlin/jvm/functions/Function3;
+	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {
@@ -565,10 +567,6 @@ public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
 	public static final fun fillUpToPortraitHeight (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fillUpToPortraitSize (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 	public static final fun fillUpToPortraitWidth (Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
-}
-
-public final class com/pyamsoft/pydroid/ui/util/PreferencesKt {
-	public static final fun getDefaultSharedPreferencesName (Landroid/content/Context;)Ljava/lang/String;
 }
 
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {

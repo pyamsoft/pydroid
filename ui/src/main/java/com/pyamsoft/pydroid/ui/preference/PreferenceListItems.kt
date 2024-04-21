@@ -153,6 +153,11 @@ internal fun CheckBoxPreferenceItem(
       icon = icon,
       trailing = { enabled ->
         Checkbox(
+            modifier =
+                Modifier.padding(
+                    start = MaterialTheme.keylines.typography,
+                    end = MaterialTheme.keylines.baseline,
+                ),
             checked = checked,
             enabled = enabled,
             onCheckedChange = { newChecked ->
@@ -191,6 +196,11 @@ internal fun SwitchPreferenceItem(
       icon = icon,
       trailing = { enabled ->
         Switch(
+            modifier =
+                Modifier.padding(
+                    start = MaterialTheme.keylines.typography,
+                    end = MaterialTheme.keylines.baseline,
+                ),
             checked = checked,
             enabled = enabled,
             onCheckedChange = { newChecked ->
@@ -513,7 +523,10 @@ private fun DefaultPreferenceItem(
     trailing?.also { compose ->
       Box(
           modifier =
-              Modifier.padding(start = MaterialTheme.keylines.baseline)
+              Modifier.padding(
+                      start = MaterialTheme.keylines.typography,
+                      end = MaterialTheme.keylines.baseline,
+                  )
                   .size(ListItemDefaults.LeadingSize),
           contentAlignment = Alignment.Center,
       ) {

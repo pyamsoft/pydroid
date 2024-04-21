@@ -199,14 +199,14 @@ private fun InAppDebugScreen(
                 )
               }
 
-                item(
-                    contentType = InAppDebugContentTypes.SPACER,
-                ) {
-                    // Padding to offset so the copy button doesn't cover
-                    Spacer(
-                        modifier = Modifier.height(MaterialTheme.keylines.content * 3),
-                    )
-                }
+              item(
+                  contentType = InAppDebugContentTypes.SPACER,
+              ) {
+                // Padding to offset so the copy button doesn't cover
+                Spacer(
+                    modifier = Modifier.height(MaterialTheme.keylines.content * 3),
+                )
+              }
             } else {
               item(
                   contentType = InAppDebugContentTypes.DISABLED,

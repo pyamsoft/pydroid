@@ -18,9 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.theme
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.os.Build
 import androidx.annotation.CheckResult
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
@@ -79,11 +77,6 @@ internal constructor(
 
   override fun setMaterialYou(enabled: Boolean) {
     preferences.setMaterialYou(enabled)
-  }
-
-  @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
-  override fun canUseMaterialYou(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
   }
 
   private suspend fun applyDarkTheme(mode: Theming.Mode) =

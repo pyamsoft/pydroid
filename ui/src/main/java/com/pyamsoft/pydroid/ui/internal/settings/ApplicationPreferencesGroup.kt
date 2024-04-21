@@ -40,6 +40,7 @@ import com.pyamsoft.pydroid.ui.preference.switchPreference
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
+import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
 
 @Composable
 @CheckResult
@@ -151,7 +152,13 @@ private fun rememberDarkThemePreference(
   val handleMaterialYouChange by rememberUpdatedState(onMaterialYouChange)
 
   val materialYouCheckboxes =
-      remember(isMaterialYou) { mapOf(MATERIAL_YOU to isMaterialYou.toString()) }
+      remember(isMaterialYou) {
+        if (canUseMaterialYou()) {
+          mapOf(MATERIAL_YOU to isMaterialYou)
+        } else {
+          emptyMap()
+        }
+      }
 
   return remember(
       name,

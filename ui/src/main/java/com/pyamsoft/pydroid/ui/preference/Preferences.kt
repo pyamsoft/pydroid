@@ -95,7 +95,7 @@ public sealed class Preferences {
       override val icon: ImageVector?,
       internal val value: String,
       internal val entries: SnapshotStateList<Map.Entry<String, String>>,
-      internal val checkboxes: SnapshotStateList<Map.Entry<String, String>>?,
+      internal val checkboxes: SnapshotStateList<Map.Entry<String, Boolean>>?,
       internal val onPreferenceSelected: (key: String, value: String) -> Unit,
   ) : Item()
 
@@ -222,7 +222,7 @@ public fun listPreference(
     isEnabled: Boolean = true,
     summary: String = "",
     icon: ImageVector? = null,
-    checkboxes: Map<String, String>? = null,
+    checkboxes: Map<String, Boolean>? = null,
     onPreferenceSelected: (key: String, value: String) -> Unit,
 ): Preferences.Item {
   return Preferences.ListPreference(

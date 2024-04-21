@@ -18,9 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.preference
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.CheckResult
-import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
@@ -36,6 +33,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
+import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
 import com.pyamsoft.pydroid.util.preferenceBooleanFlow
 import com.pyamsoft.pydroid.util.preferenceIntFlow
 import com.pyamsoft.pydroid.util.preferenceStringFlow
@@ -73,12 +71,6 @@ internal constructor(
     CoroutineScope(
         context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
     )
-  }
-
-  @CheckResult
-  @ChecksSdkIntAtLeast(Build.VERSION_CODES.S)
-  private fun canUseMaterialYou(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
   }
 
   private inline fun setPreference(crossinline block: SharedPreferences.Editor.() -> Unit) {

@@ -507,7 +507,6 @@ public final class com/pyamsoft/pydroid/ui/theme/SizesKt {
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/theme/Theming {
-	public abstract fun canUseMaterialYou ()Z
 	public abstract fun init (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun isDarkTheme (Landroid/app/Activity;)Z
 	public abstract fun isDarkTheme (Landroid/content/res/Configuration;)Z
@@ -545,6 +544,10 @@ public final class com/pyamsoft/pydroid/ui/util/BordersKt {
 	public static final fun rightBorder-H2RKhps (Landroidx/compose/ui/Modifier;FJ)Landroidx/compose/ui/Modifier;
 	public static final fun sideBorders-H2RKhps (Landroidx/compose/ui/Modifier;FJ)Landroidx/compose/ui/Modifier;
 	public static final fun topBorder-aa2Vgzc (Landroidx/compose/ui/Modifier;FJF)Landroidx/compose/ui/Modifier;
+}
+
+public final class com/pyamsoft/pydroid/ui/util/BuildVersionsKt {
+	public static final fun canUseMaterialYou ()Z
 }
 
 public final class com/pyamsoft/pydroid/ui/util/ConfigurationKt {

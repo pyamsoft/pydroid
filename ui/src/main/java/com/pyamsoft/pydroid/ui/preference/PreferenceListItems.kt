@@ -265,6 +265,7 @@ internal fun PreferenceDialog(
             key = { it.value },
             contentType = { PreferenceContentTypes.DIALOG_ITEM },
         ) { item ->
+          val isSelected = remember(item, currentValue) { item.value == currentValue }
           PreferenceDialogItem(
               modifier =
                   Modifier.fillMaxWidth()
@@ -273,12 +274,11 @@ internal fun PreferenceDialog(
                           vertical = MaterialTheme.keylines.typography,
                       ),
               name = item.key,
-              value = item.value,
-              current = currentValue,
+              isSelected = isSelected,
               style = RADIO,
-              onClick = { k, v ->
+              onClick = {
                 hapticManager?.actionButtonPress()
-                onPreferenceSelected(k, v)
+                onPreferenceSelected(item.key, item.value)
                 onDismiss()
               },
           )
@@ -290,6 +290,7 @@ internal fun PreferenceDialog(
               key = { it.value },
               contentType = { PreferenceContentTypes.DIALOG_CHECKBOXES },
           ) { item ->
+            val isSelected = remember(item) { item.value }
             PreferenceDialogItem(
                 modifier =
                     Modifier.fillMaxWidth()
@@ -298,13 +299,11 @@ internal fun PreferenceDialog(
                             vertical = MaterialTheme.keylines.typography,
                         ),
                 name = item.key,
-                value = item.value,
-                current = if (item.value.toBooleanStrict()) item.value else "",
+                isSelected = isSelected,
                 style = CHECKBOX,
-                onClick = { k, v ->
-                  val boolValue = v.toBooleanStrict().not()
+                onClick = {
                   hapticManager?.actionButtonPress()
-                  onPreferenceSelected(k, boolValue.toString())
+                  onPreferenceSelected(item.key, item.value.not().toString())
                 },
             )
           }
@@ -345,26 +344,11 @@ private fun PreferenceDialogTitle(
 private fun PreferenceDialogItem(
     modifier: Modifier = Modifier,
     name: String,
-    value: String,
-    current: String,
+    isSelected: Boolean,
     style: PreferenceDialogItemStyle,
-    onClick: (name: String, value: String) -> Unit,
+    onClick: () -> Unit,
 ) {
-  val isSelected =
-      remember(
-          value,
-          current,
-      ) {
-        value == current
-      }
-
-  val handleClick by rememberUpdatedState {
-    // Move this check outside to the CHECKBOX/RADIO layer and
-    // fix the weird passing strings to booleans to string logic
-    if (!isSelected || style == CHECKBOX) {
-      onClick(name, value)
-    }
-  }
+  val handleClick by rememberUpdatedState(onClick)
 
   Row(
       modifier =

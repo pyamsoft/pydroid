@@ -166,6 +166,7 @@ private fun rememberDarkThemePreference(
       names,
       values,
       rawValue,
+      isMaterialYou,
       materialYouCheckboxes,
   ) {
     listPreference(

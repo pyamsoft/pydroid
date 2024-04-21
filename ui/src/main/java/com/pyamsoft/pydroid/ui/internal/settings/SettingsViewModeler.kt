@@ -102,11 +102,6 @@ internal constructor(
   internal fun bind(scope: CoroutineScope) {
     val s = state
 
-    // Done loading or already loading
-    if (s.loadingState.value != SettingsViewState.LoadingState.NONE) {
-      return
-    }
-
     // Create a config to mark which bits are loaded
     val config = LoadConfig()
     s.loadingState.value = SettingsViewState.LoadingState.LOADING
@@ -237,7 +232,6 @@ internal constructor(
   }
 
   fun handleHapticsChanged(enabled: Boolean) {
-    state.isHapticsEnabled.value = enabled
     if (enabled) {
       hapticPreferences.enableHaptics()
     } else {

@@ -16,9 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.debug
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +60,7 @@ import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import java.time.Instant
 import kotlinx.coroutines.flow.MutableStateFlow
 
 private enum class InAppDebugContentTypes {
@@ -147,12 +150,13 @@ private fun InAppDebugScreen(
               ),
       ) {
         Box(
-            modifier =
-                Modifier.clickable(enabled = isEnabled) { handleCopied() }
-                    .padding(MaterialTheme.keylines.content),
+            modifier = Modifier.padding(MaterialTheme.keylines.content),
             contentAlignment = Alignment.BottomCenter,
         ) {
-          LazyColumn {
+          LazyColumn(
+              // Padding to offset so the copy button doesn't cover
+              modifier = Modifier.padding(bottom = MaterialTheme.keylines.content * 3),
+          ) {
             if (isEnabled) {
               extraContent()
 
@@ -217,6 +221,8 @@ private fun InAppDebugScreen(
           LogLinesCopied(
               snackbarHostState = snackbarHostState,
               show = copied,
+              enabled = isEnabled,
+              onCopy = handleCopied,
               onSnackbarDismissed = { setCopied(false) },
           )
         }
@@ -229,9 +235,29 @@ private fun InAppDebugScreen(
 private fun LogLinesCopied(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
+    enabled: Boolean,
     show: Boolean,
+    onCopy: () -> Unit,
     onSnackbarDismissed: () -> Unit,
 ) {
+  if (enabled) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Spacer(
+          modifier = Modifier.weight(1F),
+      )
+
+      Button(
+          onClick = { onCopy() },
+      ) {
+        Text(
+            text = "Copy Developer Logs",
+        )
+      }
+    }
+  }
+
   SnackbarHost(
       modifier = modifier,
       hostState = snackbarHostState,
@@ -252,13 +278,53 @@ private fun LogLinesCopied(
 
 @Preview
 @Composable
-private fun PreviewInAppDebugScreen() {
+private fun PreviewInAppDebugScreenDisabled() {
   InAppDebugScreen(
       state =
           MutableDebugViewState(
-                  logLinesBus = MutableStateFlow(emptyList()),
+              logLinesBus = MutableStateFlow(emptyList()),
+          ),
+      onDismiss = {},
+      onCopy = {},
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewInAppDebugScreenEnabledEmptyLog() {
+  val bus = MutableStateFlow<List<InAppDebugLogLine>>(emptyList())
+  InAppDebugScreen(
+      state =
+          MutableDebugViewState(
+                  logLinesBus = bus,
               )
-              .apply {},
+              .apply { isInAppDebuggingEnabled.value = true },
+      onDismiss = {},
+      onCopy = {},
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewInAppDebugScreenEnabledDummyLog() {
+  val bus =
+      MutableStateFlow<List<InAppDebugLogLine>>(
+          listOf(
+              InAppDebugLogLine(
+                  DEBUG, "Hello Debug", null, Instant.now().minusSeconds(10).toEpochMilli()),
+              InAppDebugLogLine(
+                  WARNING, "Hello Warning", null, Instant.now().minusSeconds(9).toEpochMilli()),
+              InAppDebugLogLine(
+                  ERROR,
+                  "Hello Error",
+                  IllegalStateException("Hello Error"),
+                  Instant.now().minusSeconds(8).toEpochMilli())))
+  InAppDebugScreen(
+      state =
+          MutableDebugViewState(
+                  logLinesBus = bus,
+              )
+              .apply { isInAppDebuggingEnabled.value = true },
       onDismiss = {},
       onCopy = {},
   )

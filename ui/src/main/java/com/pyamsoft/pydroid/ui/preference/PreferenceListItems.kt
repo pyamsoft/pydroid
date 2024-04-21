@@ -299,13 +299,12 @@ internal fun PreferenceDialog(
                         ),
                 name = item.key,
                 value = item.value,
-                current = currentValue,
+                current = if (item.value.toBooleanStrict()) item.value else "",
                 style = CHECKBOX,
                 onClick = { k, v ->
-                  val boolValue = v.toBooleanStrict()
+                  val boolValue = v.toBooleanStrict().not()
                   hapticManager?.actionButtonPress()
                   onPreferenceSelected(k, boolValue.toString())
-                  onDismiss()
                 },
             )
           }
@@ -360,7 +359,9 @@ private fun PreferenceDialogItem(
       }
 
   val handleClick by rememberUpdatedState {
-    if (!isSelected) {
+    // Move this check outside to the CHECKBOX/RADIO layer and
+    // fix the weird passing strings to booleans to string logic
+    if (!isSelected || style == CHECKBOX) {
       onClick(name, value)
     }
   }

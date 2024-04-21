@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
@@ -149,6 +151,22 @@ internal constructor(
         }
       }
     }
+
+    combineTransform(
+            theming.listenForModeChanges(),
+            theming.listenForMaterialYouChanges(),
+        ) { mode, isMaterialYou ->
+          emit(mode to isMaterialYou)
+        }
+        .flowOn(context = Dispatchers.Default)
+        .also { f ->
+          scope.launch(context = Dispatchers.Default) {
+            f.collect {
+              state.darkMode.value = it.first
+              state.isMaterialYou.value = it.second
+            }
+          }
+        }
   }
 
   internal fun handleChangeInAppDebugEnabled() {
@@ -160,7 +178,6 @@ internal constructor(
       scope: CoroutineScope,
       mode: Theming.Mode,
   ) {
-    state.darkMode.value = mode
     theming.setDarkTheme(scope, mode)
   }
 
@@ -230,7 +247,6 @@ internal constructor(
   }
 
   fun handleMaterialYouChange(enabled: Boolean) {
-    state.isMaterialYou.value = enabled
     theming.setMaterialYou(enabled)
   }
 

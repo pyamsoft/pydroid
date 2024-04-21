@@ -17,43 +17,94 @@
 package com.pyamsoft.pydroid.util
 
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.util.internal.DefaultPermissionRequester
+import androidx.core.app.ActivityOptionsCompat
+import com.pyamsoft.pydroid.core.Logger
 
 /** Handles permission requesting */
 public interface PermissionRequester {
 
-  /** Request permission from an Activity */
-  @CheckResult
-  public fun registerRequester(
-      activity: ComponentActivity,
-      onResponse: (Boolean) -> Unit,
-  ): Requester
+  /** Request Permissions */
+  public fun request(options: ActivityOptionsCompat? = null)
+}
 
-  public interface Requester {
+/** Register a new permission requester. Must be called before Activity.onStart */
+@CheckResult
+public fun ComponentActivity.registerPermissionRequester(
+    permissions: Array<String>,
+    onResponse: (Boolean) -> Unit,
+): PermissionRequester {
+  val self = this
 
-    /** Request permission from the underlying ActivityResultContract launcher */
-    public fun requestPermissions()
-
-    /** Unregister the underlying ActivityResultContract launcher */
-    public fun unregister()
+  var isAlive = true
+  if (permissions.isEmpty()) {
+    val msg = "Must pass Permissions to permission requester!"
+    Logger.w { msg }
+    throw IllegalArgumentException(msg)
   }
 
-  public companion object {
+  val launcher: ActivityResultLauncher<*>
+  val requester: PermissionRequester
+  if (permissions.size <= 1) {
+    val permission = permissions.first()
+    launcher =
+        self.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+          if (isGranted) {
+            Logger.d { "Permissions was granted $permission" }
+          } else {
+            Logger.w { "Permissions was not granted $permission" }
+          }
 
-    /** An empty requester than handles no permissions */
-    @JvmField public val NONE: PermissionRequester = create(emptyArray())
+          onResponse(isGranted)
+        }
+    requester =
+        object : PermissionRequester {
 
-    /** Create a new instance of a default PermissionRequester */
-    @CheckResult
-    public fun create(permission: String): PermissionRequester {
-      return create(arrayOf(permission))
-    }
+          override fun request(options: ActivityOptionsCompat?) {
+            if (!isAlive) {
+              Logger.w { "Cannot request permission after Activity.onDestroy" }
+              return
+            }
 
-    /** Create a new instance of a default PermissionRequester */
-    @CheckResult
-    public fun create(permissions: Array<String>): PermissionRequester {
-      return DefaultPermissionRequester(permissions)
-    }
+            launcher.launch(permission, options)
+          }
+        }
+  } else {
+    launcher =
+        self.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            results ->
+          val ungrantedPermissions = results.filterNot { it.value }.map { it.key }
+          val allPermissionsGranted = ungrantedPermissions.isEmpty()
+
+          if (allPermissionsGranted) {
+            Logger.d { "All permissions were granted $permissions" }
+          } else {
+            Logger.w { "Not all permissions were granted $ungrantedPermissions" }
+          }
+
+          onResponse(allPermissionsGranted)
+        }
+
+    requester =
+        object : PermissionRequester {
+
+          override fun request(options: ActivityOptionsCompat?) {
+            if (!isAlive) {
+              Logger.w { "Cannot request permissions after Activity.onDestroy" }
+              return
+            }
+
+            launcher.launch(permissions, options)
+          }
+        }
   }
+
+  self.lifecycle.doOnDestroy {
+    isAlive = false
+    launcher.unregister()
+  }
+
+  return requester
 }

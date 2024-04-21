@@ -65,14 +65,6 @@ public final class com/pyamsoft/pydroid/notify/NotifyIdKt {
 	public static final fun toNotifyId (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
 }
 
-public abstract interface class com/pyamsoft/pydroid/notify/NotifyPermission {
-	public static final field Companion Lcom/pyamsoft/pydroid/notify/NotifyPermission$Companion;
-}
-
-public final class com/pyamsoft/pydroid/notify/NotifyPermission$Companion {
-	public final fun createDefault ()Lcom/pyamsoft/pydroid/util/PermissionRequester;
-}
-
 public final class com/pyamsoft/pydroid/notify/NotifyTag {
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lcom/pyamsoft/pydroid/notify/NotifyTag;

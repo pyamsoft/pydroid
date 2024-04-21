@@ -34,16 +34,23 @@ public final class com/pyamsoft/pydroid/util/MarketLinker {
 	public static synthetic fun getStorePageLink$default (Landroid/content/Context;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
-public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester {
-	public abstract fun request (Landroidx/core/app/ActivityOptionsCompat;)V
+public final class com/pyamsoft/pydroid/util/PermissionRequester {
+	public static final field Companion Lcom/pyamsoft/pydroid/util/PermissionRequester$Companion;
+	public fun <init> ()V
+	public static final fun createAndRegister (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Launcher;
+	public final fun register (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Launcher;
 }
 
-public final class com/pyamsoft/pydroid/util/PermissionRequester$DefaultImpls {
-	public static synthetic fun request$default (Lcom/pyamsoft/pydroid/util/PermissionRequester;Landroidx/core/app/ActivityOptionsCompat;ILjava/lang/Object;)V
+public final class com/pyamsoft/pydroid/util/PermissionRequester$Companion {
+	public final fun createAndRegister (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Launcher;
 }
 
-public final class com/pyamsoft/pydroid/util/PermissionRequesterKt {
-	public static final fun registerPermissionRequester (Landroidx/activity/ComponentActivity;[Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester;
+public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester$Launcher {
+	public abstract fun launch (Ljava/lang/Iterable;)V
+	public abstract fun launch (Ljava/lang/Iterable;Landroidx/core/app/ActivityOptionsCompat;)V
+	public abstract fun launch (Ljava/lang/String;)V
+	public abstract fun launch ([Ljava/lang/String;)V
+	public abstract fun launch ([Ljava/lang/String;Landroidx/core/app/ActivityOptionsCompat;)V
 }
 
 public final class com/pyamsoft/pydroid/util/SharedPreferencesKt {

@@ -166,6 +166,7 @@ private fun rememberDarkThemePreference(
       names,
       values,
       rawValue,
+      materialYouCheckboxes,
   ) {
     listPreference(
         id = "dark_mode",

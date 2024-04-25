@@ -512,7 +512,7 @@ private fun DefaultPreferenceItem(
           Text(
               text = summary,
               style =
-                  MaterialTheme.typography.bodySmall.copy(
+                  MaterialTheme.typography.bodyMedium.copy(
                       color = textColor,
                   ),
           )
@@ -524,8 +524,7 @@ private fun DefaultPreferenceItem(
       Box(
           modifier =
               Modifier.padding(
-                      start = MaterialTheme.keylines.typography,
-                      end = MaterialTheme.keylines.baseline,
+                      horizontal = MaterialTheme.keylines.baseline,
                   )
                   .size(ListItemDefaults.LeadingSize),
           contentAlignment = Alignment.Center,

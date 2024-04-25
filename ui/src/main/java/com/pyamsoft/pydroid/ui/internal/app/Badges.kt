@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.app
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,11 +28,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.pyamsoft.pydroid.theme.KeylineDefaults
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.theme.HairlineSize
 
 @Composable
 internal fun InAppBadge(
@@ -45,8 +41,6 @@ internal fun InAppBadge(
   )
 }
 
-private val BADGE_SHAPE = RoundedCornerShape(KeylineDefaults.Typography)
-
 @Composable
 private fun Badge(
     modifier: Modifier = Modifier,
@@ -57,19 +51,18 @@ private fun Badge(
           modifier
               .background(
                   brush = SolidColor(Color(0xFF4CAF50)),
-                  shape = BADGE_SHAPE,
+                  shape = MaterialTheme.shapes.small,
               )
               .padding(
-                  horizontal = MaterialTheme.keylines.typography,
-                  vertical = HairlineSize,
+                  horizontal = MaterialTheme.keylines.baseline,
+                  vertical = MaterialTheme.keylines.typography,
               ),
       contentAlignment = Alignment.Center,
   ) {
     Text(
         text = text,
         style =
-            MaterialTheme.typography.bodySmall.copy(
-                fontSize = 8.sp,
+            MaterialTheme.typography.labelSmall.copy(
                 color = Color.White,
             ),
     )

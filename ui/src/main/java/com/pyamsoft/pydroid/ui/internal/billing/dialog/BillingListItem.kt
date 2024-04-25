@@ -100,7 +100,10 @@ private fun Description(
   Text(
       modifier = modifier,
       text = sku.description,
-      style = MaterialTheme.typography.bodySmall,
+      style =
+          MaterialTheme.typography.bodyMedium.copy(
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+          ),
   )
 }
 

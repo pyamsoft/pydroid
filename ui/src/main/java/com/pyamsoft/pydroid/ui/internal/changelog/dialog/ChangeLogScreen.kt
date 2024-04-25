@@ -99,7 +99,7 @@ private fun Actions(
 ) {
   val hapticManager = LocalHapticManager.current
   val versionStyle =
-      MaterialTheme.typography.bodySmall.copy(
+      MaterialTheme.typography.labelSmall.copy(
           color =
               MaterialTheme.colorScheme.onSurface.copy(
                   alpha = TypographyDefaults.ALPHA_DISABLED,

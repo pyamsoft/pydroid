@@ -136,7 +136,7 @@ private fun Links(
         modifier = Modifier.clickable { onTermsOfServiceClicked() },
         text = "View our Terms and Conditions",
         style =
-            MaterialTheme.typography.bodySmall.copy(
+            MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
             ),
     )
@@ -146,7 +146,7 @@ private fun Links(
                 .padding(top = MaterialTheme.keylines.baseline),
         text = "View our Privacy Policy",
         style =
-            MaterialTheme.typography.bodySmall.copy(
+            MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
             ),
     )

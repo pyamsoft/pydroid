@@ -165,7 +165,7 @@ private fun InAppDebugScreen(
                 Text(
                     text = "Logs",
                     style =
-                        MaterialTheme.typography.bodySmall.copy(
+                        MaterialTheme.typography.labelMedium.copy(
                             color =
                                 MaterialTheme.colorScheme.onSurface.copy(
                                     alpha = TypographyDefaults.ALPHA_DISABLED,
@@ -187,7 +187,7 @@ private fun InAppDebugScreen(
                           return@remember "${line.line} $errorMessage"
                         },
                     style =
-                        MaterialTheme.typography.bodySmall.copy(
+                        MaterialTheme.typography.bodyMedium.copy(
                             fontFamily = FontFamily.Monospace,
                             color =
                                 when (line.level) {

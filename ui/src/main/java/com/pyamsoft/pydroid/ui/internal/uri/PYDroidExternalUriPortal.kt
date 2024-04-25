@@ -47,6 +47,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
+import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -128,7 +129,10 @@ internal fun PYDroidExternalUriPortal(
               modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
               style =
                   MaterialTheme.typography.bodySmall.copy(
-                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      color =
+                          MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                              alpha = TypographyDefaults.ALPHA_DISABLED,
+                          ),
                   ),
               text =
                   "pyamsoft does not control this link and is not responsible for any of the content displayed.",

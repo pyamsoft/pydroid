@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 @Composable
@@ -95,7 +96,13 @@ private fun Name(library: OssLibrary) {
 @Composable
 private fun License(library: OssLibrary) {
   Text(
-      style = MaterialTheme.typography.bodySmall,
+      style =
+          MaterialTheme.typography.labelSmall.copy(
+              color =
+                  MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                      alpha = TypographyDefaults.ALPHA_DISABLED,
+                  ),
+          ),
       text = stringResource(R.string.license_name, library.licenseName),
   )
 }

@@ -141,7 +141,7 @@ private fun ThrowableMessage(
       Text(
           text = throwableMessage,
           style =
-              MaterialTheme.typography.bodyMedium.copy(
+              MaterialTheme.typography.bodyLarge.copy(
                   fontWeight = FontWeight.W700,
                   fontFamily = FontFamily.Monospace,
               ),
@@ -159,7 +159,7 @@ private fun StackTrace(
       modifier = modifier,
       text = stackTrace,
       style =
-          MaterialTheme.typography.bodySmall.copy(
+          MaterialTheme.typography.bodyMedium.copy(
               fontFamily = FontFamily.Monospace,
           ),
   )

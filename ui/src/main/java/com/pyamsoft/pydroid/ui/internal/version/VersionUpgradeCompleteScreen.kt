@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,6 +33,7 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import org.jetbrains.annotations.TestOnly
 
 @Composable
 internal fun VersionUpgradeCompleteScreen(
@@ -89,7 +89,7 @@ internal fun VersionUpgradeCompleteScreen(
           modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
           text = "Completing the upgrade will close and restart this app.",
           style =
-              MaterialTheme.typography.bodySmall.copy(
+              MaterialTheme.typography.bodyMedium.copy(
                   color = MaterialTheme.colorScheme.primary,
               ),
       )
@@ -109,16 +109,15 @@ internal fun VersionUpgradeCompleteScreen(
   }
 }
 
+@TestOnly
 @Composable
 private fun PreviewVersionUpgradeCompleteScreen(
     state: MutableVersionCheckViewState,
 ) {
-  Surface {
-    VersionUpgradeCompleteScreen(
-        state = state,
-        onCompleteUpdate = {},
-    )
-  }
+  VersionUpgradeCompleteScreen(
+      state = state,
+      onCompleteUpdate = {},
+  )
 }
 
 @Preview

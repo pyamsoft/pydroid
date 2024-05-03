@@ -189,9 +189,10 @@ private fun Disclosure(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
         text =
             """
-              Aside from these default "Usage and Diagnostics", your application data is never
-              knowingly collected, shared, transported, or shown to any other party, including
-              the developer.
+              Aside from these default "Usage and Diagnostics" related crash-reports, your data
+              is never knowingly collected, shared, transported, or shown to any other party,
+              including the developer. $name is open source software, and does not include any
+              tracking, or other analytics.
               """
                 .trimIndent()
                 .replace("\n", " "),

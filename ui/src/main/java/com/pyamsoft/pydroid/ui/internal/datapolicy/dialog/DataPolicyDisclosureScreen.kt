@@ -177,7 +177,7 @@ private fun Disclosure(
             """
         Because it is distributed on the Google Play Store, the developer is provided
         by default with certain analytics related to your usage of the application called Vitals.
-        You can opt out of these analytics from your device's system settings."""
+        You can opt out of these analytics by turning off the "Usage and Diagnostics" option in your device's system settings."""
                 .trimIndent()
                 .replace("\n", " "),
         style = disclosureStyle,

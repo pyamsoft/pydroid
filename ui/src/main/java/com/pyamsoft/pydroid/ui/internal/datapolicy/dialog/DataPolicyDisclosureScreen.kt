@@ -176,8 +176,10 @@ private fun Disclosure(
         text =
             """
         Because it is distributed on the Google Play Store, the developer is provided
-        by default with certain analytics related to your usage of the application called Vitals.
-        You can opt out of these analytics by turning off the "Usage and Diagnostics" option in your device's system settings."""
+        by default with crash-reports related to your usage of the application.
+        These crash-reports are controlled by the system setting called "Usage and Diagnostics"
+        You can opt out of these analytics by turning off the "Usage and Diagnostics" option
+        from your device's system settings."""
                 .trimIndent()
                 .replace("\n", " "),
         style = disclosureStyle,
@@ -187,8 +189,9 @@ private fun Disclosure(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
         text =
             """
-              Aside from these Google Play Store Vitals, your application data is never knowingly
-              collected, shared, transported, or shown to any other party, including the developer.
+              Aside from these default "Usage and Diagnostics", your application data is never
+              knowingly collected, shared, transported, or shown to any other party, including
+              the developer.
               """
                 .trimIndent()
                 .replace("\n", " "),

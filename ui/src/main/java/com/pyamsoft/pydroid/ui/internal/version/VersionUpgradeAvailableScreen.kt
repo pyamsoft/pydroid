@@ -27,11 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
@@ -69,14 +71,12 @@ internal fun VersionUpgradeAvailableScreen(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       val text =
-          remember(launcher) {
-            launcher.let { l ->
-              if (l == null) {
-                // Should basically never happen
-                "An update is available!"
-              } else {
-                "An update to version ${l.availableUpdateVersion()} is available!"
-              }
+          launcher.let { l ->
+            if (l == null) {
+              // Should basically never happen
+              stringResource(R.string.an_update_is_available)
+            } else {
+              stringResource(R.string.an_update_to_version_is_available, l.availableUpdateVersion())
             }
           }
 
@@ -96,10 +96,11 @@ internal fun VersionUpgradeAvailableScreen(
           },
       ) {
         Text(
-            text = "Download",
+            text = stringResource(R.string.download),
         )
       }
     }
+    android.R.string.copyUrl
   }
 }
 

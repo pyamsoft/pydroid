@@ -32,10 +32,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 private enum class ResetScreenContentTypes {
@@ -98,7 +100,7 @@ internal fun ResetScreen(
 @Composable
 private fun Title() {
   Text(
-      text = "Are you sure?",
+      text = stringResource(R.string.reset_title),
       style = MaterialTheme.typography.headlineMedium,
   )
 }
@@ -107,7 +109,7 @@ private fun Title() {
 private fun Message() {
   Column {
     Text(
-        text = "All saved data will be cleared and all settings reset to default.",
+        text = stringResource(R.string.reset_start),
         style = MaterialTheme.typography.bodyLarge,
     )
 
@@ -115,7 +117,7 @@ private fun Message() {
         modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
-          text = "The app will act as if you are launching it for the first time.",
+          text = stringResource(R.string.reset_end),
           style = MaterialTheme.typography.bodyLarge,
       )
     }
@@ -124,7 +126,7 @@ private fun Message() {
         modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
     ) {
       Text(
-          text = "This cannot be undone.",
+          text = stringResource(R.string.reset_warning),
           style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.W700),
       )
     }
@@ -151,7 +153,7 @@ private fun Actions(
         },
     ) {
       Text(
-          text = "Cancel",
+          text = stringResource(android.R.string.cancel),
       )
     }
     Box(
@@ -166,7 +168,7 @@ private fun Actions(
           },
       ) {
         Text(
-            text = "Reset",
+            text = stringResource(R.string.reset),
         )
       }
     }

@@ -151,7 +151,7 @@ internal fun BillingScreen(
             },
         ) {
           Text(
-              text = stringResource(R.string.close),
+              text = stringResource(android.R.string.cancel),
           )
         }
       }

@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -98,7 +99,7 @@ private fun ThreadName(
       modifier = modifier.padding(bottom = MaterialTheme.keylines.baseline),
   ) {
     Text(
-        text = "Uncaught exception in $threadName thread",
+        text = stringResource(R.string.crash_title, threadName),
         style =
             MaterialTheme.typography.bodyLarge.copy(
                 fontWeight = FontWeight.W700,

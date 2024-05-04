@@ -45,6 +45,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,6 +54,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
@@ -163,7 +166,7 @@ private fun InAppDebugScreen(
                   contentType = InAppDebugContentTypes.TITLE,
               ) {
                 Text(
-                    text = "Logs",
+                    text = stringResource(R.string.logs),
                     style =
                         MaterialTheme.typography.labelMedium.copy(
                             color =
@@ -217,7 +220,7 @@ private fun InAppDebugScreen(
                 ) {
                   Text(
                       modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
-                      text = "In-App Developer Mode is not enabled.",
+                      text = stringResource(R.string.not_enabled),
                       style = MaterialTheme.typography.headlineSmall,
                       textAlign = TextAlign.Center,
                   )
@@ -260,7 +263,7 @@ private fun LogLinesCopied(
           onClick = { onCopy() },
       ) {
         Text(
-            text = "Copy Developer Logs",
+            text = stringResource(R.string.copy_logs),
         )
       }
     }
@@ -272,9 +275,10 @@ private fun LogLinesCopied(
   )
 
   if (show) {
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
       snackbarHostState.showSnackbar(
-          message = "Developer Log Copied",
+          message = context.getString(R.string.log_copied),
           duration = SnackbarDuration.Short,
       )
 

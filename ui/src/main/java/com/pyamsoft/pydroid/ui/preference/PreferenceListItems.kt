@@ -48,7 +48,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
@@ -408,7 +407,7 @@ private fun PreferenceDialogActions(
         onClick = onDismiss,
     ) {
       Text(
-          text = stringResource(R.string.close),
+          text = stringResource(android.R.string.cancel),
       )
     }
   }

@@ -21,7 +21,7 @@
   <string name="disclosure_title">%1$s is open source software.</string>
   <string
     name="disclosure_start"
-  >Because it is distributed on the Google Play Store, the developer is provided by default with crash-reports related to your usage of the application. These crash-reports are controlled by the system setting called "Usage and Diagnostics". You can opt out of these analytics by turning off the "Usage and Diagnostics" option from your device's system settings.</string>
+  >Because it is distributed on the Google Play Store, the developer is provided by default with crash-reports related to your usage of the application. These crash-reports are controlled by the system setting called "Usage and Diagnostics". You can opt out of these analytics by turning off the "Usage and Diagnostics" option from your device\'s system settings.</string>
   <string
     name="disclosure_end"
   >Aside from these default "Usage and Diagnostics" related crash-reports, your data is never knowingly collected, shared, transported, or shown to any other party, including the developer. %1$s is open source software, and does not include any tracking, or other analytics.</string>

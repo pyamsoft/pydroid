@@ -15,12 +15,8 @@
   ~ limitations under the License.
   -->
 <resources>
-  <string name="your_upgrade_is_ready">Your upgrade is ready!</string>
-  <string
-    name="your_upgrade_to_version_is_ready"
-  >Your upgrade to version %1$s is ready!</string>
-  <string
-    name="complete_upgrade"
-  >Completing the upgrade will close and restart this app.</string>
-  <string name="upgrade">Upgrade</string>
+  <string name="logs">Logs</string>
+  <string name="not_enabled">In-App Developer Mode is not enabled.</string>
+  <string name="copy_logs">Copy Developer Logs</string>
+  <string name="log_copied">Developer Log Copied</string>
 </resources>

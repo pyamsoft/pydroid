@@ -38,14 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
@@ -75,29 +74,7 @@ internal fun PYDroidExternalUriPortal(
       uriHandler.dismiss()
     }
 
-    val confirmation =
-        remember(
-            uri,
-            appName,
-        ) {
-          buildAnnotatedString {
-            append("The link you tried to go to is outside $appName:")
-            append(" ")
-
-            withStyle(
-                style =
-                    SpanStyle(
-                        fontWeight = FontWeight.W700,
-                    ),
-            ) {
-              append(uri)
-            }
-
-            appendLine()
-            appendLine()
-            append("Are you sure you want to follow this link?")
-          }
-        }
+    val confirmation = stringResource(R.string.external_link_url, appName, uri)
 
     Dialog(
         onDismissRequest = { handleDismiss() },
@@ -115,7 +92,7 @@ internal fun PYDroidExternalUriPortal(
           Text(
               modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
               style = MaterialTheme.typography.bodyLarge,
-              text = "You're going to a link outside $appName",
+              text = stringResource(R.string.external_link_title, appName),
               fontWeight = FontWeight.W700,
           )
 
@@ -134,8 +111,7 @@ internal fun PYDroidExternalUriPortal(
                               alpha = TypographyDefaults.ALPHA_DISABLED,
                           ),
                   ),
-              text =
-                  "pyamsoft does not control this link and is not responsible for any of the content displayed.",
+              text = stringResource(R.string.external_link_disclaimer),
           )
 
           Row(
@@ -153,9 +129,7 @@ internal fun PYDroidExternalUriPortal(
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
             ) {
-              Text(
-                  text = "Cancel",
-              )
+              Text(text = stringResource(android.R.string.cancel))
             }
 
             Button(
@@ -169,7 +143,7 @@ internal fun PYDroidExternalUriPortal(
                 },
             ) {
               Text(
-                  text = "Follow Link",
+                  text = stringResource(R.string.follow_link),
               )
             }
           }

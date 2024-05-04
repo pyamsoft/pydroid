@@ -39,6 +39,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
@@ -74,7 +76,24 @@ internal fun PYDroidExternalUriPortal(
       uriHandler.dismiss()
     }
 
-    val confirmation = stringResource(R.string.external_link_url, appName, uri)
+    val linkBody = stringResource(R.string.external_link_url, appName, uri)
+    val confirmation =
+        remember(linkBody) {
+          val linkIndex = linkBody.indexOf(uri)
+          val spanStyles =
+              listOf(
+                  AnnotatedString.Range(
+                      SpanStyle(
+                          fontWeight = FontWeight.Bold,
+                      ),
+                      start = linkIndex,
+                      end = linkIndex + uri.length,
+                  ))
+          return@remember AnnotatedString(
+              linkBody,
+              spanStyles = spanStyles,
+          )
+        }
 
     Dialog(
         onDismissRequest = { handleDismiss() },

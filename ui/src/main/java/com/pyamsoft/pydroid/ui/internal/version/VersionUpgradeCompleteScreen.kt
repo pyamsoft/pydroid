@@ -26,10 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
@@ -66,14 +68,12 @@ internal fun VersionUpgradeCompleteScreen(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
       val text =
-          remember(launcher) {
-            launcher.let { l ->
-              if (l == null) {
-                // Should basically never happen
-                "Your upgrade is ready!"
-              } else {
-                "Your upgrade to version ${l.availableUpdateVersion()} is ready!"
-              }
+          launcher.let { l ->
+            if (l == null) {
+              // Should basically never happen
+              stringResource(R.string.your_upgrade_is_ready)
+            } else {
+              stringResource(R.string.your_upgrade_to_version_is_ready, l.availableUpdateVersion())
             }
           }
 
@@ -87,7 +87,7 @@ internal fun VersionUpgradeCompleteScreen(
 
       Text(
           modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
-          text = "Completing the upgrade will close and restart this app.",
+          text = stringResource(R.string.complete_upgrade),
           style =
               MaterialTheme.typography.bodyMedium.copy(
                   color = MaterialTheme.colorScheme.primary,
@@ -102,7 +102,7 @@ internal fun VersionUpgradeCompleteScreen(
           },
       ) {
         Text(
-            text = "Upgrade",
+            text = stringResource(R.string.upgrade),
         )
       }
     }

@@ -71,7 +71,12 @@ internal fun AppHeader(
         )
 
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .weight(
+                        weight = 1F,
+                        fill = false,
+                    ),
         ) {
           content()
         }

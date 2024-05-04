@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +38,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
@@ -99,7 +98,7 @@ internal fun DataPolicyDisclosureScreen(
         contentType = DataPolicyDisclosureScreenItems.DISCLOSURE,
     ) {
       Disclosure(
-          modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
+          modifier = Modifier.fillMaxWidth(),
           name = name,
       )
     }
@@ -112,10 +111,10 @@ private fun Links(
     onPrivacyPolicyClicked: () -> Unit,
     onTermsOfServiceClicked: () -> Unit,
 ) {
-  Column(
+  Row(
       modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.Center,
+      horizontalArrangement = Arrangement.SpaceEvenly,
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     Text(
         modifier = Modifier.clickable { onTermsOfServiceClicked() },
@@ -126,9 +125,7 @@ private fun Links(
             ),
     )
     Text(
-        modifier =
-            Modifier.clickable { onPrivacyPolicyClicked() }
-                .padding(top = MaterialTheme.keylines.baseline),
+        modifier = Modifier.clickable { onPrivacyPolicyClicked() },
         text = stringResource(R.string.privacy_policy),
         style =
             MaterialTheme.typography.labelSmall.copy(
@@ -194,6 +191,7 @@ private fun Actions(
     ) {
       Text(
           text = stringResource(R.string.dpd_accept),
+          style = MaterialTheme.typography.labelMedium,
       )
     }
     TextButton(
@@ -205,7 +203,7 @@ private fun Actions(
     ) {
       Text(
           text = stringResource(R.string.dpd_reject),
-          fontSize = 12.sp,
+          style = MaterialTheme.typography.labelSmall,
       )
     }
   }

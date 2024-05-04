@@ -25,13 +25,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine.Type.BUGFIX
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine.Type.CHANGE
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine.Type.FEATURE
 
 private val TYPE_WIDTH = 80.dp
 
@@ -65,8 +71,18 @@ internal fun ChangeLogListItem(
 
 @Composable
 private fun Type(line: ChangeLogLine) {
+  val stringResourceId =
+      remember(line) {
+        when (line.type) {
+          BUGFIX -> R.string.changelog_bugfix
+          CHANGE -> R.string.changelog_change
+          FEATURE -> R.string.changelog_feature
+        }
+      }
+  val text = stringResource(stringResourceId)
+
   Text(
-      text = line.type.name,
+      text = text,
       style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.W700),
   )
 }

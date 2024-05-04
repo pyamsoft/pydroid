@@ -15,5 +15,9 @@
   ~ limitations under the License.
   -->
 <resources>
+  <string name="changelog_bugfix">BUG-FIX</string>
+  <string name="changelog_change">CHANGE</string>
+  <string name="changelog_feature">FEATURE</string>
+
   <string name="view_changes">View Changes</string>
 </resources>

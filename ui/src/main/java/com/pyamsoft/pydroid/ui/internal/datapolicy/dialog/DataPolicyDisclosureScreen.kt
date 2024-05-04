@@ -179,7 +179,7 @@ private fun Actions(
       modifier =
           modifier
               .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(top = MaterialTheme.keylines.content),
+              .padding(bottom = MaterialTheme.keylines.content),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
@@ -195,7 +195,6 @@ private fun Actions(
       )
     }
     TextButton(
-        modifier = Modifier.padding(top = MaterialTheme.keylines.baseline),
         onClick = {
           hapticManager?.cancelButtonPress()
           onReject()

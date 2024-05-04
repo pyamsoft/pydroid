@@ -53,8 +53,6 @@ private enum class BillingScreenItems {
   LOADING,
   ERROR,
   ITEMS,
-  ERROR_SNACK,
-  ACTIONS,
 }
 
 @Composable
@@ -72,9 +70,6 @@ internal fun BillingScreen(
   val name by state.name.collectAsStateWithLifecycle()
   val error by state.error.collectAsStateWithLifecycle()
 
-  val hapticManager = LocalHapticManager.current
-  val snackbarHostState = remember { SnackbarHostState() }
-
   // Remember computed value
   val isLoading = remember(connected) { connected == BillingState.LOADING }
   val isConnected = remember(connected) { connected == BillingState.CONNECTED }
@@ -91,6 +86,24 @@ internal fun BillingScreen(
       icon = icon,
       name = name,
       imageLoader = imageLoader,
+      afterScroll = {
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        BillingError(
+            modifier = Modifier.fillMaxWidth(),
+            snackbarHostState = snackbarHostState,
+            error = error,
+            onSnackbarDismissed = onBillingErrorDismissed,
+        )
+
+        ActionRow(
+            modifier =
+                modifier
+                    .padding(horizontal = MaterialTheme.keylines.content)
+                    .padding(top = MaterialTheme.keylines.content),
+            onClose = onClose,
+        )
+      },
   ) {
     if (isLoading) {
       item(
@@ -121,40 +134,31 @@ internal fun BillingScreen(
         }
       }
     }
+  }
+}
 
-    item(
-        contentType = BillingScreenItems.ERROR_SNACK,
+@Composable
+private fun ActionRow(
+    modifier: Modifier = Modifier,
+    onClose: () -> Unit,
+) {
+  val hapticManager = LocalHapticManager.current
+
+  Row(
+      modifier = modifier,
+  ) {
+    Spacer(
+        modifier = Modifier.weight(1F),
+    )
+    TextButton(
+        onClick = {
+          hapticManager?.cancelButtonPress()
+          onClose()
+        },
     ) {
-      BillingError(
-          modifier = Modifier.fillMaxWidth(),
-          snackbarHostState = snackbarHostState,
-          error = error,
-          onSnackbarDismissed = onBillingErrorDismissed,
+      Text(
+          text = stringResource(android.R.string.cancel),
       )
-    }
-
-    item(
-        contentType = BillingScreenItems.ACTIONS,
-    ) {
-      Row(
-          modifier =
-              Modifier.padding(horizontal = MaterialTheme.keylines.content)
-                  .padding(top = MaterialTheme.keylines.content),
-      ) {
-        Spacer(
-            modifier = Modifier.weight(1F),
-        )
-        TextButton(
-            onClick = {
-              hapticManager?.cancelButtonPress()
-              onClose()
-            },
-        ) {
-          Text(
-              text = stringResource(android.R.string.cancel),
-          )
-        }
-      }
     }
   }
 }

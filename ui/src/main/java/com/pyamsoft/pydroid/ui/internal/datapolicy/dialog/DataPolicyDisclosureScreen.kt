@@ -51,9 +51,6 @@ private val MAX_HEIGHT_PORTRAIT = 360.dp
 
 private enum class DataPolicyDisclosureScreenItems {
   DISCLOSURE,
-  LINKS,
-  ERROR,
-  ACTIONS,
 }
 
 @Composable
@@ -77,6 +74,26 @@ internal fun DataPolicyDisclosureScreen(
       icon = icon,
       name = name,
       imageLoader = imageLoader,
+      afterScroll = {
+        Links(
+            modifier = Modifier.fillMaxWidth(),
+            onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+            onTermsOfServiceClicked = onTermsOfServiceClicked,
+        )
+
+        NavigationError(
+            modifier = Modifier.fillMaxWidth(),
+            snackbarHostState = snackbarHostState,
+            error = navigationError,
+            onSnackbarDismissed = onNavigationErrorDismissed,
+        )
+
+        Actions(
+            modifier = Modifier.fillMaxWidth(),
+            onAccept = onAccept,
+            onReject = onReject,
+        )
+      },
   ) {
     item(
         contentType = DataPolicyDisclosureScreenItems.DISCLOSURE,
@@ -84,37 +101,6 @@ internal fun DataPolicyDisclosureScreen(
       Disclosure(
           modifier = Modifier.fillMaxWidth().heightIn(max = MAX_HEIGHT_PORTRAIT),
           name = name,
-      )
-    }
-
-    item(
-        contentType = DataPolicyDisclosureScreenItems.LINKS,
-    ) {
-      Links(
-          modifier = Modifier.fillMaxWidth(),
-          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-          onTermsOfServiceClicked = onTermsOfServiceClicked,
-      )
-    }
-
-    item(
-        contentType = DataPolicyDisclosureScreenItems.ERROR,
-    ) {
-      NavigationError(
-          modifier = Modifier.fillMaxWidth(),
-          snackbarHostState = snackbarHostState,
-          error = navigationError,
-          onSnackbarDismissed = onNavigationErrorDismissed,
-      )
-    }
-
-    item(
-        contentType = DataPolicyDisclosureScreenItems.ACTIONS,
-    ) {
-      Actions(
-          modifier = Modifier.fillMaxWidth(),
-          onAccept = onAccept,
-          onReject = onReject,
       )
     }
   }
@@ -126,7 +112,6 @@ private fun Links(
     onPrivacyPolicyClicked: () -> Unit,
     onTermsOfServiceClicked: () -> Unit,
 ) {
-
   Column(
       modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
       horizontalAlignment = Alignment.CenterHorizontally,

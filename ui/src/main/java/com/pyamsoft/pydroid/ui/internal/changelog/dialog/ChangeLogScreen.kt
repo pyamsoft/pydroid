@@ -43,7 +43,6 @@ import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
 private enum class ChangeLogScreenItems {
   LOG_ITEM,
-  ACTIONS,
 }
 
 @Composable
@@ -65,6 +64,14 @@ internal fun ChangeLogScreen(
       icon = icon,
       name = name,
       imageLoader = imageLoader,
+      afterScroll = {
+        Actions(
+            modifier = Modifier.fillMaxWidth(),
+            applicationVersionCode = versionCode,
+            onRateApp = onRateApp,
+            onClose = onClose,
+        )
+      },
   ) {
     changeLog.forEach { line ->
       item(
@@ -75,17 +82,6 @@ internal fun ChangeLogScreen(
             line = line,
         )
       }
-    }
-
-    item(
-        contentType = ChangeLogScreenItems.ACTIONS,
-    ) {
-      Actions(
-          modifier = Modifier.fillMaxWidth(),
-          applicationVersionCode = versionCode,
-          onRateApp = onRateApp,
-          onClose = onClose,
-      )
     }
   }
 }

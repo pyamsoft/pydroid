@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,6 +47,7 @@ internal fun AppHeader(
     @DrawableRes icon: Int,
     name: String,
     imageLoader: ImageLoader,
+    afterScroll: @Composable ColumnScope.() -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
   Box(
@@ -73,6 +75,8 @@ internal fun AppHeader(
         ) {
           content()
         }
+
+        afterScroll()
       }
     }
 

@@ -134,7 +134,7 @@ private fun Links(
   ) {
     Text(
         modifier = Modifier.clickable { onTermsOfServiceClicked() },
-        text = "View our Terms and Conditions",
+        text = stringResource(R.string.terms_conditions),
         style =
             MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
@@ -144,7 +144,7 @@ private fun Links(
         modifier =
             Modifier.clickable { onPrivacyPolicyClicked() }
                 .padding(top = MaterialTheme.keylines.baseline),
-        text = "View our Privacy Policy",
+        text = stringResource(R.string.privacy_policy),
         style =
             MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.primary,
@@ -167,35 +167,19 @@ private fun Disclosure(
       modifier = modifier.padding(MaterialTheme.keylines.content),
   ) {
     Text(
-        text = "$name is open source software.",
+        text = stringResource(R.string.disclosure_title, name),
         style = MaterialTheme.typography.bodyLarge,
     )
 
     Text(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        text =
-            """
-        Because it is distributed on the Google Play Store, the developer is provided
-        by default with crash-reports related to your usage of the application.
-        These crash-reports are controlled by the system setting called "Usage and Diagnostics"
-        You can opt out of these analytics by turning off the "Usage and Diagnostics" option
-        from your device's system settings."""
-                .trimIndent()
-                .replace("\n", " "),
+        text = stringResource(R.string.disclosure_start).trimIndent().replace("\n", " "),
         style = disclosureStyle,
     )
 
     Text(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        text =
-            """
-              Aside from these default "Usage and Diagnostics" related crash-reports, your data
-              is never knowingly collected, shared, transported, or shown to any other party,
-              including the developer. $name is open source software, and does not include any
-              tracking, or other analytics.
-              """
-                .trimIndent()
-                .replace("\n", " "),
+        text = stringResource(R.string.disclosure_end, name).trimIndent().replace("\n", " "),
         style = disclosureStyle,
     )
   }

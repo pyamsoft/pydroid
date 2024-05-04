@@ -15,15 +15,8 @@
   ~ limitations under the License.
   -->
 <resources>
-  <!-- Social Media -->
+  <!-- Billing -->
   <string
-    name="follow_pyamsoft_around_the_web"
-  >Follow pyamsoft around the web</string>
-
-  <!-- Common -->
-  <string name="close">Close</string>
-  <string name="in_app_badge">IN-APP PURCHASE</string>
-  <string name="rate_app">Rate App</string>
-  <string name="privacy_policy">Privacy Policy</string>
-  <string name="terms_conditions">Terms &amp; Conditions</string>
+    name="billing_error_message"
+  >Sorry, there was an error connecting to the In-App Billing service. Please try again later.</string>
 </resources>

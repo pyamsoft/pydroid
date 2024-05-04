@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright 2024 pyamsoft
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+  <string name="data_policy">Data Policy Disclosure</string>
+  <string name="dpd_accept">I Accept the Data Policy Terms</string>
+  <string name="dpd_reject">I Do Not Accept the Data Policy Terms</string>
+  <string name="disclosure_title">%1$s is open source software.</string>
+  <string
+    name="disclosure_start"
+  >Because it is distributed on the Google Play Store, the developer is provided by default with crash-reports related to your usage of the application. These crash-reports are controlled by the system setting called "Usage and Diagnostics". You can opt out of these analytics by turning off the "Usage and Diagnostics" option from your device's system settings.</string>
+  <string
+    name="disclosure_end"
+  >Aside from these default "Usage and Diagnostics" related crash-reports, your data is never knowingly collected, shared, transported, or shown to any other party, including the developer. %1$s is open source software, and does not include any tracking, or other analytics.</string>
+</resources>

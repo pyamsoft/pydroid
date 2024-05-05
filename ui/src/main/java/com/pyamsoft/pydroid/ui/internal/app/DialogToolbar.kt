@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material.icons.Icons
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
@@ -41,7 +43,7 @@ import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 @OptIn(ExperimentalMaterial3Api::class)
 internal fun DialogToolbar(
     modifier: Modifier = Modifier,
-    title: String,
+    @StringRes title: Int,
     onClose: () -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
@@ -71,7 +73,7 @@ internal fun DialogToolbar(
             ),
         title = {
           Text(
-              text = title,
+              text = stringResource(title),
           )
         },
         navigationIcon = {
@@ -95,7 +97,7 @@ internal fun DialogToolbar(
 @Composable
 private fun PreviewDialogToolbar() {
   DialogToolbar(
-      title = "TEST",
+      title = R.string.reset_title,
       onClose = {},
   )
 }

@@ -148,7 +148,9 @@ internal fun PYDroidExternalUriPortal(
                         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
             ) {
-              Text(text = stringResource(android.R.string.cancel))
+              Text(
+                  text = stringResource(android.R.string.cancel),
+              )
             }
 
             Button(

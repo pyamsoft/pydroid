@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright 2024 pyamsoft
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <string name="gradle_versions_plugin_name">Gradle Versions Plugin</string>
+    <string
+  name="gradle_versions_plugin_url"
+>https://github.com/ben-manes/gradle-versions-plugin</string>
+    <string
+  name="gradle_versions_plugin_description"
+>Gradle plugin to discover dependency updates.</string>
+
+    <string name="gradle_spotless_plugin">Gradle Spotless Plugin</string>
+    <string
+  name="gradle_spotless_plugin_url"
+>https://github.com/diffplug/spotless/tree/master/plugin-gradle</string>
+    <string
+  name="gradle_spotless_plugin_description"
+>Keep your code Spotless with Gradle</string>
+
+    <string name="dokka">Dokka</string>
+    <string name="dokka_url">https://github.com/Kotlin/dokka</string>
+    <string
+  name="dokka_description"
+>API documentation engine for Kotlin</string>
+
+    <string
+  name="binary_compatibility_validator"
+>Binary Compatibility Validator</string>
+    <string
+  name="binary_compatibility_validator_url"
+>https://github.com/Kotlin/binary-compatibility-validator</string>
+    <string
+  name="binary_compatibility_validator_description"
+>Public API management tool</string>
+
+    <string
+  name="android_cache_fix_plugin"
+>Android Cache Fix Gradle Plugin</string>
+    <string
+  name="android_cache_fix_plugin_url"
+>https://github.com/gradle/android-cache-fix-gradle-plugin</string>
+    <string
+  name="android_cache_fix_plugin_description"
+>Gradle plugin that fixes Android build caching problems.</string>
+
+    <string name="gradle_doctor">Gradle Doctor</string>
+    <string
+  name="gradle_doctor_url"
+>https://runningcode.github.io/gradle-doctor/</string>
+    <string
+  name="gradle_doctor_description"
+>The right prescription for your Gradle build.</string>
+
+    <string name="core_library_desugaring">Core Library Desugaring</string>
+    <string
+  name="core_library_desugaring_url"
+>https://github.com/google/desugar_jdk_libs</string>
+    <string
+  name="core_library_desugaring_description"
+>This project contains a small subset of OpenJDK libraries simplified for use on older runtimes.</string>
+
+    <string name="pydroid_url">https://github.com/pyamsoft/pydroid</string>
+    <string name="pydroid_core">PYDroid Core</string>
+    <string
+  name="pydroid_core_description"
+>The core PYDroid library, providing the building blocks for extension libraries</string>
+
+    <string name="kotlin">Kotlin</string>
+    <string name="kotlin_url">https://github.com/JetBrains/kotlin</string>
+    <string name="kotlin_description">The Kotlin Programming Language.</string>
+
+    <string name="kotlin_coroutines">Kotlin Coroutines</string>
+    <string
+  name="kotlin_coroutines_url"
+>https://github.com/Kotlin/kotlinx.coroutines</string>
+    <string
+  name="kotlin_coroutines_description"
+>Library support for Kotlin coroutines with multiplatform support.</string>
+
+    <string name="android_sdk">Android SDK</string>
+    <string name="android_sdk_url">https://source.android.com</string>
+    <string
+  name="android_sdk_description"
+>The Android SDK, which powers everything about the devices we all love.</string>
+
+    <string name="androidx_annotations">AndroidX Annotations</string>
+    <string
+  name="androidx_annotations_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/annotation/</string>
+    <string
+  name="androidx_annotations_description"
+>Annotation library offers a set of Java annotations that are useful for Android application and library development.</string>
+
+    <string name="pydroid_util">PYDroid Util</string>
+    <string
+  name="pydroid_util_description"
+>PYDroid util extensions for easier data manipulation</string>
+
+    <string name="androidx_activity">AndroidX Activity</string>
+    <string
+  name="androidx_activity_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/</string>
+    <string
+  name="androidx_activity_description"
+>Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.</string>
+
+    <string name="androidx_fragment">AndroidX Fragment</string>
+    <string
+  name="androidx_fragment_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/</string>
+    <string
+  name="androidx_fragment_description"
+>Fragments allow you to encapsulate part of your user interface or behavior into reusable components.</string>
+
+    <string name="androidx_lifecycle_common">AndroidX Lifecycle Common</string>
+    <string
+  name="androidx_lifecycle_common_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common</string>
+    <string
+  name="androidx_lifecycle_common_description"
+>Lifecycle library provides support for Android component lifecycle.</string>
+    i
+    <string name="pydroid_bootstrap">PYDroid Bootstrap</string>
+    <string
+  name="pydroid_bootstrap_description"
+>PYDroid bootstrap extensions for quickly spinning up new applications</string>
+
+    <string
+  name="google_play_url"
+>https://developers.google.com/android/</string>
+    <string name="custom_google_license">Custom Google License</string>
+
+    <string
+  name="google_play_in_app_updates_library"
+>Google Play In-App Updates Library</string>
+    <string
+  name="google_play_in_app_updates_library_description"
+>Google Play Services In-App Updates library for Android.</string>
+
+    <string
+  name="google_play_in_app_review_library"
+>Google Play In-App Review Library</string>
+    <string
+  name="google_play_in_app_review_library_description"
+>Google Play Services In-App Review library for Android.</string>
+
+    <string name="compose_runtime">Compose Runtime</string>
+    <string
+  name="compose_runtime_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime</string>
+    <string
+  name="compose_runtime_description"
+>Compose runtime annotations</string>
+
+    <string name="pydroid_ui">PYDroid UI</string>
+    <string
+  name="pydroid_ui_description"
+>PYDroid reference implementation for various UI components</string>
+
+    <string name="coil_compose">Coil Compose</string>
+    <string name="coil_compose_url">https://github.com/coil-kt/Coil</string>
+    <string
+  name="coil_compose_description"
+>An image loading library for Android backed by Kotlin Coroutines.</string>
+
+    <string name="androidx_preference">AndroidX Preference</string>
+    <string
+  name="androidx_preference_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/</string>
+    <string
+  name="androidx_preference_description"
+>The AndroidX Preference library. Allow users to modify UI settings.</string>
+
+    <string name="androidx_core_ktx">AndroidX Core KTX</string>
+    <string
+  name="androidx_core_ktx_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/</string>
+    <string
+  name="androidx_core_ktx_description"
+>The AndroidX Core KTX library. Write more concise, idiomatic Kotlin code.</string>
+
+    <string
+  name="androidx_lifecycle_compose"
+>AndroidX Lifecycle Compose</string>
+    <string
+  name="androidx_lifecycle_compose_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-runtime-compose</string>
+    <string
+  name="androidx_lifecycle_compose_description"
+>Lifecycle library provides support for Android component lifecycle, with Compose runtime support</string>
+
+    <string name="compose_ui">Compose UI</string>
+    <string
+  name="compose_ui_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui</string>
+    <string
+  name="compose_ui_description"
+>Compose support for UI widgets</string>
+
+    <string name="compose_animation">Compose Animation</string>
+    <string
+  name="compose_animation_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/animation</string>
+    <string
+  name="compose_animation_description"
+>Compose support for animations</string>
+
+    <string name="compose_material_3">Compose Material 3</string>
+    <string
+  name="compose_material_3_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material3</string>
+    <string
+  name="compose_material_3_description"
+>Compose support for the Material Design 3 system</string>
+
+    <string name="compose_ui_tooling">Compose UI Tooling</string>
+    <string
+  name="compose_ui_tooling_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling</string>
+    <string
+  name="compose_ui_tooling_description"
+>Compose support buildtime UI tooling</string>
+
+    <string name="pydroid_theme">PYDroid Theme</string>
+    <string
+  name="pydroid_theme_description"
+>PYDroid extensions for MaterialTheme</string>
+
+    <string name="pydroid_arch">PYDroid Arch</string>
+    <string
+  name="pydroid_arch_description"
+>PYDroid standard architecture for an MVVM UI design pattern</string>
+
+    <string name="compose_runtime_saveable">Compose Runtime Saveable</string>
+    <string
+  name="compose_runtime_saveable_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime-saveable</string>
+    <string
+  name="compose_runtime_saveable_description"
+>Compose runtime support for Saveable state</string>
+
+    <string name="pydroid_bus">PYDroid Bus</string>
+    <string name="pydroid_bus_description">PYDroid event bus</string>
+
+    <string name="pydroid_billing">PYDroid Billing</string>
+    <string
+  name="pydroid_billing_description"
+>PYDroid In-App Billing library</string>
+
+    <string
+  name="google_play_in_app_billing_library"
+>Google Play In-App Billing Library</string>
+    <string
+  name="google_play_in_app_billing_library_description"
+>In-App Billing management for Android Applications</string>
+
+    <string name="pydroid_notify">PYDroid Notify</string>
+    <string
+  name="pydroid_notify_description"
+>PYDroid notification management abstraction library</string>
+
+    <string name="androidx_core">AndroidX Core</string>
+    <string
+  name="androidx_core_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/</string>
+    <string name="androidx_core_description">AndroidX Core Libraries</string>
+
+    <string name="androidx_startup">AndroidX Startup</string>
+    <string
+  name="androidx_startup_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/</string>
+    <string
+  name="androidx_startup_description"
+>Helps with Application initialization</string>
+
+    <string name="pydroid_autopsy">PYDroid Autopsy</string>
+    <string
+  name="pydroid_autopsy_description"
+>PYDroid development crash reporting screen</string>
+</resources>

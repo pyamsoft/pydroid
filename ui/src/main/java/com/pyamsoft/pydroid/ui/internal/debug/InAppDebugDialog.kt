@@ -141,7 +141,7 @@ private fun InAppDebugScreen(
     ) {
       DialogToolbar(
           modifier = Modifier.fillMaxWidth(),
-          title = "Debug Logging",
+          title = R.string.debug_title,
           onClose = onDismiss,
       )
       Card(

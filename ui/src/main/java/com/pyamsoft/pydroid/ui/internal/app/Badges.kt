@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.app
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -37,14 +38,14 @@ internal fun InAppBadge(
 ) {
   Badge(
       modifier = modifier,
-      text = stringResource(R.string.in_app_badge),
+      text = R.string.in_app_badge,
   )
 }
 
 @Composable
 private fun Badge(
     modifier: Modifier = Modifier,
-    text: String,
+    @StringRes text: Int,
 ) {
   Box(
       modifier =
@@ -60,7 +61,7 @@ private fun Badge(
       contentAlignment = Alignment.Center,
   ) {
     Text(
-        text = text,
+        text = stringResource(text),
         style =
             MaterialTheme.typography.labelSmall.copy(
                 color = Color.White,

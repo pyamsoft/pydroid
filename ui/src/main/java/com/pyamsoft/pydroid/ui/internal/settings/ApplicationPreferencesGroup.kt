@@ -119,7 +119,7 @@ internal fun rememberApplicationPreferencesGroup(
         }
       }
 
-  val title = remember(applicationName) { "$applicationName Settings" }
+  val title = stringResource(R.string.settings_title, applicationName)
   return remember(
       title,
       preferences,
@@ -131,8 +131,6 @@ internal fun rememberApplicationPreferencesGroup(
     )
   }
 }
-
-private const val MATERIAL_YOU = "Enable Material You"
 
 @Composable
 @CheckResult
@@ -151,10 +149,12 @@ private fun rememberDarkThemePreference(
   val handleModeChange by rememberUpdatedState(onModeChange)
   val handleMaterialYouChange by rememberUpdatedState(onMaterialYouChange)
 
+  val materialYouKey = stringResource(R.string.enable_material_you)
+
   val materialYouCheckboxes =
       remember(isMaterialYou) {
         if (canUseMaterialYou()) {
-          mapOf(MATERIAL_YOU to isMaterialYou)
+          mapOf(materialYouKey to isMaterialYou)
         } else {
           emptyMap()
         }
@@ -178,7 +178,7 @@ private fun rememberDarkThemePreference(
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
         checkboxes = materialYouCheckboxes,
         onPreferenceSelected = { key, value ->
-          if (key == MATERIAL_YOU) {
+          if (key == materialYouKey) {
             handleMaterialYouChange(value.toBooleanStrict())
           } else {
             handleModeChange(value.toThemingMode())

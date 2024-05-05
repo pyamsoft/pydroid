@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
@@ -70,7 +71,7 @@ internal fun AboutScreen(
   ) {
     DialogToolbar(
         modifier = Modifier.fillMaxWidth(),
-        title = "Open Source Licenses",
+        title = R.string.about_title,
         onClose = onClose,
     )
     Card(

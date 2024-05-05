@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
+import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.R
 import com.pyamsoft.pydroid.util.contains
 
 /** Manage the various open source libraries */
@@ -61,396 +63,396 @@ public object OssLibraries {
   private var addedTheme: Boolean = false
   private var addedUtil: Boolean = false
 
-  private fun addBuildLibraries() {
+  private fun addBuildLibraries(context: Context) {
     if (addedBuild) {
       return
     }
     addedBuild = true
 
     add(
-        "Gradle Versions Plugin",
-        "https://github.com/ben-manes/gradle-versions-plugin",
-        "Gradle plugin to discover dependency updates.",
+        context.getString(R.string.gradle_versions_plugin_name),
+        context.getString(R.string.gradle_versions_plugin_url),
+        context.getString(R.string.gradle_versions_plugin_description),
     )
     add(
-        "Gradle Spotless Plugin",
-        "https://github.com/diffplug/spotless/tree/master/plugin-gradle",
-        "Keep your code Spotless with Gradle",
+        context.getString(R.string.gradle_spotless_plugin),
+        context.getString(R.string.gradle_spotless_plugin_url),
+        context.getString(R.string.gradle_spotless_plugin_description),
     )
     add(
-        "Dokka",
-        "https://github.com/Kotlin/dokka",
-        "API documentation engine for Kotlin",
+        context.getString(R.string.dokka),
+        context.getString(R.string.dokka_url),
+        context.getString(R.string.dokka_description),
     )
     add(
-        "Binary Compatibility Validator",
-        "https://github.com/Kotlin/binary-compatibility-validator",
-        "Public API management tool",
+        context.getString(R.string.binary_compatibility_validator),
+        context.getString(R.string.binary_compatibility_validator_url),
+        context.getString(R.string.binary_compatibility_validator_description),
     )
     add(
-        "Android Cache Fix Gradle Plugin",
-        "https://github.com/gradle/android-cache-fix-gradle-plugin",
-        "Gradle plugin that fixes Android build caching problems.",
+        context.getString(R.string.android_cache_fix_plugin),
+        context.getString(R.string.android_cache_fix_plugin_url),
+        context.getString(R.string.android_cache_fix_plugin_description),
     )
     add(
-        "Gradle Doctor",
-        "https://runningcode.github.io/gradle-doctor/",
-        "The right prescription for your Gradle build.",
+        context.getString(R.string.gradle_doctor),
+        context.getString(R.string.gradle_doctor_url),
+        context.getString(R.string.gradle_doctor_description),
     )
     add(
-        "Core Library Desugaring",
-        "https://github.com/google/desugar_jdk_libs",
-        "This project contains a small subset of OpenJDK libraries simplified for use on older runtimes.",
+        context.getString(R.string.core_library_desugaring),
+        context.getString(R.string.core_library_desugaring_url),
+        context.getString(R.string.core_library_desugaring_description),
     )
   }
 
-  private fun addCoreLibraries() {
+  private fun addCoreLibraries(context: Context) {
     if (addedCore) {
       return
     }
     addedCore = true
 
     add(
-        "PYDroid Core",
-        "https://github.com/pyamsoft/pydroid",
-        "The core PYDroid library, providing the building blocks for extension libraries",
+        context.getString(R.string.pydroid_core),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_core_description),
     )
 
     add(
-        "Kotlin",
-        "https://github.com/JetBrains/kotlin",
-        "The Kotlin Programming Language.",
+        context.getString(R.string.kotlin),
+        context.getString(R.string.kotlin_url),
+        context.getString(R.string.kotlin_description),
     )
 
     add(
-        "Kotlin Coroutines",
-        "https://github.com/Kotlin/kotlinx.coroutines",
-        "Library support for Kotlin coroutines with multiplatform support.",
+        context.getString(R.string.kotlin_coroutines),
+        context.getString(R.string.kotlin_coroutines_url),
+        context.getString(R.string.kotlin_coroutines_description),
     )
 
     add(
-        "Android SDK",
-        "https://source.android.com",
-        "The Android SDK, which powers everything about the devices we all love.",
+        context.getString(R.string.android_sdk),
+        context.getString(R.string.android_sdk_url),
+        context.getString(R.string.android_sdk_description),
     )
 
     add(
-        "AndroidX Annotations",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/annotation/",
-        "Annotation library offers a set of Java annotations that are useful for Android application and library development.",
+        context.getString(R.string.androidx_annotations),
+        context.getString(R.string.androidx_annotations_url),
+        context.getString(R.string.androidx_annotations_description),
     )
 
-    addBuildLibraries()
+    addBuildLibraries(context)
   }
 
-  private fun addUtilLibraries() {
+  private fun addUtilLibraries(context: Context) {
     if (addedUtil) {
       return
     }
     addedUtil = true
 
     add(
-        "PYDroid Util",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid util extensions for easier data manipulation",
+        context.getString(R.string.pydroid_util),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_util_description),
     )
 
     add(
-        "AndroidX Activity",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/",
-        "Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.",
+        context.getString(R.string.androidx_activity),
+        context.getString(R.string.androidx_activity_url),
+        context.getString(R.string.androidx_activity_description),
     )
 
     add(
-        "AndroidX Fragment",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/",
-        "Fragments allow you to encapsulate part of your user interface or behavior into reusable components.",
+        context.getString(R.string.androidx_fragment),
+        context.getString(R.string.androidx_fragment_url),
+        context.getString(R.string.androidx_fragment_description),
     )
 
     add(
-        "AndroidX Lifecycle Common",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common",
-        "Lifecycle library provides support for Android component lifecycle.",
+        context.getString(R.string.androidx_lifecycle_common),
+        context.getString(R.string.androidx_lifecycle_common_url),
+        context.getString(R.string.androidx_lifecycle_common_description),
     )
 
-    addCoreLibraries()
+    addCoreLibraries(context)
   }
 
-  private fun addBootstrapLibraries() {
+  private fun addBootstrapLibraries(context: Context) {
     if (addedBootstrap) {
       return
     }
     addedBootstrap = true
 
     add(
-        "PYDroid Bootstrap",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid bootstrap extensions for quickly spinning up new applications",
+        context.getString(R.string.pydroid_bootstrap),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_bootstrap_description),
     )
 
     add(
-        "Google Play In-App Updates Library",
-        "https://developers.google.com/android/",
-        "Google Play Services In-App Updates library for Android.",
+        context.getString(R.string.google_play_in_app_updates_library),
+        context.getString(R.string.google_play_url),
+        context.getString(R.string.google_play_in_app_updates_library_description),
         license =
             OssLicenses.custom(
-                license = "Custom Google License",
-                location = "https://developer.android.com/distribute/play-services",
+                license = context.getString(R.string.custom_google_license),
+                location = context.getString(R.string.google_play_url),
             ),
     )
 
     add(
-        "Google Play In-App Review Library",
-        "https://developers.google.com/android/",
-        "Google Play Services In-App Review library for Android.",
+        context.getString(R.string.google_play_in_app_review_library),
+        context.getString(R.string.google_play_url),
+        context.getString(R.string.google_play_in_app_review_library_description),
         license =
             OssLicenses.custom(
-                license = "Custom Google License",
-                location = "https://developer.android.com/distribute/play-services",
+                license = context.getString(R.string.custom_google_license),
+                location = context.getString(R.string.google_play_url),
             ),
     )
 
     add(
-        "Jetpack Compose Runtime",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime",
-        "Jetpack Compose runtime annotations",
+        context.getString(R.string.compose_runtime),
+        context.getString(R.string.compose_runtime_url),
+        context.getString(R.string.compose_runtime_description),
     )
 
-    addUtilLibraries()
+    addUtilLibraries(context)
   }
 
-  private fun addUiLibraries() {
+  private fun addUiLibraries(context: Context) {
     if (addedUi) {
       return
     }
     addedUi = true
 
     add(
-        "PYDroid UI",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid reference implementation for various UI components",
+        context.getString(R.string.pydroid_ui),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_ui_description),
     )
 
     add(
-        "Coil Compose",
-        "https://github.com/coil-kt/Coil",
-        "An image loading library for Android backed by Kotlin Coroutines.",
+        context.getString(R.string.coil_compose),
+        context.getString(R.string.coil_compose_url),
+        context.getString(R.string.coil_compose_description),
     )
 
     add(
-        "AndroidX Preference",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
-        "The AndroidX Jetpack Preference library. Allow users to modify UI settings.",
+        context.getString(R.string.androidx_preference),
+        context.getString(R.string.androidx_preference_url),
+        context.getString(R.string.androidx_preference_description),
     )
 
     add(
-        "AndroidX Core KTX",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
-        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code.",
+        context.getString(R.string.androidx_core_ktx),
+        context.getString(R.string.androidx_core_ktx_url),
+        context.getString(R.string.androidx_core_ktx_description),
     )
 
     add(
-        "AndroidX Lifecycle Common",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common",
-        "Lifecycle library provides support for Android component lifecycle.",
+        context.getString(R.string.androidx_lifecycle_common),
+        context.getString(R.string.androidx_lifecycle_common_url),
+        context.getString(R.string.androidx_lifecycle_common_description),
     )
 
     add(
-        "AndroidX Lifecycle Compose",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-runtime-compose",
-        "Lifecycle library provides support for Android component lifecycle, with Compose runtime support",
+        context.getString(R.string.androidx_lifecycle_compose),
+        context.getString(R.string.androidx_lifecycle_compose_url),
+        context.getString(R.string.androidx_lifecycle_compose_description),
     )
 
     add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
-        "Jetpack Compose support for UI widgets",
-    )
-    add(
-        "Jetpack Compose Animation",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/animation",
-        "Jetpack Compose support for animations",
-    )
-    add(
-        "Jetpack Compose Material",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
-        "Jetpack Compose support for the Material Design system",
+        context.getString(R.string.compose_ui),
+        context.getString(R.string.compose_ui_url),
+        context.getString(R.string.compose_ui_description),
     )
 
     add(
-        "Jetpack Compose UI Tooling",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling",
-        "Jetpack Compose support buildtime UI tooling",
+        context.getString(R.string.compose_animation),
+        context.getString(R.string.compose_animation_url),
+        context.getString(R.string.compose_animation_description),
     )
 
-    addArchLibraries()
-    addBillingLibraries()
-    addBootstrapLibraries()
-    addUtilLibraries()
-    addThemeLibraries()
+    add(
+        context.getString(R.string.compose_material_3),
+        context.getString(R.string.compose_material_3_url),
+        context.getString(R.string.compose_material_3_description),
+    )
+
+    add(
+        context.getString(R.string.compose_ui_tooling),
+        context.getString(R.string.compose_ui_tooling_url),
+        context.getString(R.string.compose_ui_tooling_description),
+    )
+
+    addArchLibraries(context)
+    addBillingLibraries(context)
+    addBootstrapLibraries(context)
+    addUtilLibraries(context)
+    addThemeLibraries(context)
   }
 
-  private fun addThemeLibraries() {
+  private fun addThemeLibraries(context: Context) {
     if (addedTheme) {
       return
     }
     addedTheme = true
 
     add(
-        "PYDroid Theme",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid extensions for MaterialTheme",
+        context.getString(R.string.pydroid_theme),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_theme_description),
     )
 
     add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
-        "Jetpack Compose support for UI widgets",
+        context.getString(R.string.compose_ui),
+        context.getString(R.string.compose_ui_url),
+        context.getString(R.string.compose_ui_description),
     )
     add(
-        "Jetpack Compose Material",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
-        "Jetpack Compose support for the Material Design system",
+        context.getString(R.string.compose_material_3),
+        context.getString(R.string.compose_material_3_url),
+        context.getString(R.string.compose_material_3_description),
     )
 
-    addCoreLibraries()
+    addCoreLibraries(context)
   }
 
-  private fun addArchLibraries() {
+  private fun addArchLibraries(context: Context) {
     if (addedArch) {
       return
     }
     addedArch = true
 
     add(
-        "PYDroid Arch",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid standard architecture for an MVVM UI design pattern",
+        context.getString(R.string.pydroid_arch),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_arch_description),
     )
 
     add(
-        "Jetpack Compose Runtime Saveable",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime-saveable",
-        "Jetpack Compose runtime support for Saveable state",
+        context.getString(R.string.compose_runtime_saveable),
+        context.getString(R.string.compose_runtime_saveable_url),
+        context.getString(R.string.compose_runtime_saveable_description),
     )
 
-    addBusLibraries()
-    addUtilLibraries()
+    addBusLibraries(context)
+    addUtilLibraries(context)
   }
 
-  private fun addBusLibraries() {
+  private fun addBusLibraries(context: Context) {
     if (addedBus) {
       return
     }
     addedBus = true
 
     add(
-        "PYDroid Bus",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid event bus",
+        context.getString(R.string.pydroid_bus),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_bus_description),
     )
 
-    addCoreLibraries()
+    addCoreLibraries(context)
   }
 
-  private fun addBillingLibraries() {
+  private fun addBillingLibraries(context: Context) {
     if (addedBilling) {
       return
     }
     addedBilling = true
 
     add(
-        "PYDroid Billing",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid In-App Billing library",
+        context.getString(R.string.pydroid_billing),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_billing_description),
     )
 
     add(
-        "AndroidX Activity",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/",
-        "Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.",
+        context.getString(R.string.androidx_activity),
+        context.getString(R.string.androidx_activity_url),
+        context.getString(R.string.androidx_activity_description),
     )
 
     add(
-        "Google Play In-App Billing Library",
-        "https://developers.google.com/android/",
-        "In-App Billing management for Android Applications",
+        context.getString(R.string.google_play_in_app_billing_library),
+        context.getString(R.string.google_play_url),
+        context.getString(R.string.google_play_in_app_billing_library_description),
         license =
             OssLicenses.custom(
-                license = "Custom Google License",
-                location = "https://developer.android.com/distribute/play-services",
+                license = context.getString(R.string.custom_google_license),
+                location = context.getString(R.string.google_play_url),
             ),
     )
 
     add(
-        "Jetpack Compose Runtime",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime",
-        "Jetpack Compose runtime annotations",
+        context.getString(R.string.compose_runtime),
+        context.getString(R.string.compose_runtime_url),
+        context.getString(R.string.compose_runtime_description),
     )
 
-    addBusLibraries()
-    addUtilLibraries()
+    addBusLibraries(context)
+    addUtilLibraries(context)
   }
 
-  private fun addNotifyLibraries() {
+  private fun addNotifyLibraries(context: Context) {
     if (addedNotify) {
       return
     }
     addedNotify = true
 
     add(
-        "PYDroid Notify",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid notification management abstraction library",
+        context.getString(R.string.pydroid_notify),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_notify_description),
     )
 
     add(
-        "AndroidX Core",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
-        "AndroidX Core Libraries",
+        context.getString(R.string.androidx_core),
+        context.getString(R.string.androidx_core_url),
+        context.getString(R.string.androidx_core_description),
     )
 
-    addCoreLibraries()
-    addUtilLibraries()
+    addCoreLibraries(context)
+    addUtilLibraries(context)
   }
 
-  private fun addAutopsyLibraries() {
+  private fun addAutopsyLibraries(context: Context) {
     if (addedAutopsy) {
       return
     }
     addedAutopsy = true
 
     add(
-        "AndroidX Startup",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/",
-        "Helps with Application initialization",
+        context.getString(R.string.androidx_startup),
+        context.getString(R.string.androidx_startup_url),
+        context.getString(R.string.androidx_startup_description),
+    )
+    add(
+        context.getString(R.string.pydroid_autopsy),
+        context.getString(R.string.pydroid_url),
+        context.getString(R.string.pydroid_autopsy_description),
+    )
+    add(
+        context.getString(R.string.compose_ui),
+        context.getString(R.string.compose_ui_url),
+        context.getString(R.string.compose_ui_description),
+    )
+    add(
+        context.getString(R.string.compose_material_3),
+        context.getString(R.string.compose_material_3_url),
+        context.getString(R.string.compose_material_3_description),
     )
 
     add(
-        "PYDroid Autopsy",
-        "https://github.com/pyamsoft/pydroid",
-        "PYDroid development crash reporting screen",
+        context.getString(R.string.compose_ui_tooling),
+        context.getString(R.string.compose_ui_tooling_url),
+        context.getString(R.string.compose_ui_tooling_description),
     )
 
-    add(
-        "Jetpack Compose UI",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui",
-        "Jetpack Compose support for UI widgets",
-    )
-    add(
-        "Jetpack Compose Material",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material",
-        "Jetpack Compose support for the Material Design system",
-    )
-
-    add(
-        "Jetpack Compose UI Tooling",
-        "https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling",
-        "Jetpack Compose support buildtime UI tooling",
-    )
-
-    addCoreLibraries()
-    addThemeLibraries()
+    addCoreLibraries(context)
+    addThemeLibraries(context)
   }
 
   /** Add a new library to the list of libraries used by the application */
@@ -479,40 +481,40 @@ public object OssLibraries {
   /** Get the list of libraries used in the application */
   @JvmStatic
   @CheckResult
-  public fun libraries(): Set<OssLibrary> {
+  public fun libraries(context: Context): Set<OssLibrary> {
     // Since we are in the bootstrap module, this always happens
-    addBootstrapLibraries()
+    addBootstrapLibraries(context)
 
     if (usingUtil) {
-      addUtilLibraries()
+      addUtilLibraries(context)
     }
 
     if (usingArch) {
-      addArchLibraries()
+      addArchLibraries(context)
     }
 
     if (usingAutopsy) {
-      addAutopsyLibraries()
+      addAutopsyLibraries(context)
     }
 
     if (usingBilling) {
-      addBillingLibraries()
+      addBillingLibraries(context)
     }
 
     if (usingBus) {
-      addBusLibraries()
+      addBusLibraries(context)
     }
 
     if (usingNotify) {
-      addNotifyLibraries()
+      addNotifyLibraries(context)
     }
 
     if (usingTheme) {
-      addThemeLibraries()
+      addThemeLibraries(context)
     }
 
     if (usingUi) {
-      addUiLibraries()
+      addUiLibraries(context)
     }
 
     return libraries

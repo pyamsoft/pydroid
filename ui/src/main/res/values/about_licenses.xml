@@ -18,4 +18,5 @@
   <string name="license_name">License: %1$s</string>
   <string name="visit_homepage">Visit Homepage</string>
   <string name="view_license">View License</string>
+  <string name="about_title">Open Source Licenses</string>
 </resources>

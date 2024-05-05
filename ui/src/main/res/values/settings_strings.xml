@@ -15,9 +15,5 @@
   ~ limitations under the License.
   -->
 <resources>
-  <string name="logs">Logs</string>
-  <string name="not_enabled">In-App Developer Mode is not enabled.</string>
-  <string name="copy_logs">Copy Developer Logs</string>
-  <string name="log_copied">Developer Log Copied</string>
-  <string name="debug_title">Debug Logging</string>
+  <string name="settings_title">%1$s Settings</string>
 </resources>

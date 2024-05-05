@@ -82,6 +82,7 @@
     name="dev_mode_summary"
   >Enables a mode to view debugging information. THIS
     WILL IMPACT PERFORMANCE.</string>
+  <string name="enable_material_you">Enable Material You</string>
 
   <string-array name="dark_mode_names_v1">
     <item name="light">Light Theme</item>

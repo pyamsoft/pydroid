@@ -66,7 +66,7 @@ internal fun ChangeLogScreen(
       imageLoader = imageLoader,
       afterScroll = {
         Actions(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
             applicationVersionCode = versionCode,
             onRateApp = onRateApp,
             onClose = onClose,
@@ -103,10 +103,7 @@ private fun Actions(
       )
 
   Row(
-      modifier =
-          modifier
-              .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(top = MaterialTheme.keylines.content),
+      modifier = modifier,
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {

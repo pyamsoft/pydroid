@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
@@ -186,11 +187,12 @@ private fun PreviewAboutScreen(
     loading: AboutViewState.LoadingState,
     error: Throwable?,
 ) {
+  val context = LocalContext.current
   AboutScreen(
       state =
           MutableAboutViewState().apply {
             loadingState.value = loading
-            licenses.value = OssLibraries.libraries().sortedBy { it.name }
+            licenses.value = OssLibraries.libraries(context).sortedBy { it.name }
             navigationError.value = error
           },
       onNavigationErrorDismissed = {},

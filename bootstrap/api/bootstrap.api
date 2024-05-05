@@ -3,8 +3,17 @@ public abstract interface class com/pyamsoft/pydroid/bootstrap/about/AboutIntera
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/about/AboutModule {
-	public fun <init> ()V
+	public fun <init> (Lcom/pyamsoft/pydroid/bootstrap/about/AboutModule$Parameters;)V
 	public final fun provideInteractor ()Lcom/pyamsoft/pydroid/bootstrap/about/AboutInteractor;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/about/AboutModule$Parameters {
+	public fun <init> (Landroid/content/Context;)V
+	public final fun copy (Landroid/content/Context;)Lcom/pyamsoft/pydroid/bootstrap/about/AboutModule$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/about/AboutModule$Parameters;Landroid/content/Context;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/about/AboutModule$Parameters;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/app/AppInteractor {
@@ -80,7 +89,7 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibraries {
 	public final fun getUsingTheme ()Z
 	public final fun getUsingUi ()Z
 	public final fun getUsingUtil ()Z
-	public static final fun libraries ()Ljava/util/Set;
+	public static final fun libraries (Landroid/content/Context;)Ljava/util/Set;
 	public final fun setUsingArch (Z)V
 	public final fun setUsingAutopsy (Z)V
 	public final fun setUsingBilling (Z)V

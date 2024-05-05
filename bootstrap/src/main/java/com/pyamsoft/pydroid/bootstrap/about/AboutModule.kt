@@ -16,16 +16,25 @@
 
 package com.pyamsoft.pydroid.bootstrap.about
 
+import android.content.Context
 import androidx.annotation.CheckResult
 
 /** About module */
-public class AboutModule {
+public class AboutModule(
+    params: Parameters,
+) {
 
-  private val impl = AboutInteractorImpl()
+  private val impl =
+      AboutInteractorImpl(
+          appContext = params.context,
+      )
 
   /** Provide an instance of an AboutInteractor */
   @CheckResult
   public fun provideInteractor(): AboutInteractor {
     return impl
   }
+
+  /** Module parameters */
+  public data class Parameters(internal val context: Context)
 }

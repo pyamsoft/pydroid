@@ -97,10 +97,7 @@ internal fun BillingScreen(
         )
 
         ActionRow(
-            modifier =
-                modifier
-                    .padding(horizontal = MaterialTheme.keylines.content)
-                    .padding(top = MaterialTheme.keylines.content),
+            modifier = modifier.padding(MaterialTheme.keylines.baseline),
             onClose = onClose,
         )
       },

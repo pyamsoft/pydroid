@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -62,7 +63,13 @@ internal fun ResetScreen(
       shape = MaterialTheme.shapes.medium,
   ) {
     LazyColumn(
-        modifier = Modifier.padding(MaterialTheme.keylines.content).fillMaxWidth(),
+        modifier =
+            Modifier.padding(MaterialTheme.keylines.content)
+                .fillMaxWidth()
+                .weight(
+                    weight = 1F,
+                    fill = false,
+                ),
     ) {
       item(
           contentType = ResetScreenContentTypes.TITLE,
@@ -83,17 +90,14 @@ internal fun ResetScreen(
           Message()
         }
       }
-
-      item(
-          contentType = ResetScreenContentTypes.ACTIONS,
-      ) {
-        Actions(
-            isReset = reset,
-            onReset = onReset,
-            onClose = onClose,
-        )
-      }
     }
+
+    Actions(
+        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
+        isReset = reset,
+        onReset = onReset,
+        onClose = onClose,
+    )
   }
 }
 
@@ -135,13 +139,17 @@ private fun Message() {
 
 @Composable
 private fun Actions(
+    modifier: Modifier = Modifier,
     isReset: Boolean,
     onReset: () -> Unit,
     onClose: () -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
 
-  Row {
+  Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
     Spacer(
         modifier = Modifier.weight(1F),
     )

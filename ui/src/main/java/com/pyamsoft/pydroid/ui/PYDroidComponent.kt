@@ -113,7 +113,12 @@ internal interface PYDroidComponent {
       )
     }
 
-    private val aboutModule by lazy { AboutModule() }
+    private val aboutModule by lazy {
+      AboutModule(
+          AboutModule.Parameters(
+              context = context,
+          ))
+    }
 
     private val dataPolicyModule by lazy {
       DataPolicyModule(

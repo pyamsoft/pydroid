@@ -292,11 +292,9 @@ public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$A
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt;
 	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {

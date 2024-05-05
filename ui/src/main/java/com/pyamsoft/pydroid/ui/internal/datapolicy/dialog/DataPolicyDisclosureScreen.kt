@@ -179,7 +179,7 @@ private fun Actions(
       modifier =
           modifier
               .padding(horizontal = MaterialTheme.keylines.content)
-              .padding(bottom = MaterialTheme.keylines.content),
+              .padding(bottom = MaterialTheme.keylines.baseline),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {

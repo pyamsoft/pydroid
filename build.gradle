@@ -107,9 +107,6 @@ subprojects {
 
       // Consumer proguard file
       consumerProguardFiles("consumer-rules.pro")
-
-      // Only English, I don"t have any translations
-      resourceConfigurations = ["en"]
     }
 
     compileOptions {

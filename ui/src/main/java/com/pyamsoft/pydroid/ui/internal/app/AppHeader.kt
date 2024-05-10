@@ -41,6 +41,8 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
+private val HEADER_HEIGHT = ImageDefaults.HeaderSize
+
 @Composable
 internal fun AppHeader(
     modifier: Modifier = Modifier,
@@ -58,7 +60,7 @@ internal fun AppHeader(
         modifier = Modifier.fillMaxWidth(),
     ) {
       Spacer(
-          modifier = Modifier.height(ImageDefaults.LargeSize / 2),
+          modifier = Modifier.height(HEADER_HEIGHT / 2),
       )
       Card(
           modifier = Modifier.fillMaxWidth(),
@@ -67,7 +69,7 @@ internal fun AppHeader(
           shape = MaterialTheme.shapes.medium,
       ) {
         Spacer(
-            modifier = Modifier.height(ImageDefaults.LargeSize / 2),
+            modifier = Modifier.height(HEADER_HEIGHT / 2),
         )
 
         LazyColumn(
@@ -90,7 +92,7 @@ internal fun AppHeader(
         contentAlignment = Alignment.Center,
     ) {
       AsyncImage(
-          modifier = Modifier.size(ImageDefaults.LargeSize),
+          modifier = Modifier.size(HEADER_HEIGHT),
           model = icon,
           imageLoader = imageLoader,
           contentDescription = "$name Icon",

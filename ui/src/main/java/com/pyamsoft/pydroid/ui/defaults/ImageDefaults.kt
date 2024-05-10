@@ -22,8 +22,11 @@ import androidx.compose.ui.unit.dp
 /** Default values for Icons */
 public object ImageDefaults {
 
-  /** Default size unit */
+  /** Large size unit */
   public val LargeSize: Dp = 80.dp
+
+  /** Header size unit */
+  public val HeaderSize: Dp = 64.dp
 
   /** Default size unit */
   public val DefaultSize: Dp = 56.dp

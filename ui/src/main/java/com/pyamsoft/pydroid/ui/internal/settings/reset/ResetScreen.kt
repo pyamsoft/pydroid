@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 private enum class ResetScreenContentTypes {
-  TITLE,
   MESSAGE,
 }
 
@@ -61,33 +60,22 @@ internal fun ResetScreen(
       colors = CardDefaults.elevatedCardColors(),
       shape = MaterialTheme.shapes.medium,
   ) {
+    Title(
+        modifier = Modifier.padding(MaterialTheme.keylines.content),
+    )
+
     LazyColumn(
         modifier =
-            Modifier.padding(MaterialTheme.keylines.content)
-                .fillMaxWidth()
+            Modifier.fillMaxWidth()
                 .weight(
                     weight = 1F,
                     fill = false,
                 ),
     ) {
       item(
-          contentType = ResetScreenContentTypes.TITLE,
-      ) {
-        Box(
-            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-        ) {
-          Title()
-        }
-      }
-
-      item(
           contentType = ResetScreenContentTypes.MESSAGE,
       ) {
-        Box(
-            modifier = Modifier.padding(bottom = MaterialTheme.keylines.baseline),
-        ) {
-          Message()
-        }
+        Message(modifier = Modifier.padding(MaterialTheme.keylines.content))
       }
     }
 
@@ -101,16 +89,23 @@ internal fun ResetScreen(
 }
 
 @Composable
-private fun Title() {
+private fun Title(
+    modifier: Modifier = Modifier,
+) {
   Text(
+      modifier = modifier,
       text = stringResource(R.string.reset_title),
       style = MaterialTheme.typography.headlineMedium,
   )
 }
 
 @Composable
-private fun Message() {
-  Column {
+private fun Message(
+    modifier: Modifier = Modifier,
+) {
+  Column(
+      modifier = modifier,
+  ) {
     Text(
         text = stringResource(R.string.reset_start),
         style = MaterialTheme.typography.bodyLarge,

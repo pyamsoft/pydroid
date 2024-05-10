@@ -58,8 +58,6 @@ import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.RADIO
 private enum class PreferenceContentTypes {
   DIALOG_CHECKBOXES,
   DIALOG_ITEM,
-  DIALOG_TITLE,
-  DIALOG_ACTION,
 }
 
 private enum class PreferenceDialogItemStyle {
@@ -258,17 +256,18 @@ internal fun PreferenceDialog(
         elevation = CardDefaults.elevatedCardElevation(),
         colors = CardDefaults.elevatedCardColors(),
     ) {
-      LazyColumn {
-        item(
-            contentType = PreferenceContentTypes.DIALOG_TITLE,
-        ) {
-          PreferenceDialogTitle(
-              modifier =
-                  Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
-              title = title,
-          )
-        }
+      PreferenceDialogTitle(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
+          title = title,
+      )
 
+      LazyColumn(
+          modifier =
+              Modifier.weight(
+                  weight = 1F,
+                  fill = false,
+              ),
+      ) {
         items(
             items = entries,
             key = { it.value },
@@ -317,22 +316,18 @@ internal fun PreferenceDialog(
             )
           }
         }
-
-        item(
-            contentType = PreferenceContentTypes.DIALOG_ACTION,
-        ) {
-          PreferenceDialogActions(
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .padding(horizontal = MaterialTheme.keylines.content)
-                      .padding(bottom = MaterialTheme.keylines.baseline),
-              onDismiss = {
-                hapticManager?.cancelButtonPress()
-                onDismiss()
-              },
-          )
-        }
       }
+
+      PreferenceDialogActions(
+          modifier =
+              Modifier.fillMaxWidth()
+                  .padding(horizontal = MaterialTheme.keylines.content)
+                  .padding(bottom = MaterialTheme.keylines.baseline),
+          onDismiss = {
+            hapticManager?.cancelButtonPress()
+            onDismiss()
+          },
+      )
     }
   }
 }

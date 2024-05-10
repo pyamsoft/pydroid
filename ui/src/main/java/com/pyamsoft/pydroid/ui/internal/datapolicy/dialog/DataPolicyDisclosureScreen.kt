@@ -47,6 +47,7 @@ import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 
 private enum class DataPolicyDisclosureScreenItems {
   DISCLOSURE,
+  LINKS,
 }
 
 @Composable
@@ -71,12 +72,6 @@ internal fun DataPolicyDisclosureScreen(
       name = name,
       imageLoader = imageLoader,
       afterScroll = {
-        Links(
-            modifier = Modifier.fillMaxWidth(),
-            onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-            onTermsOfServiceClicked = onTermsOfServiceClicked,
-        )
-
         NavigationError(
             modifier = Modifier.fillMaxWidth(),
             snackbarHostState = snackbarHostState,
@@ -97,6 +92,16 @@ internal fun DataPolicyDisclosureScreen(
       Disclosure(
           modifier = Modifier.fillMaxWidth(),
           name = name,
+      )
+    }
+
+    item(
+        contentType = DataPolicyDisclosureScreenItems.LINKS,
+    ) {
+      Links(
+          modifier = Modifier.fillMaxWidth(),
+          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
+          onTermsOfServiceClicked = onTermsOfServiceClicked,
       )
     }
   }

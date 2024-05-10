@@ -217,11 +217,6 @@ private fun NavigationError(
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
-  SnackbarHost(
-      modifier = modifier,
-      hostState = snackbarHostState,
-  )
-
   if (error != null) {
     LaunchedEffect(error) {
       snackbarHostState.showSnackbar(
@@ -233,6 +228,11 @@ private fun NavigationError(
       onSnackbarDismissed()
     }
   }
+
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHostState,
+  )
 }
 
 @Preview

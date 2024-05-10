@@ -245,6 +245,7 @@ private fun InAppDebugScreen(
 @Composable
 private fun LogLinesCopied(
     modifier: Modifier = Modifier,
+    snackBarModifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState,
     enabled: Boolean,
     show: Boolean,
@@ -253,6 +254,7 @@ private fun LogLinesCopied(
 ) {
   if (enabled) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
       Spacer(
@@ -270,7 +272,7 @@ private fun LogLinesCopied(
   }
 
   SnackbarHost(
-      modifier = modifier,
+      modifier = snackBarModifier,
       hostState = snackbarHostState,
   )
 

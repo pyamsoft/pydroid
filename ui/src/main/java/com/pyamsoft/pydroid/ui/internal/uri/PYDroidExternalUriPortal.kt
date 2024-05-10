@@ -17,11 +17,11 @@
 package com.pyamsoft.pydroid.ui.internal.uri
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -34,6 +34,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -52,6 +53,13 @@ import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
+private enum class PYDroidExternalUriPortalContentTypes {
+  TITLE,
+  MESSAGE,
+  CONFIRM,
+  DISCLAIMER,
+}
 
 /** Default confirmation UI for the external URI navigation confirmation */
 @Composable
@@ -105,68 +113,89 @@ internal fun PYDroidExternalUriPortal(
           elevation = CardDefaults.elevatedCardElevation(),
           colors = CardDefaults.elevatedCardColors(),
       ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+        LazyColumn(
+            modifier =
+                Modifier.weight(
+                    weight = 1F,
+                    fill = false,
+                ),
         ) {
-          Text(
-              modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
-              style = MaterialTheme.typography.bodyLarge,
-              text = stringResource(R.string.external_link_title, appName),
-              fontWeight = FontWeight.W700,
-          )
-
-          Text(
-              modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
-              style = MaterialTheme.typography.bodyMedium,
-              text = confirmation,
-          )
-
-          Text(
-              modifier = Modifier.fillMaxWidth().padding(bottom = MaterialTheme.keylines.content),
-              style =
-                  MaterialTheme.typography.bodySmall.copy(
-                      color =
-                          MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                              alpha = TypographyDefaults.ALPHA_DISABLED,
-                          ),
-                  ),
-              text = stringResource(R.string.external_link_disclaimer),
-          )
-
-          Row(
-              modifier = Modifier.fillMaxWidth(),
+          item(
+              contentType = PYDroidExternalUriPortalContentTypes.TITLE,
           ) {
-            Spacer(
-                modifier = Modifier.weight(1F),
+            Text(
+                modifier = Modifier.padding(MaterialTheme.keylines.content),
+                style = MaterialTheme.typography.bodyLarge,
+                text = stringResource(R.string.external_link_title, appName),
+                fontWeight = FontWeight.W700,
             )
+          }
 
-            TextButton(
-                modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-                onClick = { handleDismiss() },
-                colors =
-                    ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+          item(
+              contentType = PYDroidExternalUriPortalContentTypes.MESSAGE,
+          ) {
+            Text(
+                modifier =
+                    Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                        .padding(bottom = MaterialTheme.keylines.baseline),
+                style = MaterialTheme.typography.bodyMedium,
+                text = confirmation,
+            )
+          }
+
+          item(
+              contentType = PYDroidExternalUriPortalContentTypes.CONFIRM,
+          ) {
+            Text(
+                modifier =
+                    Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                        .padding(bottom = MaterialTheme.keylines.baseline),
+                style =
+                    MaterialTheme.typography.bodySmall.copy(
+                        color =
+                            MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                alpha = TypographyDefaults.ALPHA_DISABLED,
+                            ),
                     ),
-            ) {
-              Text(
-                  text = stringResource(android.R.string.cancel),
-              )
-            }
+                text = stringResource(R.string.external_link_disclaimer),
+            )
+          }
+        }
 
-            Button(
-                onClick = {
-                  hapticManager?.confirmButtonPress()
-                  uriHandler.confirm(
-                      context = context,
-                      handler = handler,
-                      uri = uri,
-                  )
-                },
-            ) {
-              Text(
-                  text = stringResource(R.string.follow_link),
-              )
-            }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Spacer(
+              modifier = Modifier.weight(1F),
+          )
+
+          TextButton(
+              modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+              onClick = { handleDismiss() },
+              colors =
+                  ButtonDefaults.textButtonColors(
+                      contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                  ),
+          ) {
+            Text(
+                text = stringResource(android.R.string.cancel),
+            )
+          }
+
+          Button(
+              onClick = {
+                hapticManager?.confirmButtonPress()
+                uriHandler.confirm(
+                    context = context,
+                    handler = handler,
+                    uri = uri,
+                )
+              },
+          ) {
+            Text(
+                text = stringResource(R.string.follow_link),
+            )
           }
         }
       }

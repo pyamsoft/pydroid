@@ -143,6 +143,7 @@ private fun ActionRow(
 
   Row(
       modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     Spacer(
         modifier = Modifier.weight(1F),
@@ -193,11 +194,6 @@ private fun BillingError(
     error: Throwable?,
     onSnackbarDismissed: () -> Unit,
 ) {
-  SnackbarHost(
-      modifier = modifier,
-      hostState = snackbarHostState,
-  )
-
   if (error != null) {
     LaunchedEffect(error) {
       val message = error.message
@@ -210,6 +206,11 @@ private fun BillingError(
       onSnackbarDismissed()
     }
   }
+
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHostState,
+  )
 }
 
 private val PREVIEW_SKUS =

@@ -44,7 +44,6 @@ import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 private enum class ResetScreenContentTypes {
   TITLE,
   MESSAGE,
-  ACTIONS,
 }
 
 @Composable

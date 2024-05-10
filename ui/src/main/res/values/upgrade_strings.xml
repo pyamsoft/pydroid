@@ -35,5 +35,5 @@
   <string
     name="an_update_to_version_is_available"
   >An update to version %1$s is available!</string>
-  <string name="downloading_update">Downloading Update...</string>
+  <string name="downloading_update">Downloading Update…</string>
 </resources>

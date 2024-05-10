@@ -320,7 +320,7 @@ private fun PreviewInAppDebugScreenEnabledEmptyLog() {
 @Composable
 private fun PreviewInAppDebugScreenEnabledDummyLog() {
   val bus =
-      MutableStateFlow<List<InAppDebugLogLine>>(
+      MutableStateFlow(
           listOf(
               InAppDebugLogLine(
                   DEBUG, "Hello Debug", null, Instant.now().minusSeconds(10).toEpochMilli()),

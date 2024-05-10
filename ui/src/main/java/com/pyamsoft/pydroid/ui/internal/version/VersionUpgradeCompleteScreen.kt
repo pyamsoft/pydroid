@@ -111,7 +111,7 @@ internal fun VersionUpgradeCompleteScreen(
 
 @TestOnly
 @Composable
-private fun PreviewVersionUpgradeCompleteScreen(
+private fun ThePreviewVersionUpgradeCompleteScreen(
     state: MutableVersionCheckViewState,
 ) {
   VersionUpgradeCompleteScreen(
@@ -123,7 +123,7 @@ private fun PreviewVersionUpgradeCompleteScreen(
 @Preview
 @Composable
 private fun PreviewVersionUpgradeCompleteScreen() {
-  PreviewVersionUpgradeCompleteScreen(
+  ThePreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
             launcher.value = AppUpdateLauncher.empty()
@@ -135,7 +135,7 @@ private fun PreviewVersionUpgradeCompleteScreen() {
 @Preview
 @Composable
 private fun PreviewVersionUpgradeCompleteScreenNoLauncher() {
-  PreviewVersionUpgradeCompleteScreen(
+  ThePreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
             launcher.value = null

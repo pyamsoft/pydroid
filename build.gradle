@@ -118,7 +118,7 @@ subprojects {
     }
 
     kotlinOptions {
-      jvmTarget = JavaVersion.VERSION_17.getMajorVersion()
+      jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 
     publishing {

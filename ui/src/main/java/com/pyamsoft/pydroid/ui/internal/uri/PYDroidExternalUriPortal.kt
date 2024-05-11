@@ -86,7 +86,10 @@ internal fun PYDroidExternalUriPortal(
 
     val linkBody = stringResource(R.string.external_link_url, appName, uri)
     val confirmation =
-        remember(linkBody) {
+        remember(
+            linkBody,
+            uri,
+        ) {
           val linkIndex = linkBody.indexOf(uri)
           val spanStyles =
               listOf(
@@ -96,7 +99,8 @@ internal fun PYDroidExternalUriPortal(
                       ),
                       start = linkIndex,
                       end = linkIndex + uri.length,
-                  ))
+                  ),
+              )
           return@remember AnnotatedString(
               linkBody,
               spanStyles = spanStyles,

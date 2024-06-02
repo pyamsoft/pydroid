@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+plugins {
+  id("org.jetbrains.kotlin.plugin.compose")
+}
+
 android {
   namespace = "com.pyamsoft.pydroid.autopsy"
 
   kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
 
   buildFeatures { compose = true }
-
-  composeOptions { kotlinCompilerExtensionVersion = "${rootProject.extra["composeCompiler"]}" }
 }
 
 dependencies {

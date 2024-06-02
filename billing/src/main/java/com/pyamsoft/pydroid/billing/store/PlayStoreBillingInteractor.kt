@@ -26,6 +26,7 @@ import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ConsumeResponseListener
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
@@ -69,9 +70,14 @@ internal constructor(
     ProductDetailsResponseListener {
 
   private val client by lazy {
+      // Billing 7 change
+      // https://developer.android.com/google/play/billing/release-notes#google_play_billing_library_700_release_2024-05-14
+      val pendingPurchaseParams = PendingPurchasesParams.newBuilder().enableOneTimeProducts()
+          .build()
+
     BillingClient.newBuilder(context.applicationContext)
         .setListener(this)
-        .enablePendingPurchases()
+        .enablePendingPurchases(pendingPurchaseParams)
         .build()
   }
 

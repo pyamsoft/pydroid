@@ -18,17 +18,19 @@
 
 buildscript {
   ext {
-    kotlin = "1.9.24"
+    kotlin = "2.0.0"
     coroutines = "1.8.1"
 
     // Compose
     compose = "1.6.7"
-    composeCompiler = "1.5.14"
     composeMaterial3 = "1.2.1"
 
     // AndroidX
     core = "1.13.1"
     activity = "1.9.0"
+
+    // Not yet
+    // https://www.reddit.com/r/androiddev/comments/1csjwne/lifecycle_280_only_compatible_with_compose_17/
     lifecycle = "2.7.0"
 
     // Test Runner
@@ -39,7 +41,7 @@ buildscript {
 plugins {
   // Android AGP
   // https://developer.android.com/studio/build#top-level
-  id("com.android.library") version "8.4.0" apply false
+  id("com.android.library") version "8.4.1" apply false
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
@@ -48,6 +50,10 @@ plugins {
   // Kotlin
   // https://developer.android.com/studio/build#top-level
   id("org.jetbrains.kotlin.android") version "${kotlin}" apply false
+
+  // Jetpack Compose Compiler
+  // https://android-developers.googleblog.com/2024/04/jetpack-compose-compiler-moving-to-kotlin-repository.html
+  id("org.jetbrains.kotlin.plugin.compose") version "${kotlin}" apply false
 
   // Dokka
   // https://github.com/Kotlin/dokka
@@ -153,7 +159,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "27.0.1"
+          version "27.0.2"
         }
       }
     }

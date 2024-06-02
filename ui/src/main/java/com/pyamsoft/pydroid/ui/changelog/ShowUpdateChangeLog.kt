@@ -43,6 +43,7 @@ public typealias OnDismissChangeLog = () -> Unit
 
 /** Handles Change Log display in app */
 public typealias ShowUpdateChangeLogWidget =
+    @Composable
     (
         ChangeLogViewState,
         OnShowChangeLog,
@@ -112,7 +113,7 @@ internal constructor(
   @Composable
   public fun Render(
       modifier: Modifier = Modifier,
-      content: @Composable ShowUpdateChangeLogWidget,
+      content: ShowUpdateChangeLogWidget,
   ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-plugins {
-  id("org.jetbrains.kotlin.plugin.compose")
-}
+plugins { id("org.jetbrains.kotlin.plugin.compose") }
 
 android {
   namespace = "com.pyamsoft.pydroid.ui"

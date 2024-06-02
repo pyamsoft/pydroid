@@ -70,10 +70,9 @@ internal constructor(
     ProductDetailsResponseListener {
 
   private val client by lazy {
-      // Billing 7 change
-      // https://developer.android.com/google/play/billing/release-notes#google_play_billing_library_700_release_2024-05-14
-      val pendingPurchaseParams = PendingPurchasesParams.newBuilder().enableOneTimeProducts()
-          .build()
+    // Billing 7 change
+    // https://developer.android.com/google/play/billing/release-notes#google_play_billing_library_700_release_2024-05-14
+    val pendingPurchaseParams = PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
 
     BillingClient.newBuilder(context.applicationContext)
         .setListener(this)

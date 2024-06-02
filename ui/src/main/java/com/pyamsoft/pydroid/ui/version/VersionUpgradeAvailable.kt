@@ -47,6 +47,7 @@ public typealias OnUpgradeStartedCallback = () -> Unit
 
 /** A Composable that can display version upgrade availability */
 public typealias VersionUpgradeWidget =
+    @Composable
     (
         VersionCheckViewState,
         OnUpdateDownloadStartedCallback,
@@ -114,7 +115,7 @@ internal constructor(
    */
   @Composable
   public fun Render(
-      content: @Composable VersionUpgradeWidget,
+      content: VersionUpgradeWidget,
   ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render

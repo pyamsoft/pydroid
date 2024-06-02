@@ -45,6 +45,7 @@ public typealias OnDismissBilling = () -> Unit
 
 /** Handles Billing display in app */
 public typealias ShowBillingWidget =
+    @Composable
     (
         BillingViewState,
         OnShowBilling,
@@ -121,7 +122,7 @@ internal constructor(
   @Composable
   public fun Render(
       modifier: Modifier = Modifier,
-      content: @Composable ShowBillingWidget,
+      content: ShowBillingWidget,
   ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render

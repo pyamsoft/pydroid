@@ -3,7 +3,7 @@ PYDroid library for pyamsoft applications
 
 ## What is PYDroid
 
-The current version is `27.0.1`
+The current version is `27.0.2`
 
 PYDroid is the **py**amsoft An**droid** library. It contains common  
 functions and classes that are used in multiple pyamsoft projects.  

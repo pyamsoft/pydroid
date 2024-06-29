@@ -24,22 +24,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.internal.settings.version.VersionCheckingSettingsState
 import com.pyamsoft.pydroid.ui.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 
 @Composable
 internal fun SettingsScreen(
@@ -47,6 +56,7 @@ internal fun SettingsScreen(
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     state: SettingsViewState,
+    versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
@@ -71,6 +81,8 @@ internal fun SettingsScreen(
     onInAppDebuggingChanged: () -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
 ) {
+  val snackbarHostState = remember { SnackbarHostState() }
+
   val loadingState by state.loadingState.collectAsStateWithLifecycle()
   val applicationName by state.applicationName.collectAsStateWithLifecycle()
 
@@ -92,6 +104,8 @@ internal fun SettingsScreen(
       }
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
+            snackbarHost = snackbarHostState,
+            versionCheckingState = versionCheckingState,
             applicationName = applicationName,
             darkMode = darkMode,
             isMaterialYou = isMaterialYou,
@@ -146,6 +160,9 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
+    modifier: Modifier = Modifier,
+    snackbarHost: SnackbarHostState,
+    versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
@@ -248,10 +265,82 @@ private fun SettingsList(
         }
       }
 
-  PreferenceScreen(
-      topItemMargin = topItemMargin,
-      bottomItemMargin = bottomItemMargin,
-      preferences = preferences,
+  Box(
+      modifier = modifier,
+  ) {
+    PreferenceScreen(
+        topItemMargin = topItemMargin,
+        bottomItemMargin = bottomItemMargin,
+        preferences = preferences,
+    )
+
+    CheckingUpdateStatus(
+        modifier = Modifier.align(Alignment.BottomCenter),
+        snackbarHost = snackbarHost,
+        versionCheckingState = versionCheckingState,
+    )
+  }
+}
+
+@Composable
+private fun CheckingUpdateStatus(
+    modifier: Modifier = Modifier,
+    snackbarHost: SnackbarHostState,
+    versionCheckingState: VersionCheckingSettingsState,
+) {
+  val context = LocalContext.current
+  val isChecking = versionCheckingState.isChecking
+  val isEmptyUpdate = versionCheckingState.isEmptyUpdate
+  val newVersion = versionCheckingState.newVersion
+
+  LaunchedEffect(
+      isChecking,
+      isEmptyUpdate,
+      newVersion,
+      context,
+  ) {
+    val message: String
+    when (isChecking) {
+      is CheckingState.None -> {
+        Logger.d { "Do nothing visual for NONE version checking state" }
+        message = ""
+      }
+      is CheckingState.Checking -> {
+        if (isChecking.force) {
+          Logger.d { "Show snackbar checking for update because user requested it" }
+          message = context.getString(R.string.checking_for_updates)
+        } else {
+          Logger.d { "Silent checking for update" }
+          message = ""
+        }
+      }
+      is CheckingState.Done -> {
+        if (isChecking.force) {
+          if (isEmptyUpdate || newVersion <= 0) {
+            Logger.d { "Done checking for update, show update is Empty" }
+            message = context.getString(R.string.empty_update)
+          } else {
+            Logger.d { "Done checking for update, update is Available: $newVersion" }
+            message = context.getString(R.string.an_update_to_version_is_available, newVersion)
+          }
+        } else {
+          Logger.d { "Done checking for update, newVersion=$newVersion" }
+          message = ""
+        }
+      }
+    }
+
+    if (message.isNotBlank()) {
+      snackbarHost.showSnackbar(
+          message = message,
+          duration = SnackbarDuration.Short,
+      )
+    }
+  }
+
+  SnackbarHost(
+      modifier = modifier,
+      hostState = snackbarHost,
   )
 }
 
@@ -265,6 +354,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
             applicationName.value = "TEST"
             darkMode.value = Theming.Mode.LIGHT
           },
+      versionCheckingState = VersionCheckingSettingsState.empty(),
       hideClearAll = false,
       hideUpgradeInformation = false,
       topItemMargin = ZeroSize,

@@ -44,11 +44,24 @@ public interface VersionCheckViewState : UiViewState {
    */
   public val isUpgraded: StateFlow<Boolean>
 
+  /** Status of version checking */
   @Stable
   @Immutable
-  public enum class CheckingState {
-    NONE,
-    CHECKING,
-    DONE
+  public sealed interface CheckingState {
+
+    /** No version check requested */
+    public data object None : CheckingState
+
+    /** Currently checking for version updates */
+    public data class Checking(
+        /** Check initiated by user */
+        val force: Boolean
+    ) : CheckingState
+
+    /** Done checking for updates */
+    public data class Done(
+        /** Check initiated by user */
+        val force: Boolean
+    ) : CheckingState
   }
 }

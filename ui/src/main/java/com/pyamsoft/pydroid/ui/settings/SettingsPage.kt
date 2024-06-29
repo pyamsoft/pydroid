@@ -45,11 +45,13 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
+import com.pyamsoft.pydroid.ui.internal.settings.version.VersionCheckingSettingsState
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.util.MarketLinker
 
 @Composable
@@ -100,6 +102,7 @@ public fun SettingsPage(
       state = viewModel,
       billingState = billingViewModel,
       changeLogState = changeLogViewModel,
+      versionCheckViewState = versionViewModel,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,
@@ -155,6 +158,7 @@ private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
     state: SettingsViewState,
+    versionCheckViewState: VersionCheckViewState,
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
     options: PYDroidActivityOptions,
@@ -197,8 +201,22 @@ private fun SettingsContent(
   val showChangeLogDialog by changeLogState.isShowingDialog.collectAsStateWithLifecycle()
   val showInAppDebuggingDialog by state.isShowingInAppDebugDialog.collectAsStateWithLifecycle()
 
+  val versionCheckStatus by versionCheckViewState.isCheckingForUpdate.collectAsStateWithLifecycle()
+  val versionCheckLauncher by versionCheckViewState.launcher.collectAsStateWithLifecycle()
+
+  val versionCheckingState =
+      remember(versionCheckStatus, versionCheckLauncher) {
+        VersionCheckingSettingsState(
+            isChecking = versionCheckStatus,
+            isEmptyUpdate =
+                versionCheckLauncher.let { it != null && it.availableUpdateVersion() <= 0 },
+            newVersion = versionCheckLauncher?.availableUpdateVersion() ?: 0,
+        )
+      }
+
   SettingsScreen(
       modifier = modifier,
+      versionCheckingState = versionCheckingState,
       state = state,
       options = options,
       hideClearAll = hideClearAll,

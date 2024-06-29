@@ -66,7 +66,7 @@ internal constructor(
       return
     }
 
-    if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
+    if (s.isCheckingForUpdate.value is VersionCheckViewState.CheckingState.Checking) {
       Logger.d { "We are already checking for an update." }
       return
     }
@@ -78,12 +78,12 @@ internal constructor(
 
     Logger.d { "Begin check for updates" }
     scope.launch(context = Dispatchers.Default) {
-      if (s.isCheckingForUpdate.value == VersionCheckViewState.CheckingState.CHECKING) {
+      if (s.isCheckingForUpdate.value is VersionCheckViewState.CheckingState.Checking) {
         Logger.d { "We are already checking for an update." }
         return@launch
       }
 
-      s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.CHECKING
+      s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.Checking(force = force)
       interactor
           .checkVersion()
           .onSuccess { Logger.d { "Update data found as: $it" } }
@@ -91,7 +91,12 @@ internal constructor(
           .onFailure { Logger.e(it) { "Error checking for latest version" } }
           .onFailure { s.launcher.value = null }
           .onFinally { Logger.d { "Done checking for updates" } }
-          .onFinally { s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.DONE }
+          .onFinally {
+            s.isCheckingForUpdate.value =
+                VersionCheckViewState.CheckingState.Done(
+                    force = force,
+                )
+          }
     }
   }
 

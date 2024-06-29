@@ -31,11 +31,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
+import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
@@ -67,21 +67,16 @@ internal fun VersionUpgradeAvailableScreen(
       modifier = modifier,
       visible = isVisible,
   ) {
+    val validLauncher = rememberNotNull(launcher)
+
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
-      val text =
-          launcher.let { l ->
-            if (l == null) {
-              // Should basically never happen
-              stringResource(R.string.an_update_is_available)
-            } else {
-              stringResource(R.string.an_update_to_version_is_available, l.availableUpdateVersion())
-            }
-          }
-
       Text(
-          text = text,
+          text =
+              stringResource(
+                  R.string.an_update_to_version_is_available,
+                  validLauncher.availableUpdateVersion()),
           style =
               MaterialTheme.typography.bodyLarge.copy(
                   color = MaterialTheme.colorScheme.primary,
@@ -92,7 +87,7 @@ internal fun VersionUpgradeAvailableScreen(
           modifier = Modifier.padding(top = MaterialTheme.keylines.content),
           onClick = {
             hapticManager?.confirmButtonPress()
-            onBeginInAppUpdate(launcher.requireNotNull())
+            onBeginInAppUpdate(validLauncher)
           },
       ) {
         Text(
@@ -100,7 +95,6 @@ internal fun VersionUpgradeAvailableScreen(
         )
       }
     }
-    android.R.string.copyUrl
   }
 }
 

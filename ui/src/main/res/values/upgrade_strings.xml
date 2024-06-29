@@ -31,9 +31,10 @@
   <!-- Update available -->
   <string name="download">Download</string>
 
-  <string name="an_update_is_available">An update is available!</string>
+  <string name="checking_for_updates">Checking for updates…</string>
+  <string name="empty_update">No new updates found</string>
   <string
     name="an_update_to_version_is_available"
-  >An update to version %1$s is available!</string>
+  >An update to version %1$d is available!</string>
   <string name="downloading_update">Downloading Update…</string>
 </resources>

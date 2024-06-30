@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright 2024 pyamsoft
+  ~ Copyright 2024 林博仁(Buo-ren, Lin)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <string name="gradle_versions_plugin_name">Gradle Versions 可接入元件</string>
+    <string
+  name="gradle_versions_plugin_url"
+>https://github.com/ben-manes/gradle-versions-plugin</string>
+    <string
+  name="gradle_versions_plugin_description"
+>用於發現依賴組件更新的 Gradle 可接入元件。</string>
+
+    <string name="gradle_spotless_plugin">Gradle Spotless 可接入元件</string>
+    <string
+  name="gradle_spotless_plugin_url"
+>https://github.com/diffplug/spotless/tree/master/plugin-gradle</string>
+    <string
+  name="gradle_spotless_plugin_description"
+>使用 Gradle 讓您的程式碼保持一塵不染</string>
+
+    <string name="dokka">Dokka</string>
+    <string name="dokka_url">https://github.com/Kotlin/dokka</string>
+    <string
+  name="dokka_description"
+>用於 Kotlin 程式語言的應用成世界面(API)文件引擎</string>
+
+    <string
+  name="binary_compatibility_validator"
+>Binary Compatibility Validator</string>
+    <string
+  name="binary_compatibility_validator_url"
+>https://github.com/Kotlin/binary-compatibility-validator</string>
+    <string
+  name="binary_compatibility_validator_description"
+>公共應用程式界面(API)管理工具</string>
+
+    <string
+  name="android_cache_fix_plugin"
+>Android Cache Fix Gradle 可接入元件</string>
+    <string
+  name="android_cache_fix_plugin_url"
+>https://github.com/gradle/android-cache-fix-gradle-plugin</string>
+    <string
+  name="android_cache_fix_plugin_description"
+>修正 Android 軟體建構快取問題的 Gradle 可接入元件。</string>
+
+    <string name="gradle_doctor">Gradle Doctor</string>
+    <string
+  name="gradle_doctor_url"
+>https://runningcode.github.io/gradle-doctor/</string>
+    <string
+  name="gradle_doctor_description"
+>您 Gradle 軟體建構的正確處方簽。</string>
+
+    <string name="core_library_desugaring">Core Library Desugaring</string>
+    <string
+  name="core_library_desugaring_url"
+>https://github.com/google/desugar_jdk_libs</string>
+    <string
+  name="core_library_desugaring_description"
+>這個專案包含了用於較舊執行環境的小規模 OpenJDK 程式庫子集合。</string>
+
+    <string name="pydroid_url">https://github.com/pyamsoft/pydroid</string>
+    <string name="pydroid_core">PYDroid Core</string>
+    <string
+  name="pydroid_core_description"
+>核心的 PYDroid 程式庫，提供擴充用程式庫的建構基礎</string>
+
+    <string name="kotlin">Kotlin</string>
+    <string name="kotlin_url">https://github.com/JetBrains/kotlin</string>
+    <string name="kotlin_description">Kotlin 程式語言。</string>
+
+    <string name="kotlin_coroutines">Kotlin Coroutines</string>
+    <string
+  name="kotlin_coroutines_url"
+>https://github.com/Kotlin/kotlinx.coroutines</string>
+    <string
+  name="kotlin_coroutines_description"
+>提供多平台支援的 Kotlin 協同程序(coroutines)程式庫支持。</string>
+
+    <string name="android_sdk">Android SDK</string>
+    <string name="android_sdk_url">https://source.android.com</string>
+    <string
+  name="android_sdk_description"
+>Android 軟體開發工具(SDK)，為所有我們喜愛的裝置的方方面面提供助力。</string>
+
+    <string name="androidx_annotations">AndroidX Annotations</string>
+    <string
+  name="androidx_annotations_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/annotation/</string>
+    <string
+  name="androidx_annotations_description"
+>提供了實用的 Android 應用程式與程式庫開發用 Java 標註(Java annotations)的標註用程式庫。</string>
+
+    <string name="pydroid_util">PYDroid Util</string>
+    <string
+  name="pydroid_util_description"
+>用於更簡單的資料操作的 PYDroid 實用工具擴充功能</string>
+
+    <string name="androidx_activity">AndroidX Activity</string>
+    <string
+  name="androidx_activity_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/activity/</string>
+    <string
+  name="androidx_activity_description"
+>androidx Activity 程式庫提供了用於啟用高階組成元件布局的 ComponentActivity 基底類別。</string>
+
+    <string name="androidx_fragment">AndroidX Fragment</string>
+    <string
+  name="androidx_fragment_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/</string>
+    <string
+  name="androidx_fragment_description"
+>用於將您使用者界面或行為包裝成可再利用組件的片段(fragments)組件。</string>
+
+    <string name="androidx_lifecycle_common">AndroidX Lifecycle Common</string>
+    <string
+  name="androidx_lifecycle_common_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-common</string>
+    <string
+  name="androidx_lifecycle_common_description"
+>Lifecycle 程式庫提供了 Andorid 組件生命週期的支援。</string>
+    i
+    <string name="pydroid_bootstrap">PYDroid Bootstrap</string>
+    <string
+  name="pydroid_bootstrap_description"
+>用於快速地創建新的應用軟體的 PYDroid bootstrap 擴充功能</string>
+
+    <string
+  name="google_play_url"
+>https://developers.google.com/android/</string>
+    <string name="custom_google_license">自定義的 Google 授權條款</string>
+
+    <string
+  name="google_play_in_app_updates_library"
+>Google Play 應用軟體內升級支援程式庫</string>
+    <string
+  name="google_play_in_app_updates_library_description"
+>用於 Android 的 Google Play 服務應用軟體內升級支援程式庫。</string>
+
+    <string
+  name="google_play_in_app_review_library"
+>Google Play 應用軟體內評論支援程式庫</string>
+    <string
+  name="google_play_in_app_review_library_description"
+>用於 Android 的 Google Play 服務應用軟體內應用評論支援程式庫。</string>
+
+    <string name="compose_runtime">Compose Runtime</string>
+    <string
+  name="compose_runtime_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime</string>
+    <string
+  name="compose_runtime_description"
+>Compose runtime annotations</string>
+
+    <string name="pydroid_ui">PYDroid UI</string>
+    <string
+  name="pydroid_ui_description"
+>各種使用者界面(UI)組成元件的 PYDroid 參考實現</string>
+
+    <string name="coil_compose">Coil Compose</string>
+    <string name="coil_compose_url">https://github.com/coil-kt/Coil</string>
+    <string
+  name="coil_compose_description"
+>用於由 Kotlin 協同程序支援的 Android 應用軟體的圖片載入支援程式庫。</string>
+
+    <string name="androidx_preference">AndroidX 偏好設定支援程式庫</string>
+    <string
+  name="androidx_preference_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/</string>
+    <string
+  name="androidx_preference_description"
+>AndroidX 的偏好設定支援程式庫。允許使用者修改使用者界面的設定。</string>
+
+    <string name="androidx_core_ktx">AndroidX Core KTX</string>
+    <string
+  name="androidx_core_ktx_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/</string>
+    <string
+  name="androidx_core_ktx_description"
+>AndroidX Core 的 KTX 支援程式庫。提供撰寫更簡潔、口語化的 Kotlin 程式碼。</string>
+
+    <string
+  name="androidx_lifecycle_compose"
+>AndroidX Lifecycle Compose</string>
+    <string
+  name="androidx_lifecycle_compose_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/lifecycle-runtime-compose</string>
+    <string
+  name="androidx_lifecycle_compose_description"
+>Lifecycle 程式庫提供了帶有 Compose 執行時期支援的 Android 組成元件生命週期支援</string>
+
+    <string name="compose_ui">Compose UI</string>
+    <string
+  name="compose_ui_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui</string>
+    <string
+  name="compose_ui_description"
+>提供使用者界面小工具(UI widgets)的組合支援</string>
+
+    <string name="compose_animation">Compose Animation</string>
+    <string
+  name="compose_animation_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/animation</string>
+    <string
+  name="compose_animation_description"
+>提供動畫的組合支援</string>
+
+    <string name="compose_material_3">Compose Material 3</string>
+    <string
+  name="compose_material_3_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/material3</string>
+    <string
+  name="compose_material_3_description"
+>用於第三版 Material Design 系統的組合支援</string>
+
+    <string name="compose_ui_tooling">Compose UI Tooling</string>
+    <string
+  name="compose_ui_tooling_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/ui/ui-tooling</string>
+    <string
+  name="compose_ui_tooling_description"
+>建構時期使用者界面工具(UI tooling)的組合支援</string>
+
+    <string name="pydroid_theme">PYDroid Theme</string>
+    <string
+  name="pydroid_theme_description"
+>用於 MaterialTheme 的 PYDroid 擴充功能</string>
+
+    <string name="pydroid_arch">PYDroid Arch</string>
+    <string
+  name="pydroid_arch_description"
+>提供用於 MVVM 使用者界面設計式樣的 PYDroid 標準架構支援</string>
+
+    <string name="compose_runtime_saveable">Compose Runtime Saveable</string>
+    <string
+  name="compose_runtime_saveable_url"
+>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/runtime/runtime-saveable</string>
+    <string
+  name="compose_runtime_saveable_description"
+>用於可儲存狀態的執行時期組合支援</string>
+
+    <string name="pydroid_bus">PYDroid Bus</string>
+    <string name="pydroid_bus_description">提供 PYDroid 的事件匯流排(event bus)支援</string>
+
+    <string name="pydroid_billing">PYDroid Billing</string>
+    <string
+  name="pydroid_billing_description"
+>PYDroid 的應用軟體內支付支援程式庫</string>
+
+    <string
+  name="google_play_in_app_billing_library"
+>Google Play 應用軟體內支付支援程式庫</string>
+    <string
+  name="google_play_in_app_billing_library_description"
+>提供用於 Andorid 應用軟體的應用軟體內支付管理支援</string>
+
+    <string name="pydroid_notify">PYDroid Notify</string>
+    <string
+  name="pydroid_notify_description"
+>PYDroid 的通知管理抽象化支援程式庫</string>
+
+    <string name="androidx_core">AndroidX Core</string>
+    <string
+  name="androidx_core_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/</string>
+    <string name="androidx_core_description">AndroidX 的核心程式庫</string>
+
+    <string name="androidx_startup">AndroidX Startup</string>
+    <string
+  name="androidx_startup_url"
+>https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/startup/</string>
+    <string
+  name="androidx_startup_description"
+>為應用軟體的初始化提供幫助</string>
+
+    <string name="pydroid_autopsy">PYDroid Autopsy</string>
+    <string
+  name="pydroid_autopsy_description"
+>提供 PYDroid 的應用軟體開發用程式崩潰回報畫面</string>
+</resources>

@@ -31,8 +31,6 @@
 
   <!-- Update available -->
   <string name="download">下載</string>
-
-  <string name="an_update_is_available">一個應用軟體更新已經可用！</string>
   <string
     name="an_update_to_version_is_available"
   >一個 %1$s 版本的應用軟體更新已經可用！</string>

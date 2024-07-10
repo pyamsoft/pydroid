@@ -17,8 +17,12 @@
   -->
 <resources>
   <string name="haptics_title">啟用振動回饋</string>
-  <string name="haptics_summary_off">振動回饋在大部分的界面交互中不會被觸發。</string>
-  <string name="haptics_summary_on">振動回饋會在支援的界面交互中被觸發。</string>
+  <string
+    name="haptics_summary_off"
+  >振動回饋在大部分的界面交互中不會被觸發。</string>
+  <string
+    name="haptics_summary_on"
+  >振動回饋會在支援的界面交互中被觸發。</string>
 
   <string name="clear_all_title">重設所有設定</string>
   <string name="clear_all_summary">重設所有的應用軟體設定</string>
@@ -37,7 +41,9 @@
   <string name="rating_summary">喜歡這個應用軟體嗎？發表您的評論！</string>
 
   <string name="donate_title">小費罐</string>
-  <string name="donate_summary">pyamsoft 努力工作為您帶來這些開放來源碼軟體。透過小費來表達您的支持！</string>
+  <string
+    name="donate_summary"
+  >pyamsoft 努力工作為您帶來這些開放來源碼軟體。透過小費來表達您的支持！</string>
 
   <string name="bugreport_title">提交軟體缺陷報告</string>
   <string
@@ -61,9 +67,7 @@
   <string name="view_terms_summary">閱讀我們的服務條款！</string>
 
   <string name="social_media_f_title">社群媒體</string>
-  <string
-    name="social_media_f_summary"
-  >在社群媒體上跟隨 pyamsoft！</string>
+  <string name="social_media_f_summary">在社群媒體上跟隨 pyamsoft！</string>
 
   <string name="social_media_b_title">部落格與最新資訊</string>
   <string

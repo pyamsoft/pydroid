@@ -16,5 +16,7 @@
   ~ limitations under the License.
   -->
 <resources>
-  <string name="crash_title">在 %1$s 執行緒中偵測到未被捕捉的例外錯誤(exception)</string>
+  <string
+    name="crash_title"
+  >在 %1$s 執行緒中偵測到未被捕捉的例外錯誤(exception)</string>
 </resources>

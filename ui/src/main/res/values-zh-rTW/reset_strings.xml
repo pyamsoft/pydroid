@@ -21,8 +21,6 @@
   <string
     name="reset_start"
   >所有儲存的資料會被清空且所有的設定值會被重設為預設值。</string>
-  <string
-    name="reset_end"
-  >這個應用軟體會表現得像是您第一次啟動它一樣。</string>
+  <string name="reset_end">這個應用軟體會表現得像是您第一次啟動它一樣。</string>
   <string name="reset_warning">這個操作無法被復原。</string>
 </resources>

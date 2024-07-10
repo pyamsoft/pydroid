@@ -16,15 +16,11 @@
   ~ limitations under the License.
   -->
 <resources>
-  <string
-    name="external_link_title"
-  >您正在訪問目的地在 %1$s 外之連結</string>
+  <string name="external_link_title">您正在訪問目的地在 %1$s 外之連結</string>
   <string
     name="external_link_disclaimer"
   >pyamsoft 並沒有此連結頁面的控制權，且不能對任何其顯示之內容負責。</string>
-  <string
-    name="external_link_url"
-  >您正在跟隨的連結的目的地在 %1$s 外面：<b
+  <string name="external_link_url">您正在跟隨的連結的目的地在 %1$s 外面：<b
   >%2$s</b>\n\n請問您真的要跟隨這個連結嗎？</string>
   <string name="follow_link">跟隨連結</string>
 </resources>

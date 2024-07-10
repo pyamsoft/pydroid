@@ -16,7 +16,9 @@
   ~ limitations under the License.
   -->
 <resources>
-    <string name="gradle_versions_plugin_name">Gradle Versions 可接入元件</string>
+    <string
+  name="gradle_versions_plugin_name"
+>Gradle Versions 可接入元件</string>
     <string
   name="gradle_versions_plugin_url"
 >https://github.com/ben-manes/gradle-versions-plugin</string>
@@ -216,9 +218,7 @@
     <string
   name="compose_animation_url"
 >https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/compose/animation</string>
-    <string
-  name="compose_animation_description"
->提供動畫的組合支援</string>
+    <string name="compose_animation_description">提供動畫的組合支援</string>
 
     <string name="compose_material_3">Compose Material 3</string>
     <string
@@ -255,7 +255,9 @@
 >用於可儲存狀態的執行時期組合支援</string>
 
     <string name="pydroid_bus">PYDroid Bus</string>
-    <string name="pydroid_bus_description">提供 PYDroid 的事件匯流排(event bus)支援</string>
+    <string
+  name="pydroid_bus_description"
+>提供 PYDroid 的事件匯流排(event bus)支援</string>
 
     <string name="pydroid_billing">PYDroid Billing</string>
     <string

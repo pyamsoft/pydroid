@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright 2024 pyamsoft
+  ~ Copyright 2024 林博仁(Buo-ren, Lin)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+  <string name="reset">重設所有設定</string>
+  <string name="reset_title">您確定要這樣做嗎？</string>
+  <string
+    name="reset_start"
+  >所有儲存的資料會被清空且所有的設定值會被重設為預設值。</string>
+  <string
+    name="reset_end"
+  >這個應用軟體會表現得像是您第一次啟動它一樣。</string>
+  <string name="reset_warning">這個操作無法被復原。</string>
+</resources>

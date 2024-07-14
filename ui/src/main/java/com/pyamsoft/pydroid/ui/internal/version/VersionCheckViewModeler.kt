@@ -16,10 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -30,6 +32,26 @@ internal constructor(
     override val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
 ) : VersionCheckViewState by state, AbstractViewModeler<VersionCheckViewState>(state) {
+
+  @CheckResult
+  private fun canCheckForUpdates(force: Boolean): Boolean {
+    if (force) {
+      return true
+    }
+
+    val s = state
+    if (s.isCheckingForUpdate.value is CheckingState.Checking) {
+      Logger.d { "We are already checking for an update." }
+      return false
+    }
+
+    if (s.launcher.value != null) {
+      Logger.d { "Launcher is already available, do not check for update again" }
+      return false
+    }
+
+    return true
+  }
 
   internal fun bind(
       scope: CoroutineScope,
@@ -67,24 +89,17 @@ internal constructor(
       return
     }
 
-    if (s.isCheckingForUpdate.value is VersionCheckViewState.CheckingState.Checking) {
-      Logger.d { "We are already checking for an update." }
-      return
-    }
-
-    if (s.launcher.value != null && !force) {
-      Logger.d { "Launcher is already available, do not check for update again" }
+    if (!canCheckForUpdates(force)) {
       return
     }
 
     Logger.d { "Begin check for updates" }
     scope.launch(context = Dispatchers.Default) {
-      if (s.isCheckingForUpdate.value is VersionCheckViewState.CheckingState.Checking) {
-        Logger.d { "We are already checking for an update." }
+      if (!canCheckForUpdates(force)) {
         return@launch
       }
 
-      s.isCheckingForUpdate.value = VersionCheckViewState.CheckingState.Checking(force = force)
+      s.isCheckingForUpdate.value = CheckingState.Checking(force = force)
       interactor
           .checkVersion()
           .onSuccess { Logger.d { "Update data found as: $it" } }
@@ -94,7 +109,7 @@ internal constructor(
           .onFinally { Logger.d { "Done checking for updates" } }
           .onFinally {
             s.isCheckingForUpdate.value =
-                VersionCheckViewState.CheckingState.Done(
+                CheckingState.Done(
                     force = force,
                 )
           }
@@ -121,10 +136,10 @@ internal constructor(
   fun handleManualUpdateCheckComplete() {
     Logger.d { "Manual update check was completed. Mark force=false to stop visual updates" }
     state.isCheckingForUpdate.update { checking ->
-      if (checking is VersionCheckViewState.CheckingState.Done) {
-        return@update checking.copy(force = false)
-      } else {
-        return@update checking
+      return@update when (checking) {
+        is CheckingState.Checking -> checking.copy(force = false)
+        is CheckingState.Done -> checking.copy(force = false)
+        is CheckingState.None -> checking
       }
     }
   }

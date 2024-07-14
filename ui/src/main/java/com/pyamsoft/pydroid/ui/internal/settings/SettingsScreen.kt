@@ -28,6 +28,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -301,6 +302,14 @@ private fun CheckingUpdateStatus(
 
   val handleUpdateCheckComplete by rememberUpdatedState(onUpdateCheckComplete)
 
+  // In case we dismiss the dialog BEFORE the snackbar hides
+  DisposableEffect(Unit) {
+    onDispose {
+      Logger.d { "Update check is DISMISSED, mark complete" }
+      handleUpdateCheckComplete()
+    }
+  }
+
   LaunchedEffect(
       isChecking,
       isEmptyUpdate,
@@ -344,7 +353,9 @@ private fun CheckingUpdateStatus(
           duration = SnackbarDuration.Short,
       )
 
+      // After the snackbar is shown in DONE state
       if (isChecking is CheckingState.Done) {
+        Logger.d { "Update check is DONE, mark complete" }
         handleUpdateCheckComplete()
       }
     }

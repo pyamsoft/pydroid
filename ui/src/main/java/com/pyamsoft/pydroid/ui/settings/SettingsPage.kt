@@ -148,6 +148,7 @@ public fun SettingsPage(
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
       onHapticsChanged = { viewModel.handleHapticsChanged(it) },
+      onUpdateCheckComplete = { versionViewModel.handleManualUpdateCheckComplete() },
       extraDebugContent = extraDebugContent,
   )
 }
@@ -192,6 +193,7 @@ private fun SettingsContent(
     onDismissDataPolicyDialog: () -> Unit,
     onDismissInAppDebuggingDialog: () -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
+    onUpdateCheckComplete: () -> Unit,
     extraDebugContent: LazyListScope.() -> Unit,
 ) {
   val showResetDialog by state.isShowingResetDialog.collectAsStateWithLifecycle()
@@ -243,6 +245,7 @@ private fun SettingsContent(
       onInAppDebuggingChanged = onInAppDebuggingChanged,
       onInAppDebuggingClicked = onInAppDebuggingClicked,
       onHapticsChanged = onHapticsChanged,
+      onUpdateCheckComplete = onUpdateCheckComplete,
   )
 
   if (showDataPolicyDialog) {

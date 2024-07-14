@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -80,6 +81,7 @@ internal fun SettingsScreen(
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
+    onUpdateCheckComplete: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
 
@@ -136,6 +138,7 @@ internal fun SettingsScreen(
             onInAppDebuggingClicked = onInAppDebuggingClicked,
             onInAppDebuggingChanged = onInAppDebuggingChanged,
             onHapticsChanged = onHapticsChanged,
+            onUpdateCheckComplete = onUpdateCheckComplete,
         )
       }
     }
@@ -193,6 +196,7 @@ private fun SettingsList(
     onOpenMarketPage: () -> Unit,
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
+    onUpdateCheckComplete: () -> Unit,
 ) {
   val applicationPrefs =
       rememberApplicationPreferencesGroup(
@@ -278,6 +282,7 @@ private fun SettingsList(
         modifier = Modifier.align(Alignment.BottomCenter),
         snackbarHost = snackbarHost,
         versionCheckingState = versionCheckingState,
+        onUpdateCheckComplete = onUpdateCheckComplete,
     )
   }
 }
@@ -287,11 +292,14 @@ private fun CheckingUpdateStatus(
     modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
     versionCheckingState: VersionCheckingSettingsState,
+    onUpdateCheckComplete: () -> Unit,
 ) {
   val context = LocalContext.current
   val isChecking = versionCheckingState.isChecking
   val isEmptyUpdate = versionCheckingState.isEmptyUpdate
   val newVersion = versionCheckingState.newVersion
+
+  val handleUpdateCheckComplete by rememberUpdatedState(onUpdateCheckComplete)
 
   LaunchedEffect(
       isChecking,
@@ -324,7 +332,7 @@ private fun CheckingUpdateStatus(
             message = context.getString(R.string.an_update_to_version_is_available, newVersion)
           }
         } else {
-          Logger.d { "Done checking for update, newVersion=$newVersion" }
+          Logger.d { "Done silent checking for update, newVersion=$newVersion" }
           message = ""
         }
       }
@@ -335,6 +343,10 @@ private fun CheckingUpdateStatus(
           message = message,
           duration = SnackbarDuration.Short,
       )
+
+      if (isChecking is CheckingState.Done) {
+        handleUpdateCheckComplete()
+      }
     }
   }
 
@@ -379,6 +391,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       onInAppDebuggingChanged = {},
       onHapticsChanged = {},
       onMaterialYouChange = {},
+      onUpdateCheckComplete = {},
   )
 }
 

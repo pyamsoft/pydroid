@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class VersionCheckViewModeler
@@ -114,6 +115,17 @@ internal constructor(
       Logger.d { "Updating app, restart via update manager!" }
       interactor.completeUpdate()
       onUpgradeCompleted()
+    }
+  }
+
+  fun handleManualUpdateCheckComplete() {
+    Logger.d { "Manual update check was completed. Mark force=false to stop visual updates" }
+    state.isCheckingForUpdate.update { checking ->
+      if (checking is VersionCheckViewState.CheckingState.Done) {
+        return@update checking.copy(force = false)
+      } else {
+        return@update checking
+      }
     }
   }
 

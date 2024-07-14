@@ -20,9 +20,10 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
@@ -56,7 +57,10 @@ internal fun ResetDialog(
 
   val viewModel = rememberNotNull(component.viewModel)
 
-  val scope = rememberCoroutineScope()
+  // Use the LifecycleOwner.CoroutineScop  e (Activity usually)
+  // so that the scope does not die because of navigation events
+  val owner = LocalLifecycleOwner.current
+  val lifecycleScope = owner.lifecycleScope
 
   Dialog(
       properties = rememberDialogProperties(),
@@ -67,7 +71,7 @@ internal fun ResetDialog(
         state = viewModel,
         onReset = {
           viewModel.handleFullReset(
-              scope = scope,
+              scope = lifecycleScope,
           )
         },
         onClose = onDismiss,

@@ -22,13 +22,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -74,7 +75,11 @@ public fun SettingsPage(
     customBottomItemMargin: Dp = ZeroSize,
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
-  val scope = rememberCoroutineScope()
+  // Use the LifecycleOwner.CoroutineScope (Activity usually)
+  // so that the scope does not die because of navigation events
+  val owner = LocalLifecycleOwner.current
+  val lifecycleScope = owner.lifecycleScope
+
   val context = LocalContext.current
 
   val component = rememberComposableInjector { SettingsInjector() }
@@ -116,7 +121,7 @@ public fun SettingsPage(
           Logger.w { "Application has disabled the VersionCheck component" }
         } else {
           versionViewModel.handleCheckForUpdates(
-              scope = scope,
+              scope = lifecycleScope,
               force = true,
           )
         }
@@ -139,7 +144,7 @@ public fun SettingsPage(
       onDismissChangeLogDialog = { changeLogViewModel.handleCloseDialog() },
       onDarkModeChanged = {
         viewModel.handleChangeDarkMode(
-            scope = scope,
+            scope = lifecycleScope,
             mode = it,
         )
       },

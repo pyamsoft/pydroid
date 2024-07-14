@@ -41,7 +41,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +50,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
@@ -96,7 +97,10 @@ internal fun InAppDebugDialog(
   val component = rememberComposableInjector { DebugInjector() }
   val viewModel = rememberNotNull(component.viewModel)
 
-  val scope = rememberCoroutineScope()
+  // Use the LifecycleOwner.CoroutineScope (Activity usually)
+  // so that the scope does not die because of navigation events
+  val owner = LocalLifecycleOwner.current
+  val lifecycleScope = owner.lifecycleScope
 
   MountHooks(
       viewModel = viewModel,
@@ -107,7 +111,7 @@ internal fun InAppDebugDialog(
       state = viewModel,
       extraContent = extraContent,
       onDismiss = onDismiss,
-      onCopy = { viewModel.handleCopy(scope = scope) },
+      onCopy = { viewModel.handleCopy(scope = lifecycleScope) },
   )
 }
 

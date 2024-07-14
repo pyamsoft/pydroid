@@ -22,11 +22,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -78,11 +78,15 @@ private fun MountHooks(
     viewModel.bind(scope = this)
   }
 
-  val scope = rememberCoroutineScope()
+  // Use the LifecycleOwner.CoroutineScope (Activity usually)
+  // so that the scope does not die because of navigation events
+  val owner = LocalLifecycleOwner.current
+  val lifecycleScope = owner.lifecycleScope
+
   LifecycleEventEffect(
       event = Lifecycle.Event.ON_RESUME,
   ) {
-    viewModel.handleRefresh(scope = scope)
+    viewModel.handleRefresh(scope = lifecycleScope)
   }
 }
 

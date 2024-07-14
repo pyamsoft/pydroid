@@ -28,8 +28,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -46,12 +44,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
+import com.pyamsoft.pydroid.ui.internal.widget.CardDialog
 import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.CHECKBOX
 import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.RADIO
 
@@ -246,34 +243,53 @@ internal fun PreferenceDialog(
 
   val hapticManager = LocalHapticManager.current
 
-  Dialog(
-      properties = rememberDialogProperties(),
-      onDismissRequest = onDismiss,
+  CardDialog(
+      modifier = modifier,
+      onDismiss = onDismiss,
   ) {
-    Card(
-        modifier = modifier.padding(MaterialTheme.keylines.content),
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.elevatedCardElevation(),
-        colors = CardDefaults.elevatedCardColors(),
-    ) {
-      PreferenceDialogTitle(
-          modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
-          title = title,
-      )
+    PreferenceDialogTitle(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = MaterialTheme.keylines.content),
+        title = title,
+    )
 
-      LazyColumn(
-          modifier =
-              Modifier.weight(
-                  weight = 1F,
-                  fill = false,
-              ),
-      ) {
+    LazyColumn(
+        modifier =
+            Modifier.weight(
+                weight = 1F,
+                fill = false,
+            ),
+    ) {
+      items(
+          items = entries,
+          key = { it.value },
+          contentType = { PreferenceContentTypes.DIALOG_ITEM },
+      ) { item ->
+        val isSelected = remember(item, currentValue) { item.value == currentValue }
+        PreferenceDialogItem(
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(
+                        horizontal = MaterialTheme.keylines.content,
+                        vertical = MaterialTheme.keylines.typography,
+                    ),
+            name = item.key,
+            isSelected = isSelected,
+            style = RADIO,
+            onClick = {
+              hapticManager?.actionButtonPress()
+              onPreferenceSelected(item.key, item.value)
+              onDismiss()
+            },
+        )
+      }
+
+      preference.checkboxes?.let { checkboxes ->
         items(
-            items = entries,
+            items = checkboxes,
             key = { it.value },
-            contentType = { PreferenceContentTypes.DIALOG_ITEM },
+            contentType = { PreferenceContentTypes.DIALOG_CHECKBOXES },
         ) { item ->
-          val isSelected = remember(item, currentValue) { item.value == currentValue }
+          val isSelected = remember(item) { item.value }
           PreferenceDialogItem(
               modifier =
                   Modifier.fillMaxWidth()
@@ -283,52 +299,26 @@ internal fun PreferenceDialog(
                       ),
               name = item.key,
               isSelected = isSelected,
-              style = RADIO,
+              style = CHECKBOX,
               onClick = {
                 hapticManager?.actionButtonPress()
-                onPreferenceSelected(item.key, item.value)
-                onDismiss()
+                onPreferenceSelected(item.key, item.value.not().toString())
               },
           )
         }
-
-        preference.checkboxes?.let { checkboxes ->
-          items(
-              items = checkboxes,
-              key = { it.value },
-              contentType = { PreferenceContentTypes.DIALOG_CHECKBOXES },
-          ) { item ->
-            val isSelected = remember(item) { item.value }
-            PreferenceDialogItem(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .padding(
-                            horizontal = MaterialTheme.keylines.content,
-                            vertical = MaterialTheme.keylines.typography,
-                        ),
-                name = item.key,
-                isSelected = isSelected,
-                style = CHECKBOX,
-                onClick = {
-                  hapticManager?.actionButtonPress()
-                  onPreferenceSelected(item.key, item.value.not().toString())
-                },
-            )
-          }
-        }
       }
-
-      PreferenceDialogActions(
-          modifier =
-              Modifier.fillMaxWidth()
-                  .padding(horizontal = MaterialTheme.keylines.content)
-                  .padding(bottom = MaterialTheme.keylines.baseline),
-          onDismiss = {
-            hapticManager?.cancelButtonPress()
-            onDismiss()
-          },
-      )
     }
+
+    PreferenceDialogActions(
+        modifier =
+            Modifier.fillMaxWidth()
+                .padding(horizontal = MaterialTheme.keylines.content)
+                .padding(bottom = MaterialTheme.keylines.baseline),
+        onDismiss = {
+          hapticManager?.cancelButtonPress()
+          onDismiss()
+        },
+    )
   }
 }
 

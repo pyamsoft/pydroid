@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,13 +42,12 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
+import com.pyamsoft.pydroid.ui.internal.widget.CardDialog
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -107,100 +104,93 @@ internal fun PYDroidExternalUriPortal(
           )
         }
 
-    Dialog(
-        onDismissRequest = { handleDismiss() },
-        properties = rememberDialogProperties(),
+    CardDialog(
+        modifier = modifier,
+        onDismiss = { handleDismiss() },
     ) {
-      Card(
-          modifier = modifier.padding(MaterialTheme.keylines.content),
-          shape = MaterialTheme.shapes.medium,
-          elevation = CardDefaults.elevatedCardElevation(),
-          colors = CardDefaults.elevatedCardColors(),
+      LazyColumn(
+          modifier =
+              Modifier.weight(
+                  weight = 1F,
+                  fill = false,
+              ),
       ) {
-        LazyColumn(
-            modifier =
-                Modifier.weight(
-                    weight = 1F,
-                    fill = false,
-                ),
+        item(
+            contentType = PYDroidExternalUriPortalContentTypes.TITLE,
         ) {
-          item(
-              contentType = PYDroidExternalUriPortalContentTypes.TITLE,
-          ) {
-            Text(
-                modifier = Modifier.padding(MaterialTheme.keylines.content),
-                style = MaterialTheme.typography.bodyLarge,
-                text = stringResource(R.string.external_link_title, appName),
-                fontWeight = FontWeight.W700,
-            )
-          }
-
-          item(
-              contentType = PYDroidExternalUriPortalContentTypes.MESSAGE,
-          ) {
-            Text(
-                modifier =
-                    Modifier.padding(horizontal = MaterialTheme.keylines.content)
-                        .padding(bottom = MaterialTheme.keylines.baseline),
-                style = MaterialTheme.typography.bodyMedium,
-                text = confirmation,
-            )
-          }
-
-          item(
-              contentType = PYDroidExternalUriPortalContentTypes.CONFIRM,
-          ) {
-            Text(
-                modifier =
-                    Modifier.padding(horizontal = MaterialTheme.keylines.content)
-                        .padding(bottom = MaterialTheme.keylines.baseline),
-                style =
-                    MaterialTheme.typography.bodySmall.copy(
-                        color =
-                            MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                alpha = TypographyDefaults.ALPHA_DISABLED,
-                            ),
-                    ),
-                text = stringResource(R.string.external_link_disclaimer),
-            )
-          }
+          Text(
+              modifier = Modifier.padding(MaterialTheme.keylines.content),
+              style = MaterialTheme.typography.bodyLarge,
+              text = stringResource(R.string.external_link_title, appName),
+              fontWeight = FontWeight.W700,
+          )
         }
 
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
-            verticalAlignment = Alignment.CenterVertically,
+        item(
+            contentType = PYDroidExternalUriPortalContentTypes.MESSAGE,
         ) {
-          Spacer(
-              modifier = Modifier.weight(1F),
+          Text(
+              modifier =
+                  Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                      .padding(bottom = MaterialTheme.keylines.baseline),
+              style = MaterialTheme.typography.bodyMedium,
+              text = confirmation,
           )
+        }
 
-          TextButton(
-              modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-              onClick = { handleDismiss() },
-              colors =
-                  ButtonDefaults.textButtonColors(
-                      contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        item(
+            contentType = PYDroidExternalUriPortalContentTypes.CONFIRM,
+        ) {
+          Text(
+              modifier =
+                  Modifier.padding(horizontal = MaterialTheme.keylines.content)
+                      .padding(bottom = MaterialTheme.keylines.baseline),
+              style =
+                  MaterialTheme.typography.bodySmall.copy(
+                      color =
+                          MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                              alpha = TypographyDefaults.ALPHA_DISABLED,
+                          ),
                   ),
-          ) {
-            Text(
-                text = stringResource(android.R.string.cancel),
-            )
-          }
+              text = stringResource(R.string.external_link_disclaimer),
+          )
+        }
+      }
 
-          Button(
-              onClick = {
-                hapticManager?.confirmButtonPress()
-                uriHandler.confirm(
-                    context = context,
-                    handler = handler,
-                    uri = uri,
-                )
-              },
-          ) {
-            Text(
-                text = stringResource(R.string.follow_link),
-            )
-          }
+      Row(
+          modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
+          verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Spacer(
+            modifier = Modifier.weight(1F),
+        )
+
+        TextButton(
+            modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+            onClick = { handleDismiss() },
+            colors =
+                ButtonDefaults.textButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ),
+        ) {
+          Text(
+              text = stringResource(android.R.string.cancel),
+          )
+        }
+
+        Button(
+            onClick = {
+              hapticManager?.confirmButtonPress()
+              uriHandler.confirm(
+                  context = context,
+                  handler = handler,
+                  uri = uri,
+              )
+            },
+        ) {
+          Text(
+              text = stringResource(R.string.follow_link),
+          )
         }
       }
     }

@@ -23,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -69,8 +68,8 @@ public fun SettingsPage(
     dialogModifier: Modifier = Modifier,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
-    customPrePreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
-    customPostPreferences: SnapshotStateList<Preferences> = remember { mutableStateListOf() },
+    customPrePreferences: List<Preferences> = remember { mutableStateListOf() },
+    customPostPreferences: List<Preferences> = remember { mutableStateListOf() },
     customTopItemMargin: Dp = ZeroSize,
     customBottomItemMargin: Dp = ZeroSize,
     extraDebugContent: LazyListScope.() -> Unit = {},
@@ -170,8 +169,8 @@ private fun SettingsContent(
     options: PYDroidActivityOptions,
     hideUpgradeInformation: Boolean,
     hideClearAll: Boolean,
-    customPrePreferences: SnapshotStateList<Preferences>,
-    customPostPreferences: SnapshotStateList<Preferences>,
+    customPrePreferences: List<Preferences>,
+    customPostPreferences: List<Preferences>,
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
     onMaterialYouChange: (Boolean) -> Unit,

@@ -429,7 +429,7 @@ public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$Prefe
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
-	public static final fun PreferenceScreen-vz2T9sI (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;FFLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PreferenceScreen-vz2T9sI (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;FFLjava/util/List;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
@@ -499,7 +499,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/rating/RatingViewState :
 }
 
 public final class com/pyamsoft/pydroid/ui/settings/SettingsPageKt {
-	public static final fun SettingsPage-EQC0FA8 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;ZZLandroidx/compose/runtime/snapshots/SnapshotStateList;Landroidx/compose/runtime/snapshots/SnapshotStateList;FFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
+	public static final fun SettingsPage-EQC0FA8 (Landroidx/compose/ui/Modifier;Landroidx/compose/ui/Modifier;ZZLjava/util/List;Ljava/util/List;FFLkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/pyamsoft/pydroid/ui/theme/ElevationKt {
@@ -571,13 +571,13 @@ public final class com/pyamsoft/pydroid/ui/util/ModifiersKt {
 }
 
 public final class com/pyamsoft/pydroid/ui/util/RememberKt {
-	public static final fun collectAsStateList (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateList;
-	public static final fun collectAsStateListWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public static final fun collectAsStateList (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Ljava/util/List;
+	public static final fun collectAsStateListWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Ljava/util/List;
 	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun collectAsStateMapWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/activity/ComponentActivity;
-	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
-	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateList;
+	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Ljava/util/List;
+	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	public static final fun rememberAsStateMap (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun rememberNotNull (Ljava/lang/Object;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;
 	public static final fun rememberNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)Ljava/lang/Object;

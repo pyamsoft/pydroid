@@ -55,7 +55,6 @@ private enum class PYDroidExternalUriPortalContentTypes {
   TITLE,
   MESSAGE,
   CONFIRM,
-  DISCLAIMER,
 }
 
 /** Default confirmation UI for the external URI navigation confirmation */

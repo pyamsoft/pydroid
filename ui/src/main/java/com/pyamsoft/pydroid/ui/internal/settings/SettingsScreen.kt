@@ -34,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,8 +61,8 @@ internal fun SettingsScreen(
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
-    customPreContent: SnapshotStateList<Preferences>,
-    customPostContent: SnapshotStateList<Preferences>,
+    customPreContent: List<Preferences>,
+    customPostContent: List<Preferences>,
     onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -170,8 +169,8 @@ private fun SettingsList(
     options: PYDroidActivityOptions,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
-    customPreContent: SnapshotStateList<Preferences>,
-    customPostContent: SnapshotStateList<Preferences>,
+    customPreContent: List<Preferences>,
+    customPostContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     isInAppDebugChecked: Boolean,

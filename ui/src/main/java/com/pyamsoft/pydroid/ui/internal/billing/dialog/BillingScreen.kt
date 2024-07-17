@@ -33,7 +33,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -234,7 +233,7 @@ private val PREVIEW_SKUS =
 @Composable
 private fun PreviewBillingScreen(
     connected: BillingState,
-    skuList: SnapshotStateList<BillingSku>,
+    skuList: List<BillingSku>,
     error: Throwable?,
 ) {
   BillingScreen(

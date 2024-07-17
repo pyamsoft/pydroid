@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.platform.LocalContext
@@ -89,14 +88,14 @@ public fun rememberActivity(): ComponentActivity {
  */
 @Composable
 @CheckResult
-public fun <T : Any> Collection<T>.rememberAsStateList(): SnapshotStateList<T> {
+public fun <T : Any> Collection<T>.rememberAsStateList(): List<T> {
   return remember(this) { this.toMutableStateList() }
 }
 
 /** rememberAsStateList convenience for Maps */
 @Composable
 @CheckResult
-public fun <K : Any, V : Any> Map<K, V>.rememberAsStateList(): SnapshotStateList<Map.Entry<K, V>> {
+public fun <K : Any, V : Any> Map<K, V>.rememberAsStateList(): List<Map.Entry<K, V>> {
   return remember(this) { this.entries.toMutableStateList() }
 }
 
@@ -118,7 +117,7 @@ public fun <K : Any, V : Any> Map<K, V>.rememberAsStateMap(): SnapshotStateMap<K
 @CheckResult
 public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(
     context: CoroutineContext = EmptyCoroutineContext
-): SnapshotStateList<T> {
+): List<T> {
   val state by this.collectAsState(context = context)
   return state.rememberAsStateList()
 }
@@ -146,7 +145,7 @@ public fun <T : Any> StateFlow<Collection<T>>.collectAsStateListWithLifecycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     context: CoroutineContext = EmptyCoroutineContext
-): SnapshotStateList<T> {
+): List<T> {
   val state by
       this.collectAsStateWithLifecycle(
           lifecycleOwner = lifecycleOwner,

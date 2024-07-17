@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,7 +53,7 @@ public fun PreferenceScreen(
     dialogModifier: Modifier = Modifier,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
-    preferences: SnapshotStateList<Preferences>,
+    preferences: List<Preferences>,
 ) {
   val component = rememberComposableInjector { PreferenceInjector() }
 
@@ -81,7 +80,7 @@ private fun PreferenceScreenInternal(
     state: PreferenceViewState,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
-    preferences: SnapshotStateList<Preferences>,
+    preferences: List<Preferences>,
     onOpenDialog: (String) -> Unit,
     onCloseDialog: (String) -> Unit,
 ) {

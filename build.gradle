@@ -27,8 +27,8 @@ buildscript {
 
     // AndroidX
     core = "1.13.1"
-    activity = "1.9.0"
-    lifecycle = "2.8.3"
+    activity = "1.9.1"
+    lifecycle = "2.8.4"
 
     // Test Runner
     testRunner = "1.6.1"
@@ -70,7 +70,7 @@ plugins {
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.0"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.2"
 
   // Gradle Doctor
   // https://runningcode.github.io/gradle-doctor/
@@ -156,7 +156,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "27.0.4"
+          version "27.0.5"
         }
       }
     }

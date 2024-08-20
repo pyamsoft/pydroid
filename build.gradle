@@ -31,7 +31,7 @@ buildscript {
     lifecycle = "2.8.4"
 
     // Test Runner
-    testRunner = "1.6.1"
+    testRunner = "1.6.2"
   }
 }
 

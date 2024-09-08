@@ -24,8 +24,6 @@ public final class com/pyamsoft/pydroid/core/RequireNotNullKt {
 public final class com/pyamsoft/pydroid/core/ResultWrapper {
 	public static final field Companion Lcom/pyamsoft/pydroid/core/ResultWrapper$Companion;
 	public fun <init> (Ljava/lang/Object;Ljava/lang/Throwable;)V
-	public final fun copy (Ljava/lang/Object;Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/core/ResultWrapper;Ljava/lang/Object;Ljava/lang/Throwable;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun exceptionOrNull ()Ljava/lang/Throwable;
 	public final fun exceptionOrThrow ()Ljava/lang/Throwable;

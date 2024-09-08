@@ -31,7 +31,7 @@ internal interface VersionCheckComponent {
 
     @CheckResult fun create(): VersionCheckComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val module: VersionModule,

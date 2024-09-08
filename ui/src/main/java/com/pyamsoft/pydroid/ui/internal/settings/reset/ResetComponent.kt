@@ -27,7 +27,7 @@ internal interface ResetComponent {
 
     @CheckResult fun create(): ResetComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val module: SettingsModule,

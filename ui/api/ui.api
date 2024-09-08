@@ -438,8 +438,6 @@ public abstract class com/pyamsoft/pydroid/ui/preference/Preferences {
 
 public final class com/pyamsoft/pydroid/ui/preference/Preferences$Group : com/pyamsoft/pydroid/ui/preference/Preferences {
 	public static final field $stable I
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;Ljava/lang/String;Ljava/lang/String;ZLjava/util/List;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/preference/Preferences$Group;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;

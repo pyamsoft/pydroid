@@ -28,7 +28,7 @@ internal interface ChangeLogComponent {
 
     @CheckResult fun create(): ChangeLogComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val changeLogModule: ChangeLogModule,

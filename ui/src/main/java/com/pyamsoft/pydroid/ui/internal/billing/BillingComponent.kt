@@ -27,7 +27,7 @@ internal interface BillingComponent {
 
     @CheckResult fun create(): BillingComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val preferences: BillingPreferences,

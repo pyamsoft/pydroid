@@ -93,7 +93,7 @@ internal interface AppComponent {
 
     @CheckResult fun create(options: PYDroidActivityOptions): AppComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val hapticPreferences: HapticPreferences,

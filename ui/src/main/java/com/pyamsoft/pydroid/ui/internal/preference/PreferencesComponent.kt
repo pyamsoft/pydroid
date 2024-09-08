@@ -26,7 +26,7 @@ internal interface PreferencesComponent {
 
     @CheckResult fun create(): PreferencesComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         val state: MutablePreferenceViewState,

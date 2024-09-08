@@ -70,7 +70,7 @@ internal interface PYDroidComponent {
 
     @CheckResult fun moduleProvider(): ModuleProvider
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         override val privacyPolicyUrl: String,

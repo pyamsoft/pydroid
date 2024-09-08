@@ -107,8 +107,6 @@ public final class com/pyamsoft/pydroid/bootstrap/libraries/OssLibrary {
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/bootstrap/libraries/OssLibrary;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDescription ()Ljava/lang/String;
 	public final fun getKey ()Ljava/lang/String;

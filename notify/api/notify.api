@@ -53,8 +53,6 @@ public final class com/pyamsoft/pydroid/notify/NotifyGuard$Companion {
 
 public final class com/pyamsoft/pydroid/notify/NotifyId {
 	public final fun component1 ()I
-	public final fun copy (I)Lcom/pyamsoft/pydroid/notify/NotifyId;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/notify/NotifyId;IILjava/lang/Object;)Lcom/pyamsoft/pydroid/notify/NotifyId;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getId ()I
 	public fun hashCode ()I
@@ -67,8 +65,6 @@ public final class com/pyamsoft/pydroid/notify/NotifyIdKt {
 
 public final class com/pyamsoft/pydroid/notify/NotifyTag {
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/pyamsoft/pydroid/notify/NotifyTag;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/notify/NotifyTag;Ljava/lang/String;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/notify/NotifyTag;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getTag ()Ljava/lang/String;
 	public fun hashCode ()I

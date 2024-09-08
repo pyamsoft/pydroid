@@ -26,7 +26,7 @@ internal interface DebugComponent {
 
     @CheckResult fun create(): DebugComponent
 
-      @ConsistentCopyVisibility
+    @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val state: MutableDebugViewState,

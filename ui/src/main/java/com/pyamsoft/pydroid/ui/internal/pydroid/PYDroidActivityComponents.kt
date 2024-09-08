@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
+@ConsistentCopyVisibility
 internal data class PYDroidActivityComponents
 internal constructor(
     internal val billingUpsell: BillingUpsell,

@@ -29,6 +29,7 @@ internal interface ChangeLogDialogComponent {
 
     @CheckResult fun create(provider: ChangeLogProvider): ChangeLogDialogComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val state: MutableChangeLogDialogViewState,

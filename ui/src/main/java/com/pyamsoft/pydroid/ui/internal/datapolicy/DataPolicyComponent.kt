@@ -28,6 +28,7 @@ internal interface DataPolicyComponent {
 
     @CheckResult fun create(): DataPolicyComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val state: MutableDataPolicyViewState,

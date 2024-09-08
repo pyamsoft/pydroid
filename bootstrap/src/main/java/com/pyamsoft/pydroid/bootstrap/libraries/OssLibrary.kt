@@ -22,6 +22,7 @@ import androidx.compose.runtime.Stable
 /** Representation of an open source library dependency */
 @Stable
 @Immutable
+@ConsistentCopyVisibility
 public data class OssLibrary
 internal constructor(
     /** Library name */

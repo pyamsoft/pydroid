@@ -22,6 +22,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 @Immutable
+@ConsistentCopyVisibility
 internal data class ChangeLogLine
 internal constructor(
     val type: Type,

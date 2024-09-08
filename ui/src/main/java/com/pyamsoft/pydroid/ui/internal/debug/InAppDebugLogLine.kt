@@ -21,6 +21,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 @Immutable
+@ConsistentCopyVisibility
 internal data class InAppDebugLogLine
 internal constructor(
     val level: Level,

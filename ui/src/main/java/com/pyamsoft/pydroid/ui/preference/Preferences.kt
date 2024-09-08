@@ -49,6 +49,7 @@ public sealed class Preferences {
 
   /** Represents a simple Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class SimplePreference
   internal constructor(
       override val id: String,
@@ -61,6 +62,7 @@ public sealed class Preferences {
 
   /** Represents a Custom Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class CustomPreference
   internal constructor(
       override val id: String,
@@ -73,6 +75,7 @@ public sealed class Preferences {
 
   /** Represents a In-App Purchase Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class InAppPreference
   internal constructor(
       override val id: String,
@@ -85,6 +88,7 @@ public sealed class Preferences {
 
   /** Represents a List Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class ListPreference
   internal constructor(
       override val id: String,
@@ -100,6 +104,7 @@ public sealed class Preferences {
 
   /** Represents a CheckBox Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class CheckBoxPreference
   internal constructor(
       override val id: String,
@@ -114,6 +119,7 @@ public sealed class Preferences {
 
   /** Represents a Switch Preference item */
   @Stable
+  @ConsistentCopyVisibility
   internal data class SwitchPreference
   internal constructor(
       override val id: String,
@@ -128,6 +134,7 @@ public sealed class Preferences {
 
   /** Represents a group of Preferences */
   @Stable
+  @ConsistentCopyVisibility
   public data class Group
   internal constructor(
       override val id: String,

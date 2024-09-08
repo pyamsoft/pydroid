@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 
 @Stable
 @Immutable
+@ConsistentCopyVisibility
 internal data class PlayBillingSku
 internal constructor(
     internal val sku: ProductDetails,

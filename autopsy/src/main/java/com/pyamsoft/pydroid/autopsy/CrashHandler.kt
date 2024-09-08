@@ -20,25 +20,27 @@ import android.content.Context
 import android.util.Log
 import kotlin.system.exitProcess
 
-internal data class CrashHandler internal constructor(private val context: Context) :
-    Thread.UncaughtExceptionHandler {
+@ConsistentCopyVisibility
+internal data class CrashHandler internal constructor(
+    private val context: Context,
+) : Thread.UncaughtExceptionHandler {
 
-  override fun uncaughtException(t: Thread, e: Throwable) {
-    Log.e(TAG, "Uncaught Exception!", e)
-    try {
-      Log.d(TAG, "Launching uncaught exception CrashActivity")
-      context.startActivity(CrashActivity.newIntent(context, t.name, e))
-    } catch (throwable: Throwable) {
-      Log.e(TAG, "Error during exception processing", throwable)
-    } finally {
-      Log.d(TAG, "Completed exception processing")
+    override fun uncaughtException(t: Thread, e: Throwable) {
+        Log.e(TAG, "Uncaught Exception!", e)
+        try {
+            Log.d(TAG, "Launching uncaught exception CrashActivity")
+            context.startActivity(CrashActivity.newIntent(context, t.name, e))
+        } catch (throwable: Throwable) {
+            Log.e(TAG, "Error during exception processing", throwable)
+        } finally {
+            Log.d(TAG, "Completed exception processing")
 
-      // NOTE: Sometimes this exit will occur before the Activity launches correctly.
-      exitProcess(1)
+            // NOTE: Sometimes this exit will occur before the Activity launches correctly.
+            exitProcess(1)
+        }
     }
-  }
 
-  companion object {
-    private const val TAG = "CrashHandler"
-  }
+    companion object {
+        private const val TAG = "CrashHandler"
+    }
 }

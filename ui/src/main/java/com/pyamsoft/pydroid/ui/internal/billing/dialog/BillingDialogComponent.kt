@@ -30,6 +30,7 @@ internal interface BillingDialogComponent {
 
     @CheckResult fun create(provider: AppProvider): BillingDialogComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val state: MutableBillingDialogViewState,

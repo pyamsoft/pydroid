@@ -32,6 +32,7 @@ internal interface DataPolicyDialogComponent {
         provider: AppProvider,
     ): DataPolicyDialogComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val privacyPolicyUrl: String,

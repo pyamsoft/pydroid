@@ -28,6 +28,7 @@ internal interface AboutComponent {
 
     @CheckResult fun create(): AboutComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val module: AboutModule,

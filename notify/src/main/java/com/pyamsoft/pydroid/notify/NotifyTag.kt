@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.notify
 import androidx.annotation.CheckResult
 
 /** Represents a Notification Tag for a NotifyDispatcher */
+@ConsistentCopyVisibility
 public data class NotifyTag
 internal constructor(
     /** Notification Tag */

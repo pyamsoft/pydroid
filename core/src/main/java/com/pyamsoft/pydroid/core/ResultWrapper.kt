@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.core
 import androidx.annotation.CheckResult
 
 /** A simple Result style data wrapper */
+@ConsistentCopyVisibility
 public data class ResultWrapper<T : Any>
 @PublishedApi
 internal constructor(

@@ -21,6 +21,7 @@ import android.os.StrictMode
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.util.isDebugMode
 
+@ConsistentCopyVisibility
 internal data class PYDroidInitializer
 internal constructor(
     internal val component: PYDroidComponent,

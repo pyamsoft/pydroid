@@ -39,6 +39,7 @@ internal interface SettingsComponent {
 
     @CheckResult fun create(): SettingsComponent
 
+      @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
         internal val state: MutableSettingsViewState,

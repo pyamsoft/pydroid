@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.notify
 import androidx.annotation.CheckResult
 
 /** Represents a Notification ID for a NotifyDispatcher */
+@ConsistentCopyVisibility
 public data class NotifyId
 internal constructor(
     /** Notification ID */

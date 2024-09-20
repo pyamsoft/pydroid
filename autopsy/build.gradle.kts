@@ -36,7 +36,7 @@ dependencies {
 
   implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
 
-  implementation("androidx.startup:startup-runtime:1.1.1")
+  implementation("androidx.startup:startup-runtime:1.2.0")
 
   api(project(":core"))
   api(project(":theme"))

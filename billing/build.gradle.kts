@@ -22,7 +22,7 @@ android {
 
 dependencies {
   implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
-  implementation("com.android.billingclient:billing:7.0.0")
+  implementation("com.android.billingclient:billing:7.1.0")
 
   // Compose Annotations
   implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose"]}")

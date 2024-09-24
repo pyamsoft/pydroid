@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -113,7 +114,8 @@ internal constructor(
   }
 
   private fun connect() {
-    enforcer.assertOnMainThread()
+    // The Billing library method is thread safe, so we can safely enforce being OMT
+    enforcer.assertOffMainThread()
 
     if (!client.isReady) {
       Logger.d { "Connect to Billing Client" }
@@ -122,17 +124,12 @@ internal constructor(
   }
 
   private fun disconnect() {
-    enforcer.assertOnMainThread()
-
     Logger.d { "Disconnect from billing client" }
     client.endConnection()
-
     billingScope.cancel()
   }
 
   private fun querySkus() {
-    enforcer.assertOnMainThread()
-
     Logger.d { "Querying for SKUs $appSkuList" }
 
     // Map this here every time since we do not know if the QPDP builder carries state that cannot
@@ -151,8 +148,6 @@ internal constructor(
   }
 
   private fun handlePurchases(purchases: List<Purchase>) {
-    enforcer.assertOnMainThread()
-
     for (purchase in purchases) {
       Logger.d { "Consume purchase: $purchase" }
       val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
@@ -174,7 +169,7 @@ internal constructor(
   override fun bind(activity: ComponentActivity) {
     activity.lifecycle.doOnCreate {
       Logger.d { "Attempt to connect Billing on Activity create" }
-      connect()
+      activity.lifecycleScope.launch(context = Dispatchers.Default) { connect() }
     }
 
     activity.lifecycle.doOnDestroy {
@@ -216,7 +211,7 @@ internal constructor(
         Logger.d { "Wait to reconnect for $waitTime seconds" }
         delay(waitTime.seconds)
 
-        withContext(context = Dispatchers.Main) {
+        withContext(context = Dispatchers.Default) {
           Logger.d { "Try connecting again" }
           connect()
         }
@@ -227,7 +222,7 @@ internal constructor(
   }
 
   override suspend fun refresh() =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = Dispatchers.Default) {
         if (!client.isReady) {
           Logger.w { "Client is not ready yet, so we are not refreshing sku and purchases" }
           return@withContext

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ internal constructor(
 
     registry
         .consumeRestored(KEY_SHOW_DIALOG)
-        ?.let { it as Boolean }
+        ?.let { it.cast<Boolean>() }
         ?.also { s.isShowingDialog.value = it }
   }
 

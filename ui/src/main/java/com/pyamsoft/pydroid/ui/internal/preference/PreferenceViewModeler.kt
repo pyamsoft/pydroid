@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.preference
 
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
+import com.pyamsoft.pydroid.core.cast
 import kotlinx.coroutines.flow.update
 
 internal class PreferenceViewModeler
@@ -47,7 +48,7 @@ internal constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
     registry
         .consumeRestored(KEY_DIALOGS)
-        ?.let { it as String }
+        ?.let { it.cast<String>() }
         // IDs are space split
         ?.split(" ")
         ?.also { ids ->

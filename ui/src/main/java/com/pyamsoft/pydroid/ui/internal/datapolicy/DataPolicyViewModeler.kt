@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
+import com.pyamsoft.pydroid.core.cast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +40,7 @@ internal constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
     registry
         .consumeRestored(KEY_SHOW_DIALOG)
-        ?.let { it as String }
+        ?.let { it.cast<String>() }
         ?.let { DataPolicyViewState.AcceptedState.valueOf(it) }
         ?.also { state.isAccepted.value = it }
   }

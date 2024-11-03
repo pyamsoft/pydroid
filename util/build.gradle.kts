@@ -28,7 +28,7 @@ dependencies {
   //
   // In practice, this is most likely pulled in by AndroidX Activity or others
   // but we do it here just to be explicit.
-  implementation("androidx.fragment:fragment:1.8.4")
+  implementation("androidx.fragment:fragment:1.8.5")
 
   api(project(":core"))
 }

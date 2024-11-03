@@ -81,22 +81,18 @@ internal constructor(
       }
 
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
-    registry
-        .consumeRestored(KEY_SHOW_ABOUT_DIALOG)
-        ?.let { it.cast<Boolean>() }
-        ?.also { state.isShowingAboutDialog.value = it }
-    registry
-        .consumeRestored(KEY_SHOW_RESET_DIALOG)
-        ?.let { it.cast<Boolean>() }
-        ?.also { state.isShowingResetDialog.value = it }
-    registry
-        .consumeRestored(KEY_SHOW_DATA_POLICY_DIALOG)
-        ?.let { it.cast<Boolean>() }
-        ?.also { state.isShowingDataPolicyDialog.value = it }
-    registry
-        .consumeRestored(KEY_SHOW_IN_APP_DEBUG_DIALOG)
-        ?.let { it.cast<Boolean>() }
-        ?.also { state.isInAppDebuggingEnabled.value = it }
+    registry.consumeRestored(KEY_SHOW_ABOUT_DIALOG)?.cast<Boolean>()?.also {
+      state.isShowingAboutDialog.value = it
+    }
+    registry.consumeRestored(KEY_SHOW_RESET_DIALOG)?.cast<Boolean>()?.also {
+      state.isShowingResetDialog.value = it
+    }
+    registry.consumeRestored(KEY_SHOW_DATA_POLICY_DIALOG)?.cast<Boolean>()?.also {
+      state.isShowingDataPolicyDialog.value = it
+    }
+    registry.consumeRestored(KEY_SHOW_IN_APP_DEBUG_DIALOG)?.cast<Boolean>()?.also {
+      state.isInAppDebuggingEnabled.value = it
+    }
   }
 
   internal fun bind(scope: CoroutineScope) {

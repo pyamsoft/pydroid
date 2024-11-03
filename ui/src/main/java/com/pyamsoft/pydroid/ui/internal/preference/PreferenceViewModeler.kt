@@ -48,7 +48,7 @@ internal constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
     registry
         .consumeRestored(KEY_DIALOGS)
-        ?.let { it.cast<String>() }
+        ?.cast<String>()
         // IDs are space split
         ?.split(" ")
         ?.also { ids ->

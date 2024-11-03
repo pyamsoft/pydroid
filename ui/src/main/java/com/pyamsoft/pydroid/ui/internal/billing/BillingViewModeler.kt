@@ -44,10 +44,9 @@ internal constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
     val s = state
 
-    registry
-        .consumeRestored(KEY_SHOW_DIALOG)
-        ?.let { it.cast<Boolean>() }
-        ?.also { s.isShowingDialog.value = it }
+    registry.consumeRestored(KEY_SHOW_DIALOG)?.cast<Boolean>()?.also {
+      s.isShowingDialog.value = it
+    }
   }
 
   internal fun bind(scope: CoroutineScope) {

@@ -40,7 +40,7 @@ internal constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {
     registry
         .consumeRestored(KEY_SHOW_DIALOG)
-        ?.let { it.cast<String>() }
+        ?.cast<String>()
         ?.let { DataPolicyViewState.AcceptedState.valueOf(it) }
         ?.also { state.isAccepted.value = it }
   }

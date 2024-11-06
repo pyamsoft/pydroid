@@ -19,5 +19,5 @@
   <!-- Billing -->
   <string
     name="billing_error_message"
-  >抱歉，在連接至應用內收支付服務時發生了一個錯誤。請稍後再試一次。</string>
+  >抱歉，在連接至應用內支付服務時發生了一個錯誤。請稍後再試一次。</string>
 </resources>

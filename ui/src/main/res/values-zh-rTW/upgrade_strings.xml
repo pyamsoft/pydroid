@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!--
   ~ Copyright 2024 pyamsoft
-  ~ Copyright 2024 林博仁(Buo-ren, Lin)
+  ~ Copyright 2024 林博仁(Buo-ren Lin)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -31,6 +31,10 @@
 
   <!-- Update available -->
   <string name="download">下載</string>
+
+  <string name="checking_for_updates">正在檢查更新……</string>
+  <string name="empty_update">未發現新的更新</string>
+
   <string
     name="an_update_to_version_is_available"
   >一個 %1$d 版本的應用軟體更新已經可用！</string>

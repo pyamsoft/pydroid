@@ -31,7 +31,6 @@
   <!-- Update available -->
   <string name="download">Download</string>
 
-  <!-- TODO(Someone): Needs zh translation -->
   <string name="checking_for_updates">Checking for updates…</string>
   <string name="empty_update">No new updates found</string>
 

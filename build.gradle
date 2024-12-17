@@ -54,7 +54,7 @@ plugins {
 
   // Dokka
   // https://github.com/Kotlin/dokka
-  id("org.jetbrains.dokka") version "1.9.20" apply false
+  id("org.jetbrains.dokka") version "2.0.0" apply false
 
   // Gradle version checker
   // https://github.com/ben-manes/gradle-versions-plugin

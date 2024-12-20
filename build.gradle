@@ -70,7 +70,7 @@ plugins {
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
 
   // Gradle Doctor
   // https://runningcode.github.io/gradle-doctor/

@@ -66,7 +66,7 @@ plugins {
 
   // Spotless
   // https://github.com/diffplug/spotless
-  id("com.diffplug.spotless") version "7.0.1" apply false
+  id("com.diffplug.spotless") version "7.0.2" apply false
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator

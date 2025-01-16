@@ -59,8 +59,10 @@ internal constructor(
       withContext(context = Dispatchers.Main) {
         clipboardManager.setPrimaryClip(
             ClipData.newPlainText(
-                "Developer Messages", """```
+                "Developer Messages",
+                """```
 ${lines.joinToString("\n") { parseLine(it) }}
-```"""))
+```"""
+                    .trim()))
       }
 }

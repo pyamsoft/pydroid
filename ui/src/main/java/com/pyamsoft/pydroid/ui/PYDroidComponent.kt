@@ -116,27 +116,31 @@ internal interface PYDroidComponent {
 
     private val aboutModule by lazy {
       AboutModule(
-          AboutModule.Parameters(
-              context = context,
-          ))
+          params =
+              AboutModule.Parameters(
+                  context = context,
+              ),
+      )
     }
 
     private val dataPolicyModule by lazy {
       DataPolicyModule(
-          DataPolicyModule.Parameters(
-              context = context,
-              preferences = preferences,
-          ),
+          params =
+              DataPolicyModule.Parameters(
+                  context = context,
+                  preferences = preferences,
+              ),
       )
     }
 
     private val changeLogModule by lazy {
       ChangeLogModule(
-          ChangeLogModule.Parameters(
-              context = context,
-              preferences = preferences,
-              isFakeChangeLogAvailable = params.debug.changeLogAvailable,
-          ),
+          params =
+              ChangeLogModule.Parameters(
+                  context = context,
+                  preferences = preferences,
+                  isFakeChangeLogAvailable = params.debug.changeLogAvailable,
+              ),
       )
     }
 
@@ -182,9 +186,10 @@ internal interface PYDroidComponent {
       ResetComponent.Factory.Parameters(
           module =
               SettingsModule(
-                  SettingsModule.Parameters(
-                      context = context,
-                  ),
+                  params =
+                      SettingsModule.Parameters(
+                          context = context,
+                      ),
               ),
       )
     }

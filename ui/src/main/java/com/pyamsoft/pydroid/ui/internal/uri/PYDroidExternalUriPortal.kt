@@ -33,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.stringResource
@@ -63,7 +62,6 @@ internal fun PYDroidExternalUriPortal(
     appName: String,
     uriHandler: PYDroidExternalUriHandler,
 ) {
-  val context = LocalContext.current
   val handler = LocalUriHandler.current
   val hapticManager = LocalHapticManager.current
 

@@ -36,7 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -104,6 +104,7 @@ internal fun SettingsScreen(
       SettingsViewState.LoadingState.LOADING -> {
         Loading()
       }
+
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
             snackbarHost = snackbarHostState,
@@ -294,7 +295,6 @@ private fun CheckingUpdateStatus(
     versionCheckingState: VersionCheckingSettingsState,
     onUpdateCheckComplete: () -> Unit,
 ) {
-  val context = LocalContext.current
   val isChecking = versionCheckingState.isChecking
   val isEmptyUpdate = versionCheckingState.isEmptyUpdate
   val newVersion = versionCheckingState.newVersion
@@ -309,11 +309,18 @@ private fun CheckingUpdateStatus(
     }
   }
 
+  val checkingForUpdatesMessage = stringResource(R.string.checking_for_updates)
+  val emptyUpdateMessage = stringResource(R.string.empty_update)
+  val updateAvailableMessage =
+      stringResource(R.string.an_update_to_version_is_available, newVersion)
+
   LaunchedEffect(
       isChecking,
       isEmptyUpdate,
       newVersion,
-      context,
+      checkingForUpdatesMessage,
+      emptyUpdateMessage,
+      updateAvailableMessage,
   ) {
     val message: String
     when (isChecking) {
@@ -321,23 +328,25 @@ private fun CheckingUpdateStatus(
         Logger.d { "Do nothing visual for NONE version checking state" }
         message = ""
       }
+
       is CheckingState.Checking -> {
         if (isChecking.force) {
           Logger.d { "Show snackbar checking for update because user requested it" }
-          message = context.getString(R.string.checking_for_updates)
+          message = checkingForUpdatesMessage
         } else {
           Logger.d { "Silent checking for update" }
           message = ""
         }
       }
+
       is CheckingState.Done -> {
         if (isChecking.force) {
           if (isEmptyUpdate || newVersion <= 0) {
             Logger.d { "Done checking for update, show update is Empty" }
-            message = context.getString(R.string.empty_update)
+            message = emptyUpdateMessage
           } else {
             Logger.d { "Done checking for update, update is Available: $newVersion" }
-            message = context.getString(R.string.an_update_to_version_is_available, newVersion)
+            message = updateAvailableMessage
           }
         } else {
           Logger.d { "Done silent checking for update, newVersion=$newVersion" }

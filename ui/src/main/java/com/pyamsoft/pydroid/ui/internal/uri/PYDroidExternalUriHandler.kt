@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.uri
 
-import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.compose.ui.platform.UriHandler
 import com.pyamsoft.pydroid.ui.uri.ExternalUriHandler
@@ -33,7 +32,6 @@ internal interface PYDroidExternalUriHandler : ExternalUriHandler {
 
   /** URI is confirmed, fire navigation via uriHandler */
   fun confirm(
-      context: Context,
       handler: UriHandler,
       uri: String,
   )

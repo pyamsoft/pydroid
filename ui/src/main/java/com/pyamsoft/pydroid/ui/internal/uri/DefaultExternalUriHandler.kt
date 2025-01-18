@@ -24,7 +24,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /** Handles external URI confirmation and attempts to navigate */
-internal class DefaultExternalUriHandler internal constructor() : PYDroidExternalUriHandler {
+internal class DefaultExternalUriHandler
+internal constructor(
+    context: Context,
+) : PYDroidExternalUriHandler {
+
+  /** Hold only the application context to avoid leaking context from Toast error fallback */
+  private val appContext by lazy { context.applicationContext }
 
   private val confirmUri = MutableStateFlow("")
   private var toasting: Toast? = null
@@ -46,7 +52,6 @@ internal class DefaultExternalUriHandler internal constructor() : PYDroidExterna
   }
 
   override fun confirm(
-      context: Context,
       handler: UriHandler,
       uri: String,
   ) {
@@ -67,7 +72,7 @@ internal class DefaultExternalUriHandler internal constructor() : PYDroidExterna
     } catch (e: Throwable) {
       toasting =
           Toast.makeText(
-                  context,
+                  appContext,
                   "Unable to open external URL: $uri",
                   Toast.LENGTH_LONG,
               )

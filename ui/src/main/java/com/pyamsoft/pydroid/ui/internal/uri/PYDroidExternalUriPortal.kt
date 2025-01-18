@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.uri
 
-import android.content.Context
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -181,7 +180,6 @@ internal fun PYDroidExternalUriPortal(
             onClick = {
               hapticManager?.confirmButtonPress()
               uriHandler.confirm(
-                  context = context,
                   handler = handler,
                   uri = uri,
               )
@@ -232,7 +230,7 @@ private class TestExternalUriHandler(
     state.value = ""
   }
 
-  override fun confirm(context: Context, handler: UriHandler, uri: String) {}
+  override fun confirm(handler: UriHandler, uri: String) {}
 
   override fun openUri(uri: String) {
     state.value = uri

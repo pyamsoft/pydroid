@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import com.pyamsoft.pydroid.core.cast
@@ -52,7 +53,8 @@ public fun ExternalUriPortal(
 @Composable
 @CheckResult
 public fun rememberExternalUriHandler(): ExternalUriHandler {
-  return remember { DefaultExternalUriHandler() }
+  val context = LocalContext.current
+  return remember(context) { DefaultExternalUriHandler(context) }
 }
 
 /**

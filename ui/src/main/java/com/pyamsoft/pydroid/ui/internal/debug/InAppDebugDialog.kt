@@ -44,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -306,10 +305,11 @@ private fun LogLinesCopied(
   )
 
   if (show) {
-    val context = LocalContext.current
-    LaunchedEffect(Unit) {
+    val copiedMessage = stringResource(R.string.log_copied)
+
+    LaunchedEffect(copiedMessage) {
       snackbarHostState.showSnackbar(
-          message = context.getString(R.string.log_copied),
+          message = copiedMessage,
           duration = SnackbarDuration.Short,
       )
 

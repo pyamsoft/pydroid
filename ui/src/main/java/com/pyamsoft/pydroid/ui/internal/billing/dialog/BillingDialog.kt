@@ -96,10 +96,12 @@ internal fun BillingDialog(
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { BillingDialogInjector() }
-  val activity = rememberResolvedActivity()
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
   val purchaseClient = rememberNotNull(component.purchaseClient)
+
+  // Required to launch Billing flows
+  val activity = rememberResolvedActivity()
 
   MountHooks(
       viewModel = viewModel,

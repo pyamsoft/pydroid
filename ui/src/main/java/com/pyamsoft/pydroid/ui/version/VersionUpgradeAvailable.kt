@@ -124,6 +124,8 @@ internal constructor(
     }
 
     val vm = viewModel.requireNotNull()
+
+    // Required to launch upgrade flows and force finish
     val activity = rememberResolvedActivity()
 
     val handleDownloadStarted by rememberUpdatedState { launcher: AppUpdateLauncher ->

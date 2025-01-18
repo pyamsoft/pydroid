@@ -82,8 +82,8 @@ internal fun DataPolicyDisclosureDialog(
   val viewModel = rememberNotNull(component.viewModel)
   val imageLoader = rememberNotNull(component.imageLoader)
 
+  // Required to force finish
   val activity = rememberResolvedActivity()
-
   val handleRejected by rememberUpdatedState { activity.finishAndRemoveTask() }
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }

@@ -41,5 +41,6 @@ internal fun rememberPYDroidDelegate(): PYDroidActivityDelegateInternal {
 @Composable
 @CheckResult
 internal fun rememberResolvedActivity(): ComponentActivity {
+  @Suppress("DEPRECATION")
   return LocalActivity.current ?: rememberActivity()
 }

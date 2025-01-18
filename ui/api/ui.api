@@ -291,8 +291,6 @@ public final class com/pyamsoft/pydroid/ui/inject/RememberKt {
 
 public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -300,8 +298,6 @@ public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$A
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -309,23 +305,18 @@ public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$App
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -334,15 +325,12 @@ public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSin
 
 public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogListItemKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -363,8 +351,6 @@ public final class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewSta
 
 public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -372,22 +358,16 @@ public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/Composable
 
 public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function3;
-	public static field lambda-4 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-5$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -396,9 +376,6 @@ public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSin
 
 public final class com/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
-	public static field lambda-3 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
@@ -407,22 +384,18 @@ public final class com/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYD
 
 public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt;
-	public static field lambda-1 Lkotlin/jvm/functions/Function2;
-	public static field lambda-2 Lkotlin/jvm/functions/Function3;
 	public fun <init> ()V
 	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;

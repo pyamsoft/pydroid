@@ -77,6 +77,8 @@ private fun resolveActivity(context: Context): ComponentActivity {
  */
 @Composable
 @CheckResult
+@Deprecated(
+    "This will be made internal in the next major version. You should provide a LocalActivity via your MaterialTheme entry point.")
 public fun rememberActivity(): ComponentActivity {
   val context = LocalContext.current
   return remember(context) { resolveActivity(context) }

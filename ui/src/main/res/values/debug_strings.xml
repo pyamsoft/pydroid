@@ -20,4 +20,7 @@
   <string name="copy_logs">Copy Developer Logs</string>
   <string name="log_copied">Developer Log Copied</string>
   <string name="debug_title">Debug Logging</string>
+
+  <!-- TODO Need translation zh-rTW -->
+  <string name="empty_logs">No Logs Recorded</string>
 </resources>

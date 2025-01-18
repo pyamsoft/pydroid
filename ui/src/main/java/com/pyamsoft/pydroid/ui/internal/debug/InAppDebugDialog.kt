@@ -70,6 +70,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 private enum class InAppDebugContentTypes {
   LINE,
+  PLACEHOLDER,
   TITLE,
   SPACER,
   DISABLED,
@@ -180,30 +181,54 @@ private fun InAppDebugScreen(
                         ),
                 )
               }
-              items(
-                  items = sortedLines,
-                  key = { it.timestamp.toString() },
-                  contentType = { InAppDebugContentTypes.LINE },
-              ) { line ->
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text =
-                        remember(line) {
-                          val errorMessage =
-                              if (line.throwable == null) "" else line.throwable.message.orEmpty()
-                          return@remember "${line.line} $errorMessage"
-                        },
-                    style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            fontFamily = FontFamily.Monospace,
-                            color =
-                                when (line.level) {
-                                  DEBUG -> MaterialTheme.colorScheme.onSurface
-                                  WARNING -> MaterialTheme.colorScheme.tertiary
-                                  ERROR -> MaterialTheme.colorScheme.error
-                                },
-                        ),
-                )
+
+              if (sortedLines.isEmpty()) {
+                item(
+                    contentType = InAppDebugContentTypes.PLACEHOLDER,
+                ) {
+                  Text(
+                      modifier =
+                          Modifier.padding(
+                              horizontal = MaterialTheme.keylines.content,
+                              vertical = MaterialTheme.keylines.content * 2,
+                          ),
+                      text = stringResource(R.string.empty_logs),
+                      style =
+                          MaterialTheme.typography.bodyMedium.copy(
+                              fontFamily = FontFamily.Monospace,
+                              color =
+                                  MaterialTheme.colorScheme.onSurface.copy(
+                                      alpha = TypographyDefaults.ALPHA_DISABLED,
+                                  ),
+                          ),
+                  )
+                }
+              } else {
+                items(
+                    items = sortedLines,
+                    key = { it.timestamp.toString() },
+                    contentType = { InAppDebugContentTypes.LINE },
+                ) { line ->
+                  Text(
+                      modifier = Modifier.fillMaxWidth(),
+                      text =
+                          remember(line) {
+                            val errorMessage =
+                                if (line.throwable == null) "" else line.throwable.message.orEmpty()
+                            return@remember "${line.line} $errorMessage"
+                          },
+                      style =
+                          MaterialTheme.typography.bodyMedium.copy(
+                              fontFamily = FontFamily.Monospace,
+                              color =
+                                  when (line.level) {
+                                    DEBUG -> MaterialTheme.colorScheme.onSurface
+                                    WARNING -> MaterialTheme.colorScheme.tertiary
+                                    ERROR -> MaterialTheme.colorScheme.error
+                                  },
+                          ),
+                  )
+                }
               }
 
               item(

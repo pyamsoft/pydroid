@@ -17,13 +17,14 @@
 package com.pyamsoft.pydroid.ui.internal.util
 
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.pyamsoft.pydroid.ui.app.LocalActivity
+import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
-import com.pyamsoft.pydroid.ui.util.rememberActivity
 
 /** Grab the PYDroidActivity delegate from the current activity */
 @Composable
@@ -41,6 +42,11 @@ internal fun rememberPYDroidDelegate(): PYDroidActivityDelegateInternal {
 @Composable
 @CheckResult
 internal fun rememberResolvedActivity(): ComponentActivity {
-  @Suppress("DEPRECATION")
-  return LocalActivity.current ?: rememberActivity()
+  val activity = LocalActivity.current
+  return remember(activity) {
+    val validActivity = activity.requireNotNull { "LocalActivity was NULL" }
+    return@remember validActivity.cast<ComponentActivity>().requireNotNull {
+      "LocalActivity was not a ComponentActivity instance"
+    }
+  }
 }

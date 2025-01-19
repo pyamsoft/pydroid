@@ -25,7 +25,8 @@ android {
 }
 
 dependencies {
-  implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
+  // For LocalActivity in compose
+  implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
 
   // Compose
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")

@@ -44,6 +44,9 @@ dependencies {
   debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
   // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
+  // For LocalActivity in compose
+  implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
+
   // Compose Image loading
   implementation("io.coil-kt:coil-compose-base:2.7.0")
 

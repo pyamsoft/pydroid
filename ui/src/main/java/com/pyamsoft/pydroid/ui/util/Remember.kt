@@ -16,9 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.content.Context
-import android.content.ContextWrapper
-import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,12 +25,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -52,36 +47,6 @@ public fun <T : Any> rememberNotNull(anything: T?): T {
 public fun <T : Any> rememberNotNull(anything: T?, lazyMessage: () -> String): T {
   val handleLazyMessage by rememberUpdatedState(lazyMessage)
   return remember(anything) { anything.requireNotNull(handleLazyMessage) }
-}
-
-@CheckResult
-private fun resolveActivity(context: Context): ComponentActivity {
-  return when (context) {
-    is ComponentActivity -> context
-    is ContextWrapper -> resolveActivity(context.baseContext)
-    else -> {
-      Logger.w { "Provided Context is not a ComponentActivity or a ContextWrapper: $context" }
-      null
-    }
-  } ?: throw IllegalStateException("Could not resolve ComponentActivity from Context: $context")
-}
-
-/**
- * Resolve the LocalContext as an Activity
- *
- * This should basically always work, given that all ComposeViews are held inside of Activities
- *
- * In the future, if we use Compose in a RemoteView context, this will not work.
- *
- * Callers generally want to use LocalActivity.current unless they have a good reason not to.
- */
-@Composable
-@CheckResult
-@Deprecated(
-    "This will be made internal in the next major version. You should provide a LocalActivity via your MaterialTheme entry point.")
-public fun rememberActivity(): ComponentActivity {
-  val context = LocalContext.current
-  return remember(context) { resolveActivity(context) }
 }
 
 /**

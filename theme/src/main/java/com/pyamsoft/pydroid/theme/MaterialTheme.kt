@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.theme
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -35,24 +37,30 @@ public val MaterialTheme.keylines: Keylines
  * For additional features you can optionally provider CompositionLocals for:
  *
  * LocalHapticManager - enables PYDroid support for Haptic Feedback
- *
- * LocalActivity - speed up Activity resolution in PYDroid internals
  */
 @Composable
-public fun PYDroidTheme(
+public fun ComponentActivity.PYDroidTheme(
     colorScheme: ColorScheme = MaterialTheme.colorScheme,
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
     keylines: Keylines = MaterialTheme.keylines,
     content: @Composable () -> Unit
 ) {
+  val self = this
+
   MaterialTheme(
       colorScheme = colorScheme,
       typography = typography,
       shapes = shapes,
   ) {
     CompositionLocalProvider(
+        // Keyline support
         LocalKeylines provides keylines,
+
+        // Optimize finding the owning Activity by not requiring a baseContext lookup
+        LocalActivity provides self,
+
+        // Contents
         content = content,
     )
   }

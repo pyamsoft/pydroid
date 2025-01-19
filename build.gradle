@@ -27,7 +27,7 @@ buildscript {
 
     // AndroidX
     core = "1.15.0"
-    activity = "1.9.3"
+    activity = "1.10.0"
     lifecycle = "2.8.7"
 
     // Test Runner

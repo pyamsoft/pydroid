@@ -48,7 +48,7 @@ dependencies {
   implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
 
   // Compose Image loading
-  implementation("io.coil-kt:coil-compose-base:2.7.0")
+  implementation("io.coil-kt.coil3:coil-compose-core:3.1.0")
 
   implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
 

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule

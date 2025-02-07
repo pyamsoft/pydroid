@@ -35,8 +35,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import coil.ImageLoader
-import coil.compose.AsyncImage
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ImageDefaults
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader

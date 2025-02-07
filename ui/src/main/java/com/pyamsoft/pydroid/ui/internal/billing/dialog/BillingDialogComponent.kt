@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.app.AppProvider

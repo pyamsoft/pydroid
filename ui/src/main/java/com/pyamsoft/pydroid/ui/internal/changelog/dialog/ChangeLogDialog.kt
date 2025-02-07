@@ -25,7 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider

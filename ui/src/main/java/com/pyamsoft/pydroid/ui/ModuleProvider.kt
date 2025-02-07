@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
 import com.pyamsoft.pydroid.ui.theme.Theming

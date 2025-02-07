@@ -28,7 +28,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.core.Logger
 import com.pyamsoft.pydroid.theme.keylines

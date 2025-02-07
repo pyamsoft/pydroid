@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.annotation.CheckResult
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 

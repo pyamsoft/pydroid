@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import coil.ImageLoader
+import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule

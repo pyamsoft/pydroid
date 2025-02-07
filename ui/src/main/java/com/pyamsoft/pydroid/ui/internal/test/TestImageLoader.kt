@@ -22,17 +22,18 @@ import android.graphics.drawable.ColorDrawable
 import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import coil.ComponentRegistry
-import coil.ImageLoader
-import coil.decode.DataSource.MEMORY
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.DefaultRequestOptions
-import coil.request.Disposable
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.ImageResult
-import coil.request.SuccessResult
+import coil3.ComponentRegistry
+import coil3.ImageLoader
+import coil3.asImage
+import coil3.decode.DataSource.MEMORY
+import coil3.disk.DiskCache
+import coil3.memory.MemoryCache
+import coil3.request.Disposable
+import coil3.request.ErrorResult
+import coil3.request.ImageRequest
+import coil3.request.ImageRequest.Defaults
+import coil3.request.ImageResult
+import coil3.request.SuccessResult
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
@@ -51,7 +52,7 @@ private class TestImageLoader(context: Context) : ImageLoader {
         override val job: Deferred<ImageResult> =
             MainScope().async<ImageResult> {
               ErrorResult(
-                  drawable = null,
+                  image = null,
                   request = ImageRequest.Builder(context).build(),
                   throwable = RuntimeException("Test"),
               )
@@ -60,9 +61,9 @@ private class TestImageLoader(context: Context) : ImageLoader {
         override fun dispose() {}
       }
 
-  override val components: ComponentRegistry = ComponentRegistry()
+  override val components = ComponentRegistry()
 
-  override val defaults: DefaultRequestOptions = DefaultRequestOptions()
+  override val defaults = Defaults()
 
   override val diskCache: DiskCache? = null
 
@@ -70,15 +71,15 @@ private class TestImageLoader(context: Context) : ImageLoader {
 
   override fun enqueue(request: ImageRequest): Disposable {
     request.apply {
-      target?.onStart(placeholder = loadingDrawable)
-      target?.onSuccess(result = successDrawable)
+      target?.onStart(placeholder = loadingDrawable.asImage())
+      target?.onSuccess(result = successDrawable.asImage())
     }
     return disposable
   }
 
   override suspend fun execute(request: ImageRequest): ImageResult {
     return SuccessResult(
-        drawable = successDrawable,
+        image = successDrawable.asImage(),
         request = request,
         dataSource = MEMORY,
     )

@@ -38,7 +38,7 @@ buildscript {
 plugins {
   // Android AGP
   // https://developer.android.com/studio/build#top-level
-  id("com.android.library") version "8.8.1" apply false
+  id("com.android.library") version "8.8.2" apply false
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
@@ -80,7 +80,7 @@ plugins {
 subprojects {
   apply plugin: "com.android.library"
   apply plugin: "org.gradle.android.cache-fix"
-  apply plugin: "kotlin-android"
+  apply plugin: "org.jetbrains.kotlin.android"
   apply plugin: "org.jetbrains.dokka"
   apply plugin: "maven-publish"
 
@@ -163,7 +163,7 @@ subprojects {
   }
 
   dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
   }
 }
 

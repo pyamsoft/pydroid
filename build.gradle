@@ -99,7 +99,7 @@ subprojects {
   // }
 
   android {
-    compileSdk = 35
+    compileSdk = 36
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {

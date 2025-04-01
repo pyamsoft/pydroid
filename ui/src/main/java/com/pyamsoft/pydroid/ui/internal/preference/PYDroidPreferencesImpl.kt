@@ -72,7 +72,21 @@ internal constructor(
           name = "pydroid_preferences",
           produceMigrations = {
             listOf(
+                // NOTE(Peter): Since our shared preferences was the DEFAULT process one, loading up
+                //              a migration without specifying all keys will also migrate
+                //              APPLICATION SPECIFIC PREFERENCES which is what we do NOT want to do.
+                //              We instead maintain ONLY a list of the known PYDroid preference keys
                 SharedPreferencesMigration(
+                    keysToMigrate =
+                        setOf(
+                            darkModeKey.name,
+                            KEY_MATERIAL_YOU.name,
+                            KEY_HAPTICS_ENABLED.name,
+                            LAST_SHOWN_CHANGELOG.name,
+                            KEY_DATA_POLICY_CONSENTED.name,
+                            KEY_BILLING_SHOW_UPSELL_COUNT.name,
+                            KEY_IN_APP_DEBUGGING.name,
+                        ),
                     produceSharedPreferences = {
                       PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
                     },

@@ -17,8 +17,15 @@
 package com.pyamsoft.pydroid.ui.internal.preference
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
@@ -34,14 +41,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
-import com.pyamsoft.pydroid.util.preferenceBooleanFlow
-import com.pyamsoft.pydroid.util.preferenceIntFlow
-import com.pyamsoft.pydroid.util.preferenceStringFlow
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -60,175 +65,174 @@ internal constructor(
     DebugPreferences,
     HapticPreferences {
 
-  private val darkModeKey = context.getString(R.string.dark_mode_key)
+    private val darkModeKey = stringPreferencesKey(context.getString(R.string.dark_mode_key))
 
-  private val prefs by lazy {
-    enforcer.assertOffMainThread()
-    PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-  }
-
-  private val scope by lazy {
-    CoroutineScope(
-        context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "pydroid_preferences",
+        produceMigrations = {
+            listOf(
+                SharedPreferencesMigration(
+                    produceSharedPreferences = {
+                        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+                    },
+                )
+            )
+        }
     )
-  }
 
-  private inline fun setPreference(crossinline block: SharedPreferences.Editor.() -> Unit) {
-    scope.launch(context = Dispatchers.IO) {
-      enforcer.assertOffMainThread()
-      prefs.edit(action = block)
+    private val prefs by lazy {
+        enforcer.assertOffMainThread()
+        context.applicationContext.dataStore
     }
-  }
 
-  private fun setHapticsEnabled(enabled: Boolean) {
-    setPreference { putBoolean(KEY_HAPTICS_ENABLED, enabled) }
-  }
-
-  override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
-      preferenceBooleanFlow(
-              KEY_IN_APP_DEBUGGING,
-              DEFAULT_IN_APP_DEBUGGING_ENABLED,
-          ) {
-            prefs
-          }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun setInAppDebuggingEnabled(enabled: Boolean) {
-    setPreference { putBoolean(KEY_IN_APP_DEBUGGING, enabled) }
-  }
-
-  override fun listenForBillingUpsellChanges(): Flow<Boolean> =
-      preferenceIntFlow(
-              KEY_BILLING_SHOW_UPSELL_COUNT,
-              DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-          ) {
-            prefs
-          }
-          .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun maybeShowBillingUpsell() {
-    setPreference {
-      val currentCount =
-          prefs.getInt(KEY_BILLING_SHOW_UPSELL_COUNT, DEFAULT_BILLING_SHOW_UPSELL_COUNT)
-      if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
-        putInt(KEY_BILLING_SHOW_UPSELL_COUNT, currentCount + 1)
-      }
+    private val scope by lazy {
+        CoroutineScope(
+            context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
+        )
     }
-  }
 
-  override fun resetBillingShown() {
-    setPreference {
-      putInt(
-          KEY_BILLING_SHOW_UPSELL_COUNT,
-          DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-      )
-    }
-  }
+    private inline fun setPreference(crossinline block: suspend (MutablePreferences) -> Unit) {
+        scope.launch(context = Dispatchers.IO) {
+            enforcer.assertOffMainThread()
 
-  override fun listenForShowChangelogChanges(): Flow<Boolean> =
-      preferenceIntFlow(
-              LAST_SHOWN_CHANGELOG,
-              DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
-          ) {
-            prefs
-          }
-          .onEach { lastShown ->
-            // Upon the first time seeing it, update to our current version code
-            if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
-              Logger.d { "Initialize changelog for a newly installed app!" }
-              markChangeLogShown()
+            prefs.edit { settings ->
+                enforcer.assertOffMainThread()
+                block(settings)
             }
-          }
-          .map { it in 1 until versionCode }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun markChangeLogShown() {
-    setPreference { putInt(LAST_SHOWN_CHANGELOG, versionCode) }
-  }
-
-  override fun listenForDarkModeChanges(): Flow<Mode> =
-      preferenceStringFlow(darkModeKey, DEFAULT_DARK_MODE) { prefs }
-          .map { it.toThemingMode() }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun setDarkMode(mode: Mode) {
-    setPreference { putString(darkModeKey, mode.toRawString()) }
-  }
-
-  override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
-      preferenceBooleanFlow(
-              KEY_DATA_POLICY_CONSENTED,
-              DEFAULT_DATA_POLICY_CONSENTED,
-          ) {
-            prefs
-          }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun respondToPolicy(accepted: Boolean) {
-    setPreference { putBoolean(KEY_DATA_POLICY_CONSENTED, accepted) }
-  }
-
-  override fun listenForHapticsChanges(): Flow<Boolean> =
-      preferenceBooleanFlow(
-              KEY_HAPTICS_ENABLED,
-              DEFAULT_HAPTICS_ENABLED,
-          ) {
-            prefs
-          }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun enableHaptics() {
-    setHapticsEnabled(true)
-  }
-
-  override fun disableHaptics() {
-    setHapticsEnabled(false)
-  }
-
-  override fun listenForMaterialYouChanges(): Flow<Boolean> =
-      preferenceBooleanFlow(
-              KEY_MATERIAL_YOU,
-              DEFAULT_MATERIAL_YOU,
-          ) {
-            prefs
-          }
-          .flowOn(context = Dispatchers.IO)
-
-  override fun setMaterialYou(enabled: Boolean) {
-    setPreference {
-      val isEnabled =
-          if (canUseMaterialYou()) {
-            enabled
-          } else {
-            false
-          }
-
-      putBoolean(KEY_MATERIAL_YOU, isEnabled)
+        }
     }
-  }
 
-  companion object {
+    private fun setHapticsEnabled(enabled: Boolean) {
+        setPreference { it[KEY_HAPTICS_ENABLED] = enabled }
+    }
 
-    private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
+    override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
+        prefs.data.map { it[KEY_IN_APP_DEBUGGING] ?: DEFAULT_IN_APP_DEBUGGING_ENABLED }
+            .flowOn(context = Dispatchers.IO)
 
-    private const val KEY_MATERIAL_YOU = "material_you_v1"
-    private const val DEFAULT_MATERIAL_YOU = false
+    override fun setInAppDebuggingEnabled(enabled: Boolean) {
+        setPreference { it[KEY_IN_APP_DEBUGGING] = enabled }
+    }
 
-    private const val DEFAULT_HAPTICS_ENABLED = true
-    private const val KEY_HAPTICS_ENABLED = "haptic_manager_v1"
+    override fun listenForBillingUpsellChanges(): Flow<Boolean> =
+        prefs.data.map {
+            it[KEY_BILLING_SHOW_UPSELL_COUNT] ?: DEFAULT_BILLING_SHOW_UPSELL_COUNT
+        }
+            .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
+            .flowOn(context = Dispatchers.IO)
 
-    private const val DEFAULT_LAST_SHOWN_CHANGELOG_CODE = -1
-    private const val LAST_SHOWN_CHANGELOG = "changelog_app_last_shown"
+    override fun maybeShowBillingUpsell() {
+        setPreference { settings ->
+            // Get the current count and increment it
+            val currentCount = prefs.data.map {
+                it[KEY_BILLING_SHOW_UPSELL_COUNT] ?: DEFAULT_BILLING_SHOW_UPSELL_COUNT
+            }
+                .flowOn(context = Dispatchers.IO)
+                .first()
 
-    private const val DEFAULT_DATA_POLICY_CONSENTED = false
-    private const val KEY_DATA_POLICY_CONSENTED = "data_policy_consented_v1"
+            if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
+                settings[KEY_BILLING_SHOW_UPSELL_COUNT] = currentCount + 1
+            }
+        }
+    }
 
-    private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
-    private const val KEY_BILLING_SHOW_UPSELL_COUNT = "billing_show_upsell_v1"
-    private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 20
+    override fun resetBillingShown() {
+        setPreference {
+            it[KEY_BILLING_SHOW_UPSELL_COUNT] = DEFAULT_BILLING_SHOW_UPSELL_COUNT
+        }
+    }
 
-    private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false
-    private const val KEY_IN_APP_DEBUGGING = "in_app_debugging_v1"
-  }
+    override fun listenForShowChangelogChanges(): Flow<Boolean> =
+        prefs.data.map {
+            it[LAST_SHOWN_CHANGELOG] ?: DEFAULT_LAST_SHOWN_CHANGELOG_CODE
+        }
+            .onEach { lastShown ->
+                // Upon the first time seeing it, update to our current version code
+                if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
+                    Logger.d { "Initialize changelog for a newly installed app!" }
+                    markChangeLogShown()
+                }
+            }
+            .map { it in 1 until versionCode }
+            .flowOn(context = Dispatchers.IO)
+
+    override fun markChangeLogShown() {
+        setPreference { it[LAST_SHOWN_CHANGELOG] = versionCode }
+    }
+
+    override fun listenForDarkModeChanges(): Flow<Mode> =
+        prefs.data.map { it[darkModeKey] ?: DEFAULT_DARK_MODE }
+            .map { it.toThemingMode() }
+            .flowOn(context = Dispatchers.IO)
+
+    override fun setDarkMode(mode: Mode) {
+        setPreference { it[darkModeKey] = mode.toRawString() }
+    }
+
+    override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
+        prefs.data.map {
+            it[KEY_DATA_POLICY_CONSENTED] ?: DEFAULT_DATA_POLICY_CONSENTED
+        }
+            .flowOn(context = Dispatchers.IO)
+
+    override fun respondToPolicy(accepted: Boolean) {
+        setPreference { it[KEY_DATA_POLICY_CONSENTED] = accepted }
+    }
+
+    override fun listenForHapticsChanges(): Flow<Boolean> =
+        prefs.data.map {
+            it[KEY_HAPTICS_ENABLED] ?: DEFAULT_HAPTICS_ENABLED
+        }
+            .flowOn(context = Dispatchers.IO)
+
+    override fun enableHaptics() {
+        setHapticsEnabled(true)
+    }
+
+    override fun disableHaptics() {
+        setHapticsEnabled(false)
+    }
+
+    override fun listenForMaterialYouChanges(): Flow<Boolean> =
+        prefs.data.map {
+            it[KEY_MATERIAL_YOU] ?: DEFAULT_MATERIAL_YOU
+        }
+            .flowOn(context = Dispatchers.IO)
+
+    override fun setMaterialYou(enabled: Boolean) {
+        setPreference { settings ->
+            val isEnabled =
+                if (canUseMaterialYou()) {
+                    enabled
+                } else {
+                    false
+                }
+
+            settings[KEY_MATERIAL_YOU] = isEnabled
+        }
+    }
+
+    companion object {
+
+        private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
+
+        private val KEY_MATERIAL_YOU = booleanPreferencesKey("material_you_v1")
+        private const val DEFAULT_MATERIAL_YOU = false
+
+        private val KEY_HAPTICS_ENABLED = booleanPreferencesKey("haptic_manager_v1")
+        private const val DEFAULT_HAPTICS_ENABLED = true
+
+        private val LAST_SHOWN_CHANGELOG = intPreferencesKey("changelog_app_last_shown")
+        private const val DEFAULT_LAST_SHOWN_CHANGELOG_CODE = -1
+
+        private val KEY_DATA_POLICY_CONSENTED = booleanPreferencesKey("data_policy_consented_v1")
+        private const val DEFAULT_DATA_POLICY_CONSENTED = false
+
+        private val KEY_BILLING_SHOW_UPSELL_COUNT = intPreferencesKey("billing_show_upsell_v1")
+        private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
+        private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 20
+
+        private val KEY_IN_APP_DEBUGGING = booleanPreferencesKey("in_app_debugging_v1")
+        private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false
+    }
 }

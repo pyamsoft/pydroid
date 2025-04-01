@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
     key: String,
     defaultValue: T,
@@ -57,36 +58,42 @@ private inline fun <R : Any, T : Any> SharedPreferences.preferenceFlow(
 
 /** Watch a SharedPreference Int for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.intFlow(key: String, defaultValue: Int): Flow<Int> {
   return this.preferenceFlow(key, defaultValue) { k, v -> getInt(k, v) }
 }
 
 /** Watch a SharedPreference Boolean for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.booleanFlow(key: String, defaultValue: Boolean): Flow<Boolean> {
   return this.preferenceFlow(key, defaultValue) { k, v -> getBoolean(k, v) }
 }
 
 /** Watch a SharedPreference String for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.stringFlow(key: String, defaultValue: String): Flow<String> {
   return this.preferenceFlow(key, defaultValue) { k, v -> getString(k, v) ?: defaultValue }
 }
 
 /** Watch a SharedPreference Float for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.floatFlow(key: String, defaultValue: Float): Flow<Float> {
   return this.preferenceFlow(key, defaultValue) { k, v -> getFloat(k, v) }
 }
 
 /** Watch a SharedPreference Long for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.longFlow(key: String, defaultValue: Long): Flow<Long> {
   return this.preferenceFlow(key, defaultValue) { k, v -> getLong(k, v) }
 }
 
 /** Watch a SharedPreference String Set for changes as a Flow */
 @CheckResult
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public fun SharedPreferences.stringSetFlow(
     key: String,
     defaultValue: Set<String>
@@ -99,6 +106,7 @@ public fun SharedPreferences.stringSetFlow(
 /** Lazily initialize SharedPreferences to avoid a main-thread ANR */
 @CheckResult
 @PublishedApi
+@Deprecated("Move to AndroidX PreferenceDataStore")
 internal inline fun lazyPreferencesFlow(
     crossinline preferences: () -> SharedPreferences
 ): Flow<SharedPreferences> {
@@ -114,6 +122,7 @@ internal inline fun lazyPreferencesFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceIntFlow(
     key: String,
     defaultValue: Int,
@@ -129,6 +138,7 @@ public inline fun preferenceIntFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceBooleanFlow(
     key: String,
     defaultValue: Boolean,
@@ -144,6 +154,7 @@ public inline fun preferenceBooleanFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceStringFlow(
     key: String,
     defaultValue: String,
@@ -159,6 +170,7 @@ public inline fun preferenceStringFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceFloatFlow(
     key: String,
     defaultValue: Float,
@@ -174,6 +186,7 @@ public inline fun preferenceFloatFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceLongFlow(
     key: String,
     defaultValue: Long,
@@ -189,6 +202,7 @@ public inline fun preferenceLongFlow(
  */
 @CheckResult
 @OptIn(ExperimentalCoroutinesApi::class)
+@Deprecated("Move to AndroidX PreferenceDataStore")
 public inline fun preferenceStringSetFlow(
     key: String,
     defaultValue: Set<String>,

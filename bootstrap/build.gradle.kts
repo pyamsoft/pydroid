@@ -21,8 +21,8 @@ android {
 }
 
 dependencies {
-  implementation("com.google.android.play:app-update:2.1.0")
-  implementation("com.google.android.play:review:2.0.2")
+  implementation("com.google.android.play:app-update:${rootProject.extra["inAppUpdate"]}")
+  implementation("com.google.android.play:review:${rootProject.extra["inAppReview"]}")
 
   // Compose Annotations
   implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose"]}")

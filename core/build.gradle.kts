@@ -28,7 +28,7 @@ android {
 
 dependencies {
   // Expose annotations
-  api("androidx.annotation:annotation:1.9.1")
+  api("androidx.annotation:annotation:${rootProject.extra["annotation"]}")
 
   // Expose Coroutines
   api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines"]}")

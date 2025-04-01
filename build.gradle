@@ -27,8 +27,20 @@ buildscript {
 
     // AndroidX
     core = "1.15.0"
+    annotation = "1.9.1"
     activity = "1.10.1"
     lifecycle = "2.8.7"
+    dataStore = "1.1.4"
+    fragment = "1.8.6"
+    startup = "1.2.0"
+
+    // Google Play
+    inAppUpdate = "2.1.0"
+    inAppReview = "2.0.2"
+    billing = "7.1.1"
+
+    // Coil
+    coil = "3.1.0"
 
     // Test Runner
     testRunner = "1.6.2"

@@ -25,6 +25,9 @@ android {
 }
 
 dependencies {
+  // DataStore
+  implementation("androidx.datastore:datastore-preferences:${rootProject.extra["dataStore"]}")
+
   // Lifecycle support
   implementation("androidx.lifecycle:lifecycle-common:${rootProject.extra["lifecycle"]}")
   implementation("androidx.lifecycle:lifecycle-runtime-compose:${rootProject.extra["lifecycle"]}")
@@ -48,7 +51,7 @@ dependencies {
   implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
 
   // Compose Image loading
-  implementation("io.coil-kt.coil3:coil-compose-core:3.1.0")
+  implementation("io.coil-kt.coil3:coil-compose-core:${rootProject.extra["coil"]}")
 
   implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
 

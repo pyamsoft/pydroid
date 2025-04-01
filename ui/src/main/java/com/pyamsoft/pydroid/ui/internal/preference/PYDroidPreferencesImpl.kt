@@ -76,8 +76,10 @@ internal constructor(
                     produceSharedPreferences = {
                       PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
                     },
-                ))
-          })
+                ),
+            )
+          },
+      )
 
   private val prefs by lazy {
     enforcer.assertOffMainThread()

@@ -35,7 +35,7 @@ dependencies {
   // Needed just for androidx.preference.PreferenceManager
   // Eventually, big G may push for DataStore being a requirement, which will be pain
   // This pulls in all the UI bits too, which is a little lame.
-  implementation("androidx.preference:preference:1.2.1")
+  implementation("androidx.preference:preference:${rootProject.extra["preference"]}")
 
   // Compose
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")

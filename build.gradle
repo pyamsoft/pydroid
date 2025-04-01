@@ -33,6 +33,7 @@ buildscript {
     dataStore = "1.1.4"
     fragment = "1.8.6"
     startup = "1.2.0"
+    preference = "1.2.1"
 
     // Google Play
     inAppUpdate = "2.1.0"

@@ -99,7 +99,6 @@ internal interface PYDroidComponent {
 
     private val preferences by lazy {
       PYDroidPreferencesImpl(
-          enforcer = enforcer,
           context = params.application,
           versionCode = params.version,
       )

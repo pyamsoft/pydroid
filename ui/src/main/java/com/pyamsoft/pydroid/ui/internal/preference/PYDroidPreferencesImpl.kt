@@ -30,7 +30,6 @@ import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
@@ -54,7 +53,6 @@ import kotlinx.coroutines.launch
 
 internal class PYDroidPreferencesImpl
 internal constructor(
-    private val enforcer: ThreadEnforcer,
     context: Context,
     private val versionCode: Int,
 ) :
@@ -96,7 +94,6 @@ internal constructor(
       )
 
   private val prefs by lazy {
-    enforcer.assertOffMainThread()
     context.applicationContext.dataStore
   }
 
@@ -108,10 +105,7 @@ internal constructor(
 
   private inline fun setPreference(crossinline block: suspend (MutablePreferences) -> Unit) {
     scope.launch(context = Dispatchers.IO) {
-      enforcer.assertOffMainThread()
-
       prefs.edit { settings ->
-        enforcer.assertOffMainThread()
         block(settings)
       }
     }

@@ -286,9 +286,4 @@
     <string
   name="androidx_startup_description"
 >Helps with Application initialization</string>
-
-    <string name="pydroid_autopsy">PYDroid Autopsy</string>
-    <string
-  name="pydroid_autopsy_description"
->PYDroid development crash reporting screen</string>
 </resources>

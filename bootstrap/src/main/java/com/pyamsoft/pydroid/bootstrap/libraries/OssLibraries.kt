@@ -30,9 +30,6 @@ public object OssLibraries {
   /** Using pydroid-arch library */
   public var usingArch: Boolean = false
 
-  /** Using pydroid-autopsy library */
-  public var usingAutopsy: Boolean = false
-
   /** Using pydroid-notify library */
   public var usingNotify: Boolean = false
 
@@ -57,7 +54,6 @@ public object OssLibraries {
   private var addedCore: Boolean = false
   private var addedBootstrap: Boolean = false
   private var addedArch: Boolean = false
-  private var addedAutopsy: Boolean = false
   private var addedNotify: Boolean = false
   private var addedUi: Boolean = false
   private var addedTheme: Boolean = false
@@ -418,43 +414,6 @@ public object OssLibraries {
     addUtilLibraries(context)
   }
 
-  private fun addAutopsyLibraries(context: Context) {
-    if (addedAutopsy) {
-      return
-    }
-    addedAutopsy = true
-
-    add(
-        context.getString(R.string.androidx_startup),
-        context.getString(R.string.androidx_startup_url),
-        context.getString(R.string.androidx_startup_description),
-    )
-    add(
-        context.getString(R.string.pydroid_autopsy),
-        context.getString(R.string.pydroid_url),
-        context.getString(R.string.pydroid_autopsy_description),
-    )
-    add(
-        context.getString(R.string.compose_ui),
-        context.getString(R.string.compose_ui_url),
-        context.getString(R.string.compose_ui_description),
-    )
-    add(
-        context.getString(R.string.compose_material_3),
-        context.getString(R.string.compose_material_3_url),
-        context.getString(R.string.compose_material_3_description),
-    )
-
-    add(
-        context.getString(R.string.compose_ui_tooling),
-        context.getString(R.string.compose_ui_tooling_url),
-        context.getString(R.string.compose_ui_tooling_description),
-    )
-
-    addCoreLibraries(context)
-    addThemeLibraries(context)
-  }
-
   /** Add a new library to the list of libraries used by the application */
   @JvmStatic
   @JvmOverloads
@@ -491,10 +450,6 @@ public object OssLibraries {
 
     if (usingArch) {
       addArchLibraries(context)
-    }
-
-    if (usingAutopsy) {
-      addAutopsyLibraries(context)
     }
 
     if (usingBilling) {

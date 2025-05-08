@@ -289,9 +289,4 @@
     <string
   name="androidx_startup_description"
 >為應用軟體的初始化提供幫助</string>
-
-    <string name="pydroid_autopsy">PYDroid Autopsy</string>
-    <string
-  name="pydroid_autopsy_description"
->提供 PYDroid 的應用軟體開發用程式崩潰回報畫面</string>
 </resources>

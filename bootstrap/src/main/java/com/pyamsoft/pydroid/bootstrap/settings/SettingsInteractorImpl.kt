@@ -31,6 +31,9 @@ internal class SettingsInteractorImpl internal constructor(context: Context) : S
 
   override suspend fun wipeData() {
     Logger.d { "Resetting all application user data" }
+
+    // TODO(Peter): This crashes with a SecurityException on at least one device.
+    //              What should we do here? Toast and disable the option?
     activityManager.clearApplicationUserData()
   }
 }

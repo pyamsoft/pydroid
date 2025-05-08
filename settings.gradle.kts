@@ -27,8 +27,6 @@ rootProject.name = "PYDroid"
 
 include(":arch")
 
-include(":autopsy")
-
 include(":billing")
 
 include(":bootstrap")

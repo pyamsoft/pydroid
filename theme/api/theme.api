@@ -1,8 +1,3 @@
-public final class com/pyamsoft/pydroid/theme/ActivityKt {
-	public static final fun attributeFromCurrentTheme (Landroid/app/Activity;I)I
-	public static final fun attributesFromCurrentTheme (Landroid/app/Activity;[I)[I
-}
-
 public final class com/pyamsoft/pydroid/theme/KeylineDefaults {
 	public static final field $stable I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/theme/KeylineDefaults;
@@ -32,7 +27,7 @@ public final class com/pyamsoft/pydroid/theme/LocalKeylinesKt {
 }
 
 public final class com/pyamsoft/pydroid/theme/MaterialThemeKt {
-	public static final fun PYDroidTheme (Landroidx/compose/material3/ColorScheme;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;Lcom/pyamsoft/pydroid/theme/Keylines;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun PYDroidTheme (Landroidx/activity/ComponentActivity;Landroidx/compose/material3/ColorScheme;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;Lcom/pyamsoft/pydroid/theme/Keylines;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
 	public static final fun getKeylines (Landroidx/compose/material3/MaterialTheme;Landroidx/compose/runtime/Composer;I)Lcom/pyamsoft/pydroid/theme/Keylines;
 }
 

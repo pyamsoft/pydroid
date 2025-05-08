@@ -4,7 +4,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider {
 
 public abstract interface class com/pyamsoft/pydroid/ui/ModuleProvider$Modules {
 	public abstract fun enforcer ()Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
-	public abstract fun imageLoader ()Lcoil/ImageLoader;
+	public abstract fun imageLoader ()Lcoil3/ImageLoader;
 	public abstract fun inAppDebugStatus ()Lcom/pyamsoft/pydroid/ui/debug/InAppDebugStatus;
 	public abstract fun theming ()Lcom/pyamsoft/pydroid/ui/theme/Theming;
 }
@@ -61,10 +61,6 @@ public abstract interface class com/pyamsoft/pydroid/ui/app/AppProvider {
 
 public final class com/pyamsoft/pydroid/ui/app/DialogKt {
 	public static final fun rememberDialogProperties (ZZLandroidx/compose/ui/window/SecureFlagPolicy;Landroidx/compose/runtime/Composer;II)Landroidx/compose/ui/window/DialogProperties;
-}
-
-public final class com/pyamsoft/pydroid/ui/app/LocalActivityKt {
-	public static final field LocalActivity Landroidx/compose/runtime/ProvidableCompositionLocal;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/app/PYDroidActivityDelegate {
@@ -292,48 +288,48 @@ public final class com/pyamsoft/pydroid/ui/inject/RememberKt {
 public final class com/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/about/ComposableSingletons$AboutListItemKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-159980395$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-646315630$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$AppHeaderKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1017070222$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$155658104$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1934455105$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1607063800$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$163045955$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$548906266$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$6142954$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogListItemKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogListItemKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1691655599$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/changelog/dialog/ComposableSingletons$ChangeLogScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1381131271$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$298147842$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public abstract interface class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewState : com/pyamsoft/pydroid/arch/UiViewState {
@@ -352,53 +348,53 @@ public final class com/pyamsoft/pydroid/ui/internal/datapolicy/DataPolicyViewSta
 public final class com/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/datapolicy/dialog/ComposableSingletons$DataPolicyDisclosureScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-30418206$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2033735509$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-5$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-2115599850$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-398215155$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-81557238$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-969002520$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1882079684$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-336515555$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1368708624$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$892476118$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/uri/ComposableSingletons$PYDroidExternalUriPortalKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1939257058$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-223726006$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$828635601$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeAvailableScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1424101578$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/version/ComposableSingletons$VersionUpgradeCompleteScreenKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$123290499$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/preference/ComposableSingletons$PreferenceListItemsKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-2136553958$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-80498389$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/preference/PreferenceScreenKt {
@@ -546,7 +542,6 @@ public final class com/pyamsoft/pydroid/ui/util/RememberKt {
 	public static final fun collectAsStateListWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Ljava/util/List;
 	public static final fun collectAsStateMap (Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
 	public static final fun collectAsStateMapWithLifecycle (Lkotlinx/coroutines/flow/StateFlow;Landroidx/lifecycle/LifecycleOwner;Landroidx/lifecycle/Lifecycle$State;Lkotlin/coroutines/CoroutineContext;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/snapshots/SnapshotStateMap;
-	public static final fun rememberActivity (Landroidx/compose/runtime/Composer;I)Landroidx/activity/ComponentActivity;
 	public static final fun rememberAsStateList (Ljava/util/Collection;Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	public static final fun rememberAsStateList (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Ljava/util/List;
 	public static final fun rememberAsStateMap (Ljava/util/Map;Landroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/snapshots/SnapshotStateMap;

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.preference
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.SharedPreferencesMigration
-import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -40,12 +39,13 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -93,9 +93,7 @@ internal constructor(
           },
       )
 
-  private val prefs by lazy {
-    context.applicationContext.dataStore
-  }
+  private val prefs by lazy { context.applicationContext.dataStore }
 
   private val scope by lazy {
     CoroutineScope(
@@ -103,55 +101,94 @@ internal constructor(
     )
   }
 
-  private inline fun setPreference(crossinline block: suspend (MutablePreferences) -> Unit) {
+  private inline fun <T : Any> setPreference(
+      key: Preferences.Key<T>,
+      fallbackValue: T,
+      crossinline value: suspend (Preferences) -> T
+  ) {
     scope.launch(context = Dispatchers.IO) {
-      prefs.edit { settings ->
-        block(settings)
+      try {
+        prefs.edit { it[key] = value(it) }
+      } catch (e: Throwable) {
+        e.ifNotCancellation { prefs.edit { it[key] = fallbackValue } }
       }
     }
   }
 
+  private fun <T : Any> getPreference(
+      key: Preferences.Key<T>,
+      value: T,
+  ): Flow<T> =
+      prefs.data
+          .map { it[key] ?: value }
+          .catch { err ->
+            Logger.e(err) { "Error reading from dataStore: ${key.name}" }
+            prefs.edit { it[key] = value }
+            emit(value)
+          }
+
   private fun setHapticsEnabled(enabled: Boolean) {
-    setPreference { it[KEY_HAPTICS_ENABLED] = enabled }
+    setPreference(
+        key = KEY_HAPTICS_ENABLED,
+        fallbackValue = DEFAULT_HAPTICS_ENABLED,
+        value = { enabled },
+    )
   }
 
   override fun listenForInAppDebuggingEnabled(): Flow<Boolean> =
-      prefs.data
-          .map { it[KEY_IN_APP_DEBUGGING] ?: DEFAULT_IN_APP_DEBUGGING_ENABLED }
+      getPreference(
+              key = KEY_IN_APP_DEBUGGING,
+              value = DEFAULT_IN_APP_DEBUGGING_ENABLED,
+          )
           .flowOn(context = Dispatchers.IO)
 
   override fun setInAppDebuggingEnabled(enabled: Boolean) {
-    setPreference { it[KEY_IN_APP_DEBUGGING] = enabled }
+    setPreference(
+        key = KEY_IN_APP_DEBUGGING,
+        fallbackValue = DEFAULT_IN_APP_DEBUGGING_ENABLED,
+        value = { enabled },
+    )
   }
 
   override fun listenForBillingUpsellChanges(): Flow<Boolean> =
-      prefs.data
-          .map { it[KEY_BILLING_SHOW_UPSELL_COUNT] ?: DEFAULT_BILLING_SHOW_UPSELL_COUNT }
+      getPreference(
+              key = KEY_BILLING_SHOW_UPSELL_COUNT,
+              value = DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+          )
           .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
           .flowOn(context = Dispatchers.IO)
 
   override fun maybeShowBillingUpsell() {
-    setPreference { settings ->
-      // Get the current count and increment it
-      val currentCount =
-          prefs.data
-              .map { it[KEY_BILLING_SHOW_UPSELL_COUNT] ?: DEFAULT_BILLING_SHOW_UPSELL_COUNT }
-              .flowOn(context = Dispatchers.IO)
-              .first()
+    setPreference(
+        key = KEY_BILLING_SHOW_UPSELL_COUNT,
+        fallbackValue = DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+        value = { settings ->
+          // Get the current count and increment it
+          val currentCount =
+              settings[KEY_BILLING_SHOW_UPSELL_COUNT] ?: DEFAULT_BILLING_SHOW_UPSELL_COUNT
 
-      if (currentCount < VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
-        settings[KEY_BILLING_SHOW_UPSELL_COUNT] = currentCount + 1
-      }
-    }
+          if (currentCount >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD) {
+            return@setPreference currentCount
+          }
+
+          return@setPreference currentCount + 1
+        },
+    )
   }
 
   override fun resetBillingShown() {
-    setPreference { it[KEY_BILLING_SHOW_UPSELL_COUNT] = DEFAULT_BILLING_SHOW_UPSELL_COUNT }
+    setPreference(
+        key = KEY_BILLING_SHOW_UPSELL_COUNT,
+        fallbackValue = DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+        value = { DEFAULT_BILLING_SHOW_UPSELL_COUNT },
+    )
   }
 
   override fun listenForShowChangelogChanges(): Flow<Boolean> =
-      prefs.data
-          .map { it[LAST_SHOWN_CHANGELOG] ?: DEFAULT_LAST_SHOWN_CHANGELOG_CODE }
+      getPreference(
+              key = LAST_SHOWN_CHANGELOG,
+              value = DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
+          )
           .onEach { lastShown ->
             // Upon the first time seeing it, update to our current version code
             if (lastShown == DEFAULT_LAST_SHOWN_CHANGELOG_CODE) {
@@ -163,31 +200,49 @@ internal constructor(
           .flowOn(context = Dispatchers.IO)
 
   override fun markChangeLogShown() {
-    setPreference { it[LAST_SHOWN_CHANGELOG] = versionCode }
+    setPreference(
+        key = LAST_SHOWN_CHANGELOG,
+        fallbackValue = DEFAULT_LAST_SHOWN_CHANGELOG_CODE,
+        value = { versionCode },
+    )
   }
 
   override fun listenForDarkModeChanges(): Flow<Mode> =
-      prefs.data
-          .map { it[darkModeKey] ?: DEFAULT_DARK_MODE }
+      getPreference(
+              key = darkModeKey,
+              value = DEFAULT_DARK_MODE,
+          )
           .map { it.toThemingMode() }
           .flowOn(context = Dispatchers.IO)
 
   override fun setDarkMode(mode: Mode) {
-    setPreference { it[darkModeKey] = mode.toRawString() }
+    setPreference(
+        key = darkModeKey,
+        fallbackValue = DEFAULT_DARK_MODE,
+        value = { mode.toRawString() },
+    )
   }
 
   override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
-      prefs.data
-          .map { it[KEY_DATA_POLICY_CONSENTED] ?: DEFAULT_DATA_POLICY_CONSENTED }
+      getPreference(
+              key = KEY_DATA_POLICY_CONSENTED,
+              value = DEFAULT_DATA_POLICY_CONSENTED,
+          )
           .flowOn(context = Dispatchers.IO)
 
   override fun respondToPolicy(accepted: Boolean) {
-    setPreference { it[KEY_DATA_POLICY_CONSENTED] = accepted }
+    setPreference(
+        key = KEY_DATA_POLICY_CONSENTED,
+        fallbackValue = DEFAULT_DATA_POLICY_CONSENTED,
+        value = { accepted },
+    )
   }
 
   override fun listenForHapticsChanges(): Flow<Boolean> =
-      prefs.data
-          .map { it[KEY_HAPTICS_ENABLED] ?: DEFAULT_HAPTICS_ENABLED }
+      getPreference(
+              key = KEY_HAPTICS_ENABLED,
+              value = DEFAULT_HAPTICS_ENABLED,
+          )
           .flowOn(context = Dispatchers.IO)
 
   override fun enableHaptics() {
@@ -199,21 +254,24 @@ internal constructor(
   }
 
   override fun listenForMaterialYouChanges(): Flow<Boolean> =
-      prefs.data
-          .map { it[KEY_MATERIAL_YOU] ?: DEFAULT_MATERIAL_YOU }
+      getPreference(
+              key = KEY_MATERIAL_YOU,
+              value = DEFAULT_MATERIAL_YOU,
+          )
           .flowOn(context = Dispatchers.IO)
 
   override fun setMaterialYou(enabled: Boolean) {
-    setPreference { settings ->
-      val isEnabled =
+    setPreference(
+        key = KEY_MATERIAL_YOU,
+        fallbackValue = DEFAULT_MATERIAL_YOU,
+        value = {
           if (canUseMaterialYou()) {
             enabled
           } else {
             false
           }
-
-      settings[KEY_MATERIAL_YOU] = isEnabled
-    }
+        },
+    )
   }
 
   companion object {

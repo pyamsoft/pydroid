@@ -18,10 +18,12 @@ package com.pyamsoft.pydroid.ui.internal.preference
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -68,6 +70,10 @@ internal constructor(
   private val Context.dataStore: DataStore<Preferences> by
       preferencesDataStore(
           name = "pydroid_preferences",
+          corruptionHandler = ReplaceFileCorruptionHandler { err ->
+              Logger.e(err) { "File corruption detected, start with empty Preferences" }
+              return@ReplaceFileCorruptionHandler emptyPreferences()
+          },
           produceMigrations = {
             listOf(
                 // NOTE(Peter): Since our shared preferences was the DEFAULT process one, loading up

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.bus
 
+import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
@@ -24,4 +25,5 @@ import kotlinx.coroutines.flow.MutableSharedFlow
  * An event bus is a MutableSharedFlow but implements an EventConsumer interface which allows a DI
  * framework like Dagger to easily inject it as a 'resolver' of a dependency
  */
+@OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 public interface EventBus<T : Any> : EventConsumer<T>, MutableSharedFlow<T>

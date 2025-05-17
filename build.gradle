@@ -18,7 +18,7 @@
 
 buildscript {
   ext {
-    kotlin = "2.1.20"
+    kotlin = "2.1.21"
     coroutines = "1.10.2"
 
     // Compose
@@ -40,7 +40,7 @@ buildscript {
     billing = "7.1.1"
 
     // Coil
-    coil = "3.1.0"
+    coil = "3.2.0"
 
     // Test Runner
     testRunner = "1.6.2"
@@ -50,7 +50,7 @@ buildscript {
 plugins {
   // Android AGP
   // https://developer.android.com/studio/build#top-level
-  id("com.android.library") version "8.9.2" apply false
+  id("com.android.library") version "8.10.0" apply false
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin

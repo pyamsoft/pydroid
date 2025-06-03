@@ -70,10 +70,11 @@ internal constructor(
   private val Context.dataStore: DataStore<Preferences> by
       preferencesDataStore(
           name = "pydroid_preferences",
-          corruptionHandler = ReplaceFileCorruptionHandler { err ->
-              Logger.e(err) { "File corruption detected, start with empty Preferences" }
-              return@ReplaceFileCorruptionHandler emptyPreferences()
-          },
+          corruptionHandler =
+              ReplaceFileCorruptionHandler { err ->
+                Logger.e(err) { "File corruption detected, start with empty Preferences" }
+                return@ReplaceFileCorruptionHandler emptyPreferences()
+              },
           produceMigrations = {
             listOf(
                 // NOTE(Peter): Since our shared preferences was the DEFAULT process one, loading up

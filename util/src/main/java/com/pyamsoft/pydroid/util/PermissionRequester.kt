@@ -35,6 +35,11 @@ public class PermissionRequester private constructor() {
     public fun launch(permissions: Iterable<String>)
 
     public fun launch(
+        permission: String,
+        options: ActivityOptionsCompat?,
+    )
+
+    public fun launch(
         permissions: Array<String>,
         options: ActivityOptionsCompat?,
     )
@@ -76,7 +81,11 @@ public class PermissionRequester private constructor() {
 
     return object : Launcher {
       override fun launch(permission: String) {
-        launch(arrayOf(permission))
+        launch(permission, null)
+      }
+
+      override fun launch(permission: String, options: ActivityOptionsCompat?) {
+        launch(arrayOf(permission), options)
       }
 
       override fun launch(permissions: Iterable<String>) {

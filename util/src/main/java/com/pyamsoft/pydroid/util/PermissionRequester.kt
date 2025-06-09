@@ -24,7 +24,7 @@ import androidx.core.app.ActivityOptionsCompat
 import com.pyamsoft.pydroid.core.Logger
 
 /** Simplify the code for requesting permissions via the ActivityResultContract */
-public class PermissionRequester {
+public class PermissionRequester private constructor() {
 
   public interface Launcher {
 

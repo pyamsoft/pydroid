@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

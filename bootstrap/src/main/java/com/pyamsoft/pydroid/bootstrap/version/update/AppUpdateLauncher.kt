@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.version.update
 
 import android.app.Activity
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ResultWrapper
 import org.jetbrains.annotations.TestOnly
 
 /** In app update launcher */

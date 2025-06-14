@@ -30,7 +30,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties

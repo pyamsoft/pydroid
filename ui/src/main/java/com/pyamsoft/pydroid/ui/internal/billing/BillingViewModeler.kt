@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import kotlinx.coroutines.CoroutineScope

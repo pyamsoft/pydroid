@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.inject
 
 import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 
 /** Base class implementing a simple DI lifecycle */
 public abstract class ComposableInjector {

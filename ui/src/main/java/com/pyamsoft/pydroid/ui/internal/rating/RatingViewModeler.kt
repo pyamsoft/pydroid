@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.ui.rating.RatingViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

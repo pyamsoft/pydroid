@@ -18,6 +18,12 @@ android {
   namespace = "com.pyamsoft.pydroid.util"
 
   kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
+
+  defaultConfig {
+    // Android Testing
+    // https://developer.android.com/training/testing/instrumented-tests
+    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
 }
 
 dependencies {
@@ -29,6 +35,16 @@ dependencies {
   // In practice, this is most likely pulled in by AndroidX Activity or others
   // but we do it here just to be explicit.
   implementation("androidx.fragment:fragment:${rootProject.extra["fragment"]}")
+
+  // Testing
+  testImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
+  testImplementation(
+    "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
+
+  androidTestImplementation("androidx.test:runner:${rootProject.extra["testRunner"]}")
+  androidTestImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
+  androidTestImplementation(
+    "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
 
   api(project(":core"))
 }

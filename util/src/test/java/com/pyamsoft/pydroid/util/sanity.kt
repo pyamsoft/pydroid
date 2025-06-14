@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.notify"
+package com.pyamsoft.pydroid.util
 
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-}
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlinx.coroutines.test.runTest
 
-dependencies {
-  implementation("androidx.core:core:${rootProject.extra["core"]}")
+public class JVMSanity {
 
-  api(project(":util"))
+  @Test public fun sanity(): Unit = runTest { assertEquals(2 + 2, 4) }
 }

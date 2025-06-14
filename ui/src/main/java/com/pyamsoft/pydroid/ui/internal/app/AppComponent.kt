@@ -27,7 +27,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions

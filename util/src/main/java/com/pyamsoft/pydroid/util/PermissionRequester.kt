@@ -21,7 +21,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CheckResult
 import androidx.core.app.ActivityOptionsCompat
-import com.pyamsoft.pydroid.core.Logger
 
 /** Simplify the code for requesting permissions via the ActivityResultContract */
 public class PermissionRequester private constructor() {

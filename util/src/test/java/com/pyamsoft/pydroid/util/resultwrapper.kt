@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.util
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

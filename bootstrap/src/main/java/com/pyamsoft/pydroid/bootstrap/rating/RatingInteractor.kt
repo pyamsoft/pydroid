@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
-import com.pyamsoft.pydroid.core.ResultWrapper
+import com.pyamsoft.pydroid.util.ResultWrapper
 
 /** Interactor for handling rating related actions */
 public interface RatingInteractor {

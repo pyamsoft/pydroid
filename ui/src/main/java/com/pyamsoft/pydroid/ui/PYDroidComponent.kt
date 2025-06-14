@@ -25,8 +25,8 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.internal.DefaultEventBus
-import com.pyamsoft.pydroid.core.Logger
-import com.pyamsoft.pydroid.core.PYDroidLogger
+import com.pyamsoft.pydroid.util.Logger
+import com.pyamsoft.pydroid.util.PYDroidLogger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus

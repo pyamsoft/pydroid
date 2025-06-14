@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.settings
 import android.app.ActivityManager
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 
 internal class SettingsInteractorImpl internal constructor(context: Context) : SettingsInteractor {

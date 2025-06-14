@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.pydroid
 import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.Logger
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.doOnDestroy

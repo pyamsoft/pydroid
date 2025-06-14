@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.PYDroidLogger
+import com.pyamsoft.pydroid.util.PYDroidLogger
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 
 /** PYDroid library entry point */

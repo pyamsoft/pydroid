@@ -2,51 +2,9 @@ public final class com/pyamsoft/pydroid/core/EnforcerKt {
 	public static final fun createThreadEnforcer (Z)Lcom/pyamsoft/pydroid/core/ThreadEnforcer;
 }
 
-public final class com/pyamsoft/pydroid/core/Logger {
-	public static final field INSTANCE Lcom/pyamsoft/pydroid/core/Logger;
-	public final fun d (Lkotlin/jvm/functions/Function0;)V
-	public final fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
-	public final fun setLogger (Lcom/pyamsoft/pydroid/core/PYDroidLogger;)V
-	public final fun w (Lkotlin/jvm/functions/Function0;)V
-}
-
-public abstract interface class com/pyamsoft/pydroid/core/PYDroidLogger {
-	public abstract fun d (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-	public abstract fun e (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
-	public abstract fun w (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
-}
-
 public final class com/pyamsoft/pydroid/core/RequireNotNullKt {
 	public static final fun requireNotNull (Ljava/lang/Object;)Ljava/lang/Object;
 	public static final fun requireNotNull (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
-}
-
-public final class com/pyamsoft/pydroid/core/ResultWrapper {
-	public static final field Companion Lcom/pyamsoft/pydroid/core/ResultWrapper$Companion;
-	public fun <init> (Ljava/lang/Object;Ljava/lang/Throwable;)V
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun exceptionOrNull ()Ljava/lang/Throwable;
-	public final fun exceptionOrThrow ()Ljava/lang/Throwable;
-	public static final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun getData ()Ljava/lang/Object;
-	public final fun getError ()Ljava/lang/Throwable;
-	public final fun getOrNull ()Ljava/lang/Object;
-	public final fun getOrThrow ()Ljava/lang/Object;
-	public fun hashCode ()I
-	public final fun internallyWrap (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun map (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun onFailure (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun onFinally (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun onSuccess (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun recover (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public static final fun success (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public fun toString ()Ljava/lang/String;
-	public final fun validateWrapper ()V
-}
-
-public final class com/pyamsoft/pydroid/core/ResultWrapper$Companion {
-	public final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
-	public final fun success (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/core/ResultWrapper;
 }
 
 public abstract interface class com/pyamsoft/pydroid/core/ThreadEnforcer {

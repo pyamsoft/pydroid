@@ -29,20 +29,20 @@ public final class com/pyamsoft/pydroid/ui/PYDroid$DebugParameters {
 public final class com/pyamsoft/pydroid/ui/PYDroid$Parameters : com/pyamsoft/pydroid/ui/PYDroid$BaseParameters {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/core/PYDroidLogger;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/core/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/core/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/util/PYDroidLogger;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/util/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/util/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()I
-	public final fun component6 ()Lcom/pyamsoft/pydroid/core/PYDroidLogger;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/core/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;)Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/core/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;
+	public final fun component6 ()Lcom/pyamsoft/pydroid/util/PYDroidLogger;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/util/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;)Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;
+	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/pyamsoft/pydroid/util/PYDroidLogger;Lcom/pyamsoft/pydroid/ui/PYDroid$DebugParameters;ILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/PYDroid$Parameters;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getBugReportUrl ()Ljava/lang/String;
-	public fun getLogger ()Lcom/pyamsoft/pydroid/core/PYDroidLogger;
+	public fun getLogger ()Lcom/pyamsoft/pydroid/util/PYDroidLogger;
 	public fun getPrivacyPolicyUrl ()Ljava/lang/String;
 	public fun getTermsConditionsUrl ()Ljava/lang/String;
 	public fun getVersion ()I
@@ -562,10 +562,7 @@ public abstract interface class com/pyamsoft/pydroid/ui/version/VersionCheckView
 
 public final class com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Checking : com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState {
 	public static final field $stable I
-	public fun <init> (Z)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Checking;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Checking;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Checking;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getForce ()Z
 	public fun hashCode ()I
@@ -574,10 +571,7 @@ public final class com/pyamsoft/pydroid/ui/version/VersionCheckViewState$Checkin
 
 public final class com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Done : com/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState {
 	public static final field $stable I
-	public fun <init> (Z)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Done;
-	public static synthetic fun copy$default (Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Done;ZILjava/lang/Object;)Lcom/pyamsoft/pydroid/ui/version/VersionCheckViewState$CheckingState$Done;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getForce ()Z
 	public fun hashCode ()I

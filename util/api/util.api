@@ -26,6 +26,14 @@ public final class com/pyamsoft/pydroid/util/LifecycleKt {
 	public static final fun doOnStop (Landroidx/lifecycle/LifecycleOwner;Lkotlin/jvm/functions/Function0;)V
 }
 
+public final class com/pyamsoft/pydroid/util/Logger {
+	public static final field INSTANCE Lcom/pyamsoft/pydroid/util/Logger;
+	public final fun d (Lkotlin/jvm/functions/Function0;)V
+	public final fun e (Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public final fun setLogger (Lcom/pyamsoft/pydroid/util/PYDroidLogger;)V
+	public final fun w (Lkotlin/jvm/functions/Function0;)V
+}
+
 public final class com/pyamsoft/pydroid/util/MarketLinker {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/util/MarketLinker;
 	public static final fun getDeveloperPageLink ()Ljava/lang/String;
@@ -34,9 +42,14 @@ public final class com/pyamsoft/pydroid/util/MarketLinker {
 	public static synthetic fun getStorePageLink$default (Landroid/content/Context;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 }
 
+public abstract interface class com/pyamsoft/pydroid/util/PYDroidLogger {
+	public abstract fun d (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+	public abstract fun e (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public abstract fun w (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+}
+
 public final class com/pyamsoft/pydroid/util/PermissionRequester {
 	public static final field Companion Lcom/pyamsoft/pydroid/util/PermissionRequester$Companion;
-	public fun <init> ()V
 	public static final fun createAndRegister (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Launcher;
 	public final fun register (Landroidx/activity/ComponentActivity;Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/PermissionRequester$Launcher;
 }
@@ -49,7 +62,36 @@ public abstract interface class com/pyamsoft/pydroid/util/PermissionRequester$La
 	public abstract fun launch (Ljava/lang/Iterable;)V
 	public abstract fun launch (Ljava/lang/Iterable;Landroidx/core/app/ActivityOptionsCompat;)V
 	public abstract fun launch (Ljava/lang/String;)V
+	public abstract fun launch (Ljava/lang/String;Landroidx/core/app/ActivityOptionsCompat;)V
 	public abstract fun launch ([Ljava/lang/String;)V
 	public abstract fun launch ([Ljava/lang/String;Landroidx/core/app/ActivityOptionsCompat;)V
+}
+
+public final class com/pyamsoft/pydroid/util/ResultWrapper {
+	public static final field Companion Lcom/pyamsoft/pydroid/util/ResultWrapper$Companion;
+	public fun <init> (Ljava/lang/Object;Ljava/lang/Throwable;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun exceptionOrNull ()Ljava/lang/Throwable;
+	public final fun exceptionOrThrow ()Ljava/lang/Throwable;
+	public static final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun getData ()Ljava/lang/Object;
+	public final fun getError ()Ljava/lang/Throwable;
+	public final fun getOrNull ()Ljava/lang/Object;
+	public final fun getOrThrow ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public final fun internallyWrap (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun map (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun onFailure (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun onFinally (Lkotlin/jvm/functions/Function0;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun onSuccess (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun recover (Lkotlin/jvm/functions/Function1;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public static final fun success (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public fun toString ()Ljava/lang/String;
+	public final fun validateWrapper ()V
+}
+
+public final class com/pyamsoft/pydroid/util/ResultWrapper$Companion {
+	public final fun failure (Ljava/lang/Throwable;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
+	public final fun success (Ljava/lang/Object;)Lcom/pyamsoft/pydroid/util/ResultWrapper;
 }
 

@@ -32,7 +32,9 @@ public interface BillingInteractor {
   public suspend fun refresh()
 
   /** A snapshot of the billing SKU list */
-  public data class BillingSkuListSnapshot(
+  @ConsistentCopyVisibility
+  public data class BillingSkuListSnapshot
+  internal constructor(
       val status: BillingState,
       val skus: List<BillingSku>,
   )

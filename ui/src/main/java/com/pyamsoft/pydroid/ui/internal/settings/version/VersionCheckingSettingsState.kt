@@ -23,7 +23,9 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 
 @Stable
 @Immutable
-internal data class VersionCheckingSettingsState(
+@ConsistentCopyVisibility
+internal data class VersionCheckingSettingsState
+internal constructor(
     val isChecking: CheckingState,
     val isEmptyUpdate: Boolean,
     val newVersion: Int,

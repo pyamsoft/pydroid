@@ -53,13 +53,17 @@ public interface VersionCheckViewState : UiViewState {
     public data object None : CheckingState
 
     /** Currently checking for version updates */
-    public data class Checking(
+    @ConsistentCopyVisibility
+    public data class Checking
+    internal constructor(
         /** Check initiated by user */
         val force: Boolean
     ) : CheckingState
 
     /** Done checking for updates */
-    public data class Done(
+    @ConsistentCopyVisibility
+    public data class Done
+    internal constructor(
         /** Check initiated by user */
         val force: Boolean
     ) : CheckingState

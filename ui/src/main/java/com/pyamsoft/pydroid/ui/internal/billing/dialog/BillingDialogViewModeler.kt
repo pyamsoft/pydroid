@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.billing.dialog
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

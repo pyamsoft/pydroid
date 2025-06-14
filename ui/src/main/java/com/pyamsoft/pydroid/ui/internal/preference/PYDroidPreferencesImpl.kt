@@ -30,7 +30,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
@@ -41,6 +40,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

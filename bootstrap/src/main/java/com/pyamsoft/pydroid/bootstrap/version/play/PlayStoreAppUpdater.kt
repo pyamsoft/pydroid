@@ -26,8 +26,8 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.isDebugMode
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

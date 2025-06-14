@@ -25,8 +25,6 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.internal.DefaultEventBus
-import com.pyamsoft.pydroid.util.Logger
-import com.pyamsoft.pydroid.util.PYDroidLogger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
@@ -41,6 +39,8 @@ import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.Logger
+import com.pyamsoft.pydroid.util.PYDroidLogger
 import com.pyamsoft.pydroid.util.isDebugMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope

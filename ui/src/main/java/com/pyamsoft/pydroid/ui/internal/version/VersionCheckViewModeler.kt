@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
+import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update

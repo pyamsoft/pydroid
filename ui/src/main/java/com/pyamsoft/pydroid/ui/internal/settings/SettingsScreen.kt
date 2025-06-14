@@ -40,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -50,6 +49,7 @@ import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
+import com.pyamsoft.pydroid.util.Logger
 
 @Composable
 internal fun SettingsScreen(

@@ -24,12 +24,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewModeler
 import com.pyamsoft.pydroid.ui.internal.datapolicy.DataPolicyViewState
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 

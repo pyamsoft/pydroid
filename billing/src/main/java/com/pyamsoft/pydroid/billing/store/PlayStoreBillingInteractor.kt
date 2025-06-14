@@ -39,9 +39,9 @@ import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlin.time.Duration.Companion.seconds

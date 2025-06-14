@@ -30,7 +30,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
@@ -52,6 +51,7 @@ import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.MarketLinker
 
 @Composable

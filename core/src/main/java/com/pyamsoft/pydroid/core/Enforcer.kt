@@ -29,7 +29,7 @@ public interface ThreadEnforcer {
   public fun assertOnMainThread()
 }
 
-/** A thead looper to be used in Debug mode */
+/** A thread looper to be used in Debug mode */
 private object DebugThreadEnforcer : ThreadEnforcer {
 
   private val mainLooper by lazy { Looper.getMainLooper().requireNotNull() }
@@ -52,7 +52,7 @@ private object DebugThreadEnforcer : ThreadEnforcer {
   }
 }
 
-/** A noop thead looper to be used in Production mode */
+/** A noop thread looper to be used in Production mode */
 private object NoopThreadEnforcer : ThreadEnforcer {
   override fun assertOffMainThread() {
     // Noop

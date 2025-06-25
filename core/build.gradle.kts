@@ -17,8 +17,6 @@
 android {
   namespace = "com.pyamsoft.pydroid.core"
 
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-
   defaultConfig {
     // Android Testing
     // https://developer.android.com/training/testing/instrumented-tests

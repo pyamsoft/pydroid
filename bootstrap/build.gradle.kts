@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.bootstrap"
-
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-}
+android { namespace = "com.pyamsoft.pydroid.bootstrap" }
 
 dependencies {
   implementation("com.google.android.play:app-update:${rootProject.extra["inAppUpdate"]}")

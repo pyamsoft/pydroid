@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.notify"
-
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-}
+android { namespace = "com.pyamsoft.pydroid.notify" }
 
 dependencies {
   implementation("androidx.core:core:${rootProject.extra["core"]}")

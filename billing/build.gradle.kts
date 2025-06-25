@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.billing"
-
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-}
+android { namespace = "com.pyamsoft.pydroid.billing" }
 
 dependencies {
   implementation("androidx.activity:activity:${rootProject.extra["activity"]}")

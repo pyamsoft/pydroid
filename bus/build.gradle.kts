@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.bus"
-
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-}
+android { namespace = "com.pyamsoft.pydroid.bus" }
 
 dependencies { api(project(":core")) }

@@ -19,8 +19,6 @@ plugins { id("org.jetbrains.kotlin.plugin.compose") }
 android {
   namespace = "com.pyamsoft.pydroid.ui"
 
-  kotlinOptions { freeCompilerArgs += "-Xexplicit-api=strict" }
-
   buildFeatures { compose = true }
 }
 

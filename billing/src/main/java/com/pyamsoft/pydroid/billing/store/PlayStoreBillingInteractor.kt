@@ -150,11 +150,22 @@ internal constructor(
     client.queryProductDetailsAsync(params, this)
   }
 
+  private fun consumePurchase(purchase: Purchase) {
+    Logger.d { "Consume purchase: $purchase" }
+    val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+    client.consumeAsync(params, this)
+  }
+
   private fun handlePurchases(purchases: List<Purchase>) {
     for (purchase in purchases) {
-      Logger.d { "Consume purchase: $purchase" }
-      val params = ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
-      client.consumeAsync(params, this)
+      // We should only consume purchases once they are complete
+      //
+      // Since our app is fully local and purchases do not grant any additional features, they
+      // serve only as Tips, we should only consume fully purchased items, and just ignore
+      // pending or unknown state until the item completes purchase
+      if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+        consumePurchase(purchase)
+      }
     }
   }
 

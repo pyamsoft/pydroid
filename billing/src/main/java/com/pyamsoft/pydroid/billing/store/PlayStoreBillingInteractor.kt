@@ -78,6 +78,9 @@ internal constructor(
     BillingClient.newBuilder(context.applicationContext)
         .setListener(this)
         .enablePendingPurchases(pendingPurchaseParams)
+        // Auto service reconnection, Billing 8
+        // https://developer.android.com/google/play/billing/migrate-gpblv8
+        .enableAutoServiceReconnection()
         .build()
   }
 
@@ -156,6 +159,10 @@ internal constructor(
   }
 
   override fun onProductDetailsResponse(result: BillingResult, details: QueryProductDetailsResult) {
+    // Billing 8 change delivers back "unfetched" products
+    //
+    // Since we can not do anything about unfetched products, just ignore them. YOLO
+    // https://developer.android.com/google/play/billing/migrate-gpblv8
     if (result.isOk()) {
       val products = details.productDetailsList
       Logger.d { "Sku response: $products" }

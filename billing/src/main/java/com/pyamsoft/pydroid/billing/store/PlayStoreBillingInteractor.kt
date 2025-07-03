@@ -28,11 +28,11 @@ import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.ConsumeResponseListener
 import com.android.billingclient.api.PendingPurchasesParams
-import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryProductDetailsResult
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingLauncher
@@ -155,10 +155,11 @@ internal constructor(
     }
   }
 
-  override fun onProductDetailsResponse(result: BillingResult, skuDetails: List<ProductDetails>) {
+  override fun onProductDetailsResponse(result: BillingResult, details: QueryProductDetailsResult) {
     if (result.isOk()) {
-      Logger.d { "Sku response: $skuDetails" }
-      val skuList = skuDetails.map { PlayBillingSku(it) }
+      val products = details.productDetailsList
+      Logger.d { "Sku response: $products" }
+      val skuList = products.map { PlayBillingSku(it) }
       skuFlow.value = State(BillingState.CONNECTED, skuList)
     } else {
       Logger.w { "SKU response not OK: ${result.debugMessage}" }

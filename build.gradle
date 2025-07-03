@@ -39,7 +39,7 @@ buildscript {
     // Google Play
     inAppUpdate = "2.1.0"
     inAppReview = "2.0.2"
-    billing = "7.1.1"
+    billing = "8.0.0"
 
     // Coil
     coil = "3.2.0"

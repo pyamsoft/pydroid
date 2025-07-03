@@ -102,7 +102,7 @@ private fun PreviewChangeLogListItem() {
     ChangeLogListItem(
         line =
             ChangeLogLine(
-                ChangeLogLine.Type.FEATURE,
+                FEATURE,
                 "Changed Stuff, like a lot of stuff, so much stuff that you wouldn't even recognize",
             ),
     )

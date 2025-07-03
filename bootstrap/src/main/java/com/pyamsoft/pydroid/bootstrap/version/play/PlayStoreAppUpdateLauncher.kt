@@ -35,7 +35,7 @@ internal class PlayStoreAppUpdateLauncher
 internal constructor(
     private val manager: AppUpdateManager,
     private val info: AppUpdateInfo,
-    @AppUpdateType private val type: Int,
+    @param:AppUpdateType private val type: Int,
 ) : AppUpdateLauncher {
 
   private suspend fun FakeAppUpdateManager.fakeUpdate() {

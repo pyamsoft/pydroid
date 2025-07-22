@@ -31,7 +31,7 @@ buildscript {
     core = "1.16.0"
     annotation = "1.9.1"
     activity = "1.10.1"
-    lifecycle = "2.9.1"
+    lifecycle = "2.9.2"
     dataStore = "1.1.7"
     fragment = "1.8.8"
     preference = "1.2.1"
@@ -80,7 +80,7 @@ plugins {
 
   // Spotless
   // https://github.com/diffplug/spotless
-  id("com.diffplug.spotless") version "7.2.0" apply false
+  id("com.diffplug.spotless") version "7.2.1" apply false
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator

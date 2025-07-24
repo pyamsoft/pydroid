@@ -42,7 +42,7 @@ buildscript {
     billing = "8.0.0"
 
     // Coil
-    coil = "3.2.0"
+    coil = "3.3.0"
 
     // Test Runner
     testRunner = "1.6.2"

@@ -18,8 +18,11 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeAppUpdater
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.isDebugMode
 
 /** In-App update module */
 public class VersionModule(params: Parameters) {
@@ -28,12 +31,19 @@ public class VersionModule(params: Parameters) {
 
   init {
     val updater =
-        PlayStoreAppUpdater(
-            enforcer = params.enforcer,
-            context = params.context.applicationContext,
-            version = params.version,
-            isFakeUpgradeAvailable = params.isFakeUpgradeAvailable,
-        )
+        if (params.context.applicationContext.isDebugMode() && params.fakeUpgradeRequest != null) {
+          FakeAppUpdater(
+              enforcer = params.enforcer,
+              context = params.context.applicationContext,
+              version = params.version,
+              fakeUpgradeRequest = params.fakeUpgradeRequest,
+          )
+        } else {
+          PlayStoreAppUpdater(
+              enforcer = params.enforcer,
+              context = params.context.applicationContext,
+          )
+        }
 
     val network = VersionInteractorNetwork(updater)
     impl = VersionInteractorImpl(network)
@@ -54,6 +64,6 @@ public class VersionModule(params: Parameters) {
       internal val enforcer: ThreadEnforcer,
 
       /** If this field is set, the version module will always deliver an update */
-      internal val isFakeUpgradeAvailable: Boolean = false,
+      internal val fakeUpgradeRequest: FakeUpgradeRequest? = null,
   )
 }

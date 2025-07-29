@@ -30,4 +30,5 @@ internal class MutableVersionCheckViewState internal constructor() : VersionChec
   override val isUpdateReadyToInstall = MutableStateFlow(false)
   override val updateProgressPercent = MutableStateFlow(0F)
   override val isUpgraded = MutableStateFlow(false)
+  override val updateError = MutableStateFlow<Throwable?>(null)
 }

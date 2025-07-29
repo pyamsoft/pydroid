@@ -31,19 +31,23 @@ internal constructor(
 
   override suspend fun watchDownloadStatus(
       onDownloadProgress: (Float) -> Unit,
-      onDownloadCompleted: () -> Unit
+      onDownloadCompleted: () -> Unit,
+      onDownloadCancelled: () -> Unit,
+      onDownloadFailed: () -> Unit
   ) =
       withContext(context = Dispatchers.Default) {
         updater.watchDownloadStatus(
             onDownloadProgress = onDownloadProgress,
             onDownloadCompleted = onDownloadCompleted,
+            onDownloadCancelled = onDownloadCancelled,
+            onDownloadFailed = onDownloadFailed,
         )
       }
 
   override suspend fun completeUpdate() =
       withContext(context = Dispatchers.Default) {
         Logger.d { "GOING DOWN FOR UPDATE" }
-        updater.complete()
+        updater.completeUpgrade()
       }
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =

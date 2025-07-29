@@ -18,14 +18,11 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
-import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 internal interface VersionCheckComponent {
 
   fun inject(component: VersionUpgradeAvailable)
-
-  fun inject(component: VersionUpdateProgress)
 
   interface Factory {
 
@@ -45,14 +42,6 @@ internal interface VersionCheckComponent {
   ) : VersionCheckComponent {
 
     override fun inject(component: VersionUpgradeAvailable) {
-      component.viewModel =
-          VersionCheckViewModeler(
-              state = params.state,
-              interactor = params.module.provideInteractor(),
-          )
-    }
-
-    override fun inject(component: VersionUpdateProgress) {
       component.viewModel =
           VersionCheckViewModeler(
               state = params.state,

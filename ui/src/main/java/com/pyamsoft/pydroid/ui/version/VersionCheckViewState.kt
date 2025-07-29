@@ -32,11 +32,14 @@ public interface VersionCheckViewState : UiViewState {
   /** The launcher that will start the In-App update process */
   public val launcher: StateFlow<AppUpdateLauncher?>
 
+  /** If an upload is downloading, how close are we to done? */
+  public val updateProgressPercent: StateFlow<Float>
+
   /** Is the update downloaded and ready to install? */
   public val isUpdateReadyToInstall: StateFlow<Boolean>
 
-  /** If an upload is downloading, how close are we to done? */
-  public val updateProgressPercent: StateFlow<Float>
+  /** Did the update fail to download or install? */
+  public val updateError: StateFlow<Throwable?>
 
   /**
    * Has the upgrade completion been triggered (in production, the app closes, this is just to guard

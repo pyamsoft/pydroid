@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.version.fake
 
-internal class VersionInteractorImpl
-internal constructor(
-    networkInteractor: VersionInteractorNetwork,
-) : VersionInteractor by networkInteractor {
-
-  // NOTE(Peter): This intermediate useless class exists in case we one day want to add
-  // local caching over the interface
-
+/** Various test states for the FakeUpdateManager */
+public enum class FakeUpgradeRequest {
+  USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_SUCCESS,
+  USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_FAILURE,
+  USER_ACCEPTED_DOWNLOAD_CANCELLED,
+  USER_ACCEPTED_DOWNLOAD_FAILS,
+  USER_REJECTED_DOWNLOAD,
 }

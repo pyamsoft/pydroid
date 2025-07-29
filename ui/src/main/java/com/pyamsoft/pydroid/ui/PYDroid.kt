@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.PYDroidLogger
 
@@ -73,8 +74,13 @@ internal constructor(
 
   /** PYDroid debugging parameters */
   public data class DebugParameters(
-      /** Is there an upgrade ready to install? */
-      internal val upgradeAvailable: Boolean = false,
+      /**
+       * Is there an upgrade ready to install?
+       *
+       * Depending on the [FakeUpgradeRequest] provided here will determine what the "fake" updater
+       * does
+       */
+      internal val upgradeAvailable: FakeUpgradeRequest? = null,
 
       /** Should the user be shown the changelog? */
       internal val changeLogAvailable: Boolean = false,

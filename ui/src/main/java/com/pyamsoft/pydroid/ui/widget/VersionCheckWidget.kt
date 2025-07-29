@@ -23,12 +23,12 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 
 /**
- * Shows the default UI for when an update begins to download
+ * Shows the default UI for when a new version is available
  *
  * Must be hosted in a PYDroidActivity
  */
 @Composable
-public fun UpdateProgressWidget(
+public fun VersionCheckWidget(
     modifier: Modifier = Modifier,
 ) {
   // If isEditMode, we don't render nothing
@@ -37,9 +37,9 @@ public fun UpdateProgressWidget(
   }
 
   val delegate = rememberPYDroidDelegate()
-  val updateProgress = remember(delegate) { delegate.updateProgress() }
+  val versionUpgrader = remember(delegate) { delegate.versionUpgrader() }
 
-  updateProgress.RenderVersionCheckWidget(
+  versionUpgrader.RenderVersionCheckWidget(
       modifier = modifier,
   )
 }

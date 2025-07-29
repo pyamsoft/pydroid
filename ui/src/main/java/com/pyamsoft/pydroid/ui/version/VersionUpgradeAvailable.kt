@@ -26,11 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
+import com.pyamsoft.pydroid.ui.internal.version.VersionUpdateProgressScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeAvailableScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeCompleteScreen
 import com.pyamsoft.pydroid.util.Logger
@@ -45,6 +47,9 @@ public typealias OnUpdateDownloadStartedCallback = (launcher: AppUpdateLauncher)
 /** Upon upgrade action started, this callback will run */
 public typealias OnUpgradeStartedCallback = () -> Unit
 
+/** User has selected to try downloading again after initial download failed */
+public typealias OnDownloadRetryCallback = () -> Unit
+
 /** A Composable that can display version upgrade availability */
 public typealias VersionUpgradeWidget =
     @Composable
@@ -52,7 +57,24 @@ public typealias VersionUpgradeWidget =
         VersionCheckViewState,
         OnUpdateDownloadStartedCallback,
         OnUpgradeStartedCallback,
+        OnDownloadRetryCallback,
     ) -> Unit
+
+private fun handleRestartUpdateFlow(
+    viewModel: VersionCheckViewModeler,
+    activity: ComponentActivity,
+    onLauncherReceived: (AppUpdateLauncher) -> Unit = {},
+) {
+  // Since an update launcher can only be used once, if the update fails to
+  // happen because of the user or a failure, re-fetch a new updater
+  //
+  // Don't use scope since if this leaves Composition it would die
+  viewModel.handleCheckForUpdates(
+      scope = activity.lifecycleScope,
+      force = true,
+      onLauncherReceived = onLauncherReceived,
+  )
+}
 
 /**
  * A self contained class which is able to check for updates and prompt the user to install them
@@ -82,12 +104,8 @@ internal constructor(
             object : DefaultLifecycleObserver {
 
               override fun onCreate(owner: LifecycleOwner) {
-                viewModel
-                    .requireNotNull()
-                    .bind(
-                        scope = owner.lifecycleScope,
-                        onUpgradeReady = { Logger.d { "A new upgrade it ready!" } },
-                    )
+                val vm = viewModel.requireNotNull()
+                vm.bind(scope = owner.lifecycleScope)
               }
 
               override fun onStart(owner: LifecycleOwner) {
@@ -128,14 +146,36 @@ internal constructor(
     // Required to launch upgrade flows and force finish
     val activity = rememberResolvedActivity()
 
-    val handleDownloadStarted by rememberUpdatedState { launcher: AppUpdateLauncher ->
+    val handleStartInAppUpdateDownload by rememberUpdatedState { launcher: AppUpdateLauncher ->
       // Don't use scope since if this leaves Composition it would die
       // Enforce that we do this on the Main thread
       activity.lifecycleScope.launch(context = Dispatchers.Main) {
         launcher
-            .update(activity, VersionCheckViewModeler.RC_APP_UPDATE)
-            .onSuccess { Logger.d { "Launched an in-app update flow" } }
-            .onFailure { Logger.e(it) { "Unable to launch in-app update flow" } }
+            .launchUpdate(activity)
+            .onSuccess { status ->
+              when (status) {
+                AppUpdateResultStatus.ACCEPTED -> {
+                  Logger.d { "Started downloading new in-app update..." }
+                }
+
+                AppUpdateResultStatus.USER_CANCELLED -> {
+                  Logger.d { "User canceled in-app flow, unable to start downloading update." }
+                  handleRestartUpdateFlow(
+                      viewModel = vm,
+                      activity = activity,
+                  )
+                }
+
+                AppUpdateResultStatus.IN_APP_UPDATE_FAILED -> {
+                  Logger.d { "In-app flow failed, unable to start downloading update." }
+                  vm.handleInAppUpdateFailed()
+                }
+              }
+            }
+            .onFailure {
+              Logger.e(it) { "Unable to launch in-app update flow to start download." }
+              vm.handleInAppUpdateFailed()
+            }
       }
     }
 
@@ -152,8 +192,18 @@ internal constructor(
 
     content(
         vm,
-        { handleDownloadStarted(it) },
+        { handleStartInAppUpdateDownload(it) },
         { handleUpgradeStarted() },
+        {
+          handleRestartUpdateFlow(
+              viewModel = vm,
+              activity = activity,
+              onLauncherReceived = {
+                // Once we receive the launcher immediately restart the download flow
+                handleStartInAppUpdateDownload(it)
+              },
+          )
+        },
     )
   }
 
@@ -162,11 +212,22 @@ internal constructor(
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
   ) {
-    Render { state, onDownloadStarted, onUpgradeStarted ->
+    Render { state, onDownloadStarted, onUpgradeStarted, onRestartDownload ->
       VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,
-          onBeginInAppUpdate = onDownloadStarted,
+          onBeginInAppUpdate = { launcher, forceRetry ->
+            if (forceRetry) {
+              onRestartDownload()
+            } else {
+              onDownloadStarted(launcher)
+            }
+          },
+      )
+
+      VersionUpdateProgressScreen(
+          modifier = modifier,
+          state = state,
       )
 
       VersionUpgradeCompleteScreen(

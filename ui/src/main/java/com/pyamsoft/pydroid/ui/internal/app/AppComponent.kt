@@ -61,7 +61,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsComponent
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -157,7 +156,7 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
-                isFakeUpgradeAvailable = params.debug.upgradeAvailable,
+                fakeUpgradeRequest = params.debug.upgradeAvailable,
             ),
         )
 
@@ -288,11 +287,6 @@ internal interface AppComponent {
               ),
           versionUpgrader =
               VersionUpgradeAvailable.create(
-                  activity,
-                  disabled = options.disableVersionCheck,
-              ),
-          versionUpdateProgress =
-              VersionUpdateProgress.create(
                   activity,
                   disabled = options.disableVersionCheck,
               ),

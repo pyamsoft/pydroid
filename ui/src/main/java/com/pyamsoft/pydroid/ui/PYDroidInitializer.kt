@@ -53,7 +53,7 @@ internal constructor(
                       logger = params.logger,
                       debug =
                           PYDroid.DebugParameters(
-                              upgradeAvailable = params.debug?.upgradeAvailable ?: false,
+                              upgradeAvailable = params.debug?.upgradeAvailable,
                               changeLogAvailable = params.debug?.changeLogAvailable ?: false,
                           ),
                   ),

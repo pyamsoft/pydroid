@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
-import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -43,7 +42,6 @@ internal constructor(
   // Copy these out of PYDroidActivityComponents so we can null them out onDestroy
   private var ratingDelegate: RatingDelegate?
   private var versionUpgradeAvailable: VersionUpgradeAvailable?
-  private var versionUpdateProgress: VersionUpdateProgress?
   private var showUpdateChangeLog: ShowUpdateChangeLog?
   private var showDataPolicy: ShowDataPolicy?
   private var billingUpsell: BillingUpsell?
@@ -55,7 +53,6 @@ internal constructor(
 
     ratingDelegate = rd
     versionUpgradeAvailable = components.versionUpgrader
-    versionUpdateProgress = components.versionUpdateProgress
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
     showDataPolicy = components.dataPolicy
@@ -66,7 +63,6 @@ internal constructor(
 
       ratingDelegate = null
       versionUpgradeAvailable = null
-      versionUpdateProgress = null
       billingUpsell = null
       showDataPolicy = null
     }
@@ -89,14 +85,6 @@ internal constructor(
   internal fun versionUpgrader(): VersionUpgradeAvailable {
     return versionUpgradeAvailable.requireNotNull {
       "VersionUpgradeAvailable is NULL, was this destroyed?"
-    }
-  }
-
-  /** Used in UpdateProgressWidget */
-  @CheckResult
-  internal fun updateProgress(): VersionUpdateProgress {
-    return versionUpdateProgress.requireNotNull {
-      "VersionUpdateProgress is NULL, was this destroyed?"
     }
   }
 

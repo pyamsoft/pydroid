@@ -25,11 +25,13 @@ public interface AppUpdater {
   public suspend fun watchDownloadStatus(
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit,
+      onDownloadCancelled: () -> Unit,
+      onDownloadFailed: () -> Unit
   )
 
   /** Check for a new update */
   @CheckResult public suspend fun checkForUpdate(): AppUpdateLauncher
 
   /** Complete the update, which will restart the application */
-  public suspend fun complete()
+  public suspend fun completeUpgrade()
 }

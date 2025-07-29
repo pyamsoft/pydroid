@@ -228,14 +228,24 @@ public final class com/pyamsoft/pydroid/bootstrap/version/VersionModule$Paramete
 public abstract interface class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher {
 	public static final field Companion Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher$Companion;
 	public abstract fun availableUpdateVersion ()I
+	public abstract fun consumed ()Z
 	public static fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
+	public abstract fun launchUpdate (Landroid/app/Activity;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static fun test (I)Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
-	public abstract fun update (Landroid/app/Activity;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher$Companion {
 	public final fun empty ()Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
 	public final fun test (I)Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateLauncher;
+}
+
+public final class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus : java/lang/Enum {
+	public static final field ACCEPTED Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus;
+	public static final field IN_APP_UPDATE_FAILED Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus;
+	public static final field USER_CANCELED Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus;
+	public static fun values ()[Lcom/pyamsoft/pydroid/bootstrap/version/update/AppUpdateResultStatus;
 }
 
 public abstract interface class com/pyamsoft/pydroid/bootstrap/version/update/AppUpdater {

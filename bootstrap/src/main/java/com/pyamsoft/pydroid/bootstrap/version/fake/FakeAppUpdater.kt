@@ -14,30 +14,41 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.play
+package com.pyamsoft.pydroid.bootstrap.version.fake
 
 import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.Logger
+import kotlinx.coroutines.delay
 
-internal class PlayStoreAppUpdater
+internal class FakeAppUpdater
 internal constructor(
-    enforcer: ThreadEnforcer,
-    context: Context,
+  enforcer: ThreadEnforcer,
+  context: Context,
+  version: Int,
+  private val fakeUpgradeRequest: FakeUpgradeRequest,
 ) :
-    AbstractAppUpdater<AppUpdateManager>(
-        enforcer = enforcer,
-        resolveAppUpdateManager = { AppUpdateManagerFactory.create(context.applicationContext) },
-    ) {
+  AbstractAppUpdater<FakeAppUpdateManager>(
+    enforcer = enforcer,
+    resolveAppUpdateManager = {
+      FakeAppUpdateManager(context.applicationContext).apply { setUpdateAvailable(version + 1) }
+    },
+  ) {
+
+  override suspend fun onBeforeCheckForUpdate() {
+    Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
+    delay(2000L)
+  }
 
   override fun createAppUpdateLauncher(info: AppUpdateInfo, updateType: Int): AppUpdateLauncher =
-      PlayStoreAppUpdateLauncher(
-          manager = manager,
-          info = info,
-          type = updateType,
-      )
+    FakeAppUpdateLauncher(
+      manager = manager,
+      info = info,
+      type = updateType,
+      fakeUpgradeRequest = fakeUpgradeRequest,
+    )
 }

@@ -16,12 +16,11 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-internal class VersionInteractorImpl
-internal constructor(
-    networkInteractor: VersionInteractorNetwork,
-) : VersionInteractor by networkInteractor {
-
-  // NOTE(Peter): This intermediate useless class exists in case we one day want to add
-  // local caching over the interface
-
+/**
+ * https://developer.android.com/reference/com/google/android/play/core/appupdate/AppUpdateManager.html#startUpdateFlowForResult(com.google.android.play.core.appupdate.AppUpdateInfo,%20android.app.Activity,%20com.google.android.play.core.appupdate.AppUpdateOptions,%20int)
+ */
+public enum class AppUpdateResultStatus {
+  ACCEPTED,
+  USER_CANCELLED,
+  IN_APP_UPDATE_FAILED
 }

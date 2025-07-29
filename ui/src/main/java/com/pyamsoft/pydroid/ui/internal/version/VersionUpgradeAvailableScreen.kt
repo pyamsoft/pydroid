@@ -35,64 +35,103 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.widget.InterruptCard
-import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 
 @Composable
 internal fun VersionUpgradeAvailableScreen(
     modifier: Modifier = Modifier,
     state: VersionCheckViewState,
-    onBeginInAppUpdate: (AppUpdateLauncher) -> Unit,
+    onBeginInAppUpdate: (AppUpdateLauncher, Boolean) -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
 
   val launcher by state.launcher.collectAsStateWithLifecycle()
   val progress by state.updateProgressPercent.collectAsStateWithLifecycle()
   val isReady by state.isUpdateReadyToInstall.collectAsStateWithLifecycle()
+  val updateErrorDelegate by state.updateError.collectAsStateWithLifecycle()
 
-  val isUpdateAvailable =
-      remember(launcher) { launcher.let { it != null && it.availableUpdateVersion() > 0 } }
+  val updateError = updateErrorDelegate
 
-  val isVisible =
-      remember(
-          isReady,
-          progress,
-          isUpdateAvailable,
-      ) {
-        !isReady && progress <= 0 && isUpdateAvailable
-      }
+  launcher.also { maybeLauncher ->
+    // The launcher CAN be null if the user cancels out of a request so do NOT
+    // expect rememberNotNull here
+    if (maybeLauncher == null) {
+      return
+    }
 
-  // Show if we have a launcher but its not done downloading the update yet
-  InterruptCard(
-      modifier = modifier,
-      visible = isVisible,
-  ) {
-    val validLauncher = rememberNotNull(launcher)
+    val isUpdateAvailable = remember(maybeLauncher) { maybeLauncher.availableUpdateVersion() > 0 }
 
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
+    val isVisible =
+        remember(
+            isReady,
+            progress,
+            isUpdateAvailable,
+        ) {
+          !isReady && progress <= 0 && isUpdateAvailable
+        }
+
+    // Show if we have a launcher but its not done downloading the update yet
+    //
+    // The launcher CAN be null if the user cancels out of a request so do NOT
+    // expect rememberNotNull here
+    InterruptCard(
+        modifier = modifier,
+        visible = isVisible,
     ) {
-      Text(
-          text =
-              stringResource(
-                  R.string.an_update_to_version_is_available,
-                  validLauncher.availableUpdateVersion()),
-          style =
-              MaterialTheme.typography.bodyLarge.copy(
-                  color = MaterialTheme.colorScheme.primary,
-              ),
-      )
-
-      OutlinedButton(
-          modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-          onClick = {
-            hapticManager?.confirmButtonPress()
-            onBeginInAppUpdate(validLauncher)
-          },
+      Column(
+          modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
       ) {
-        Text(
-            text = stringResource(R.string.download),
-        )
+        val newAvailableVersion = maybeLauncher.availableUpdateVersion()
+        if (updateError == null) {
+          Text(
+              text =
+                  stringResource(
+                      R.string.an_update_to_version_is_available,
+                      newAvailableVersion,
+                  ),
+              style =
+                  MaterialTheme.typography.bodyLarge.copy(
+                      color = MaterialTheme.colorScheme.primary,
+                  ),
+          )
+        } else {
+          Text(
+              text =
+                  stringResource(
+                      R.string.error_downloading_updated_version,
+                      newAvailableVersion,
+                  ),
+              style =
+                  MaterialTheme.typography.bodyLarge.copy(
+                      color = MaterialTheme.colorScheme.primary,
+                  ),
+          )
+
+          Text(
+              text = updateError.message ?: "An unexpected error occurred.",
+              style =
+                  MaterialTheme.typography.bodyMedium.copy(
+                      color = MaterialTheme.colorScheme.error,
+                  ),
+          )
+        }
+
+        OutlinedButton(
+            modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+            onClick = {
+              hapticManager?.confirmButtonPress()
+              onBeginInAppUpdate(
+                  maybeLauncher,
+                  updateError != null,
+              )
+            },
+        ) {
+          Text(
+              text =
+                  stringResource(
+                      if (updateError == null) R.string.download else R.string.download_try_again),
+          )
+        }
       }
     }
   }
@@ -105,7 +144,7 @@ private fun PreviewVersionUpgradeAvailableScreen(
   Surface {
     VersionUpgradeAvailableScreen(
         state = state,
-        onBeginInAppUpdate = {},
+        onBeginInAppUpdate = { _, _ -> },
     )
   }
 }
@@ -142,6 +181,19 @@ private fun PreviewVersionCheckScreenNotAvailable() {
           MutableVersionCheckViewState().apply {
             launcher.value = null
             isUpdateReadyToInstall.value = false
+          },
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewVersionCheckScreenErrorRecover() {
+  PreviewVersionUpgradeAvailableScreen(
+      state =
+          MutableVersionCheckViewState().apply {
+            launcher.value = AppUpdateLauncher.test(1)
+            isUpdateReadyToInstall.value = false
+            updateError.value = UPDATE_FAILED_DOWNLOAD_ERROR
           },
   )
 }

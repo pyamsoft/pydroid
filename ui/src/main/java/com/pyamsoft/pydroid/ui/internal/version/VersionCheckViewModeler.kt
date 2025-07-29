@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 import com.pyamsoft.pydroid.util.Logger
+import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
@@ -45,6 +47,16 @@ internal constructor(
       return false
     }
 
+    if (s.isUpdateReadyToInstall.value) {
+      Logger.d { "Update is already ready to install, do not check for update again" }
+      return false
+    }
+
+    if (s.updateProgressPercent.value > 0) {
+      Logger.d { "Update download is in progress, do not check for update again" }
+      return false
+    }
+
     if (s.launcher.value != null) {
       Logger.d { "Launcher is already available, do not check for update again" }
       return false
@@ -53,16 +65,18 @@ internal constructor(
     return true
   }
 
-  internal fun bind(
-      scope: CoroutineScope,
-      onUpgradeReady: () -> Unit,
-  ) {
+  private fun MutableVersionCheckViewState.handleInAppUpdateFailed() {
+    updateProgressPercent.value = 0F
+    isUpdateReadyToInstall.value = false
+    updateError.value = UPDATE_FAILED_DOWNLOAD_ERROR
+  }
+
+  internal fun bind(scope: CoroutineScope) {
     val s = state
     scope.launch(context = Dispatchers.Default) {
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
             if (!s.isUpdateReadyToInstall.value) {
-              Logger.d { "Update progress: $percent" }
               s.updateProgressPercent.value = percent
             } else {
               Logger.w { "Download marks progress, but update is ready to install: $percent" }
@@ -72,7 +86,26 @@ internal constructor(
           onDownloadCompleted = {
             Logger.d { "App update download ready!" }
             s.isUpdateReadyToInstall.value = true
-            onUpgradeReady()
+          },
+          onDownloadCancelled = {
+            Logger.d { "App update download was canceled!" }
+
+            // Clear the update values
+            s.apply {
+              updateProgressPercent.value = 0F
+              isUpdateReadyToInstall.value = false
+              updateError.value = null
+            }
+
+            // Since the user cancelled, we ALWAYS want to refresh the update flow
+            handleCheckForUpdates(
+                scope = scope,
+                force = true,
+            )
+          },
+          onDownloadFailed = {
+            Logger.w { "App update download failed" }
+            s.handleInAppUpdateFailed()
           },
       )
     }
@@ -81,13 +114,9 @@ internal constructor(
   internal fun handleCheckForUpdates(
       scope: CoroutineScope,
       force: Boolean,
+      onLauncherReceived: (AppUpdateLauncher) -> Unit = {},
   ) {
     val s = state
-
-    if (s.isUpdateReadyToInstall.value) {
-      Logger.d { "Update is already ready to install, do not check for update again" }
-      return
-    }
 
     if (!canCheckForUpdates(force)) {
       return
@@ -99,14 +128,26 @@ internal constructor(
         return@launch
       }
 
-      s.isCheckingForUpdate.value = CheckingState.Checking(force = force)
+      s.apply {
+        // Start the upgrade check
+        isCheckingForUpdate.value = CheckingState.Checking(force = force)
+
+        // We are checking again, so reset progress
+        isUpdateReadyToInstall.value = false
+        updateProgressPercent.value = 0F
+        updateError.value = null
+
+        // Clear the launcher incase we have an old one hanging around
+        launcher.value = null
+      }
+
       interactor
           .checkVersion()
           .onSuccess { Logger.d { "Update data found as: $it" } }
           .onSuccess { s.launcher.value = it }
+          .onSuccess(onLauncherReceived)
           .onFailure { Logger.e(it) { "Error checking for latest version" } }
           .onFailure { s.launcher.value = null }
-          .onFinally { Logger.d { "Done checking for updates" } }
           .onFinally {
             s.isCheckingForUpdate.value =
                 CheckingState.Done(
@@ -128,8 +169,15 @@ internal constructor(
     state.isUpgraded.value = true
     scope.launch(context = Dispatchers.Default) {
       Logger.d { "Updating app, restart via update manager!" }
-      interactor.completeUpdate()
-      onUpgradeCompleted()
+      try {
+        interactor.completeUpdate()
+      } catch (e: Throwable) {
+        e.ifNotCancellation {
+          Logger.e(e) { "Error during upgrade. Close application anyway to try again later." }
+        }
+      } finally {
+        onUpgradeCompleted()
+      }
     }
   }
 
@@ -144,9 +192,8 @@ internal constructor(
     }
   }
 
-  companion object {
-
-    /** Request code for in-app updates Only bottom 16 bits. */
-    internal const val RC_APP_UPDATE = 146
+  fun handleInAppUpdateFailed() {
+    Logger.d { "Unable to start in-app update download, process failed" }
+    state.handleInAppUpdateFailed()
   }
 }

@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.ui.internal.version
 
-internal class VersionInteractorImpl
-internal constructor(
-    networkInteractor: VersionInteractorNetwork,
-) : VersionInteractor by networkInteractor {
-
-  // NOTE(Peter): This intermediate useless class exists in case we one day want to add
-  // local caching over the interface
-
-}
+internal val UPDATE_FAILED_DOWNLOAD_ERROR = RuntimeException("Unable to download update")

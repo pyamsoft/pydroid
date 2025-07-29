@@ -38,4 +38,10 @@
     name="an_update_to_version_is_available"
   >An update to version %1$d is available!</string>
   <string name="downloading_update">Downloading Update…</string>
+
+  <!-- TODO(Peter): Need zh-rTW translation -->
+  <string
+    name="error_downloading_updated_version"
+  >An error occurred while downloading version %1$d</string>
+  <string name="download_try_again">Try Again</string>
 </resources>

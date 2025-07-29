@@ -20,7 +20,6 @@ import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
-import com.pyamsoft.pydroid.ui.version.VersionUpdateProgress
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 
 @ConsistentCopyVisibility
@@ -30,6 +29,5 @@ internal constructor(
     internal val rating: RatingDelegate,
     internal val dataPolicy: ShowDataPolicy,
     internal val versionUpgrader: VersionUpgradeAvailable,
-    internal val versionUpdateProgress: VersionUpdateProgress,
     internal val showUpdateChangeLog: ShowUpdateChangeLog,
 )

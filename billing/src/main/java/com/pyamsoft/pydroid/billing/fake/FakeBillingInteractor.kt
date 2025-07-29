@@ -21,6 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.AbstractBillingInteractor
 import com.pyamsoft.pydroid.billing.BillingFlowState
+import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
@@ -31,11 +32,14 @@ internal class FakeBillingInteractor
 internal constructor(
     context: Context,
     errorBus: EventBus<Throwable>,
+    purchaseBus: EventBus<BillingPurchase>,
 ) :
     AbstractBillingInteractor(
         context = context,
         errorBus = errorBus,
+        purchaseBus = purchaseBus,
     ) {
+
   @CheckResult
   private fun makeFakeSku(priceInDollars: Long): BillingSku =
       FakeBillingSku(
@@ -50,18 +54,19 @@ internal constructor(
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) {
     launchInScope(context = Dispatchers.Default) {
-      if (sku.price > 5 * PRICE_SCALE) {
+      if (sku.price > 30 * PRICE_SCALE) {
         Logger.w { "Purchase response not OK: $sku" }
         emitError(RuntimeException("Error purchasing ${sku.title}"))
       } else {
         Logger.d { "Purchase success $sku" }
+        emitPurchase(BillingPurchase.Fake(sku))
       }
     }
   }
 
   override suspend fun onClientRefresh() {
     // Fake a list of products to purchase
-    emitSkuFlow(
+    emitStateUpdate(
         state =
             BillingFlowState(
                 state = BillingState.CONNECTED,
@@ -76,6 +81,8 @@ internal constructor(
                         makeFakeSku(30),
                         makeFakeSku(50),
                         makeFakeSku(100),
+                        makeFakeSku(250),
+                        makeFakeSku(300),
                         makeFakeSku(500),
                     ),
             ),

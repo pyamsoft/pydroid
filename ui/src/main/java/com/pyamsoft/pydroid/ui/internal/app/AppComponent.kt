@@ -21,6 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
+import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
@@ -107,6 +108,7 @@ internal interface AppComponent {
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
         internal val billingErrorBus: EventBus<Throwable>,
+        internal val billingPurchaseBus: EventBus<BillingPurchase>,
         internal val imageLoader: ImageLoader,
         internal val version: Int,
         internal val changeLogModule: ChangeLogModule,
@@ -135,6 +137,7 @@ internal interface AppComponent {
                 context = params.context.applicationContext,
                 enforcer = params.enforcer,
                 errorBus = params.billingErrorBus,
+                purchaseBus = params.billingPurchaseBus,
             ),
         )
 

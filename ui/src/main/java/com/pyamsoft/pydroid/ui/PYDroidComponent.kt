@@ -149,6 +149,7 @@ internal interface PYDroidComponent {
           context = context,
           theming = theming,
           billingErrorBus = DefaultEventBus(),
+          billingPurchaseBus = DefaultEventBus(),
           changeLogModule = changeLogModule,
           imageLoader = imageLoader,
           version = params.version,

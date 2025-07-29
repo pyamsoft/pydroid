@@ -123,7 +123,7 @@ internal fun BillingDialog(
             purchaseClient.purchase(activity, sku)
           }
         },
-        onBillingErrorDismissed = { viewModel.handleClearError() },
+        onBillingPopupDismissed = { viewModel.handleBillingPopupDismissed() },
         onClose = onDismiss,
     )
   }

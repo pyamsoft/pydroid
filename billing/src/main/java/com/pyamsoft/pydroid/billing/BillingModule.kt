@@ -37,12 +37,14 @@ public class BillingModule(params: Parameters) {
           FakeBillingInteractor(
               context = params.context.applicationContext,
               errorBus = params.errorBus,
+              purchaseBus = params.purchaseBus,
           )
         } else {
           PlayStoreBillingInteractor(
               enforcer = params.enforcer,
               context = params.context.applicationContext,
               errorBus = params.errorBus,
+              purchaseBus = params.purchaseBus,
           )
         }
 
@@ -74,5 +76,6 @@ public class BillingModule(params: Parameters) {
       internal val context: Context,
       internal val enforcer: ThreadEnforcer,
       internal val errorBus: EventBus<Throwable>,
+      internal val purchaseBus: EventBus<BillingPurchase>,
   )
 }

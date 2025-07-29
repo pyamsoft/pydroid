@@ -36,7 +36,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -44,6 +43,7 @@ internal abstract class AbstractBillingInteractor
 protected constructor(
     context: Context,
     private val errorBus: EventBus<Throwable>,
+    private val purchaseBus: EventBus<BillingPurchase>,
 ) : BillingConnector, BillingInteractor, BillingLauncher {
 
   private val appSkuList: List<String>
@@ -137,8 +137,9 @@ protected constructor(
         }
       }
 
-  final override fun watchBillingErrors(): Flow<Throwable> =
-      errorBus.onEach { Logger.e(it) { "Billing error received!" } }
+  final override fun watchBillingErrors(): Flow<Throwable> = errorBus
+
+  final override fun watchBillingPurchases(): Flow<BillingPurchase> = purchaseBus
 
   @CheckResult protected fun getSkuList(): List<String> = appSkuList
 
@@ -158,8 +159,12 @@ protected constructor(
     errorBus.emit(throwable)
   }
 
-  protected fun emitSkuFlow(state: BillingFlowState) {
+  protected fun emitStateUpdate(state: BillingFlowState) {
     skuFlow.value = state
+  }
+
+  protected suspend fun emitPurchase(purchase: BillingPurchase) {
+    purchaseBus.emit(purchase)
   }
 
   protected fun launchInScope(

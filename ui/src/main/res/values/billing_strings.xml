@@ -15,8 +15,10 @@
   ~ limitations under the License.
   -->
 <resources>
-  <!-- Billing -->
   <string
     name="billing_error_message"
   >Sorry, there was an error connecting to the In-App Billing service. Please try again later.</string>
+
+  <!-- TODO(Peter): Need zh-rTW translation -->
+  <string name="billing_thank_you">Thank you for your support!</string>
 </resources>

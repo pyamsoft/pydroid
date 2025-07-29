@@ -64,10 +64,22 @@ internal constructor(
         }
       }
     }
+
+    interactor.watchBillingPurchases().also { f ->
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { purchase ->
+          Logger.d { "Billing purchase received: $purchase" }
+          state.thanksPurchase.value = purchase
+        }
+      }
+    }
   }
 
-  internal fun handleClearError() {
-    state.error.value = null
+  internal fun handleBillingPopupDismissed() {
+    state.apply {
+      error.value = null
+      thanksPurchase.value = null
+    }
   }
 
   internal fun handleRefresh(scope: CoroutineScope) {

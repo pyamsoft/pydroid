@@ -28,6 +28,9 @@ public interface BillingInteractor {
   /** Watch for errors in the billing client */
   @CheckResult public fun watchBillingErrors(): Flow<Throwable>
 
+  /** Watch for successful purchases in the billing client */
+  @CheckResult public fun watchBillingPurchases(): Flow<BillingPurchase>
+
   /** Refresh the SKU list */
   public suspend fun refresh()
 

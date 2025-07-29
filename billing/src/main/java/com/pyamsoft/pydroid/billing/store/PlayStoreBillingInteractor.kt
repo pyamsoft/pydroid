@@ -33,6 +33,7 @@ import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.QueryProductDetailsResult
 import com.pyamsoft.pydroid.billing.AbstractBillingInteractor
 import com.pyamsoft.pydroid.billing.BillingFlowState
+import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
@@ -47,10 +48,12 @@ internal constructor(
     private val enforcer: ThreadEnforcer,
     context: Context,
     errorBus: EventBus<Throwable>,
+    purchaseBus: EventBus<BillingPurchase>,
 ) :
     AbstractBillingInteractor(
         context = context.applicationContext,
         errorBus = errorBus,
+        purchaseBus = purchaseBus,
     ),
     BillingClientStateListener,
     PurchasesUpdatedListener,
@@ -139,16 +142,19 @@ internal constructor(
       val products = details.productDetailsList
       Logger.d { "Sku response: $products" }
       val skuList = products.map { PlayBillingSku(it) }
-      emitSkuFlow(state = BillingFlowState(BillingState.CONNECTED, skuList))
+      emitStateUpdate(state = BillingFlowState(BillingState.CONNECTED, skuList))
     } else {
       Logger.w { "SKU response not OK: ${result.debugMessage}" }
-      emitSkuFlow(state = BillingFlowState(BillingState.DISCONNECTED, emptyList()))
+      emitStateUpdate(state = BillingFlowState(BillingState.DISCONNECTED, emptyList()))
     }
   }
 
   override fun onConsumeResponse(result: BillingResult, token: String) {
     if (result.isOk()) {
-      Logger.d { "Purchase consumed $token" }
+      launchInScope(context = Dispatchers.Default) {
+        Logger.d { "Purchase consumed $token" }
+        emitPurchase(BillingPurchase.PlayBillingConsumed(token))
+      }
     } else {
       launchInScope(context = Dispatchers.Default) {
         Logger.w { "Consume response not OK: ${result.debugMessage}" }
@@ -167,7 +173,7 @@ internal constructor(
       querySkus()
     } else {
       Logger.w { "Billing setup not OK: ${result.debugMessage}" }
-      emitSkuFlow(state = BillingFlowState(BillingState.DISCONNECTED, emptyList()))
+      emitStateUpdate(state = BillingFlowState(BillingState.DISCONNECTED, emptyList()))
     }
   }
 

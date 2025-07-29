@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating.play
+package com.pyamsoft.pydroid.bootstrap.rating.fake
 
 import android.content.Context
 import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AbstractRateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.Logger
+import kotlinx.coroutines.delay
 
-internal class PlayStoreRateMyApp
+internal class FakeRateMyApp
 internal constructor(
   enforcer: ThreadEnforcer,
   context: Context,
-) : AbstractRateMyApp<ReviewManager>(
-  enforcer = enforcer,
-  resolveReviewManager = { ReviewManagerFactory.create(context.applicationContext) },
-) {
+) : AbstractRateMyApp<FakeReviewManager>(
+  enforcer = enforcer, resolveReviewManager = { FakeReviewManager(context.applicationContext) }) {
 
-  override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =
-    PlayStoreAppRatingLauncher(
-      manager = manager,
-      info = info,
-    )
+  override suspend fun onBeforeStartRating() {
+    Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
+    delay(2000L)
+  }
+
+  override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher = FakeAppRatingLauncher(
+    manager = manager,
+    info = info,
+  )
 }

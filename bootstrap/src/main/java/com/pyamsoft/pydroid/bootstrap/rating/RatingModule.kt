@@ -18,8 +18,10 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.rating.fake.FakeRateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.play.PlayStoreRateMyApp
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Rating module */
 public class RatingModule(params: Parameters) {
@@ -27,11 +29,17 @@ public class RatingModule(params: Parameters) {
   private val impl: RatingInteractor
 
   init {
-    val rateMyApp =
-        PlayStoreRateMyApp(
-            enforcer = params.enforcer,
-            context = params.context.applicationContext,
-        )
+    val rateMyApp = if (params.context.isDebugMode()) {
+      FakeRateMyApp(
+        enforcer = params.enforcer,
+        context = params.context.applicationContext,
+      )
+    } else {
+      PlayStoreRateMyApp(
+        enforcer = params.enforcer,
+        context = params.context.applicationContext,
+      )
+    }
 
     impl = RatingInteractorImpl(rateMyApp)
   }
@@ -44,7 +52,7 @@ public class RatingModule(params: Parameters) {
 
   /** Module parameters */
   public data class Parameters(
-      internal val context: Context,
-      internal val enforcer: ThreadEnforcer,
+    internal val context: Context,
+    internal val enforcer: ThreadEnforcer,
   )
 }

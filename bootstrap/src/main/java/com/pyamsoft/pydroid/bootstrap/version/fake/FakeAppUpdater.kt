@@ -27,17 +27,17 @@ import kotlinx.coroutines.delay
 
 internal class FakeAppUpdater
 internal constructor(
-  enforcer: ThreadEnforcer,
-  context: Context,
-  version: Int,
-  private val fakeUpgradeRequest: FakeUpgradeRequest,
+    enforcer: ThreadEnforcer,
+    context: Context,
+    version: Int,
+    private val fakeUpgradeRequest: FakeUpgradeRequest,
 ) :
-  AbstractAppUpdater<FakeAppUpdateManager>(
-    enforcer = enforcer,
-    resolveAppUpdateManager = {
-      FakeAppUpdateManager(context.applicationContext).apply { setUpdateAvailable(version + 1) }
-    },
-  ) {
+    AbstractAppUpdater<FakeAppUpdateManager>(
+        enforcer = enforcer,
+        resolveAppUpdateManager = {
+          FakeAppUpdateManager(context.applicationContext).apply { setUpdateAvailable(version + 1) }
+        },
+    ) {
 
   override suspend fun onBeforeCheckForUpdate() {
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
@@ -45,10 +45,10 @@ internal constructor(
   }
 
   override fun createAppUpdateLauncher(info: AppUpdateInfo, updateType: Int): AppUpdateLauncher =
-    FakeAppUpdateLauncher(
-      manager = manager,
-      info = info,
-      type = updateType,
-      fakeUpgradeRequest = fakeUpgradeRequest,
-    )
+      FakeAppUpdateLauncher(
+          manager = manager,
+          info = info,
+          type = updateType,
+          fakeUpgradeRequest = fakeUpgradeRequest,
+      )
 }

@@ -26,16 +26,17 @@ import com.pyamsoft.pydroid.core.ThreadEnforcer
 
 internal class PlayStoreRateMyApp
 internal constructor(
-  enforcer: ThreadEnforcer,
-  context: Context,
-) : AbstractRateMyApp<ReviewManager>(
-  enforcer = enforcer,
-  resolveReviewManager = { ReviewManagerFactory.create(context.applicationContext) },
-) {
+    enforcer: ThreadEnforcer,
+    context: Context,
+) :
+    AbstractRateMyApp<ReviewManager>(
+        enforcer = enforcer,
+        resolveReviewManager = { ReviewManagerFactory.create(context.applicationContext) },
+    ) {
 
   override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =
-    PlayStoreAppRatingLauncher(
-      manager = manager,
-      info = info,
-    )
+      PlayStoreAppRatingLauncher(
+          manager = manager,
+          info = info,
+      )
 }

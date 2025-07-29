@@ -136,9 +136,7 @@ protected constructor(
       @AppUpdateType updateType: Int
   ): AppUpdateLauncher
 
-  protected open suspend fun onBeforeCheckForUpdate() {
-
-  }
+  protected open suspend fun onBeforeCheckForUpdate() {}
 
   companion object {
 

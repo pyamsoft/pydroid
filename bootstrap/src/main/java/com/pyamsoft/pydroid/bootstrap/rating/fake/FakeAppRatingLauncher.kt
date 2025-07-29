@@ -22,8 +22,8 @@ import com.pyamsoft.pydroid.bootstrap.rating.AbstractAppRatingLauncher
 
 internal class FakeAppRatingLauncher
 internal constructor(
-  manager: FakeReviewManager,
-  info: ReviewInfo,
+    manager: FakeReviewManager,
+    info: ReviewInfo,
 ) : AbstractAppRatingLauncher(manager, info) {
 
   // NOTE(Peter): Is there any kind of customization we can do here?

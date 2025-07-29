@@ -29,17 +29,18 @@ public class RatingModule(params: Parameters) {
   private val impl: RatingInteractor
 
   init {
-    val rateMyApp = if (params.context.isDebugMode()) {
-      FakeRateMyApp(
-        enforcer = params.enforcer,
-        context = params.context.applicationContext,
-      )
-    } else {
-      PlayStoreRateMyApp(
-        enforcer = params.enforcer,
-        context = params.context.applicationContext,
-      )
-    }
+    val rateMyApp =
+        if (params.context.isDebugMode()) {
+          FakeRateMyApp(
+              enforcer = params.enforcer,
+              context = params.context.applicationContext,
+          )
+        } else {
+          PlayStoreRateMyApp(
+              enforcer = params.enforcer,
+              context = params.context.applicationContext,
+          )
+        }
 
     impl = RatingInteractorImpl(rateMyApp)
   }
@@ -52,7 +53,7 @@ public class RatingModule(params: Parameters) {
 
   /** Module parameters */
   public data class Parameters(
-    internal val context: Context,
-    internal val enforcer: ThreadEnforcer,
+      internal val context: Context,
+      internal val enforcer: ThreadEnforcer,
   )
 }

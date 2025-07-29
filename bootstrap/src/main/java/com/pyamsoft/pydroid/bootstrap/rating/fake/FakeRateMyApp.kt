@@ -27,18 +27,21 @@ import kotlinx.coroutines.delay
 
 internal class FakeRateMyApp
 internal constructor(
-  enforcer: ThreadEnforcer,
-  context: Context,
-) : AbstractRateMyApp<FakeReviewManager>(
-  enforcer = enforcer, resolveReviewManager = { FakeReviewManager(context.applicationContext) }) {
+    enforcer: ThreadEnforcer,
+    context: Context,
+) :
+    AbstractRateMyApp<FakeReviewManager>(
+        enforcer = enforcer,
+        resolveReviewManager = { FakeReviewManager(context.applicationContext) }) {
 
   override suspend fun onBeforeStartRating() {
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
     delay(2000L)
   }
 
-  override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher = FakeAppRatingLauncher(
-    manager = manager,
-    info = info,
-  )
+  override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =
+      FakeAppRatingLauncher(
+          manager = manager,
+          info = info,
+      )
 }

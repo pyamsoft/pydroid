@@ -30,8 +30,8 @@ import kotlinx.coroutines.withContext
 
 internal abstract class AbstractRateMyApp<T : ReviewManager>
 protected constructor(
-  enforcer: ThreadEnforcer,
-  resolveReviewManager: () -> T,
+    enforcer: ThreadEnforcer,
+    resolveReviewManager: () -> T,
 ) : RateMyApp {
 
   protected val manager by lazy {
@@ -40,34 +40,32 @@ protected constructor(
   }
 
   final override suspend fun startRating(): AppRatingLauncher =
-    withContext(context = Dispatchers.IO) {
-      onBeforeStartRating()
-      return@withContext suspendCancellableCoroutine { continuation ->
-        manager
-          .requestReviewFlow()
-          .addOnCanceledListener {
-            Logger.w { "Review task has been cancelled" }
-            continuation.cancel()
-          }
-          .addOnFailureListener { error ->
-            Logger.e(error) { "Failed to resolve app review info task" }
-            continuation.resume(AppRatingLauncher.empty())
-          }
-          .addOnSuccessListener { info ->
-            // Always false in play-core 1.10.3, but nullable in rating 2.0.0
-            if (info == null) {
-              Logger.w { "Successful request had NULL review info" }
-              continuation.resume(AppRatingLauncher.empty())
-            } else {
-              continuation.resume(createRatingLauncher(info))
-            }
-          }
+      withContext(context = Dispatchers.IO) {
+        onBeforeStartRating()
+        return@withContext suspendCancellableCoroutine { continuation ->
+          manager
+              .requestReviewFlow()
+              .addOnCanceledListener {
+                Logger.w { "Review task has been cancelled" }
+                continuation.cancel()
+              }
+              .addOnFailureListener { error ->
+                Logger.e(error) { "Failed to resolve app review info task" }
+                continuation.resume(AppRatingLauncher.empty())
+              }
+              .addOnSuccessListener { info ->
+                // Always false in play-core 1.10.3, but nullable in rating 2.0.0
+                if (info == null) {
+                  Logger.w { "Successful request had NULL review info" }
+                  continuation.resume(AppRatingLauncher.empty())
+                } else {
+                  continuation.resume(createRatingLauncher(info))
+                }
+              }
+        }
       }
-    }
 
-  @CheckResult
-  protected abstract fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher
+  @CheckResult protected abstract fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher
 
-  protected open suspend fun onBeforeStartRating() {
-  }
+  protected open suspend fun onBeforeStartRating() {}
 }

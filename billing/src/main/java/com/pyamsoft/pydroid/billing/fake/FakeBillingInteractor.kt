@@ -71,6 +71,12 @@ internal constructor(
                         makeFakeSku(3),
                         makeFakeSku(5),
                         makeFakeSku(10),
+                        makeFakeSku(15),
+                        makeFakeSku(20),
+                        makeFakeSku(30),
+                        makeFakeSku(50),
+                        makeFakeSku(100),
+                        makeFakeSku(500),
                     ),
             ),
     )

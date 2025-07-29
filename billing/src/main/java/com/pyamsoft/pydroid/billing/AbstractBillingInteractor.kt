@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.store
+package com.pyamsoft.pydroid.billing
 
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.billing.BillingLauncher
-import com.pyamsoft.pydroid.billing.BillingSku
-import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -43,40 +42,40 @@ import kotlinx.coroutines.withContext
 
 internal abstract class AbstractBillingInteractor
 protected constructor(
-    context: Context,
-    protected val errorBus: EventBus<Throwable>,
+  context: Context,
+  private val errorBus: EventBus<Throwable>,
 ) : BillingConnector, BillingInteractor, BillingLauncher {
 
   private val appSkuList: List<String>
 
-  protected val skuFlow: MutableStateFlow<BillingFlowState> =
-      MutableStateFlow(
-          BillingFlowState(
-              state = BillingState.LOADING,
-              list = emptyList(),
-          ),
-      )
+  private val skuFlow: MutableStateFlow<BillingFlowState> =
+    MutableStateFlow(
+      BillingFlowState(
+        state = BillingState.LOADING,
+        list = emptyList(),
+      ),
+    )
 
-  protected val billingScope = MainScope()
+  private val billingScope = MainScope()
 
-  protected var backoffCount = 1
+  private var backoffCount = 1
 
   init {
     Logger.d { "Construct new interactor and billing client" }
 
     val rawPackageName = context.applicationContext.packageName
     val packageName =
-        if (rawPackageName.endsWith(DEV_SUFFIX))
-            rawPackageName.substring(0 until rawPackageName.length - DEV_SUFFIX.length)
-        else rawPackageName
+      if (rawPackageName.endsWith(DEV_SUFFIX))
+        rawPackageName.substring(0 until rawPackageName.length - DEV_SUFFIX.length)
+      else rawPackageName
 
     appSkuList =
-        listOf(
-            "$packageName.iap_one",
-            "$packageName.iap_three",
-            "$packageName.iap_five",
-            "$packageName.iap_ten",
-        )
+      listOf(
+        "$packageName.iap_one",
+        "$packageName.iap_three",
+        "$packageName.iap_five",
+        "$packageName.iap_ten",
+      )
   }
 
   private fun disconnectBillingClient() {
@@ -118,30 +117,31 @@ protected constructor(
   }
 
   final override suspend fun refresh() =
-      withContext(context = Dispatchers.Default) { onClientRefresh() }
+    withContext(context = Dispatchers.Default) { onClientRefresh() }
 
   final override fun watchSkuList(): Flow<BillingInteractor.BillingSkuListSnapshot> =
-      skuFlow.map {
-        BillingInteractor.BillingSkuListSnapshot(
-            status = it.state,
-            skus = it.list,
-        )
-      }
+    skuFlow.map {
+      BillingInteractor.BillingSkuListSnapshot(
+        status = it.state,
+        skus = it.list,
+      )
+    }
 
   final override suspend fun purchase(activity: ComponentActivity, sku: BillingSku): Unit =
-      withContext(context = Dispatchers.Default) {
-        try {
-          onPurchase(activity, sku)
-        } catch (e: Throwable) {
-          Logger.e(e) { "Failed purchase flow for SKU: $sku" }
-          errorBus.emit(RuntimeException(e.message ?: "An error occurred during purchasing."))
-        }
+    withContext(context = Dispatchers.Default) {
+      try {
+        onPurchase(activity, sku)
+      } catch (e: Throwable) {
+        Logger.e(e) { "Failed purchase flow for SKU: $sku" }
+        emitError(RuntimeException(e.message ?: "An error occurred during purchasing."))
       }
+    }
 
   final override fun watchBillingErrors(): Flow<Throwable> =
-      errorBus.onEach { Logger.e(it) { "Billing error received!" } }
+    errorBus.onEach { Logger.e(it) { "Billing error received!" } }
 
-  @CheckResult protected fun getSkuList(): List<String> = appSkuList
+  @CheckResult
+  protected fun getSkuList(): List<String> = appSkuList
 
   protected abstract suspend fun onClientConnect()
 
@@ -150,6 +150,24 @@ protected constructor(
   protected abstract suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku)
 
   protected abstract suspend fun onClientRefresh()
+
+  protected fun resetBackoff() {
+    backoffCount = 1
+  }
+
+  protected suspend fun emitError(throwable: Throwable) {
+    errorBus.emit(throwable)
+  }
+
+  protected fun emitSkuFlow(state: BillingFlowState) {
+    skuFlow.value = state
+  }
+
+  protected fun launchInScope(
+    context: CoroutineContext = EmptyCoroutineContext,
+    start: CoroutineStart = CoroutineStart.DEFAULT,
+    block: suspend CoroutineScope.() -> Unit
+  ) = billingScope.launch(context, start, block)
 
   companion object {
 

@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.store
-
-import com.pyamsoft.pydroid.billing.BillingState
+package com.pyamsoft.pydroid.billing
 
 @ConsistentCopyVisibility
 internal data class BillingFlowState
 internal constructor(
     val state: BillingState,
-    val list: List<PlayBillingSku>,
+    val list: List<BillingSku>,
 )

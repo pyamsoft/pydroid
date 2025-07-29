@@ -18,42 +18,60 @@ package com.pyamsoft.pydroid.billing
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.billing.fake.FakeBillingInteractor
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Billing module */
 public class BillingModule(params: Parameters) {
 
-  private val impl =
-      PlayStoreBillingInteractor(
-          context = params.context.applicationContext,
-          enforcer = params.enforcer,
-          errorBus = params.errorBus,
+  private val connector: BillingConnector
+  private val launcher: BillingLauncher
+  private val interactor: BillingInteractor
+
+  init {
+    val impl = if (params.context.isDebugMode()) {
+      FakeBillingInteractor(
+        context = params.context.applicationContext,
+        errorBus = params.errorBus,
       )
+    } else {
+      PlayStoreBillingInteractor(
+        enforcer = params.enforcer,
+        context = params.context.applicationContext,
+        errorBus = params.errorBus,
+      )
+    }
+
+    interactor = impl
+    launcher = impl
+    connector = impl
+  }
 
   /** Provide a billing instance */
   @CheckResult
   public fun provideInteractor(): BillingInteractor {
-    return impl
+    return interactor
   }
 
   /** Provide a launcher instance */
   @CheckResult
   public fun provideLauncher(): BillingLauncher {
-    return impl
+    return launcher
   }
 
   /** Provide a connector instance */
   @CheckResult
   public fun provideConnector(): BillingConnector {
-    return impl
+    return connector
   }
 
   /** Module parameters */
   public data class Parameters(
-      internal val context: Context,
-      internal val enforcer: ThreadEnforcer,
-      internal val errorBus: EventBus<Throwable>,
+    internal val context: Context,
+    internal val enforcer: ThreadEnforcer,
+    internal val errorBus: EventBus<Throwable>,
   )
 }

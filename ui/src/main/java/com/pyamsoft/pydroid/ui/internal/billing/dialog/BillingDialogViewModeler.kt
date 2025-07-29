@@ -60,7 +60,11 @@ internal constructor(
       scope.launch(context = Dispatchers.Default) {
         f.collect { err ->
           Logger.e(err) { "Billing error received" }
-          state.error.value = err
+          state.apply {
+            // Clear the purchase and mark as error
+            thanksPurchase.value = null
+            error.value = err
+          }
         }
       }
     }
@@ -69,7 +73,11 @@ internal constructor(
       scope.launch(context = Dispatchers.Default) {
         f.collect { purchase ->
           Logger.d { "Billing purchase received: $purchase" }
-          state.thanksPurchase.value = purchase
+          state.apply {
+            // Clear the error and mark the purchase
+            error.value = null
+            thanksPurchase.value = purchase
+          }
         }
       }
     }

@@ -44,18 +44,18 @@ import kotlinx.coroutines.withContext
 
 internal class PlayStoreBillingInteractor
 internal constructor(
-  private val enforcer: ThreadEnforcer,
-  context: Context,
-  errorBus: EventBus<Throwable>,
+    private val enforcer: ThreadEnforcer,
+    context: Context,
+    errorBus: EventBus<Throwable>,
 ) :
-  AbstractBillingInteractor(
-    context = context.applicationContext,
-    errorBus = errorBus,
-  ),
-  BillingClientStateListener,
-  PurchasesUpdatedListener,
-  ConsumeResponseListener,
-  ProductDetailsResponseListener {
+    AbstractBillingInteractor(
+        context = context.applicationContext,
+        errorBus = errorBus,
+    ),
+    BillingClientStateListener,
+    PurchasesUpdatedListener,
+    ConsumeResponseListener,
+    ProductDetailsResponseListener {
 
   private val client by lazy {
     // Billing 7 change
@@ -63,12 +63,12 @@ internal constructor(
     val pendingPurchaseParams = PendingPurchasesParams.newBuilder().enableOneTimeProducts().build()
 
     BillingClient.newBuilder(context.applicationContext)
-      .setListener(this)
-      .enablePendingPurchases(pendingPurchaseParams)
-      // Auto service reconnection, Billing 8
-      // https://developer.android.com/google/play/billing/migrate-gpblv8
-      .enableAutoServiceReconnection()
-      .build()
+        .setListener(this)
+        .enablePendingPurchases(pendingPurchaseParams)
+        // Auto service reconnection, Billing 8
+        // https://developer.android.com/google/play/billing/migrate-gpblv8
+        .enableAutoServiceReconnection()
+        .build()
   }
 
   override suspend fun onClientConnect() {
@@ -96,12 +96,12 @@ internal constructor(
     // Map this here every time since we do not know if the QPDP builder carries state that cannot
     // be re-used.
     val skus =
-      skuList.map { sku ->
-        QueryProductDetailsParams.Product.newBuilder()
-          .setProductType(BillingClient.ProductType.INAPP)
-          .setProductId(sku)
-          .build()
-      }
+        skuList.map { sku ->
+          QueryProductDetailsParams.Product.newBuilder()
+              .setProductType(BillingClient.ProductType.INAPP)
+              .setProductId(sku)
+              .build()
+        }
 
     val params = QueryProductDetailsParams.newBuilder().setProductList(skus).build()
 
@@ -177,42 +177,42 @@ internal constructor(
   }
 
   override suspend fun onClientRefresh() =
-    withContext(context = Dispatchers.Default) {
-      if (!client.isReady) {
-        Logger.w { "Client is not ready yet, so we are not refreshing sku and purchases" }
-        return@withContext
-      }
+      withContext(context = Dispatchers.Default) {
+        if (!client.isReady) {
+          Logger.w { "Client is not ready yet, so we are not refreshing sku and purchases" }
+          return@withContext
+        }
 
-      querySkus()
-    }
+        querySkus()
+      }
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) =
-    withContext(context = Dispatchers.Default) {
-      val realSku = sku.cast<PlayBillingSku>()
-      if (realSku == null) {
-        emitError(ERROR_WRONG_SKU_TYPE)
+      withContext(context = Dispatchers.Default) {
+        val realSku = sku.cast<PlayBillingSku>()
+        if (realSku == null) {
+          emitError(ERROR_WRONG_SKU_TYPE)
+          return@withContext
+        }
+
+        val products =
+            listOf(
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(realSku.sku)
+                    // Do not need to set offerToken since we are not a subscription
+                    .build(),
+            )
+
+        val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
+
+        withContext(context = Dispatchers.Main) {
+          Logger.d { "Launch purchase flow ${realSku.id}" }
+
+          // onPurchasesUpdated
+          client.launchBillingFlow(activity, params)
+        }
+
         return@withContext
       }
-
-      val products =
-        listOf(
-          BillingFlowParams.ProductDetailsParams.newBuilder()
-            .setProductDetails(realSku.sku)
-            // Do not need to set offerToken since we are not a subscription
-            .build(),
-        )
-
-      val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
-
-      withContext(context = Dispatchers.Main) {
-        Logger.d { "Launch purchase flow ${realSku.id}" }
-
-        // onPurchasesUpdated
-        client.launchBillingFlow(activity, params)
-      }
-
-      return@withContext
-    }
 
   override fun onPurchasesUpdated(result: BillingResult, purchases: List<Purchase>?) {
     if (result.isOk()) {
@@ -247,7 +247,7 @@ internal constructor(
   companion object {
 
     private val ERROR_WRONG_SKU_TYPE =
-      IllegalArgumentException("SKU must be of type PlayBillingSku")
+        IllegalArgumentException("SKU must be of type PlayBillingSku")
     private val ERROR_BAD_PURCHASE_LIST = RuntimeException("Unable to process your recent purchase")
 
     @JvmStatic

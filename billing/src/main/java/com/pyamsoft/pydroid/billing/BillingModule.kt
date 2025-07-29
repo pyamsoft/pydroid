@@ -32,18 +32,19 @@ public class BillingModule(params: Parameters) {
   private val interactor: BillingInteractor
 
   init {
-    val impl = if (params.context.isDebugMode()) {
-      FakeBillingInteractor(
-        context = params.context.applicationContext,
-        errorBus = params.errorBus,
-      )
-    } else {
-      PlayStoreBillingInteractor(
-        enforcer = params.enforcer,
-        context = params.context.applicationContext,
-        errorBus = params.errorBus,
-      )
-    }
+    val impl =
+        if (params.context.isDebugMode()) {
+          FakeBillingInteractor(
+              context = params.context.applicationContext,
+              errorBus = params.errorBus,
+          )
+        } else {
+          PlayStoreBillingInteractor(
+              enforcer = params.enforcer,
+              context = params.context.applicationContext,
+              errorBus = params.errorBus,
+          )
+        }
 
     interactor = impl
     launcher = impl
@@ -70,8 +71,8 @@ public class BillingModule(params: Parameters) {
 
   /** Module parameters */
   public data class Parameters(
-    internal val context: Context,
-    internal val enforcer: ThreadEnforcer,
-    internal val errorBus: EventBus<Throwable>,
+      internal val context: Context,
+      internal val enforcer: ThreadEnforcer,
+      internal val errorBus: EventBus<Throwable>,
   )
 }

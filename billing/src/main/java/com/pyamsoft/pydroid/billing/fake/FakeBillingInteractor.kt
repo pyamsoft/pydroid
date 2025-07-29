@@ -27,30 +27,28 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.Dispatchers
 
-internal class FakeBillingInteractor internal constructor(
-  context: Context,
-  errorBus: EventBus<Throwable>,
-) : AbstractBillingInteractor(
-  context = context,
-  errorBus = errorBus,
-) {
+internal class FakeBillingInteractor
+internal constructor(
+    context: Context,
+    errorBus: EventBus<Throwable>,
+) :
+    AbstractBillingInteractor(
+        context = context,
+        errorBus = errorBus,
+    ) {
   @CheckResult
-  private fun makeFakeSku(priceInDollars: Long): BillingSku = FakeBillingSku(
-    title = "Fake Buy $${priceInDollars}",
-    description = "Fake purchase for $${priceInDollars}",
-    priceInCents = priceInDollars * 100,
-  )
+  private fun makeFakeSku(priceInDollars: Long): BillingSku =
+      FakeBillingSku(
+          title = "Fake Buy $${priceInDollars}",
+          description = "Fake purchase for $${priceInDollars}",
+          priceInCents = priceInDollars * 100,
+      )
 
-  override suspend fun onClientConnect() {
-  }
+  override suspend fun onClientConnect() {}
 
-  override fun onClientDisconnect() {
-  }
+  override fun onClientDisconnect() {}
 
-  override suspend fun onPurchase(
-    activity: ComponentActivity,
-    sku: BillingSku
-  ) {
+  override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) {
     launchInScope(context = Dispatchers.Default) {
       if (sku.price > 5 * PRICE_SCALE) {
         Logger.w { "Purchase response not OK: $sku" }
@@ -64,15 +62,17 @@ internal class FakeBillingInteractor internal constructor(
   override suspend fun onClientRefresh() {
     // Fake a list of products to purchase
     emitSkuFlow(
-      state = BillingFlowState(
-        state = BillingState.CONNECTED,
-        list = listOf(
-          makeFakeSku(1),
-          makeFakeSku(3),
-          makeFakeSku(5),
-          makeFakeSku(10),
-        ),
-      ),
+        state =
+            BillingFlowState(
+                state = BillingState.CONNECTED,
+                list =
+                    listOf(
+                        makeFakeSku(1),
+                        makeFakeSku(3),
+                        makeFakeSku(5),
+                        makeFakeSku(10),
+                    ),
+            ),
     )
   }
 

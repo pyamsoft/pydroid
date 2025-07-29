@@ -26,9 +26,9 @@ import java.util.UUID
 @ConsistentCopyVisibility
 internal data class FakeBillingSku
 internal constructor(
-  override val title: String,
-  override val description: String,
-  private val priceInCents: Long,
+    override val title: String,
+    override val description: String,
+    private val priceInCents: Long,
 ) : BillingSku {
 
   override val id: String = UUID.randomUUID().toString()

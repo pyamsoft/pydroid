@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.store
 
-import androidx.activity.ComponentActivity
+import com.pyamsoft.pydroid.billing.BillingState
 
-/** Purchase client */
-public interface BillingLauncher {
-
-  /** Purchase an in-app item */
-  public suspend fun purchase(activity: ComponentActivity, sku: BillingSku)
-}
+@ConsistentCopyVisibility
+internal data class BillingFlowState
+internal constructor(
+    val state: BillingState,
+    val list: List<PlayBillingSku>,
+)

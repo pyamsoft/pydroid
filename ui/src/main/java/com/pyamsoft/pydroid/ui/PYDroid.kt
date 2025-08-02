@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.PYDroidLogger
 
@@ -67,36 +66,10 @@ internal constructor(
 
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
+  ) : InternalParameters
 
-      /** Debug options */
-      internal val debug: DebugParameters? = null,
-  ) : BaseParameters
-
-  /** PYDroid debugging parameters */
-  public data class DebugParameters(
-      /**
-       * Is there an upgrade ready to install?
-       *
-       * Depending on the [FakeUpgradeRequest] provided here will determine what the "fake" updater
-       * does
-       */
-      internal val upgradeAvailable: FakeUpgradeRequest? = null,
-
-      /** Should the user be shown the changelog? */
-      internal val changeLogAvailable: Boolean = false,
-
-      /** Should the user be shown a billing upsell ? */
-      internal val showBillingUpsell: Boolean = false,
-
-      /** Should we try to show the rating dialog? (Not always guaranteed) */
-      internal val tryShowInAppRating: Boolean = false,
-
-      /** Should we try to show the rate on store upsell */
-      internal val showRatingUpsell: Boolean = false,
-  )
-
-  /** Base parameters for PYDroid */
-  internal interface BaseParameters {
+  /** Parameters for PYDroid */
+  internal interface InternalParameters {
     val viewSourceUrl: String
     val bugReportUrl: String
     val privacyPolicyUrl: String
@@ -139,7 +112,6 @@ private fun Application.internalInstallPYDroid(
  *       name = getString(R.string.app_name),
  *       bugReportUrl = getString(R.string.bug_report),
  *       version = BuildConfig.VERSION_CODE,
- *       debug = PYDroid.DebugParameters( ... ),
  *     ),
  *   )
  * }
@@ -156,7 +128,6 @@ private fun Application.internalInstallPYDroid(
  *       name = getString(R.string.app_name),
  *       bugReportUrl = getString(R.string.bug_report),
  *       version = BuildConfig.VERSION_CODE,
- *       debug = PYDroid.DebugParameters( ... ),
  *     ),
  *   )
  * }

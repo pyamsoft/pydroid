@@ -23,13 +23,14 @@ import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 internal class BillingViewModeler
 internal constructor(
     override val state: MutableBillingViewState,
     private val preferences: BillingPreferences,
-    private val isFakeUpsell: Boolean,
+    private val isFakeUpsell: Flow<Boolean>,
 ) : BillingViewState by state, AbstractViewModeler<BillingViewState>(state) {
 
   override fun registerSaveState(
@@ -63,10 +64,14 @@ internal constructor(
       }
     }
 
-    if (isFakeUpsell) {
+    isFakeUpsell.also { f ->
       scope.launch(context = Dispatchers.Default) {
-        Logger.d { "Fake a billing upsell, force show" }
-        s.isShowingUpsell.value = true
+        f.collect { show ->
+          if (show) {
+            Logger.d { "Fake a billing upsell, force show" }
+            s.isShowingUpsell.value = true
+          }
+        }
       }
     }
   }

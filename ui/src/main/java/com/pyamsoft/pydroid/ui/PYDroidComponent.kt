@@ -80,8 +80,7 @@ internal interface PYDroidComponent {
         override val version: Int,
         override val logger: PYDroidLogger?,
         internal val application: Application,
-        internal val debug: PYDroid.DebugParameters,
-    ) : PYDroid.BaseParameters
+    ) : PYDroid.InternalParameters
   }
 
   class ComponentImpl
@@ -138,7 +137,7 @@ internal interface PYDroidComponent {
               ChangeLogModule.Parameters(
                   context = context,
                   preferences = preferences,
-                  isFakeChangeLogAvailable = params.debug.changeLogAvailable,
+                  isFakeChangeLogAvailable = preferences.listenForShowChangelogChanges(),
               ),
       )
     }
@@ -158,7 +157,6 @@ internal interface PYDroidComponent {
           termsConditionsUrl = params.termsConditionsUrl,
           privacyPolicyUrl = params.privacyPolicyUrl,
           viewSourceUrl = params.viewSourceUrl,
-          debug = params.debug,
           billingPreferences = preferences,
           debugPreferences = preferences,
           logLinesBus = inAppLogLines,

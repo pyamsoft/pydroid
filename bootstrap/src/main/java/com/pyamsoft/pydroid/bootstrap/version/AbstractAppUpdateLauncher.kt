@@ -129,11 +129,11 @@ protected constructor(
       }
 
   @CheckResult
-  protected open fun onBeforeUpdateFlowStarted(): ResultWrapper<AppUpdateResultStatus>? {
+  protected open suspend fun onBeforeUpdateFlowStarted(): ResultWrapper<AppUpdateResultStatus>? {
     return null
   }
 
-  protected open fun onAfterUpdateFlowStarted(
+  protected open suspend fun onAfterUpdateFlowStarted(
       activity: ComponentActivity,
       status: AppUpdateResultStatus
   ) {}

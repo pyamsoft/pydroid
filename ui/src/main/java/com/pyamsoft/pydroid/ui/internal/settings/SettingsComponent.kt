@@ -53,11 +53,10 @@ internal interface SettingsComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val options: PYDroidActivityOptions,
         internal val billingPreferences: BillingPreferences,
-        internal val debugPreferences: DebugPreferences,
         internal val hapticPreferences: HapticPreferences,
         internal val billingState: MutableBillingViewState,
         internal val changeLogState: MutableChangeLogViewState,
-        internal val isFakeBillingUpsell: Boolean,
+        internal val debugPreferences: DebugPreferences,
     )
   }
 
@@ -89,7 +88,7 @@ internal interface SettingsComponent {
           BillingViewModeler(
               state = params.billingState,
               preferences = params.billingPreferences,
-              isFakeUpsell = params.isFakeBillingUpsell,
+              isFakeUpsell = params.debugPreferences.listenShowBillingUpsell(),
           )
       injector.changeLogViewModel =
           ChangeLogViewModeler(

@@ -30,6 +30,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
@@ -48,6 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -91,6 +93,10 @@ internal constructor(
                             KEY_DATA_POLICY_CONSENTED.name,
                             KEY_BILLING_SHOW_UPSELL_COUNT.name,
                             KEY_IN_APP_DEBUGGING.name,
+                            DEBUG_KEY_SHOW_CHANGELOG.name,
+                            DEBUG_KEY_UPGRADE_AVAILABLE.name,
+                            DEBUG_KEY_SHOW_RATING_UPSELL.name,
+                            DEBUG_KEY_SHOW_BILLING_UPSELL.name,
                         ),
                     produceSharedPreferences = {
                       PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
@@ -281,6 +287,56 @@ internal constructor(
     )
   }
 
+  override fun listenUpgradeAvailable(): Flow<FakeUpgradeRequest> =
+      getPreference(
+              DEBUG_KEY_UPGRADE_AVAILABLE,
+              "",
+          )
+          .filterNot { it.isBlank() }
+          .map { FakeUpgradeRequest.valueOf(it) }
+          .flowOn(context = Dispatchers.IO)
+
+  override fun setUpgradeAvailable(fake: FakeUpgradeRequest?) {
+    setPreference(
+        key = DEBUG_KEY_UPGRADE_AVAILABLE,
+        fallbackValue = "",
+        value = { fake?.name.orEmpty() },
+    )
+  }
+
+  override fun listenShowChangelog(): Flow<Boolean> =
+      getPreference(DEBUG_KEY_SHOW_CHANGELOG, false).flowOn(context = Dispatchers.IO)
+
+  override fun setShowChangelog(show: Boolean) {
+    setPreference(
+        key = DEBUG_KEY_SHOW_CHANGELOG,
+        fallbackValue = false,
+        value = { show },
+    )
+  }
+
+  override fun listenTryShowRatingUpsell(): Flow<Boolean> =
+      getPreference(DEBUG_KEY_SHOW_RATING_UPSELL, false).flowOn(context = Dispatchers.IO)
+
+  override fun setTryShowRatingUpsell(show: Boolean) {
+    setPreference(
+        key = DEBUG_KEY_SHOW_RATING_UPSELL,
+        fallbackValue = false,
+        value = { show },
+    )
+  }
+
+  override fun listenShowBillingUpsell(): Flow<Boolean> =
+      getPreference(DEBUG_KEY_SHOW_BILLING_UPSELL, false).flowOn(context = Dispatchers.IO)
+
+  override fun setShowBillingUpsell(show: Boolean) {
+    setPreference(
+        key = DEBUG_KEY_SHOW_BILLING_UPSELL,
+        fallbackValue = false,
+        value = { show },
+    )
+  }
+
   companion object {
 
     private val DEFAULT_DARK_MODE = SYSTEM.toRawString()
@@ -303,5 +359,11 @@ internal constructor(
 
     private val KEY_IN_APP_DEBUGGING = booleanPreferencesKey("in_app_debugging_v1")
     private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false
+
+    private val DEBUG_KEY_UPGRADE_AVAILABLE = stringPreferencesKey("debug_upgrade_available_v1")
+    private val DEBUG_KEY_SHOW_CHANGELOG = booleanPreferencesKey("debug_show_changelog_v1")
+    private val DEBUG_KEY_SHOW_BILLING_UPSELL =
+        booleanPreferencesKey("debug_show_billing_upsell_v1")
+    private val DEBUG_KEY_SHOW_RATING_UPSELL = booleanPreferencesKey("debug_show_rating_upsell_v1")
   }
 }

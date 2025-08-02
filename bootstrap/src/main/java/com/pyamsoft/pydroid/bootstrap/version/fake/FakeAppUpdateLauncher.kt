@@ -27,6 +27,8 @@ import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 internal class FakeAppUpdateLauncher
@@ -34,7 +36,7 @@ internal constructor(
     private val manager: FakeAppUpdateManager,
     info: AppUpdateInfo,
     @AppUpdateType type: Int,
-    private val fakeUpgradeRequest: FakeUpgradeRequest,
+    private val fakeUpgradeRequest: Flow<FakeUpgradeRequest>,
 ) : AbstractAppUpdateLauncher(manager, info, type) {
 
   private suspend fun FakeAppUpdateManager.fakeDownload(
@@ -61,7 +63,8 @@ internal constructor(
   private suspend fun FakeAppUpdateManager.fakeUpdate() {
     val self = this
 
-    when (fakeUpgradeRequest) {
+    val request = fakeUpgradeRequest.first()
+    when (request) {
       FakeUpgradeRequest.USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_SUCCESS,
       FakeUpgradeRequest.USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_FAILURE -> {
         Logger.d { "User accepts fake update" }
@@ -110,8 +113,9 @@ internal constructor(
     }
   }
 
-  override fun onBeforeUpdateFlowStarted(): ResultWrapper<AppUpdateResultStatus>? {
-    if (fakeUpgradeRequest == FakeUpgradeRequest.USER_REJECTED_DOWNLOAD) {
+  override suspend fun onBeforeUpdateFlowStarted(): ResultWrapper<AppUpdateResultStatus>? {
+    val request = fakeUpgradeRequest.first()
+    if (request == FakeUpgradeRequest.USER_REJECTED_DOWNLOAD) {
       Logger.d { "User rejects fake update" }
       manager.userRejectsUpdate()
 
@@ -123,7 +127,7 @@ internal constructor(
     return null
   }
 
-  override fun onAfterUpdateFlowStarted(
+  override suspend fun onAfterUpdateFlowStarted(
       activity: ComponentActivity,
       status: AppUpdateResultStatus
   ) {

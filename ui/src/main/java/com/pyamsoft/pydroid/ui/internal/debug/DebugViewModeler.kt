@@ -17,8 +17,10 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 internal class DebugViewModeler
@@ -43,5 +45,25 @@ internal constructor(
       val lines = state.inAppDebuggingLogLines.value
       interactor.copyInAppDebugMessagesToClipboard(lines)
     }
+  }
+
+  internal fun handleToggleShowRatingUpsell() {
+    val newState = state.isDebugFakeShowRatingUpsell.updateAndGet { !it }
+    preferences.setTryShowRatingUpsell(newState)
+  }
+
+  internal fun handleToggleShowBillingUpsell() {
+    val newState = state.isDebugFakeShowBillingUpsell.updateAndGet { !it }
+    preferences.setShowBillingUpsell(newState)
+  }
+
+  internal fun handleToggleShowChangelog() {
+    val newState = state.isDebugFakeShowChangelog.updateAndGet { !it }
+    preferences.setShowChangelog(newState)
+  }
+
+  internal fun handleUpdateVersionRequest(request: FakeUpgradeRequest?) {
+    val newState = state.debugFakeVersionUpdate.updateAndGet { request }
+    preferences.setUpgradeAvailable(newState)
   }
 }

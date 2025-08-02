@@ -51,11 +51,6 @@ internal constructor(
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
                       logger = params.logger,
-                      debug =
-                          PYDroid.DebugParameters(
-                              upgradeAvailable = params.debug?.upgradeAvailable,
-                              changeLogAvailable = params.debug?.changeLogAvailable ?: false,
-                          ),
                   ),
               )
 

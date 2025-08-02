@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.app
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
+import androidx.lifecycle.lifecycleScope
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.billing.BillingPurchase
@@ -29,7 +30,6 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
-import com.pyamsoft.pydroid.ui.PYDroid.DebugParameters
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
@@ -65,7 +65,9 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 internal interface AppComponent {
 
@@ -113,7 +115,6 @@ internal interface AppComponent {
         internal val version: Int,
         internal val changeLogModule: ChangeLogModule,
         internal val dataPolicyModule: DataPolicyModule,
-        internal val debug: DebugParameters,
         internal val enforcer: ThreadEnforcer,
     )
   }
@@ -159,7 +160,7 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
-                fakeUpgradeRequest = params.debug.upgradeAvailable,
+                fakeUpgradeRequest = params.debugPreferences.listenUpgradeAvailable(),
             ),
         )
 
@@ -175,7 +176,7 @@ internal interface AppComponent {
         BillingComponent.Factory.Parameters(
             preferences = params.billingPreferences,
             state = billingState,
-            isFakeBillingUpsell = params.debug.showBillingUpsell,
+            isFakeBillingUpsell = params.debugPreferences.listenShowBillingUpsell(),
         )
 
     private val settingsParams =
@@ -192,7 +193,6 @@ internal interface AppComponent {
             state = MutableSettingsViewState(),
             billingPreferences = params.billingPreferences,
             billingState = billingState,
-            isFakeBillingUpsell = params.debug.showBillingUpsell,
             changeLogState = changeLogState,
             debugPreferences = params.debugPreferences,
             hapticPreferences = params.hapticPreferences,
@@ -264,10 +264,14 @@ internal interface AppComponent {
       // Connect the In-App Billing
       activity.doOnCreate { connectBilling(activity) }
 
-      if (params.debug.tryShowInAppRating) {
-        activity.doOnCreate {
-          Logger.d { "Try to force-show an In-App Rating" }
-          rating.loadInAppRating()
+      activity.doOnCreate {
+        params.debugPreferences.listenTryShowRatingUpsell().also { f ->
+          activity.lifecycleScope.launch(context = Dispatchers.Main) {
+            f.collect { show ->
+              Logger.d { "Try to force-show an In-App Rating" }
+              rating.loadInAppRating()
+            }
+          }
         }
       }
 

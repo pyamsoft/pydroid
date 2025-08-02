@@ -16,11 +16,38 @@
 
 package com.pyamsoft.pydroid.ui.internal.debug
 
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
+import kotlinx.coroutines.flow.Flow
 
 /** In-App Debugging preferences */
 internal interface DebugPreferences : InAppDebugStatus {
 
   /** Mark the debugging on or off */
   fun setInAppDebuggingEnabled(enabled: Boolean)
+
+  /** Fake an in-app upgrade availability */
+  fun setUpgradeAvailable(fake: FakeUpgradeRequest?)
+
+  /** Watch for changes to fake in-app upgrade */
+  @CheckResult fun listenUpgradeAvailable(): Flow<FakeUpgradeRequest>
+
+  /** Fake show the changelog tooltip */
+  fun setShowChangelog(show: Boolean)
+
+  /** Watch for changes to fake changelog */
+  @CheckResult fun listenShowChangelog(): Flow<Boolean>
+
+  /** Fake show the billing upsell */
+  fun setShowBillingUpsell(show: Boolean)
+
+  /** Watch for changes to fake billing upsell */
+  @CheckResult fun listenShowBillingUpsell(): Flow<Boolean>
+
+  /** Fake show the in-app rating dialog (not guaranteed, thanks Google) */
+  fun setTryShowRatingUpsell(show: Boolean)
+
+  /** Watch for changes to fake rating upsell */
+  @CheckResult fun listenTryShowRatingUpsell(): Flow<Boolean>
 }

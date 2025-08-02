@@ -24,13 +24,14 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 
 internal class FakeAppUpdater
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
     version: Int,
-    private val fakeUpgradeRequest: FakeUpgradeRequest,
+    private val fakeUpgradeRequest: Flow<FakeUpgradeRequest>,
 ) :
     AbstractAppUpdater<FakeAppUpdateManager>(
         enforcer = enforcer,

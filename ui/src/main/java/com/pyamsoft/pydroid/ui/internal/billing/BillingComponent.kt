@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
+import kotlinx.coroutines.flow.Flow
 
 internal interface BillingComponent {
 
@@ -32,7 +33,7 @@ internal interface BillingComponent {
     internal constructor(
         internal val preferences: BillingPreferences,
         internal val state: MutableBillingViewState,
-        internal val isFakeBillingUpsell: Boolean,
+        internal val isFakeBillingUpsell: Flow<Boolean>,
     )
   }
 

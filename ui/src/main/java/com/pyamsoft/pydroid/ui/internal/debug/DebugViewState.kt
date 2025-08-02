@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.compose.runtime.Stable
 import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -25,6 +26,11 @@ import kotlinx.coroutines.flow.StateFlow
 internal interface DebugViewState : UiViewState {
   val isInAppDebuggingEnabled: StateFlow<Boolean>
   val inAppDebuggingLogLines: StateFlow<List<InAppDebugLogLine>>
+
+  val debugFakeVersionUpdate: StateFlow<FakeUpgradeRequest?>
+  val isDebugFakeShowChangelog: StateFlow<Boolean>
+  val isDebugFakeShowBillingUpsell: StateFlow<Boolean>
+  val isDebugFakeShowRatingUpsell: StateFlow<Boolean>
 }
 
 @Stable
@@ -34,4 +40,9 @@ internal constructor(
 ) : DebugViewState {
   override val isInAppDebuggingEnabled = MutableStateFlow(false)
   override val inAppDebuggingLogLines = logLinesBus
+
+  override val debugFakeVersionUpdate = MutableStateFlow<FakeUpgradeRequest?>(null)
+  override val isDebugFakeShowChangelog = MutableStateFlow(false)
+  override val isDebugFakeShowBillingUpsell = MutableStateFlow(false)
+  override val isDebugFakeShowRatingUpsell = MutableStateFlow(false)
 }

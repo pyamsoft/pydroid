@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.debug
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,9 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -49,10 +53,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
@@ -67,12 +73,15 @@ import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import java.time.Instant
 import kotlinx.coroutines.flow.MutableStateFlow
 
+private const val FAKE_UPGRADE_NONE_DISPLAY_NAME = "NONE"
+
 private enum class InAppDebugContentTypes {
   LINE,
   PLACEHOLDER,
   TITLE,
   SPACER,
   DISABLED,
+  DEBUG_OPTION,
 }
 
 @Composable
@@ -111,7 +120,11 @@ internal fun InAppDebugDialog(
       state = viewModel,
       extraContent = extraContent,
       onDismiss = onDismiss,
-      onCopy = { viewModel.handleCopy(scope = lifecycleScope) },
+      onCopyLogs = { viewModel.handleCopy(scope = lifecycleScope) },
+      onToggleShowChangelog = { viewModel.handleToggleShowChangelog() },
+      onToggleShowRatingUpsell = { viewModel.handleToggleShowRatingUpsell() },
+      onToggleShowBillingUpsell = { viewModel.handleToggleShowBillingUpsell() },
+      onUpdateVersionRequest = { viewModel.handleUpdateVersionRequest(it) },
   )
 }
 
@@ -120,7 +133,11 @@ private fun InAppDebugScreen(
     modifier: Modifier = Modifier,
     state: DebugViewState,
     onDismiss: () -> Unit,
-    onCopy: () -> Unit,
+    onCopyLogs: () -> Unit,
+    onUpdateVersionRequest: (FakeUpgradeRequest?) -> Unit,
+    onToggleShowChangelog: () -> Unit,
+    onToggleShowBillingUpsell: () -> Unit,
+    onToggleShowRatingUpsell: () -> Unit,
     extraContent: LazyListScope.() -> Unit = {},
 ) {
   val isEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
@@ -130,7 +147,7 @@ private fun InAppDebugScreen(
   val (copied, setCopied) = remember { mutableStateOf(false) }
 
   val handleCopied by rememberUpdatedState {
-    onCopy()
+    onCopyLogs()
     setCopied(true)
   }
 
@@ -165,6 +182,73 @@ private fun InAppDebugScreen(
           LazyColumn {
             if (isEnabled) {
               extraContent()
+
+              // Debug options
+              item(
+                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
+              ) {
+                val option by state.debugFakeVersionUpdate.collectAsStateWithLifecycle()
+                val allValues: Map<FakeUpgradeRequest?, String> = remember {
+                  val validValues = FakeUpgradeRequest.entries
+                  return@remember mapOf(
+                      null to FAKE_UPGRADE_NONE_DISPLAY_NAME,
+                      *validValues.map { it to it.name }.toTypedArray(),
+                  )
+                }
+
+                val displayValue =
+                    remember(option, allValues) {
+                      allValues[option] ?: FAKE_UPGRADE_NONE_DISPLAY_NAME
+                    }
+
+                DebugSelect(
+                    modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+                    title = "Show Version Update",
+                    description = "Fake visual state as if a version upgrade was available",
+                    value = option,
+                    displayValue = displayValue,
+                    allValues = allValues,
+                    onSelect = { onUpdateVersionRequest(it) },
+                )
+              }
+
+              item(
+                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
+              ) {
+                val isChecked by state.isDebugFakeShowChangelog.collectAsStateWithLifecycle()
+                DebugOption(
+                    modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+                    title = "Show Changelog",
+                    description = "Fake visual state as if a changelog was available",
+                    isChecked = isChecked,
+                    onCheckedChange = { onToggleShowChangelog() },
+                )
+              }
+
+              item(
+                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
+              ) {
+                val isChecked by state.isDebugFakeShowBillingUpsell.collectAsStateWithLifecycle()
+                DebugOption(
+                    title = "Show Billing Upsell",
+                    description = "Show the upsell for the tip jar",
+                    isChecked = isChecked,
+                    onCheckedChange = { onToggleShowBillingUpsell() },
+                )
+              }
+
+              item(
+                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
+              ) {
+                val isChecked by state.isDebugFakeShowRatingUpsell.collectAsStateWithLifecycle()
+                DebugOption(
+                    modifier = Modifier.padding(bottom = MaterialTheme.keylines.content),
+                    title = "Show Rating Upsell",
+                    description = "Show the upsell to rate the app",
+                    isChecked = isChecked,
+                    onCheckedChange = { onToggleShowRatingUpsell() },
+                )
+              }
 
               item(
                   contentType = InAppDebugContentTypes.TITLE,
@@ -271,6 +355,98 @@ private fun InAppDebugScreen(
 }
 
 @Composable
+private fun DebugOption(
+    modifier: Modifier = Modifier,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    title: String,
+    description: String,
+) {
+  Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Checkbox(
+        modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
+        checked = isChecked,
+        onCheckedChange = onCheckedChange,
+    )
+    Column(
+        modifier = Modifier.weight(1F),
+    ) {
+      Text(
+          text = title,
+          style = MaterialTheme.typography.bodyMedium,
+      )
+      Text(
+          text = description,
+          style =
+              MaterialTheme.typography.bodySmall.copy(
+                  color = MaterialTheme.colorScheme.onSurfaceVariant,
+              ),
+      )
+    }
+  }
+}
+
+@Composable
+private fun <T : Any> DebugSelect(
+    modifier: Modifier = Modifier,
+    value: T?,
+    allValues: Map<T?, String>,
+    displayValue: String,
+    title: String,
+    description: String,
+    onSelect: (T?) -> Unit,
+) {
+  val (isOpen, setOpen) = remember { mutableStateOf(false) }
+
+  Row(
+      modifier = modifier,
+      verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Text(
+        modifier =
+            Modifier.padding(end = MaterialTheme.keylines.baseline).clickable { setOpen(!isOpen) },
+        text = displayValue,
+        style = MaterialTheme.typography.bodyLarge,
+    )
+
+    DropdownMenu(
+        expanded = isOpen,
+        onDismissRequest = { setOpen(false) },
+        properties = remember { PopupProperties() },
+    ) {
+      for (entry in allValues) {
+        DropdownMenuItem(
+            text = {
+              Text(
+                  text = entry.value,
+              )
+            },
+            onClick = { onSelect(entry.key) },
+        )
+      }
+    }
+    Column(
+        modifier = Modifier.weight(1F),
+    ) {
+      Text(
+          text = title,
+          style = MaterialTheme.typography.bodyMedium,
+      )
+      Text(
+          text = description,
+          style =
+              MaterialTheme.typography.bodySmall.copy(
+                  color = MaterialTheme.colorScheme.onSurfaceVariant,
+              ),
+      )
+    }
+  }
+}
+
+@Composable
 private fun LogLinesCopied(
     modifier: Modifier = Modifier,
     snackBarModifier: Modifier = Modifier,
@@ -328,7 +504,11 @@ private fun PreviewInAppDebugScreenDisabled() {
               logLinesBus = MutableStateFlow(emptyList()),
           ),
       onDismiss = {},
-      onCopy = {},
+      onCopyLogs = {},
+      onToggleShowChangelog = {},
+      onToggleShowRatingUpsell = {},
+      onToggleShowBillingUpsell = {},
+      onUpdateVersionRequest = {},
   )
 }
 
@@ -343,7 +523,11 @@ private fun PreviewInAppDebugScreenEnabledEmptyLog() {
               )
               .apply { isInAppDebuggingEnabled.value = true },
       onDismiss = {},
-      onCopy = {},
+      onCopyLogs = {},
+      onToggleShowChangelog = {},
+      onToggleShowRatingUpsell = {},
+      onToggleShowBillingUpsell = {},
+      onUpdateVersionRequest = {},
   )
 }
 
@@ -369,6 +553,10 @@ private fun PreviewInAppDebugScreenEnabledDummyLog() {
               )
               .apply { isInAppDebuggingEnabled.value = true },
       onDismiss = {},
-      onCopy = {},
+      onCopyLogs = {},
+      onToggleShowChangelog = {},
+      onToggleShowRatingUpsell = {},
+      onToggleShowBillingUpsell = {},
+      onUpdateVersionRequest = {},
   )
 }

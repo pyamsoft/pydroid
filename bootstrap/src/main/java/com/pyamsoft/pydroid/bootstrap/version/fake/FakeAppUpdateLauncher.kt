@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.util.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 internal class FakeAppUpdateLauncher
@@ -60,10 +60,8 @@ internal constructor(
     }
   }
 
-  private suspend fun FakeAppUpdateManager.fakeUpdate() {
+  private suspend fun FakeAppUpdateManager.fakeUpdate(request: FakeUpgradeRequest) {
     val self = this
-
-    val request = fakeUpgradeRequest.first()
     when (request) {
       FakeUpgradeRequest.USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_SUCCESS,
       FakeUpgradeRequest.USER_ACCEPTED_DOWNLOAD_SUCCESS_INSTALL_FAILURE -> {
@@ -114,7 +112,8 @@ internal constructor(
   }
 
   override suspend fun onBeforeUpdateFlowStarted(): ResultWrapper<AppUpdateResultStatus>? {
-    val request = fakeUpgradeRequest.first()
+    val request = fakeUpgradeRequest.firstOrNull()
+
     if (request == FakeUpgradeRequest.USER_REJECTED_DOWNLOAD) {
       Logger.d { "User rejects fake update" }
       manager.userRejectsUpdate()
@@ -131,12 +130,14 @@ internal constructor(
       activity: ComponentActivity,
       status: AppUpdateResultStatus
   ) {
-    // In the background, we "download"
-    // Use the activity scope to fake this so that this background activity
-    // does not prevent the actual flow from returning
-    activity.lifecycleScope.launch(context = Dispatchers.IO) {
-      Logger.d { "User has accepted the fake in-app update prompt." }
-      manager.fakeUpdate()
+    fakeUpgradeRequest.firstOrNull()?.also { request ->
+      // In the background, we "download"
+      // Use the activity scope to fake this so that this background activity
+      // does not prevent the actual flow from returning
+      activity.lifecycleScope.launch(context = Dispatchers.IO) {
+        Logger.d { "User has accepted the fake in-app update prompt: $request" }
+        manager.fakeUpdate(request)
+      }
     }
   }
 }

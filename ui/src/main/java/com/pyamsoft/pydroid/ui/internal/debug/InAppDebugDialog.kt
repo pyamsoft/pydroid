@@ -181,7 +181,6 @@ private fun InAppDebugScreen(
         ) {
           LazyColumn {
             if (isEnabled) {
-              extraContent()
 
               // Debug options
               item(
@@ -264,6 +263,8 @@ private fun InAppDebugScreen(
                         ),
                 )
               }
+
+              extraContent()
 
               if (sortedLines.isEmpty()) {
                 item(

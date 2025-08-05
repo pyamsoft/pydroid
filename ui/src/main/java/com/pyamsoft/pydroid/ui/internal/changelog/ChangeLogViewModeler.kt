@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 internal class ChangeLogViewModeler
@@ -51,16 +50,7 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     interactor.listenShowChangeLogChanges().also { f ->
-      scope.launch(context = Dispatchers.Default) {
-        // Decide based on preference (have we seen the current version changelog)
-        val show = f.first()
-        state.isShowUpsell.value = show
-
-        // If we can show, mark as shown so that in the future we do not show.
-        if (show) {
-          interactor.markChangeLogShown()
-        }
-      }
+      scope.launch(context = Dispatchers.Default) { f.collect { state.isShowUpsell.value = it } }
     }
   }
 

@@ -18,9 +18,10 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.flowOn
 
 internal class ChangeLogInteractorImpl
 internal constructor(
@@ -29,25 +30,22 @@ internal constructor(
     private val isFakeChangeLogAvailable: Flow<Boolean>?,
 ) : ChangeLogInteractor, AppInteractorImpl(context) {
 
-  override fun listenShowChangeLogChanges(): Flow<Boolean> =
-      preferences.listenForShowChangelogChanges().map { show ->
-        // If this is showing normally, we return it
-        if (show) {
-          return@map true
-        }
-
-        // Force to show if this is faked
-        val faked = isFakeChangeLogAvailable
-        if (faked != null) {
-          val isFaked = faked.firstOrNull()
-          if (isFaked != null) {
-            return@map isFaked
+  override fun listenShowChangeLogChanges(): Flow<Boolean> {
+    val faked = isFakeChangeLogAvailable
+    return if (faked != null) {
+      combineTransform(
+              faked,
+              preferences.listenForShowChangelogChanges(),
+          ) { isFaked, show ->
+            // If this is showing normally, we return it
+            // Or if it's faked
+            emit(isFaked || show)
           }
-        }
-
-        // Otherwise not showing
-        return@map false
-      }
+          .flowOn(context = Dispatchers.IO)
+    } else {
+      preferences.listenForShowChangelogChanges()
+    }
+  }
 
   override fun markChangeLogShown() {
     preferences.markChangeLogShown()

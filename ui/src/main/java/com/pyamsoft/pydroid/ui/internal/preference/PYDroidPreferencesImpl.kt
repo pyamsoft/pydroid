@@ -49,6 +49,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -134,6 +136,9 @@ internal constructor(
   ): Flow<T> =
       prefs.data
           .map { it[key] ?: value }
+          // Otherwise any time ANY preference updates, ALL preferences will be
+          // re-sent
+          .distinctUntilChanged()
           .catch { err ->
             Logger.e(err) { "Error reading from dataStore: ${key.name}" }
             prefs.edit { it[key] = value }
@@ -287,16 +292,23 @@ internal constructor(
     )
   }
 
-  override fun listenUpgradeAvailable(): Flow<FakeUpgradeRequest> =
-      getPreference(
-              DEBUG_KEY_UPGRADE_AVAILABLE,
-              "",
-          )
-          .filterNot { it.isBlank() }
-          .map { FakeUpgradeRequest.valueOf(it) }
+  override fun listenUpgradeScenarioAvailable(): Flow<FakeUpgradeRequest> =
+      combineTransform(
+              listenForInAppDebuggingEnabled(),
+              getPreference(
+                      DEBUG_KEY_UPGRADE_AVAILABLE,
+                      "",
+                  )
+                  .filterNot { it.isBlank() }
+                  .map { FakeUpgradeRequest.valueOf(it) },
+          ) { isDebugEnabled, request ->
+            if (isDebugEnabled) {
+              emit(request)
+            }
+          }
           .flowOn(context = Dispatchers.IO)
 
-  override fun setUpgradeAvailable(fake: FakeUpgradeRequest?) {
+  override fun setUpgradeScenarioAvailable(fake: FakeUpgradeRequest?) {
     setPreference(
         key = DEBUG_KEY_UPGRADE_AVAILABLE,
         fallbackValue = "",
@@ -304,10 +316,16 @@ internal constructor(
     )
   }
 
-  override fun listenShowChangelog(): Flow<Boolean> =
-      getPreference(DEBUG_KEY_SHOW_CHANGELOG, false).flowOn(context = Dispatchers.IO)
+  override fun listenShowChangelogUpsell(): Flow<Boolean> =
+      combineTransform(
+              listenForInAppDebuggingEnabled(),
+              getPreference(DEBUG_KEY_SHOW_CHANGELOG, false),
+          ) { isDebugEnabled, show ->
+            emit(isDebugEnabled && show)
+          }
+          .flowOn(context = Dispatchers.IO)
 
-  override fun setShowChangelog(show: Boolean) {
+  override fun setShowChangelogUpsell(show: Boolean) {
     setPreference(
         key = DEBUG_KEY_SHOW_CHANGELOG,
         fallbackValue = false,
@@ -316,7 +334,13 @@ internal constructor(
   }
 
   override fun listenTryShowRatingUpsell(): Flow<Boolean> =
-      getPreference(DEBUG_KEY_SHOW_RATING_UPSELL, false).flowOn(context = Dispatchers.IO)
+      combineTransform(
+              listenForInAppDebuggingEnabled(),
+              getPreference(DEBUG_KEY_SHOW_RATING_UPSELL, false),
+          ) { isDebugEnabled, show ->
+            emit(isDebugEnabled && show)
+          }
+          .flowOn(context = Dispatchers.IO)
 
   override fun setTryShowRatingUpsell(show: Boolean) {
     setPreference(
@@ -327,7 +351,13 @@ internal constructor(
   }
 
   override fun listenShowBillingUpsell(): Flow<Boolean> =
-      getPreference(DEBUG_KEY_SHOW_BILLING_UPSELL, false).flowOn(context = Dispatchers.IO)
+      combineTransform(
+              listenForInAppDebuggingEnabled(),
+              getPreference(DEBUG_KEY_SHOW_BILLING_UPSELL, false),
+          ) { isDebugEnabled, show ->
+            emit(isDebugEnabled && show)
+          }
+          .flowOn(context = Dispatchers.IO)
 
   override fun setShowBillingUpsell(show: Boolean) {
     setPreference(

@@ -28,16 +28,16 @@ internal interface DebugPreferences : InAppDebugStatus {
   fun setInAppDebuggingEnabled(enabled: Boolean)
 
   /** Fake an in-app upgrade availability */
-  fun setUpgradeAvailable(fake: FakeUpgradeRequest?)
+  fun setUpgradeScenarioAvailable(fake: FakeUpgradeRequest?)
 
   /** Watch for changes to fake in-app upgrade */
-  @CheckResult fun listenUpgradeAvailable(): Flow<FakeUpgradeRequest>
+  @CheckResult fun listenUpgradeScenarioAvailable(): Flow<FakeUpgradeRequest>
 
   /** Fake show the changelog tooltip */
-  fun setShowChangelog(show: Boolean)
+  fun setShowChangelogUpsell(show: Boolean)
 
   /** Watch for changes to fake changelog */
-  @CheckResult fun listenShowChangelog(): Flow<Boolean>
+  @CheckResult fun listenShowChangelogUpsell(): Flow<Boolean>
 
   /** Fake show the billing upsell */
   fun setShowBillingUpsell(show: Boolean)

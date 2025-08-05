@@ -19,28 +19,40 @@ package com.pyamsoft.pydroid.bootstrap.version.fake
 import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
+import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 internal class FakeAppUpdater
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
-    version: Int,
+    private val version: Int,
     private val fakeUpgradeRequest: Flow<FakeUpgradeRequest>,
 ) :
     AbstractAppUpdater<FakeAppUpdateManager>(
         enforcer = enforcer,
-        resolveAppUpdateManager = {
-          FakeAppUpdateManager(context.applicationContext).apply { setUpdateAvailable(version + 1) }
-        },
+        resolveAppUpdateManager = { FakeAppUpdateManager(context.applicationContext) },
     ) {
 
   override suspend fun onBeforeCheckForUpdate() {
+    val request = fakeUpgradeRequest.firstOrNull()
+    if (request == null) {
+      Logger.d { "No update available" }
+      manager.setUpdateNotAvailable()
+      return
+    }
+
+    // Otherwise we want to update
+    val newVersion = version + 1
+    Logger.d { "Set flex update available for version: $newVersion" }
+    manager.setUpdateAvailable(newVersion, AppUpdateType.FLEXIBLE)
+
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
     delay(2000L)
   }

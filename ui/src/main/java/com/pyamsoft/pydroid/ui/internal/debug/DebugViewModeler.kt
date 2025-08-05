@@ -38,6 +38,30 @@ internal constructor(
         f.collect { s.isInAppDebuggingEnabled.value = it }
       }
     }
+
+    preferences.listenUpgradeScenarioAvailable().also { f ->
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { s.debugFakeVersionUpdate.value = it }
+      }
+    }
+
+    preferences.listenTryShowRatingUpsell().also { f ->
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { s.isDebugFakeShowRatingUpsell.value = it }
+      }
+    }
+
+    preferences.listenShowBillingUpsell().also { f ->
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { s.isDebugFakeShowBillingUpsell.value = it }
+      }
+    }
+
+    preferences.listenShowChangelogUpsell().also { f ->
+      scope.launch(context = Dispatchers.Default) {
+        f.collect { s.isDebugFakeShowChangelog.value = it }
+      }
+    }
   }
 
   internal fun handleCopy(scope: CoroutineScope) {
@@ -59,11 +83,11 @@ internal constructor(
 
   internal fun handleToggleShowChangelog() {
     val newState = state.isDebugFakeShowChangelog.updateAndGet { !it }
-    preferences.setShowChangelog(newState)
+    preferences.setShowChangelogUpsell(newState)
   }
 
   internal fun handleUpdateVersionRequest(request: FakeUpgradeRequest?) {
     val newState = state.debugFakeVersionUpdate.updateAndGet { request }
-    preferences.setUpgradeAvailable(newState)
+    preferences.setUpgradeScenarioAvailable(newState)
   }
 }

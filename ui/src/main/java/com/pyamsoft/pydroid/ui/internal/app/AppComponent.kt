@@ -160,7 +160,7 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
-                fakeUpgradeRequest = params.debugPreferences.listenUpgradeAvailable(),
+                fakeUpgradeRequest = params.debugPreferences.listenUpgradeScenarioAvailable(),
             ),
         )
 
@@ -264,12 +264,15 @@ internal interface AppComponent {
       // Connect the In-App Billing
       activity.doOnCreate { connectBilling(activity) }
 
+      // Fake force-showing in-app rating
       activity.doOnCreate {
         params.debugPreferences.listenTryShowRatingUpsell().also { f ->
           activity.lifecycleScope.launch(context = Dispatchers.Main) {
             f.collect { show ->
-              Logger.d { "Try to force-show an In-App Rating" }
-              rating.loadInAppRating()
+              if (show) {
+                Logger.d { "Try to force-show an In-App Rating" }
+                rating.loadInAppRating()
+              }
             }
           }
         }

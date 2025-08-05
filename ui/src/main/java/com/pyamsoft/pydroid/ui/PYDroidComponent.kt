@@ -137,7 +137,7 @@ internal interface PYDroidComponent {
               ChangeLogModule.Parameters(
                   context = context,
                   preferences = preferences,
-                  isFakeChangeLogAvailable = preferences.listenForShowChangelogChanges(),
+                  isFakeChangeLogAvailable = preferences.listenShowChangelogUpsell(),
               ),
       )
     }

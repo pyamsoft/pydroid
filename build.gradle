@@ -45,7 +45,7 @@ buildscript {
     coil = "3.3.0"
 
     // Test Runner
-    testRunner = "1.6.2"
+    testRunner = "1.7.0"
   }
 }
 

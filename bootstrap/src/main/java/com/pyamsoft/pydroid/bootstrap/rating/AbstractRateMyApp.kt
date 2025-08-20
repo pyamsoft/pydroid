@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import androidx.compose.runtime.CheckResult
+import androidx.annotation.CheckResult
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher

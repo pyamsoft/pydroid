@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.bootstrap.version.fake.FakeAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer
-import com.pyamsoft.pydroid.util.isDebugMode
 import kotlinx.coroutines.flow.Flow
 
 /** In-App update module */
@@ -32,7 +31,7 @@ public class VersionModule(params: Parameters) {
 
   init {
     val updater =
-        if (params.context.applicationContext.isDebugMode() && params.fakeUpgradeRequest != null) {
+        if (params.fakeUpgradeRequest != null) {
           FakeAppUpdater(
               enforcer = params.enforcer,
               context = params.context.applicationContext,

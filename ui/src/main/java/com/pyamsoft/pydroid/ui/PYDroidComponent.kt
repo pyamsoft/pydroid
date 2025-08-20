@@ -96,6 +96,8 @@ internal interface PYDroidComponent {
 
     private val theming: Theming by lazy { ThemingImpl(preferences) }
 
+    private val isDebugMode by lazy { context.isDebugMode() }
+
     private val preferences by lazy {
       PYDroidPreferencesImpl(
           context = params.application,
@@ -137,13 +139,15 @@ internal interface PYDroidComponent {
               ChangeLogModule.Parameters(
                   context = context,
                   preferences = preferences,
-                  isFakeChangeLogAvailable = preferences.listenShowChangelogUpsell(),
+                  isFakeChangeLogAvailable =
+                      if (isDebugMode) preferences.listenShowChangelogUpsell() else null,
               ),
       )
     }
 
     private val appParams by lazy {
       AppComponent.Factory.Parameters(
+          isDebugMode = isDebugMode,
           enforcer = enforcer,
           context = context,
           theming = theming,

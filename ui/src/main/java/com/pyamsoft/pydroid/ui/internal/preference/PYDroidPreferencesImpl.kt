@@ -43,6 +43,7 @@ import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ifNotCancellation
+import com.pyamsoft.pydroid.util.isDebugMode
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,6 +70,7 @@ internal constructor(
     DebugPreferences,
     HapticPreferences {
 
+  private val isDebugMode by lazy { context.isDebugMode() }
   private val darkModeKey = stringPreferencesKey(context.getString(R.string.dark_mode_key))
 
   private val Context.dataStore: DataStore<Preferences> by
@@ -158,6 +160,7 @@ internal constructor(
               key = KEY_IN_APP_DEBUGGING,
               value = DEFAULT_IN_APP_DEBUGGING_ENABLED,
           )
+          .map { it && isDebugMode }
           .flowOn(context = Dispatchers.IO)
 
   override fun setInAppDebuggingEnabled(enabled: Boolean) {

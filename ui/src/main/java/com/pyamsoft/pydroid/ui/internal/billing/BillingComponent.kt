@@ -33,7 +33,7 @@ internal interface BillingComponent {
     internal constructor(
         internal val preferences: BillingPreferences,
         internal val state: MutableBillingViewState,
-        internal val isFakeBillingUpsell: Flow<Boolean>,
+        internal val isFakeBillingUpsell: Flow<Boolean>?,
     )
   }
 

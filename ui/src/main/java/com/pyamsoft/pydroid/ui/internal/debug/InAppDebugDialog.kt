@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +71,7 @@ import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import com.pyamsoft.pydroid.util.isDebugMode
 import java.time.Instant
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -153,6 +155,15 @@ private fun InAppDebugScreen(
 
   val sortedLines = remember(lines) { lines.sortedBy { it.timestamp } }
 
+  val context = LocalContext.current
+  val isDebuggable =
+      remember(
+          isEnabled,
+          context,
+      ) {
+        isEnabled && context.applicationContext.isDebugMode()
+      }
+
   Dialog(
       properties = rememberDialogProperties(),
       onDismissRequest = onDismiss,
@@ -182,72 +193,76 @@ private fun InAppDebugScreen(
           LazyColumn {
             if (isEnabled) {
 
-              // Debug options
-              item(
-                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
-              ) {
-                val option by state.debugFakeVersionUpdate.collectAsStateWithLifecycle()
-                val allValues: Map<FakeUpgradeRequest?, String> = remember {
-                  val validValues = FakeUpgradeRequest.entries
-                  return@remember mapOf(
-                      null to FAKE_UPGRADE_NONE_DISPLAY_NAME,
-                      *validValues.map { it to it.name }.toTypedArray(),
+              if (isDebuggable) {
+                // Debug options
+                item(
+                    contentType = InAppDebugContentTypes.DEBUG_OPTION,
+                ) {
+                  val option by state.debugFakeVersionUpdate.collectAsStateWithLifecycle()
+                  val allValues: Map<FakeUpgradeRequest?, String> = remember {
+                    val validValues = FakeUpgradeRequest.entries
+                    return@remember mapOf(
+                        null to FAKE_UPGRADE_NONE_DISPLAY_NAME,
+                        *validValues.map { it to it.name }.toTypedArray(),
+                    )
+                  }
+
+                  val displayValue =
+                      remember(option, allValues) {
+                        allValues[option] ?: FAKE_UPGRADE_NONE_DISPLAY_NAME
+                      }
+
+                  DebugSelect(
+                      modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+                      title = "Show Version Update",
+                      description = "Fake visual state as if a version upgrade was available",
+                      value = option,
+                      displayValue = displayValue,
+                      allValues = allValues,
+                      onSelect = { onUpdateVersionRequest(it) },
                   )
                 }
 
-                val displayValue =
-                    remember(option, allValues) {
-                      allValues[option] ?: FAKE_UPGRADE_NONE_DISPLAY_NAME
-                    }
+                item(
+                    contentType = InAppDebugContentTypes.DEBUG_OPTION,
+                ) {
+                  val isChecked by state.isDebugFakeShowChangelog.collectAsStateWithLifecycle()
+                  DebugOption(
+                      modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+                      title = "Show Changelog",
+                      description = "Fake visual state as if a changelog was available",
+                      isChecked = isChecked,
+                      onCheckedChange = { onToggleShowChangelog() },
+                  )
+                }
 
-                DebugSelect(
-                    modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-                    title = "Show Version Update",
-                    description = "Fake visual state as if a version upgrade was available",
-                    value = option,
-                    displayValue = displayValue,
-                    allValues = allValues,
-                    onSelect = { onUpdateVersionRequest(it) },
-                )
+                item(
+                    contentType = InAppDebugContentTypes.DEBUG_OPTION,
+                ) {
+                  val isChecked by state.isDebugFakeShowBillingUpsell.collectAsStateWithLifecycle()
+                  DebugOption(
+                      title = "Show Billing Upsell",
+                      description = "Show the upsell for the tip jar",
+                      isChecked = isChecked,
+                      onCheckedChange = { onToggleShowBillingUpsell() },
+                  )
+                }
+
+                item(
+                    contentType = InAppDebugContentTypes.DEBUG_OPTION,
+                ) {
+                  val isChecked by state.isDebugFakeShowRatingUpsell.collectAsStateWithLifecycle()
+                  DebugOption(
+                      modifier = Modifier.padding(bottom = MaterialTheme.keylines.content),
+                      title = "Show Rating Upsell",
+                      description = "Show the upsell to rate the app",
+                      isChecked = isChecked,
+                      onCheckedChange = { onToggleShowRatingUpsell() },
+                  )
+                }
               }
 
-              item(
-                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
-              ) {
-                val isChecked by state.isDebugFakeShowChangelog.collectAsStateWithLifecycle()
-                DebugOption(
-                    modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-                    title = "Show Changelog",
-                    description = "Fake visual state as if a changelog was available",
-                    isChecked = isChecked,
-                    onCheckedChange = { onToggleShowChangelog() },
-                )
-              }
-
-              item(
-                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
-              ) {
-                val isChecked by state.isDebugFakeShowBillingUpsell.collectAsStateWithLifecycle()
-                DebugOption(
-                    title = "Show Billing Upsell",
-                    description = "Show the upsell for the tip jar",
-                    isChecked = isChecked,
-                    onCheckedChange = { onToggleShowBillingUpsell() },
-                )
-              }
-
-              item(
-                  contentType = InAppDebugContentTypes.DEBUG_OPTION,
-              ) {
-                val isChecked by state.isDebugFakeShowRatingUpsell.collectAsStateWithLifecycle()
-                DebugOption(
-                    modifier = Modifier.padding(bottom = MaterialTheme.keylines.content),
-                    title = "Show Rating Upsell",
-                    description = "Show the upsell to rate the app",
-                    isChecked = isChecked,
-                    onCheckedChange = { onToggleShowRatingUpsell() },
-                )
-              }
+              extraContent()
 
               item(
                   contentType = InAppDebugContentTypes.TITLE,
@@ -263,8 +278,6 @@ private fun InAppDebugScreen(
                         ),
                 )
               }
-
-              extraContent()
 
               if (sortedLines.isEmpty()) {
                 item(

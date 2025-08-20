@@ -30,7 +30,7 @@ internal class BillingViewModeler
 internal constructor(
     override val state: MutableBillingViewState,
     private val preferences: BillingPreferences,
-    private val isFakeUpsell: Flow<Boolean>,
+    private val isFakeUpsell: Flow<Boolean>?,
 ) : BillingViewState by state, AbstractViewModeler<BillingViewState>(state) {
 
   override fun registerSaveState(
@@ -64,7 +64,7 @@ internal constructor(
       }
     }
 
-    isFakeUpsell.also { f ->
+    isFakeUpsell?.also { f ->
       scope.launch(context = Dispatchers.Default) {
         f.collect { show ->
           if (show) {

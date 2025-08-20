@@ -98,6 +98,7 @@ internal interface AppComponent {
     @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
+        internal val isDebugMode: Boolean,
         internal val hapticPreferences: HapticPreferences,
         internal val debugPreferences: DebugPreferences,
         internal val logLinesBus: StateFlow<List<InAppDebugLogLine>>,
@@ -160,7 +161,9 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
-                fakeUpgradeRequest = params.debugPreferences.listenUpgradeScenarioAvailable(),
+                fakeUpgradeRequest =
+                    if (params.isDebugMode) params.debugPreferences.listenUpgradeScenarioAvailable()
+                    else null,
             ),
         )
 
@@ -176,7 +179,8 @@ internal interface AppComponent {
         BillingComponent.Factory.Parameters(
             preferences = params.billingPreferences,
             state = billingState,
-            isFakeBillingUpsell = params.debugPreferences.listenShowBillingUpsell(),
+            isFakeBillingUpsell =
+                if (params.isDebugMode) params.debugPreferences.listenShowBillingUpsell() else null,
         )
 
     private val settingsParams =
@@ -266,12 +270,14 @@ internal interface AppComponent {
 
       // Fake force-showing in-app rating
       activity.doOnCreate {
-        params.debugPreferences.listenTryShowRatingUpsell().also { f ->
-          activity.lifecycleScope.launch(context = Dispatchers.Main) {
-            f.collect { show ->
-              if (show) {
-                Logger.d { "Try to force-show an In-App Rating" }
-                rating.loadInAppRating()
+        if (params.isDebugMode) {
+          params.debugPreferences.listenTryShowRatingUpsell().also { f ->
+            activity.lifecycleScope.launch(context = Dispatchers.Main) {
+              f.collect { show ->
+                if (show) {
+                  Logger.d { "Try to force-show an In-App Rating" }
+                  rating.loadInAppRating()
+                }
               }
             }
           }

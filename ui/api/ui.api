@@ -343,10 +343,10 @@ public final class com/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$I
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/debug/ComposableSingletons$InAppDebugDialogKt;
 	public fun <init> ()V
 	public final fun getLambda$-1226367227$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-1838126538$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$-1953834313$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1491003213$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1816866308$ui_release ()Lkotlin/jvm/functions/Function3;
 	public final fun getLambda$-81557238$ui_release ()Lkotlin/jvm/functions/Function3;
-	public final fun getLambda$1896289495$ui_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$2028867790$ui_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/settings/reset/ComposableSingletons$ResetScreenKt {

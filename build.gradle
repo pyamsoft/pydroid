@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
   ext {
-    kotlin = "2.2.10"
+    kotlin = "2.2.20"
     coroutines = "1.10.2"
 
     // Compose

@@ -222,7 +222,7 @@ allprojects {
       leadingTabsToSpaces(2)
     }
     kotlin {
-      target("src/**/*.kt", "*.kts")
+      target("src/**/*.kt")
       ktfmt()
 
       trimTrailingWhitespace()

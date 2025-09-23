@@ -139,6 +139,10 @@ subprojects {
         jvmTarget = JvmTarget.JVM_21
         freeCompilerArgs.add("-Xexplicit-api=strict")
       }
+
+      abiValidation {
+        enabled = true
+      }
     }
 
     publishing {
@@ -204,11 +208,18 @@ allprojects {
     }
   }
 
-  // Java compile
-  tasks.withType(JavaCompile).configureEach {
+  tasks.withType(JavaCompile).forEach {
     options.compilerArgs.add("-Xlint:unchecked")
     options.compilerArgs.add("-Xlint:deprecation")
     options.deprecation = true
+  }
+
+  // Enable ABI checking
+  //
+  // https://github.com/JakeWharton/timber/commit/65747860b59e40a95866cbb4bd866f44a3b1880c
+  // TODO: https://youtrack.jetbrains.com/issue/KT-78525
+  tasks.named("check") {
+    it.dependsOn(tasks.named("checkLegacyAbi"))
   }
 
   // Spotless

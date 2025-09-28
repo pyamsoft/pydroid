@@ -77,8 +77,10 @@ internal constructor(
   ) {
     val acceptedState by state.isAccepted.collectAsStateWithLifecycle()
 
-    if (acceptedState != DataPolicyViewState.AcceptedState.NONE &&
-        acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED) {
+    if (
+        acceptedState != DataPolicyViewState.AcceptedState.NONE &&
+            acceptedState != DataPolicyViewState.AcceptedState.ACCEPTED
+    ) {
       DataPolicyDisclosureDialog(
           modifier = modifier,
           onDismiss = onDismissDialog,

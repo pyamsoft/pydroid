@@ -33,7 +33,7 @@ public interface Notifier {
   public fun <T : NotifyData> show(
       id: NotifyId,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId
 
   /** Show a notification with a given tag */
@@ -41,7 +41,7 @@ public interface Notifier {
   public fun <T : NotifyData> show(
       tag: NotifyTag,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId
 
   /** Show a notification with a given id and tag */
@@ -50,7 +50,7 @@ public interface Notifier {
       id: NotifyId,
       tag: NotifyTag,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId
 
   /** Cancel a notification by id */
@@ -64,7 +64,7 @@ public interface Notifier {
   public fun <T : NotifyData> startForeground(
       service: Service,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId
 
   /** Show a foreground notification with a given id and tag */
@@ -73,7 +73,7 @@ public interface Notifier {
       service: Service,
       id: NotifyId,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId
 
   /** Cancel a foreground notification by id */

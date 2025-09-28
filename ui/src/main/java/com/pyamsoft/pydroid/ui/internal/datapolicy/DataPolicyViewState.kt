@@ -35,7 +35,7 @@ public interface DataPolicyViewState : UiViewState {
   public enum class AcceptedState {
     NONE,
     ACCEPTED,
-    REJECTED
+    REJECTED,
   }
 }
 

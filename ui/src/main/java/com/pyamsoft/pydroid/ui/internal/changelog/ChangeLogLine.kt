@@ -34,7 +34,7 @@ internal constructor(
   internal enum class Type {
     BUGFIX,
     CHANGE,
-    FEATURE
+    FEATURE,
   }
 }
 

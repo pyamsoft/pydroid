@@ -37,12 +37,14 @@ dependencies {
   // Testing
   testImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
   testImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
+      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
+  )
 
   androidTestImplementation("androidx.test:runner:${rootProject.extra["testRunner"]}")
   androidTestImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
   androidTestImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}")
+      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
+  )
 
   api(project(":core"))
 }

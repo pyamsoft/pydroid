@@ -55,17 +55,18 @@ public class PermissionRequester private constructor() {
       onResponse: (Boolean) -> Unit,
   ): ActivityResultLauncher<Array<String>> {
     return activity.registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()) { results ->
-          val ungrantedPermissions = results.filterNot { it.value }.map { it.key }
-          val allPermissionsGranted = ungrantedPermissions.isEmpty()
-          if (allPermissionsGranted) {
-            Logger.d { "All permissions granted" }
-          } else {
-            Logger.w { "Did not grant all permissions: $ungrantedPermissions" }
-          }
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+      val ungrantedPermissions = results.filterNot { it.value }.map { it.key }
+      val allPermissionsGranted = ungrantedPermissions.isEmpty()
+      if (allPermissionsGranted) {
+        Logger.d { "All permissions granted" }
+      } else {
+        Logger.w { "Did not grant all permissions: $ungrantedPermissions" }
+      }
 
-          onResponse(allPermissionsGranted)
-        }
+      onResponse(allPermissionsGranted)
+    }
   }
 
   /** Register to the activity */
@@ -112,7 +113,7 @@ public class PermissionRequester private constructor() {
     @CheckResult
     public fun createAndRegister(
         activity: ComponentActivity,
-        onResponse: (Boolean) -> Unit
+        onResponse: (Boolean) -> Unit,
     ): Launcher {
       return PermissionRequester()
           .register(

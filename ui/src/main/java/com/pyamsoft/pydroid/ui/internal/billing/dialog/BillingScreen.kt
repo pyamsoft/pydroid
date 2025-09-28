@@ -176,7 +176,8 @@ private fun ErrorText(
   ) {
     Text(
         text = stringResource(R.string.billing_error_message),
-        style = MaterialTheme.typography.bodyLarge)
+        style = MaterialTheme.typography.bodyLarge,
+    )
   }
 }
 
@@ -242,7 +243,8 @@ private fun BillingPopup(
              */
             else ->
                 throw AssertionError(
-                    "The only reason we can't use a sealed class is because Dokka breaks.")
+                    "The only reason we can't use a sealed class is because Dokka breaks."
+                )
           }
 
       snackbarHostState.showSnackbar(

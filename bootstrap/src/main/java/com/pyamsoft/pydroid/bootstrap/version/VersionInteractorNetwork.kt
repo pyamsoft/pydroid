@@ -33,7 +33,7 @@ internal constructor(
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit,
       onDownloadCancelled: () -> Unit,
-      onDownloadFailed: () -> Unit
+      onDownloadFailed: () -> Unit,
   ) =
       withContext(context = Dispatchers.Default) {
         updater.watchDownloadStatus(

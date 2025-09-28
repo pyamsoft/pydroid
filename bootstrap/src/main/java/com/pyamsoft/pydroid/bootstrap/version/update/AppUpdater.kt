@@ -26,7 +26,7 @@ public interface AppUpdater {
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit,
       onDownloadCancelled: () -> Unit,
-      onDownloadFailed: () -> Unit
+      onDownloadFailed: () -> Unit,
   )
 
   /** Check for a new update */

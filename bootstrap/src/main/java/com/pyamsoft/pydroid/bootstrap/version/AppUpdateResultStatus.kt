@@ -22,5 +22,5 @@ package com.pyamsoft.pydroid.bootstrap.version
 public enum class AppUpdateResultStatus {
   ACCEPTED,
   USER_CANCELLED,
-  IN_APP_UPDATE_FAILED
+  IN_APP_UPDATE_FAILED,
 }

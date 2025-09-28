@@ -260,7 +260,8 @@ private fun RenderItem(
         )
     else ->
         throw IllegalArgumentException(
-            "Preference is not a consumable type for PreferenceScreen: $preference")
+            "Preference is not a consumable type for PreferenceScreen: $preference"
+        )
   }
 }
 

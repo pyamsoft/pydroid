@@ -44,7 +44,7 @@ public fun ComponentActivity.PYDroidTheme(
     typography: Typography = MaterialTheme.typography,
     shapes: Shapes = MaterialTheme.shapes,
     keylines: Keylines = MaterialTheme.keylines,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
   val self = this
 

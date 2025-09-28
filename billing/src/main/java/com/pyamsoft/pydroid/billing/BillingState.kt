@@ -30,5 +30,5 @@ public enum class BillingState {
   CONNECTED,
 
   /** Billing client is currently disconnected but may become active again later. */
-  DISCONNECTED
+  DISCONNECTED,
 }

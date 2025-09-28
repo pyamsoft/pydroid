@@ -421,7 +421,7 @@ public object OssLibraries {
       name: String,
       url: String,
       description: String,
-      license: LibraryLicense = OssLicenses.APACHE2
+      license: LibraryLicense = OssLicenses.APACHE2,
   ) {
     val lib =
         OssLibrary(

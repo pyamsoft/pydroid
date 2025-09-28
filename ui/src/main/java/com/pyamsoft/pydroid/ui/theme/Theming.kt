@@ -59,7 +59,7 @@ public interface Theming {
     DARK,
 
     /** System mode */
-    SYSTEM
+    SYSTEM,
   }
 }
 

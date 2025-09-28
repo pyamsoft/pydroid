@@ -28,7 +28,7 @@ public interface VersionInteractor {
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit,
       onDownloadCancelled: () -> Unit,
-      onDownloadFailed: () -> Unit
+      onDownloadFailed: () -> Unit,
   )
 
   /** Check for a new version update */

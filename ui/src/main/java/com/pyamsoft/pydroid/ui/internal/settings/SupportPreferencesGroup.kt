@@ -86,7 +86,7 @@ internal fun rememberSupportPreferencesGroup(
 @CheckResult
 private fun rememberRatePreference(
     applicationName: CharSequence,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ): Preferences.Item {
   val summary = stringResource(R.string.rating_summary)
 

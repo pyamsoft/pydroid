@@ -32,7 +32,8 @@ internal constructor(
 ) :
     AbstractRateMyApp<FakeReviewManager>(
         enforcer = enforcer,
-        resolveReviewManager = { FakeReviewManager(context.applicationContext) }) {
+        resolveReviewManager = { FakeReviewManager(context.applicationContext) },
+    ) {
 
   override suspend fun onBeforeStartRating() {
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }

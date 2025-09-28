@@ -27,7 +27,7 @@ internal constructor(
     val level: Level,
     val line: String,
     val throwable: Throwable?,
-    val timestamp: Long
+    val timestamp: Long,
 ) {
 
   @Stable
@@ -35,6 +35,6 @@ internal constructor(
   enum class Level {
     DEBUG,
     WARNING,
-    ERROR
+    ERROR,
   }
 }

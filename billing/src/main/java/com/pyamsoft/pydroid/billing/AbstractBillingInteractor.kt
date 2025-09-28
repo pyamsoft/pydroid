@@ -170,7 +170,7 @@ protected constructor(
   protected fun launchInScope(
       context: CoroutineContext = EmptyCoroutineContext,
       start: CoroutineStart = CoroutineStart.DEFAULT,
-      block: suspend CoroutineScope.() -> Unit
+      block: suspend CoroutineScope.() -> Unit,
   ) = billingScope.launch(context, start, block)
 
   companion object {

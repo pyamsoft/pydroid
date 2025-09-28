@@ -44,7 +44,7 @@ internal interface SettingsViewState : UiViewState {
   enum class LoadingState {
     NONE,
     LOADING,
-    DONE
+    DONE,
   }
 }
 

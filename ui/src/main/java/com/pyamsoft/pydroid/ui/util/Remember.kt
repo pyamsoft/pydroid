@@ -111,7 +111,7 @@ public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(
 public fun <T : Any> StateFlow<Collection<T>>.collectAsStateListWithLifecycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    context: CoroutineContext = EmptyCoroutineContext
+    context: CoroutineContext = EmptyCoroutineContext,
 ): List<T> {
   val state by
       this.collectAsStateWithLifecycle(
@@ -131,7 +131,7 @@ public fun <T : Any> StateFlow<Collection<T>>.collectAsStateListWithLifecycle(
 public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMapWithLifecycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    context: CoroutineContext = EmptyCoroutineContext
+    context: CoroutineContext = EmptyCoroutineContext,
 ): SnapshotStateMap<K, V> {
   val state by
       this.collectAsStateWithLifecycle(

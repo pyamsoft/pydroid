@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.util.isDebugMode
 internal data class PYDroidInitializer
 internal constructor(
     internal val component: PYDroidComponent,
-    internal val moduleProvider: ModuleProvider
+    internal val moduleProvider: ModuleProvider,
 ) {
 
   companion object {
@@ -62,7 +62,8 @@ internal constructor(
     @JvmStatic
     private fun setStrictMode() {
       StrictMode.setThreadPolicy(
-          StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyFlashScreen().build())
+          StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyFlashScreen().build()
+      )
 
       StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
     }

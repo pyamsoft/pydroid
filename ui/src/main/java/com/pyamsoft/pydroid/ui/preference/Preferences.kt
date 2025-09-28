@@ -140,7 +140,7 @@ public sealed class Preferences {
       override val id: String,
       override val name: String,
       override val isEnabled: Boolean,
-      internal val preferences: List<Item>
+      internal val preferences: List<Item>,
   ) : Preferences()
 }
 

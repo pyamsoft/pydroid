@@ -68,7 +68,7 @@ protected constructor(
       onDownloadProgress: (Float) -> Unit,
       onDownloadCompleted: () -> Unit,
       onDownloadCancelled: () -> Unit,
-      onDownloadFailed: () -> Unit
+      onDownloadFailed: () -> Unit,
   ) =
       withContext(context = Dispatchers.Default) {
         suspendCancellableCoroutine<Unit> { continuation ->
@@ -133,7 +133,7 @@ protected constructor(
   @CheckResult
   protected abstract fun createAppUpdateLauncher(
       info: AppUpdateInfo,
-      @AppUpdateType updateType: Int
+      @AppUpdateType updateType: Int,
   ): AppUpdateLauncher
 
   protected open suspend fun onBeforeCheckForUpdate() {}
@@ -145,7 +145,7 @@ protected constructor(
         crossinline onDownloadProgress: (Float) -> Unit,
         crossinline onDownloadCompleted: () -> Unit,
         crossinline onDownloadCancelled: () -> Unit,
-        crossinline onDownloadFailed: () -> Unit
+        crossinline onDownloadFailed: () -> Unit,
     ): InstallStateUpdatedListener {
       return InstallStateUpdatedListener { state ->
         when (state.installStatus()) {

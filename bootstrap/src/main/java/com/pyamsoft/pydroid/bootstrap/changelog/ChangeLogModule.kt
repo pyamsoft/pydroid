@@ -43,6 +43,6 @@ public class ChangeLogModule(params: Parameters) {
       internal val context: Context,
       internal val preferences: ChangeLogPreferences,
       /** If this field is set, the changelog module will always request to show a changelog */
-      internal val isFakeChangeLogAvailable: Flow<Boolean>? = null
+      internal val isFakeChangeLogAvailable: Flow<Boolean>? = null,
   )
 }

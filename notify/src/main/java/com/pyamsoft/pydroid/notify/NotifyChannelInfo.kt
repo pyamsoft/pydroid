@@ -27,5 +27,5 @@ public data class NotifyChannelInfo(
     /** Human readable channel name */
     val title: String,
     /** Human readable channel description */
-    val description: String
+    val description: String,
 )

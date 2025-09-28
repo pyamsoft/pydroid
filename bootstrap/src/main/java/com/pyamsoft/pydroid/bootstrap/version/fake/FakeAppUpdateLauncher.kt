@@ -41,7 +41,7 @@ internal constructor(
 
   private suspend fun FakeAppUpdateManager.fakeDownload(
       totalBytes: Long,
-      downloadCompletedAmount: Long
+      downloadCompletedAmount: Long,
   ) {
     val self = this
 
@@ -128,7 +128,7 @@ internal constructor(
 
   override suspend fun onAfterUpdateFlowStarted(
       activity: ComponentActivity,
-      status: AppUpdateResultStatus
+      status: AppUpdateResultStatus,
   ) {
     fakeUpgradeRequest.firstOrNull()?.also { request ->
       // In the background, we "download"

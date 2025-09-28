@@ -49,7 +49,7 @@ internal constructor(
   override fun <T : NotifyData> show(
       id: NotifyId,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId {
     return show(id, NOTIFY_EMPTY_TAG, channelInfo, notification)
   }
@@ -57,7 +57,7 @@ internal constructor(
   override fun <T : NotifyData> show(
       tag: NotifyTag,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId {
     return show(generateNotificationId(), tag, channelInfo, notification)
   }
@@ -66,7 +66,7 @@ internal constructor(
   private fun <T : NotifyData> buildNotification(
       id: NotifyId,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): Notification {
     val dispatcher =
         dispatchers
@@ -83,7 +83,7 @@ internal constructor(
       id: NotifyId,
       tag: NotifyTag,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId {
     val newNotification = buildNotification(id, channelInfo, notification)
     if (tag.tag.isNotBlank()) {
@@ -110,7 +110,7 @@ internal constructor(
   override fun <T : NotifyData> startForeground(
       service: Service,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId {
     return startForeground(service, generateNotificationId(), channelInfo, notification)
   }
@@ -119,7 +119,7 @@ internal constructor(
       service: Service,
       id: NotifyId,
       channelInfo: NotifyChannelInfo,
-      notification: T
+      notification: T,
   ): NotifyId {
     val newNotification = buildNotification(id, channelInfo, notification)
     service.startForeground(id.id, newNotification)

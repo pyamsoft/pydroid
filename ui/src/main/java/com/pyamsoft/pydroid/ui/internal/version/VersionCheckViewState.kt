@@ -25,7 +25,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class MutableVersionCheckViewState internal constructor() : VersionCheckViewState {
   override val isCheckingForUpdate =
       MutableStateFlow<VersionCheckViewState.CheckingState>(
-          VersionCheckViewState.CheckingState.None)
+          VersionCheckViewState.CheckingState.None
+      )
   override val launcher = MutableStateFlow<AppUpdateLauncher?>(null)
   override val isUpdateReadyToInstall = MutableStateFlow(false)
   override val updateProgressPercent = MutableStateFlow(0F)

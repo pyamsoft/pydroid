@@ -33,7 +33,7 @@ internal constructor(
 
   internal fun loadInAppRating(
       scope: CoroutineScope,
-      onLaunchInAppRating: (AppRatingLauncher) -> Unit
+      onLaunchInAppRating: (AppRatingLauncher) -> Unit,
   ) {
     val s = state
     if (s.isInAppRatingShown.value || s.isLoading.value) {

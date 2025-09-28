@@ -24,4 +24,5 @@ internal constructor(dispatchers: Set<NotifyDispatcher<*>>, notification: Notify
     No dispatcher available to handle notification: $notification
     Available dispatchers: $dispatchers
     """
-            .trimIndent())
+            .trimIndent()
+    )

@@ -135,6 +135,6 @@ protected constructor(
 
   protected open suspend fun onAfterUpdateFlowStarted(
       activity: ComponentActivity,
-      status: AppUpdateResultStatus
+      status: AppUpdateResultStatus,
   ) {}
 }

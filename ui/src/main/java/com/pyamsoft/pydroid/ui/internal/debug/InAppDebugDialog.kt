@@ -552,14 +552,25 @@ private fun PreviewInAppDebugScreenEnabledDummyLog() {
       MutableStateFlow(
           listOf(
               InAppDebugLogLine(
-                  DEBUG, "Hello Debug", null, Instant.now().minusSeconds(10).toEpochMilli()),
+                  DEBUG,
+                  "Hello Debug",
+                  null,
+                  Instant.now().minusSeconds(10).toEpochMilli(),
+              ),
               InAppDebugLogLine(
-                  WARNING, "Hello Warning", null, Instant.now().minusSeconds(9).toEpochMilli()),
+                  WARNING,
+                  "Hello Warning",
+                  null,
+                  Instant.now().minusSeconds(9).toEpochMilli(),
+              ),
               InAppDebugLogLine(
                   ERROR,
                   "Hello Error",
                   IllegalStateException("Hello Error"),
-                  Instant.now().minusSeconds(8).toEpochMilli())))
+                  Instant.now().minusSeconds(8).toEpochMilli(),
+              ),
+          )
+      )
   InAppDebugScreen(
       state =
           MutableDebugViewState(

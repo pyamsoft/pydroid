@@ -52,10 +52,12 @@ internal constructor(
   )
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
-    if (loadConfig.darkMode &&
-        loadConfig.inAppDebug &&
-        loadConfig.name &&
-        loadConfig.isHapticsEnabled) {
+    if (
+        loadConfig.darkMode &&
+            loadConfig.inAppDebug &&
+            loadConfig.name &&
+            loadConfig.isHapticsEnabled
+    ) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }
   }

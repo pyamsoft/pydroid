@@ -63,6 +63,8 @@ internal constructor(
                 """```
 ${lines.joinToString("\n") { parseLine(it) }}
 ```"""
-                    .trim()))
+                    .trim(),
+            )
+        )
       }
 }

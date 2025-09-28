@@ -45,7 +45,7 @@ internal fun AboutListItem(
     modifier: Modifier = Modifier,
     library: OssLibrary,
     onViewHomePage: (OssLibrary) -> Unit,
-    onViewLicense: (OssLibrary) -> Unit
+    onViewLicense: (OssLibrary) -> Unit,
 ) {
   val hapticManager = LocalHapticManager.current
 

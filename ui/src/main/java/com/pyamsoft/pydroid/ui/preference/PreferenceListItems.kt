@@ -234,7 +234,7 @@ internal fun ListPreferenceItem(
 internal fun PreferenceDialog(
     modifier: Modifier = Modifier,
     preference: Preferences.ListPreference,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
   val title = preference.name
   val currentValue = preference.value

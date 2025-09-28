@@ -52,7 +52,7 @@ internal fun ChangeLogScreen(
     state: ChangeLogDialogViewState,
     imageLoader: ImageLoader,
     onRateApp: () -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) {
   val changeLog = state.changeLog.collectAsStateListWithLifecycle()
   val icon by state.icon.collectAsStateWithLifecycle()
@@ -169,12 +169,16 @@ private fun PreviewChangeLogScreenContent() {
           listOf(
               ChangeLogLine(
                   ChangeLogLine.Type.CHANGE,
-                  "Just a simple Change, Lots of content content content wow"),
+                  "Just a simple Change, Lots of content content content wow",
+              ),
               ChangeLogLine(
                   ChangeLogLine.Type.BUGFIX,
-                  "Just a text Bugfix, Lots of content content content wow"),
+                  "Just a text Bugfix, Lots of content content content wow",
+              ),
               ChangeLogLine(
                   ChangeLogLine.Type.FEATURE,
-                  "Just a new Feature, Lots of content content content wow"),
-          ))
+                  "Just a new Feature, Lots of content content content wow",
+              ),
+          )
+  )
 }

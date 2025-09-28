@@ -29,7 +29,7 @@ public class DefaultEventBus<T : Any>
 public constructor(
     replay: Int = 0,
     extraBufferCapacity: Int = 0,
-    onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND
+    onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND,
 ) : EventBus<T> {
 
   /** The real bus */

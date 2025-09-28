@@ -41,7 +41,7 @@ protected constructor(private val delegate: SocketFactory) : SocketFactory() {
       host: String?,
       port: Int,
       localAddress: InetAddress?,
-      localPort: Int
+      localPort: Int,
   ): Socket {
     return configureSocket(delegate.createSocket(host, port, localAddress, localPort))
   }
@@ -56,7 +56,7 @@ protected constructor(private val delegate: SocketFactory) : SocketFactory() {
       host: InetAddress?,
       port: Int,
       localAddress: InetAddress?,
-      localPort: Int
+      localPort: Int,
   ): Socket {
     return configureSocket(delegate.createSocket(host, port, localAddress, localPort))
   }

@@ -39,7 +39,9 @@ dependencies {
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
   implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
   implementation("androidx.compose.animation:animation:${rootProject.extra["compose"]}")
-  implementation("androidx.compose.material:material-icons-core:${rootProject.extra["composeMaterial"]}")
+  implementation(
+      "androidx.compose.material:material-icons-core:${rootProject.extra["composeMaterial"]}"
+  )
   // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
   // Compose Preview

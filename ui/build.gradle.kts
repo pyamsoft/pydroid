@@ -39,11 +39,12 @@ dependencies {
   implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
   implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
   implementation("androidx.compose.animation:animation:${rootProject.extra["compose"]}")
+  implementation("androidx.compose.material:material-icons-core:${rootProject.extra["composeMaterial"]}")
+  // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
   // Compose Preview
   compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
   debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
-  // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
 
   // For LocalActivity in compose
   implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")

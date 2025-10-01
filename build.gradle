@@ -57,11 +57,11 @@ plugins {
 }
 
 subprojects {
-  apply plugin: "com.android.library"
-  apply plugin: "org.gradle.android.cache-fix"
-  apply plugin: "org.jetbrains.kotlin.android"
-  apply plugin: "org.jetbrains.dokka"
-  apply plugin: "maven-publish"
+  apply(plugin: "com.android.library")
+  apply(plugin: "org.gradle.android.cache-fix")
+  apply(plugin: "org.jetbrains.kotlin.android")
+  apply(plugin: "org.jetbrains.dokka")
+  apply(plugin: "maven-publish")
 
   android {
     compileSdk = 36

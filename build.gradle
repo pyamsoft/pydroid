@@ -195,24 +195,27 @@ subprojects {
     }
   }
 
-    repositories {
-      gradlePluginPortal()
-      google()
-      mavenCentral()
+  dependencies {
+    coreLibraryDesugaring(libs.android.desugar)
+  }
+}
 
-      // Jitpack
-      maven {
-        setUrl("https://jitpack.io")
-        content {
-          includeGroup("com.github.pyamsoft")
-        }
+allprojects {
+  repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+
+    // Jitpack
+    maven {
+      setUrl("https://jitpack.io")
+      content {
+        includeGroup("com.github.pyamsoft")
       }
     }
-
-    dependencies {
-      coreLibraryDesugaring(libs.android.desugar)
-    }
+  }
 }
+
 
 // Spotless
 spotless {

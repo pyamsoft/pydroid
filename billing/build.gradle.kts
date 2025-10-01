@@ -17,11 +17,12 @@
 android { namespace = "com.pyamsoft.pydroid.billing" }
 
 dependencies {
-  implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
-  implementation("com.android.billingclient:billing:${rootProject.extra["billing"]}")
+  implementation(libs.androidx.activity)
+
+  implementation(libs.google.billing)
 
   // Compose Annotations
-  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose"]}")
+  implementation(libs.compose.runtimeAnnotation)
 
   api(project(":bus"))
   api(project(":util"))

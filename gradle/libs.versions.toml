@@ -58,8 +58,13 @@ android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", vers
 
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
+compose-runtimeAnnotation = { group = "androidx.compose.runtime", name = "runtime-annotation", version.ref = "compose" }
 compose-runtimeSaveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "compose" }
+
+google-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }

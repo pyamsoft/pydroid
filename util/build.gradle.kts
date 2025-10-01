@@ -25,26 +25,22 @@ android {
 }
 
 dependencies {
-  implementation("androidx.lifecycle:lifecycle-common:${rootProject.extra["lifecycle"]}")
-  implementation("androidx.activity:activity:${rootProject.extra["activity"]}")
+  implementation(libs.androidx.lifecycle)
+  implementation(libs.androidx.activity)
 
   // Needed to silence warning about using ActivityResult APIs
   //
   // In practice, this is most likely pulled in by AndroidX Activity or others
   // but we do it here just to be explicit.
-  implementation("androidx.fragment:fragment:${rootProject.extra["fragment"]}")
+  implementation(libs.androidx.fragment)
 
   // Testing
-  testImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
-  testImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
-  )
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
 
-  androidTestImplementation("androidx.test:runner:${rootProject.extra["testRunner"]}")
-  androidTestImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
-  androidTestImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
-  )
+  androidTestImplementation(libs.androidx.testRunner)
+  androidTestImplementation(libs.kotlin.test)
+  androidTestImplementation(libs.kotlinx.coroutines.test)
 
   api(project(":core"))
 }

@@ -60,10 +60,15 @@ androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 
 compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
 compose-runtimeAnnotation = { group = "androidx.compose.runtime", name = "runtime-annotation", version.ref = "compose" }
 compose-runtimeSaveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "compose" }
+
+compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
 
 google-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 google-inAppUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "inAppUpdate" }

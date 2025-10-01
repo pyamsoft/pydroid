@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-plugins { id("org.jetbrains.kotlin.plugin.compose") }
+plugins { alias(libs.plugins.compose.compiler) }
 
 android {
   namespace = "com.pyamsoft.pydroid.theme"
@@ -24,11 +24,11 @@ android {
 
 dependencies {
   // For LocalActivity in compose
-  implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
+  implementation(libs.androidx.activity.compose)
 
   // Compose
-  implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
-  implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
+  implementation(libs.compose.ui)
+  implementation(libs.compose.material3)
 
   api(project(":core"))
 }

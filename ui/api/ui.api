@@ -289,7 +289,7 @@ public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$App
 public final class com/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt {
 	public static final field INSTANCE Lcom/pyamsoft/pydroid/ui/internal/app/ComposableSingletons$DialogToolbarKt;
 	public fun <init> ()V
-	public final fun getLambda$1934455105$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$897444704$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/pyamsoft/pydroid/ui/internal/billing/dialog/ComposableSingletons$BillingListItemKt {

@@ -17,11 +17,11 @@
 android { namespace = "com.pyamsoft.pydroid.bootstrap" }
 
 dependencies {
-  implementation("com.google.android.play:app-update:${rootProject.extra["inAppUpdate"]}")
-  implementation("com.google.android.play:review:${rootProject.extra["inAppReview"]}")
+  implementation(libs.google.inAppUpdate)
+  implementation(libs.google.inAppReview)
 
   // Compose Annotations
-  implementation("androidx.compose.runtime:runtime:${rootProject.extra["compose"]}")
+  implementation(libs.compose.runtimeAnnotation)
 
   api(project(":util"))
 }

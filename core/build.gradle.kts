@@ -26,20 +26,16 @@ android {
 
 dependencies {
   // Expose annotations
-  api("androidx.annotation:annotation:${rootProject.extra["annotation"]}")
+  api(libs.androidx.annotation)
 
   // Expose Coroutines
-  api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${rootProject.extra["coroutines"]}")
+  api(libs.kotlinx.coroutines)
 
   // Testing
-  testImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
-  testImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
-  )
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
 
-  androidTestImplementation("androidx.test:runner:${rootProject.extra["testRunner"]}")
-  androidTestImplementation("org.jetbrains.kotlin:kotlin-test:${rootProject.extra["kotlin"]}")
-  androidTestImplementation(
-      "org.jetbrains.kotlinx:kotlinx-coroutines-test:${rootProject.extra["coroutines"]}"
-  )
+  androidTestImplementation(libs.androidx.testRunner)
+  androidTestImplementation(libs.kotlin.test)
+  androidTestImplementation(libs.kotlinx.coroutines.test)
 }

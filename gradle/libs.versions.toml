@@ -59,6 +59,8 @@ android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", vers
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 
+compose-runtimeSaveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "compose" }
+
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }

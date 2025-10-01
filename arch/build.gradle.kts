@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-plugins { id("org.jetbrains.kotlin.plugin.compose") }
+plugins { alias(libs.plugins.compose.compiler) }
 
 android {
   namespace = "com.pyamsoft.pydroid.arch"
@@ -24,7 +24,7 @@ android {
 
 dependencies {
   // Compose
-  implementation("androidx.compose.runtime:runtime-saveable:${rootProject.extra["compose"]}")
+  implementation(libs.compose.runtimeSaveable)
 
   api(project(":bus"))
   api(project(":util"))

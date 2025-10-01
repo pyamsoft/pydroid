@@ -22,7 +22,7 @@ dependencies {
   implementation(libs.google.billing)
 
   // Compose Annotations
-  implementation(libs.compose.runtimeAnnotation)
+  implementation(libs.compose.runtime.annotation)
 
   api(project(":bus"))
   api(project(":util"))

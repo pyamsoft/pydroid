@@ -21,7 +21,7 @@ dependencies {
   implementation(libs.google.inAppReview)
 
   // Compose Annotations
-  implementation(libs.compose.runtimeAnnotation)
+  implementation(libs.compose.runtime.annotation)
 
   api(project(":util"))
 }

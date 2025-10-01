@@ -24,7 +24,7 @@ android {
 
 dependencies {
   // Compose
-  implementation(libs.compose.runtimeSaveable)
+  implementation(libs.compose.runtime.saveable)
 
   api(project(":bus"))
   api(project(":util"))

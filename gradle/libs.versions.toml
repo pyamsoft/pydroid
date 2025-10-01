@@ -56,19 +56,29 @@ caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "jdkDesugar" }
 
-androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
-androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
-androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
+androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 
-compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
-compose-runtimeAnnotation = { group = "androidx.compose.runtime", name = "runtime-annotation", version.ref = "compose" }
-compose-runtimeSaveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "compose" }
-
-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
-
+compose-animation = { group = "androidx.compose.animation", name = "animation", version.ref = "compose" }
+compose-material-icons = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "composeMaterial" }
+compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterial" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "compose" }
+compose-runtime-annotation = { group = "androidx.compose.runtime", name = "runtime-annotation", version.ref = "compose" }
+compose-runtime-saveable = { group = "androidx.compose.runtime", name = "runtime-saveable", version.ref = "compose" }
+compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose-core", version.ref = "coil" }
 
 google-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
 google-inAppUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "inAppUpdate" }

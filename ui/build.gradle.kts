@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-plugins { id("org.jetbrains.kotlin.plugin.compose") }
+plugins { alias(libs.plugins.compose.compiler) }
 
 android {
   namespace = "com.pyamsoft.pydroid.ui"
@@ -24,37 +24,35 @@ android {
 
 dependencies {
   // DataStore
-  implementation("androidx.datastore:datastore-preferences:${rootProject.extra["dataStore"]}")
+  implementation(libs.androidx.dataStore)
 
   // Lifecycle support
-  implementation("androidx.lifecycle:lifecycle-common:${rootProject.extra["lifecycle"]}")
-  implementation("androidx.lifecycle:lifecycle-runtime-compose:${rootProject.extra["lifecycle"]}")
+  implementation(libs.androidx.lifecycle)
+  implementation(libs.androidx.lifecycle.compose)
 
   // Needed just for androidx.preference.PreferenceManager
   // Eventually, big G may push for DataStore being a requirement, which will be pain
   // This pulls in all the UI bits too, which is a little lame.
-  implementation("androidx.preference:preference:${rootProject.extra["preference"]}")
+  implementation(libs.androidx.preference)
 
   // Compose
-  implementation("androidx.compose.ui:ui:${rootProject.extra["compose"]}")
-  implementation("androidx.compose.material3:material3:${rootProject.extra["composeMaterial3"]}")
-  implementation("androidx.compose.animation:animation:${rootProject.extra["compose"]}")
-  implementation(
-      "androidx.compose.material:material-icons-core:${rootProject.extra["composeMaterial"]}"
-  )
-  // implementation("androidx.compose.material:material-icons-extended:${rootProject.extra["composeMaterial"]}")
+  implementation(libs.compose.ui)
+  implementation(libs.compose.material3)
+  implementation(libs.compose.animation)
+  implementation(libs.compose.material.icons)
+  // implementation(libs.compose.material.icons.extended)
 
   // Compose Preview
-  compileOnly("androidx.compose.ui:ui-tooling-preview:${rootProject.extra["compose"]}")
-  debugImplementation("androidx.compose.ui:ui-tooling:${rootProject.extra["compose"]}")
+  compileOnly(libs.compose.ui.tooling.preview)
+  debugImplementation(libs.compose.ui.tooling)
 
   // For LocalActivity in compose
-  implementation("androidx.activity:activity-compose:${rootProject.extra["activity"]}")
+  implementation(libs.androidx.activity.compose)
 
   // Compose Image loading
-  implementation("io.coil-kt.coil3:coil-compose-core:${rootProject.extra["coil"]}")
+  implementation(libs.coil.compose)
 
-  implementation("androidx.core:core-ktx:${rootProject.extra["core"]}")
+  implementation(libs.androidx.core.ktx)
 
   api(project(":arch"))
   api(project(":billing"))

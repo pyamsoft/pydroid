@@ -17,7 +17,7 @@
 android { namespace = "com.pyamsoft.pydroid.notify" }
 
 dependencies {
-  implementation("androidx.core:core:${rootProject.extra["core"]}")
+  implementation(libs.androidx.core)
 
   api(project(":util"))
 }

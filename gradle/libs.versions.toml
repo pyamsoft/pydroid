@@ -56,6 +56,7 @@ caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "jdkDesugar" }
 
+androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }

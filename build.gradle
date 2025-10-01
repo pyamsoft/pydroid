@@ -53,44 +53,39 @@ buildscript {
 plugins {
   // Android AGP
   // https://developer.android.com/studio/build#top-level
-  id("com.android.library") version "8.13.0" apply false
+  alias(libs.plugins.android) apply false
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
-  id("org.gradle.android.cache-fix") version "3.0.1" apply false
+  alias(libs.plugins.android.cacheFix) apply false
 
   // Kotlin
   // https://developer.android.com/studio/build#top-level
-  id("org.jetbrains.kotlin.android") version "${kotlin}" apply false
+  alias(libs.plugins.kotlin.android) apply false
 
   // Jetpack Compose Compiler
   // https://android-developers.googleblog.com/2024/04/jetpack-compose-compiler-moving-to-kotlin-repository.html
-  id("org.jetbrains.kotlin.plugin.compose") version "${kotlin}" apply false
+  alias(libs.plugins.compose.compiler) apply false
 
   // Dokka
   // https://github.com/Kotlin/dokka
-  id("org.jetbrains.dokka") version "2.0.0" apply false
-
-  // Gradle version checker
-  // https://github.com/ben-manes/gradle-versions-plugin
-  // 0.53.0 needs to run with --no-parallel
-  id("com.github.ben-manes.versions") version "0.53.0" apply false
-
-  // Version Filter Plugin
-  // https://github.com/janderssonse/gradle-versions-filter-plugin
-  id("se.ascp.gradle.gradle-versions-filter") version "0.1.16" apply false
+  alias(libs.plugins.dokka) apply false
 
   // Spotless
   // https://github.com/diffplug/spotless
-  id("com.diffplug.spotless") version "8.0.0" apply false
+  alias(libs.plugins.spotless) apply true
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
+  alias(libs.plugins.kotlinx.binaryValidator) apply true
 
   // Gradle Doctor
   // https://runningcode.github.io/gradle-doctor/
-  id("com.osacky.doctor") version "0.12.1" apply true
+  alias(libs.plugins.doctor) apply true
+
+  // Caupain
+  // https://github.com/deezer/caupain/blob/main/gradle-plugin/README.md
+  alias(libs.plugins.caupain) apply true
 }
 
 subprojects {
@@ -99,20 +94,6 @@ subprojects {
   apply plugin: "org.jetbrains.kotlin.android"
   apply plugin: "org.jetbrains.dokka"
   apply plugin: "maven-publish"
-
-  // Configure matching toolchains
-  // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc
-  //
-  // Or maybe don't
-  // https://jakewharton.com/gradle-toolchains-are-rarely-a-good-idea/
-  // kotlin {
-  //   jvmToolchain(17)
-  // }
-  // java {
-  //   toolchain {
-  //     languageVersion.set(JavaLanguageVersion.of(17))
-  //   }
-  // }
 
   android {
     compileSdk = 36
@@ -171,6 +152,35 @@ subprojects {
     }
   }
 
+  tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:deprecation")
+    options.deprecation = true
+  }
+
+  // Enable ABI checking
+  //
+  // https://github.com/JakeWharton/timber/commit/65747860b59e40a95866cbb4bd866f44a3b1880c
+  // TODO: https://youtrack.jetbrains.com/issue/KT-78525
+  tasks.named("check") {
+    it.dependsOn(tasks.named("checkLegacyAbi"))
+  }
+
+
+  // Configure matching toolchains
+  // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc
+  //
+  // Or maybe don't
+  // https://jakewharton.com/gradle-toolchains-are-rarely-a-good-idea/
+  // kotlin {
+  //   jvmToolchain(17)
+  // }
+  // java {
+  //   toolchain {
+  //     languageVersion.set(JavaLanguageVersion.of(17))
+  //   }
+  // }
+
   project.afterEvaluate {
     publishing {
       publications {
@@ -185,78 +195,57 @@ subprojects {
     }
   }
 
-  dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-  }
-}
+    repositories {
+      gradlePluginPortal()
+      google()
+      mavenCentral()
 
-allprojects {
-  apply plugin: "com.diffplug.spotless"
-  apply plugin: "com.github.ben-manes.versions"
-  apply plugin: "se.ascp.gradle.gradle-versions-filter"
-
-  repositories {
-    mavenLocal()
-    gradlePluginPortal()
-    mavenCentral()
-    google()
-
-    // Jitpack
-    maven {
-      setUrl("https://jitpack.io")
-      content {
-        includeGroup("com.github.pyamsoft")
+      // Jitpack
+      maven {
+        setUrl("https://jitpack.io")
+        content {
+          includeGroup("com.github.pyamsoft")
+        }
       }
     }
+
+    dependencies {
+      coreLibraryDesugaring(libs.android.desugar)
+    }
+}
+
+// Spotless
+spotless {
+  java {
+    target("src/**/*.java")
+
+    removeUnusedImports()
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+  kotlin {
+    target("src/**/*.kt")
+    ktfmt()
 
-  tasks.withType(JavaCompile).forEach {
-    options.compilerArgs.add("-Xlint:unchecked")
-    options.compilerArgs.add("-Xlint:deprecation")
-    options.deprecation = true
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+  kotlinGradle {
+    target("*.gradle.kts")
+    ktfmt()
 
-  // Enable ABI checking
-  //
-  // https://github.com/JakeWharton/timber/commit/65747860b59e40a95866cbb4bd866f44a3b1880c
-  // TODO: https://youtrack.jetbrains.com/issue/KT-78525
-  tasks.named("check") {
-    it.dependsOn(tasks.named("checkLegacyAbi"))
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+  groovyGradle {
+    target("*.gradle")
+    greclipse()
 
-  // Spotless
-  spotless {
-    java {
-      target("src/**/*.java")
-
-      removeUnusedImports()
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
-    kotlin {
-      target("src/**/*.kt")
-      ktfmt()
-
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
-    kotlinGradle {
-      target("*.gradle.kts")
-      ktfmt()
-
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
-    groovyGradle {
-      target("*.gradle")
-      greclipse()
-
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
 }

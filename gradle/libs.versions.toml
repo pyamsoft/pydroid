@@ -1,0 +1,64 @@
+[versions]
+# Android Gradle
+agp = "8.13.0"
+cacheFix = "3.0.1"
+
+# Kotlin
+kotlin = "2.2.20"
+coroutines = "1.10.2"
+dokka = "2.0.0"
+binaryValidator = "0.18.1"
+
+# AndroidX
+core = "1.17.0"
+annotation = "1.9.1"
+activity = "1.11.0"
+lifecycle = "2.9.4"
+dataStore = "1.1.7"
+fragment = "1.8.9"
+preference = "1.2.1"
+testRunner = "1.7.0"
+
+# Compose
+compose = "1.9.2"
+composeMaterial = "1.7.8"
+composeMaterial3 = "1.4.0"
+
+# Google
+inAppUpdate = "2.1.0"
+inAppReview = "2.0.2"
+billing = "8.0.0"
+
+# Images
+coil = "3.3.0"
+
+# Developer Tools
+spotless = "8.0.0"
+doctor = "0.12.1"
+jdkDesugar = "2.1.5"
+caupain = "1.6.1"
+
+
+[plugins]
+android = { id = "com.android.library", version.ref = "agp" }
+android-cacheFix = { id = "org.gradle.android.cache-fix", version.ref = "cacheFix" }
+
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
+
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinx-binaryValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryValidator" }
+
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+doctor = { id = "com.osacky.doctor", version.ref = "doctor" }
+caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
+
+[libraries]
+android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "jdkDesugar" }
+
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-testRunner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }

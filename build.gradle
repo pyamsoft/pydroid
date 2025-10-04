@@ -41,7 +41,7 @@ plugins {
 
   // Spotless
   // https://github.com/diffplug/spotless
-  alias(libs.plugins.spotless) apply true
+  alias(libs.plugins.spotless) apply false
 
   // Validate the public API
   // https://github.com/Kotlin/binary-compatibility-validator
@@ -57,10 +57,10 @@ plugins {
 }
 
 subprojects {
-  apply(plugin: "com.android.library")
-  apply(plugin: "org.gradle.android.cache-fix")
-  apply(plugin: "org.jetbrains.kotlin.android")
-  apply(plugin: "org.jetbrains.dokka")
+  apply(plugin: libs.plugins.android.asProvider().get().pluginId)
+  apply(plugin: libs.plugins.android.cacheFix.get().pluginId)
+  apply(plugin: libs.plugins.kotlin.android.get().pluginId)
+  apply(plugin: libs.plugins.dokka.get().pluginId)
   apply(plugin: "maven-publish")
 
   android {
@@ -169,6 +169,12 @@ subprojects {
 }
 
 allprojects {
+  // Need to do this instead of applying Spotless in the plugin block
+  // or we get an error about duplicate plugins
+  //
+  // and we can't just apply this toplevel or it won't run on all the subprojects
+  apply(plugin: libs.plugins.spotless.get().pluginId)
+
   repositories {
     gradlePluginPortal()
     google()
@@ -182,41 +188,40 @@ allprojects {
       }
     }
   }
-}
 
+  // Spotless
+  spotless {
+    java {
+      target("src/**/*.java")
 
-// Spotless
-spotless {
-  java {
-    target("src/**/*.java")
+      removeUnusedImports()
+      trimTrailingWhitespace()
+      endWithNewline()
+      leadingTabsToSpaces(2)
+    }
+    kotlin {
+      target("src/**/*.kt")
+      ktfmt()
 
-    removeUnusedImports()
-    trimTrailingWhitespace()
-    endWithNewline()
-    leadingTabsToSpaces(2)
-  }
-  kotlin {
-    target("src/**/*.kt")
-    ktfmt()
+      trimTrailingWhitespace()
+      endWithNewline()
+      leadingTabsToSpaces(2)
+    }
+    kotlinGradle {
+      target("*.gradle.kts")
+      ktfmt()
 
-    trimTrailingWhitespace()
-    endWithNewline()
-    leadingTabsToSpaces(2)
-  }
-  kotlinGradle {
-    target("*.gradle.kts")
-    ktfmt()
+      trimTrailingWhitespace()
+      endWithNewline()
+      leadingTabsToSpaces(2)
+    }
+    groovyGradle {
+      target("*.gradle")
+      greclipse()
 
-    trimTrailingWhitespace()
-    endWithNewline()
-    leadingTabsToSpaces(2)
-  }
-  groovyGradle {
-    target("*.gradle")
-    greclipse()
-
-    trimTrailingWhitespace()
-    endWithNewline()
-    leadingTabsToSpaces(2)
+      trimTrailingWhitespace()
+      endWithNewline()
+      leadingTabsToSpaces(2)
+    }
   }
 }

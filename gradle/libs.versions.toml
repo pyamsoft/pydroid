@@ -15,7 +15,6 @@ annotation = "1.9.1"
 activity = "1.11.0"
 lifecycle = "2.9.4"
 dataStore = "1.1.7"
-fragment = "1.8.9"
 preference = "1.2.1"
 testRunner = "1.7.0"
 
@@ -61,7 +60,6 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
-androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
 androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }

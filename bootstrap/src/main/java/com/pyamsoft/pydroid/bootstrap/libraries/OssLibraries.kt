@@ -66,10 +66,11 @@ public object OssLibraries {
     addedBuild = true
 
     add(
-        context.getString(R.string.gradle_versions_plugin_name),
-        context.getString(R.string.gradle_versions_plugin_url),
-        context.getString(R.string.gradle_versions_plugin_description),
+        context.getString(R.string.caupain),
+        context.getString(R.string.caupain_url),
+        context.getString(R.string.caupain_description),
     )
+
     add(
         context.getString(R.string.gradle_spotless_plugin),
         context.getString(R.string.gradle_spotless_plugin_url),
@@ -157,12 +158,6 @@ public object OssLibraries {
         context.getString(R.string.androidx_activity),
         context.getString(R.string.androidx_activity_url),
         context.getString(R.string.androidx_activity_description),
-    )
-
-    add(
-        context.getString(R.string.androidx_fragment),
-        context.getString(R.string.androidx_fragment_url),
-        context.getString(R.string.androidx_fragment_description),
     )
 
     add(

@@ -28,12 +28,6 @@ dependencies {
   implementation(libs.androidx.lifecycle)
   implementation(libs.androidx.activity)
 
-  // Needed to silence warning about using ActivityResult APIs
-  //
-  // In practice, this is most likely pulled in by AndroidX Activity or others
-  // but we do it here just to be explicit.
-  implementation(libs.androidx.fragment)
-
   // Testing
   testImplementation(libs.kotlin.test)
   testImplementation(libs.kotlinx.coroutines.test)

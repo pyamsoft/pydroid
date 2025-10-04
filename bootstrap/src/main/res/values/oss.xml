@@ -15,14 +15,6 @@
   ~ limitations under the License.
   -->
 <resources>
-    <string name="gradle_versions_plugin_name">Gradle Versions Plugin</string>
-    <string
-  name="gradle_versions_plugin_url"
->https://github.com/ben-manes/gradle-versions-plugin</string>
-    <string
-  name="gradle_versions_plugin_description"
->Gradle plugin to discover dependency updates.</string>
-
     <string name="gradle_spotless_plugin">Gradle Spotless Plugin</string>
     <string
   name="gradle_spotless_plugin_url"
@@ -117,14 +109,6 @@
     <string
   name="androidx_activity_description"
 >Activity library offers a ComponentActivity which is a base class for activities used in androidx that enables composition of higher level components.</string>
-
-    <string name="androidx_fragment">AndroidX Fragment</string>
-    <string
-  name="androidx_fragment_url"
->https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/</string>
-    <string
-  name="androidx_fragment_description"
->Fragments allow you to encapsulate part of your user interface or behavior into reusable components.</string>
 
     <string name="androidx_lifecycle_common">AndroidX Lifecycle Common</string>
     <string
@@ -286,4 +270,11 @@
     <string
   name="androidx_startup_description"
 >Helps with Application initialization</string>
+
+    <!-- TODO(Peter): Need zh-rTW translation -->
+    <string name="caupain">Caupain</string>
+    <string name="caupain_url">https://github.com/deezer/caupain</string>
+    <string
+  name="caupain_description"
+>Your best buddy for keeping version catalogs up to date!</string>
 </resources>

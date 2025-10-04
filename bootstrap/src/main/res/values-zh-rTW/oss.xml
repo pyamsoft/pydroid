@@ -16,16 +16,6 @@
   ~ limitations under the License.
   -->
 <resources>
-    <string
-  name="gradle_versions_plugin_name"
->Gradle Versions 可接入元件</string>
-    <string
-  name="gradle_versions_plugin_url"
->https://github.com/ben-manes/gradle-versions-plugin</string>
-    <string
-  name="gradle_versions_plugin_description"
->用於發現依賴組件更新的 Gradle 可接入元件。</string>
-
     <string name="gradle_spotless_plugin">Gradle Spotless 可接入元件</string>
     <string
   name="gradle_spotless_plugin_url"
@@ -120,14 +110,6 @@
     <string
   name="androidx_activity_description"
 >androidx Activity 程式庫提供了用於啟用高階組成元件布局的 ComponentActivity 基底類別。</string>
-
-    <string name="androidx_fragment">AndroidX Fragment</string>
-    <string
-  name="androidx_fragment_url"
->https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/fragment/</string>
-    <string
-  name="androidx_fragment_description"
->用於將您使用者界面或行為包裝成可再利用組件的片段(fragments)組件。</string>
 
     <string name="androidx_lifecycle_common">AndroidX Lifecycle Common</string>
     <string

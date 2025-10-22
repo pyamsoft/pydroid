@@ -6,7 +6,7 @@ cacheFix = "3.0.2"
 # Kotlin
 kotlin = "2.2.20"
 coroutines = "1.10.2"
-dokka = "2.0.0"
+dokka = "2.1.0"
 binaryValidator = "0.18.1"
 
 # AndroidX

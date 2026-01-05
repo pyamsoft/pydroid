@@ -26,7 +26,7 @@ composeMaterial3 = "1.4.0"
 # Google
 inAppUpdate = "2.1.0"
 inAppReview = "2.0.2"
-billing = "8.2.1"
+billing = "8.3.0"
 
 # Images
 coil = "3.3.0"
@@ -42,7 +42,7 @@ caupain = "1.7.1"
 android = { id = "com.android.library", version.ref = "agp" }
 android-cacheFix = { id = "org.gradle.android.cache-fix", version.ref = "cacheFix" }
 
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinx-binaryValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryValidator" }
@@ -85,3 +85,4 @@ google-inAppReview = { group = "com.google.android.play", name = "review", versi
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+

@@ -1,6 +1,6 @@
 [versions]
 # Android Gradle
-agp = "8.13.2"
+agp = "9.0.0"
 cacheFix = "3.0.3"
 
 # Kotlin

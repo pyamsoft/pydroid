@@ -17,6 +17,8 @@
 android { namespace = "com.pyamsoft.pydroid.bootstrap" }
 
 dependencies {
+  implementation(libs.androidx.activity)
+
   implementation(libs.google.inAppUpdate)
   implementation(libs.google.inAppReview)
 

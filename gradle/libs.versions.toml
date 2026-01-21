@@ -1,13 +1,16 @@
 [versions]
+# SDK
+minSdk = "24"
+compileSdk = "36"
+
 # Android Gradle
-agp = "8.13.2"
+agp = "9.0.0"
 cacheFix = "3.0.3"
 
 # Kotlin
 kotlin = "2.3.0"
 coroutines = "1.10.2"
 dokka = "2.1.0"
-binaryValidator = "0.18.1"
 
 # AndroidX
 core = "1.17.0"
@@ -19,7 +22,7 @@ preference = "1.2.1"
 testRunner = "1.7.0"
 
 # Compose
-compose = "1.10.0"
+compose = "1.10.1"
 composeMaterial = "1.7.8"
 composeMaterial3 = "1.4.0"
 
@@ -35,7 +38,7 @@ coil = "3.3.0"
 spotless = "8.1.0"
 doctor = "0.12.1"
 jdkDesugar = "2.1.5"
-caupain = "1.7.1"
+caupain = "1.8.1"
 
 
 [plugins]
@@ -43,9 +46,6 @@ android = { id = "com.android.library", version.ref = "agp" }
 android-cacheFix = { id = "org.gradle.android.cache-fix", version.ref = "cacheFix" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlinx-binaryValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binaryValidator" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
@@ -85,4 +85,3 @@ google-inAppReview = { group = "com.google.android.play", name = "review", versi
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
-

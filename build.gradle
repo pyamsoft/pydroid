@@ -17,6 +17,7 @@
 import com.deezer.caupain.model.StabilityLevelPolicy
 import com.deezer.caupain.plugin.DependenciesUpdateTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
   // Android AGP
@@ -26,10 +27,6 @@ plugins {
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
   alias(libs.plugins.android.cacheFix) apply false
-
-  // Kotlin
-  // https://developer.android.com/studio/build#top-level
-  alias(libs.plugins.kotlin.android) apply false
 
   // Jetpack Compose Compiler
   // https://android-developers.googleblog.com/2024/04/jetpack-compose-compiler-moving-to-kotlin-repository.html
@@ -43,10 +40,6 @@ plugins {
   // https://github.com/diffplug/spotless
   alias(libs.plugins.spotless) apply false
 
-  // Validate the public API
-  // https://github.com/Kotlin/binary-compatibility-validator
-  alias(libs.plugins.kotlinx.binaryValidator) apply true
-
   // Gradle Doctor
   // https://runningcode.github.io/gradle-doctor/
   alias(libs.plugins.doctor) apply true
@@ -59,16 +52,15 @@ plugins {
 subprojects {
   apply(plugin: libs.plugins.android.asProvider().get().pluginId)
   apply(plugin: libs.plugins.android.cacheFix.get().pluginId)
-  apply(plugin: libs.plugins.kotlin.android.get().pluginId)
   apply(plugin: libs.plugins.dokka.get().pluginId)
   apply(plugin: "maven-publish")
 
   android {
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInteger()
 
     //noinspection GroovyMissingReturnStatement
     defaultConfig {
-      minSdk = 24
+      minSdk = libs.versions.minSdk.get().toInteger()
 
       // For vector drawables
       vectorDrawables.useSupportLibrary = true
@@ -87,12 +79,9 @@ subprojects {
 
     kotlin {
       compilerOptions {
+        languageVersion = KotlinVersion.KOTLIN_2_3
         jvmTarget = JvmTarget.JVM_21
         freeCompilerArgs.add("-Xexplicit-api=strict")
-      }
-
-      abiValidation {
-        enabled = true
       }
     }
 
@@ -126,29 +115,6 @@ subprojects {
     options.deprecation = true
   }
 
-  // Enable ABI checking
-  //
-  // https://github.com/JakeWharton/timber/commit/65747860b59e40a95866cbb4bd866f44a3b1880c
-  // TODO: https://youtrack.jetbrains.com/issue/KT-78525
-  tasks.named("check") {
-    it.dependsOn(tasks.named("checkLegacyAbi"))
-  }
-
-
-  // Configure matching toolchains
-  // https://kotlinlang.org/docs/gradle-configure-project.html#2c42d1dc
-  //
-  // Or maybe don't
-  // https://jakewharton.com/gradle-toolchains-are-rarely-a-good-idea/
-  // kotlin {
-  //   jvmToolchain(17)
-  // }
-  // java {
-  //   toolchain {
-  //     languageVersion.set(JavaLanguageVersion.of(17))
-  //   }
-  // }
-
   project.afterEvaluate {
     publishing {
       publications {
@@ -157,7 +123,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "29.2.0"
+          version "29.2.1"
         }
       }
     }

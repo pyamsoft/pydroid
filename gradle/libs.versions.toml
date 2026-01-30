@@ -8,6 +8,7 @@ agp = "9.0.0"
 cacheFix = "3.0.3"
 
 # Kotlin
+kotlin = "2.3.0"
 coroutines = "1.10.2"
 dokka = "2.1.0"
 
@@ -84,4 +85,3 @@ google-inAppReview = { group = "com.google.android.play", name = "review", versi
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
-

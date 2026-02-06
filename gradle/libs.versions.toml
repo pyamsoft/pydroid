@@ -8,7 +8,7 @@ agp = "9.0.0"
 cacheFix = "3.0.3"
 
 # Kotlin
-kotlin = "2.3.0"
+kotlin = "2.3.10"
 coroutines = "1.10.2"
 dokka = "2.1.0"
 

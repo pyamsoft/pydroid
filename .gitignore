@@ -16,4 +16,4 @@ package-lock.json
 package.json
 
 # Kotlin
-.kotlin/sessions
+.kotlin

@@ -123,7 +123,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "29.2.1"
+          version "29.2.2"
         }
       }
     }

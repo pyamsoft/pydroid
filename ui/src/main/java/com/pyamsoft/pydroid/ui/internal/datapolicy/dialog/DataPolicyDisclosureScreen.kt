@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -85,6 +86,9 @@ internal fun DataPolicyDisclosureScreen(
 
         Actions(
             modifier = Modifier.fillMaxWidth(),
+            appName = name,
+            tosUrl = tosUrl,
+            privacyPolicyUrl = privacyPolicyUrl,
             onAccept = onAccept,
             onReject = onReject,
         )
@@ -96,8 +100,6 @@ internal fun DataPolicyDisclosureScreen(
       Disclosure(
           modifier = Modifier.fillMaxWidth(),
           appName = name,
-          tosUrl = tosUrl,
-          privacyPolicyUrl = privacyPolicyUrl,
       )
     }
   }
@@ -190,8 +192,6 @@ private fun renderAcceptTerms(
 private fun Disclosure(
     modifier: Modifier = Modifier,
     appName: String,
-    tosUrl: String,
-    privacyPolicyUrl: String,
 ) {
   val disclosureStyle =
       MaterialTheme.typography.bodyMedium.copy(
@@ -217,23 +217,15 @@ private fun Disclosure(
         style = disclosureStyle,
         text = stringResource(R.string.disclosure_end, appName).trimIndent().replace("\n", " "),
     )
-
-    Text(
-        modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        style = disclosureStyle,
-        text =
-            renderAcceptTerms(
-                appName = appName,
-                tosUrl = tosUrl,
-                privacyPolicyUrl = privacyPolicyUrl,
-            ),
-    )
   }
 }
 
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
+    appName: String,
+    tosUrl: String,
+    privacyPolicyUrl: String,
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
@@ -247,6 +239,21 @@ private fun Actions(
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
+    Text(
+        modifier = Modifier.fillMaxWidth().padding(vertical = MaterialTheme.keylines.baseline),
+        style =
+            MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            ),
+        textAlign = TextAlign.Center,
+        text =
+            renderAcceptTerms(
+                appName = appName,
+                tosUrl = tosUrl,
+                privacyPolicyUrl = privacyPolicyUrl,
+            ),
+    )
+
     Button(
         onClick = {
           hapticManager?.confirmButtonPress()

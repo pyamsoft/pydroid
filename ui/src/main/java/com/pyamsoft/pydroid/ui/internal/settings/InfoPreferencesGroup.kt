@@ -163,7 +163,7 @@ private fun rememberDataPolicyPreference(
         id = "data_policy",
         name = name,
         summary = summary,
-        icon = R.drawable.policy_24px,
+        icon = R.drawable.license_24px,
         onClick = { handleClick() },
     )
   }

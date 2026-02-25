@@ -34,7 +34,6 @@ import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
-import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 
 internal class DataPolicyInjector : ComposableInjector() {
@@ -88,17 +87,6 @@ internal fun DataPolicyDisclosureDialog(
 
   val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
 
-  val uriHandler = rememberUriHandler()
-  val openPage by rememberUpdatedState { url: String ->
-    handleHideNavigationError()
-
-    try {
-      uriHandler.openUri(url)
-    } catch (e: Throwable) {
-      viewModel.handleNavigationFailed(e)
-    }
-  }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -122,8 +110,6 @@ internal fun DataPolicyDisclosureDialog(
               onRejected = { handleRejected() },
           )
         },
-        onPrivacyPolicyClicked = { viewModel.handleViewPrivacyPolicy(openPage) },
-        onTermsOfServiceClicked = { viewModel.handleViewTermsOfService(openPage) },
     )
   }
 }

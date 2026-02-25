@@ -25,4 +25,8 @@
   <string
     name="disclosure_end"
   >Aside from these default "Usage and Diagnostics" related crash-reports, your data is never knowingly collected, shared, transported, or shown to any other party, including the developer. %1$s is open source software, and does not include any tracking, or other analytics.</string>
+
+  <string
+    name="disclosure_accepted"
+  >By accepting, you agree to the %1$s %2$s and %3$s</string>
 </resources>

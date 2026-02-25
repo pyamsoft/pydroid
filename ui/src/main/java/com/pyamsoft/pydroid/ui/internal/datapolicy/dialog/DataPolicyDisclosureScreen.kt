@@ -16,10 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -33,9 +31,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
@@ -44,10 +47,10 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
+import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 
 private enum class DataPolicyDisclosureScreenItems {
   DISCLOSURE,
-  LINKS,
 }
 
 @Composable
@@ -55,8 +58,6 @@ internal fun DataPolicyDisclosureScreen(
     modifier: Modifier = Modifier,
     state: DataPolicyDialogViewState,
     imageLoader: ImageLoader,
-    onPrivacyPolicyClicked: () -> Unit,
-    onTermsOfServiceClicked: () -> Unit,
     onNavigationErrorDismissed: () -> Unit,
     onAccept: () -> Unit,
     onReject: () -> Unit,
@@ -65,6 +66,9 @@ internal fun DataPolicyDisclosureScreen(
   val icon by state.icon.collectAsStateWithLifecycle()
   val name by state.name.collectAsStateWithLifecycle()
   val navigationError by state.navigationError.collectAsStateWithLifecycle()
+
+  val tosUrl by state.tosUrl.collectAsStateWithLifecycle()
+  val privacyPolicyUrl by state.privacyPolicyUrl.collectAsStateWithLifecycle()
 
   AppHeader(
       modifier = modifier,
@@ -91,56 +95,103 @@ internal fun DataPolicyDisclosureScreen(
     ) {
       Disclosure(
           modifier = Modifier.fillMaxWidth(),
-          name = name,
-      )
-    }
-
-    item(
-        contentType = DataPolicyDisclosureScreenItems.LINKS,
-    ) {
-      Links(
-          modifier = Modifier.fillMaxWidth(),
-          onPrivacyPolicyClicked = onPrivacyPolicyClicked,
-          onTermsOfServiceClicked = onTermsOfServiceClicked,
+          appName = name,
+          tosUrl = tosUrl,
+          privacyPolicyUrl = privacyPolicyUrl,
       )
     }
   }
 }
 
 @Composable
-private fun Links(
-    modifier: Modifier = Modifier,
-    onPrivacyPolicyClicked: () -> Unit,
-    onTermsOfServiceClicked: () -> Unit,
-) {
-  Row(
-      modifier = modifier.padding(vertical = MaterialTheme.keylines.baseline),
-      horizontalArrangement = Arrangement.SpaceEvenly,
-      verticalAlignment = Alignment.CenterVertically,
+private fun renderAcceptTerms(
+    appName: String,
+    tosUrl: String,
+    privacyPolicyUrl: String,
+): AnnotatedString {
+  val uriHandler = rememberUriHandler()
+  val handleLinkClicked by rememberUpdatedState { link: LinkAnnotation ->
+    if (link is LinkAnnotation.Url) {
+      uriHandler.openUri(link.url)
+    }
+  }
+
+  val linkColor = MaterialTheme.colorScheme.primary
+  val tosText = stringResource(R.string.terms_conditions)
+  val privacyText = stringResource(R.string.privacy_policy)
+
+  val rawBlurb = stringResource(R.string.disclosure_accepted, appName, tosText, privacyText)
+
+  return remember(
+      linkColor,
+      rawBlurb,
+      tosText,
+      privacyText,
   ) {
-    Text(
-        modifier = Modifier.clickable { onTermsOfServiceClicked() },
-        text = stringResource(R.string.terms_conditions),
-        style =
-            MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.colorScheme.primary,
+    val tosIndex = rawBlurb.indexOf(tosText)
+    val privacyIndex = rawBlurb.indexOf(privacyText)
+
+    val linkStyle =
+        SpanStyle(
+            color = linkColor,
+            textDecoration = TextDecoration.Underline,
+        )
+
+    val spanStyles =
+        listOf(
+            AnnotatedString.Range(
+                linkStyle,
+                start = tosIndex,
+                end = tosIndex + tosText.length,
             ),
-    )
-    Text(
-        modifier = Modifier.clickable { onPrivacyPolicyClicked() },
-        text = stringResource(R.string.privacy_policy),
-        style =
-            MaterialTheme.typography.labelSmall.copy(
-                color = MaterialTheme.colorScheme.primary,
+            AnnotatedString.Range(
+                linkStyle,
+                start = privacyIndex,
+                end = privacyIndex + privacyText.length,
             ),
-    )
+        )
+
+    val visualString =
+        AnnotatedString(
+            rawBlurb,
+            spanStyles = spanStyles,
+        )
+
+    // Can only add annotations to builders
+    return@remember AnnotatedString.Builder(visualString)
+        .apply {
+          // TOS clickable
+          addLink(
+              url =
+                  LinkAnnotation.Url(
+                      url = tosUrl,
+                      linkInteractionListener = { handleLinkClicked(it) },
+                  ),
+              start = tosIndex,
+              end = tosIndex + tosText.length,
+          )
+
+          // Privacy clickable
+          addLink(
+              url =
+                  LinkAnnotation.Url(
+                      url = privacyPolicyUrl,
+                      linkInteractionListener = { handleLinkClicked(it) },
+                  ),
+              start = privacyIndex,
+              end = privacyIndex + privacyText.length,
+          )
+        }
+        .toAnnotatedString()
   }
 }
 
 @Composable
 private fun Disclosure(
     modifier: Modifier = Modifier,
-    name: String,
+    appName: String,
+    tosUrl: String,
+    privacyPolicyUrl: String,
 ) {
   val disclosureStyle =
       MaterialTheme.typography.bodyMedium.copy(
@@ -151,20 +202,31 @@ private fun Disclosure(
       modifier = modifier.padding(MaterialTheme.keylines.content),
   ) {
     Text(
-        text = stringResource(R.string.disclosure_title, name),
+        text = stringResource(R.string.disclosure_title, appName),
         style = MaterialTheme.typography.bodyLarge,
     )
 
     Text(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        text = stringResource(R.string.disclosure_start).trimIndent().replace("\n", " "),
         style = disclosureStyle,
+        text = stringResource(R.string.disclosure_start).trimIndent().replace("\n", " "),
     )
 
     Text(
         modifier = Modifier.padding(top = MaterialTheme.keylines.content),
-        text = stringResource(R.string.disclosure_end, name).trimIndent().replace("\n", " "),
         style = disclosureStyle,
+        text = stringResource(R.string.disclosure_end, appName).trimIndent().replace("\n", " "),
+    )
+
+    Text(
+        modifier = Modifier.padding(top = MaterialTheme.keylines.content),
+        style = disclosureStyle,
+        text =
+            renderAcceptTerms(
+                appName = appName,
+                tosUrl = tosUrl,
+                privacyPolicyUrl = privacyPolicyUrl,
+            ),
     )
   }
 }
@@ -240,14 +302,16 @@ private fun NavigationError(
 private fun PreviewDataPolicyDisclosureScreen() {
   DataPolicyDisclosureScreen(
       state =
-          MutableDataPolicyDialogViewState().apply {
-            icon.value = 0
-            name.value = "TEST"
-            navigationError.value = null
-          },
+          MutableDataPolicyDialogViewState(
+                  tosUrl = "",
+                  privacyPolicyUrl = "",
+              )
+              .apply {
+                icon.value = 0
+                name.value = "TEST"
+                navigationError.value = null
+              },
       imageLoader = createNewTestImageLoader(),
-      onPrivacyPolicyClicked = {},
-      onTermsOfServiceClicked = {},
       onNavigationErrorDismissed = {},
       onAccept = {},
       onReject = {},

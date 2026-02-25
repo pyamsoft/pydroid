@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.preference
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
@@ -68,17 +70,14 @@ internal fun SimplePreferenceItem(
     preference: Preferences.SimplePreference,
 ) {
   val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val onClick = preference.onClick
 
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
+      modifier = modifier.clickable(enabled = isEnabled) { preference.onClick?.invoke() },
       isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
   )
 }
 
@@ -87,19 +86,14 @@ internal fun CustomPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.CustomPreference,
 ) {
-  val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val content = preference.content
-
   PreferenceItem(
       modifier = modifier,
-      isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
-      customContent = content,
+      isEnabled = preference.isEnabled,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
+      customContent = preference.content,
   )
 }
 
@@ -109,17 +103,14 @@ internal fun InAppPreferenceItem(
     preference: Preferences.InAppPreference,
 ) {
   val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val onClick = preference.onClick
 
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
+      modifier = modifier.clickable(enabled = isEnabled) { preference.onClick?.invoke() },
       isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
       badge = { InAppBadge() },
   )
 }
@@ -129,22 +120,17 @@ internal fun CheckBoxPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.CheckBoxPreference,
 ) {
-  val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val onClick = preference.onClick
-  val onCheckedChanged = preference.onCheckedChanged
-  val checked = preference.checked
-
   val hapticManager = LocalHapticManager.current
 
+  val isEnabled = preference.isEnabled
+
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
+      modifier = modifier.clickable(enabled = isEnabled) { preference.onClick?.invoke() },
       isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
       trailing = { enabled ->
         Checkbox(
             modifier =
@@ -152,7 +138,7 @@ internal fun CheckBoxPreferenceItem(
                     start = MaterialTheme.keylines.typography,
                     end = MaterialTheme.keylines.baseline,
                 ),
-            checked = checked,
+            checked = preference.checked,
             enabled = enabled,
             onCheckedChange = { newChecked ->
               if (newChecked) {
@@ -160,7 +146,7 @@ internal fun CheckBoxPreferenceItem(
               } else {
                 hapticManager?.toggleOff()
               }
-              onCheckedChanged(newChecked)
+              preference.onCheckedChanged(newChecked)
             },
         )
       },
@@ -172,22 +158,17 @@ internal fun SwitchPreferenceItem(
     modifier: Modifier = Modifier,
     preference: Preferences.SwitchPreference,
 ) {
-  val isEnabled = preference.isEnabled
-  val name = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
-  val checked = preference.checked
-  val onClick = preference.onClick
-  val onCheckedChanged = preference.onCheckedChanged
-
   val hapticManager = LocalHapticManager.current
 
+  val isEnabled = preference.isEnabled
+
   PreferenceItem(
-      modifier = modifier.clickable(enabled = isEnabled) { onClick?.invoke() },
+      modifier = modifier.clickable(enabled = isEnabled) { preference.onClick?.invoke() },
       isEnabled = isEnabled,
-      text = name,
-      summary = summary,
-      icon = icon,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
       trailing = { enabled ->
         Switch(
             modifier =
@@ -195,7 +176,7 @@ internal fun SwitchPreferenceItem(
                     start = MaterialTheme.keylines.typography,
                     end = MaterialTheme.keylines.baseline,
                 ),
-            checked = checked,
+            checked = preference.checked,
             enabled = enabled,
             onCheckedChange = { newChecked ->
               if (newChecked) {
@@ -203,7 +184,7 @@ internal fun SwitchPreferenceItem(
               } else {
                 hapticManager?.toggleOff()
               }
-              onCheckedChanged(newChecked)
+              preference.onCheckedChanged(newChecked)
             },
         )
       },
@@ -217,16 +198,14 @@ internal fun ListPreferenceItem(
     onOpenDialog: () -> Unit,
 ) {
   val isEnabled = preference.isEnabled
-  val title = preference.name
-  val summary = preference.summary
-  val icon = preference.icon
 
   PreferenceItem(
       modifier = modifier.clickable(enabled = isEnabled) { onOpenDialog() },
       isEnabled = isEnabled,
-      text = title,
-      summary = summary,
-      icon = icon,
+      text = preference.name,
+      summary = preference.summary,
+      icon = preference.icon,
+      iconRes = preference.iconRes,
   )
 }
 
@@ -236,12 +215,11 @@ internal fun PreferenceDialog(
     preference: Preferences.ListPreference,
     onDismiss: () -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
+
   val title = preference.name
   val currentValue = preference.value
-  val entries = preference.entries
   val onPreferenceSelected = preference.onPreferenceSelected
-
-  val hapticManager = LocalHapticManager.current
 
   CardDialog(
       modifier = modifier,
@@ -260,7 +238,7 @@ internal fun PreferenceDialog(
             ),
     ) {
       items(
-          items = entries,
+          items = preference.entries,
           key = { it.value },
           contentType = { PreferenceContentTypes.DIALOG_ITEM },
       ) { item ->
@@ -361,6 +339,7 @@ private fun PreferenceDialogItem(
             onClick = { handleClick() },
         )
       }
+
       CHECKBOX -> {
         Checkbox(
             modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
@@ -405,6 +384,7 @@ private fun PreferenceItem(
     text: String,
     summary: String,
     icon: ImageVector?,
+    @DrawableRes iconRes: Int,
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
     customContent: (@Composable (isEnabled: Boolean) -> Unit)? = null,
@@ -422,6 +402,7 @@ private fun PreferenceItem(
           text = text,
           summary = summary,
           icon = icon,
+          iconRes = iconRes,
           trailing = trailing,
           badge = badge,
       )
@@ -438,6 +419,7 @@ private fun DefaultPreferenceItem(
     text: String,
     summary: String,
     icon: ImageVector?,
+    @DrawableRes iconRes: Int,
     trailing: (@Composable (isEnabled: Boolean) -> Unit)? = null,
     badge: (@Composable () -> Unit)? = null,
 ) {
@@ -452,7 +434,13 @@ private fun DefaultPreferenceItem(
         modifier = Modifier.size(ListItemDefaults.LeadingSize),
         contentAlignment = Alignment.Center,
     ) {
-      if (icon != null) {
+      if (iconRes != 0) {
+        Icon(
+            painter = painterResource(iconRes),
+            contentDescription = text,
+            tint = textColor,
+        )
+      } else if (icon != null) {
         Icon(
             imageVector = icon,
             contentDescription = text,

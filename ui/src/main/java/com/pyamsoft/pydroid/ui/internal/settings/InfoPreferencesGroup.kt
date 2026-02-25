@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,10 +24,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
-import com.pyamsoft.pydroid.ui.icons.BugReport
-import com.pyamsoft.pydroid.ui.icons.Business
-import com.pyamsoft.pydroid.ui.icons.Code
-import com.pyamsoft.pydroid.ui.icons.Policy
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
@@ -120,7 +115,7 @@ private fun rememberBugReportPreference(
         id = "bug_report",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.BugReport,
+        icon = R.drawable.bug_report_24px,
         onClick = { handleClick() },
     )
   }
@@ -144,7 +139,7 @@ private fun rememberViewSourceCodePreference(
         id = "view_source",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Code,
+        icon = R.drawable.code_24px,
         onClick = { handleClick() },
     )
   }
@@ -168,7 +163,7 @@ private fun rememberDataPolicyPreference(
         id = "data_policy",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Policy,
+        icon = R.drawable.policy_24px,
         onClick = { handleClick() },
     )
   }
@@ -192,7 +187,7 @@ private fun rememberPrivacyPolicyPreference(
         id = "privacy_policy",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Policy,
+        icon = R.drawable.policy_24px,
         onClick = { handleClick() },
     )
   }
@@ -216,7 +211,7 @@ private fun rememberTermsOfServicePreference(
         id = "view_tos",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Business,
+        icon = R.drawable.domain_24px,
         onClick = { handleClick() },
     )
   }

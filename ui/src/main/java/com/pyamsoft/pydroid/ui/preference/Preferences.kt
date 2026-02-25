@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.preference
 
 import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.toMutableStateList
@@ -45,6 +46,9 @@ public sealed class Preferences {
 
     /** Icon */
     internal abstract val icon: ImageVector?
+
+    /** Icon */
+    internal abstract val iconRes: Int
   }
 
   /** Represents a simple Preference item */
@@ -57,6 +61,7 @@ public sealed class Preferences {
       override val isEnabled: Boolean,
       override val summary: String,
       override val icon: ImageVector?,
+      override val iconRes: Int,
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
@@ -70,10 +75,11 @@ public sealed class Preferences {
       override val name: String = "",
       override val summary: String = "",
       override val icon: ImageVector? = null,
+      override val iconRes: Int = 0,
       internal val content: @Composable (isEnabled: Boolean) -> Unit,
   ) : Item()
 
-  /** Represents a In-App Purchase Preference item */
+  /** Represents an In-App Purchase Preference item */
   @Stable
   @ConsistentCopyVisibility
   internal data class InAppPreference
@@ -83,6 +89,7 @@ public sealed class Preferences {
       override val isEnabled: Boolean,
       override val summary: String,
       override val icon: ImageVector?,
+      override val iconRes: Int,
       internal val onClick: (() -> Unit)?,
   ) : Item()
 
@@ -96,6 +103,7 @@ public sealed class Preferences {
       override val isEnabled: Boolean,
       override val summary: String,
       override val icon: ImageVector?,
+      override val iconRes: Int,
       internal val value: String,
       internal val entries: List<Map.Entry<String, String>>,
       internal val checkboxes: List<Map.Entry<String, Boolean>>?,
@@ -112,6 +120,7 @@ public sealed class Preferences {
       override val isEnabled: Boolean,
       override val summary: String,
       override val icon: ImageVector?,
+      override val iconRes: Int,
       internal val checked: Boolean,
       internal val onClick: (() -> Unit)?,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
@@ -127,6 +136,7 @@ public sealed class Preferences {
       override val isEnabled: Boolean,
       override val summary: String,
       override val icon: ImageVector?,
+      override val iconRes: Int,
       internal val checked: Boolean,
       internal val onClick: (() -> Unit)?,
       internal val onCheckedChanged: (checked: Boolean) -> Unit,
@@ -146,7 +156,6 @@ public sealed class Preferences {
 
 /** Create a new Preference.Group */
 @CheckResult
-@JvmOverloads
 public fun preferenceGroup(
     id: String,
     name: String,
@@ -177,7 +186,6 @@ public fun customPreference(
 
 /** Create a new Preference.SimplePreference */
 @CheckResult
-@JvmOverloads
 public fun preference(
     id: String,
     name: String,
@@ -192,13 +200,34 @@ public fun preference(
       isEnabled = isEnabled,
       summary = summary,
       icon = icon,
+      iconRes = 0,
+      onClick = onClick,
+  )
+}
+
+/** Create a new Preference.SimplePreference */
+@CheckResult
+public fun preference(
+    id: String,
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    onClick: (() -> Unit)? = null,
+): Preferences.Item {
+  return Preferences.SimplePreference(
+      id = id,
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      iconRes = icon,
+      icon = null,
       onClick = onClick,
   )
 }
 
 /** Create a new Preference.InAppPreference */
 @CheckResult
-@JvmOverloads
 public fun inAppPreference(
     id: String,
     name: String,
@@ -213,13 +242,34 @@ public fun inAppPreference(
       isEnabled = isEnabled,
       summary = summary,
       icon = icon,
+      iconRes = 0,
+      onClick = onClick,
+  )
+}
+
+/** Create a new Preference.InAppPreference */
+@CheckResult
+public fun inAppPreference(
+    id: String,
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    onClick: (() -> Unit)? = null,
+): Preferences.Item {
+  return Preferences.InAppPreference(
+      id = id,
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      iconRes = icon,
+      icon = null,
       onClick = onClick,
   )
 }
 
 /** Create a new Preference.ListPreference */
 @CheckResult
-@JvmOverloads
 public fun listPreference(
     id: String,
     name: String,
@@ -239,6 +289,34 @@ public fun listPreference(
       value = value,
       entries = entries.entries.toMutableStateList(),
       icon = icon,
+      iconRes = 0,
+      checkboxes = checkboxes?.entries?.toMutableStateList(),
+      onPreferenceSelected = onPreferenceSelected,
+  )
+}
+
+/** Create a new Preference.ListPreference */
+@CheckResult
+public fun listPreference(
+    id: String,
+    name: String,
+    value: String,
+    entries: Map<String, String>,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    checkboxes: Map<String, Boolean>? = null,
+    onPreferenceSelected: (key: String, value: String) -> Unit,
+): Preferences.Item {
+  return Preferences.ListPreference(
+      id = id,
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      value = value,
+      entries = entries.entries.toMutableStateList(),
+      icon = null,
+      iconRes = icon,
       checkboxes = checkboxes?.entries?.toMutableStateList(),
       onPreferenceSelected = onPreferenceSelected,
   )
@@ -246,7 +324,6 @@ public fun listPreference(
 
 /** Create a new Preference.CheckBoxPreference */
 @CheckResult
-@JvmOverloads
 public fun checkBoxPreference(
     id: String,
     name: String,
@@ -263,6 +340,32 @@ public fun checkBoxPreference(
       isEnabled = isEnabled,
       summary = summary,
       icon = icon,
+      iconRes = 0,
+      checked = checked,
+      onClick = onClick,
+      onCheckedChanged = onCheckedChanged,
+  )
+}
+
+/** Create a new Preference.CheckBoxPreference */
+@CheckResult
+public fun checkBoxPreference(
+    id: String,
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    checked: Boolean,
+    onClick: (() -> Unit)? = null,
+    onCheckedChanged: (checked: Boolean) -> Unit,
+): Preferences.Item {
+  return Preferences.CheckBoxPreference(
+      id = id,
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      icon = null,
+      iconRes = icon,
       checked = checked,
       onClick = onClick,
       onCheckedChanged = onCheckedChanged,
@@ -271,7 +374,6 @@ public fun checkBoxPreference(
 
 /** Create a new Preference.SwitchPreference */
 @CheckResult
-@JvmOverloads
 public fun switchPreference(
     id: String,
     name: String,
@@ -288,6 +390,32 @@ public fun switchPreference(
       isEnabled = isEnabled,
       summary = summary,
       icon = icon,
+      iconRes = 0,
+      checked = checked,
+      onClick = onClick,
+      onCheckedChanged = onCheckedChanged,
+  )
+}
+
+/** Create a new Preference.SwitchPreference */
+@CheckResult
+public fun switchPreference(
+    id: String,
+    name: String,
+    isEnabled: Boolean = true,
+    summary: String = "",
+    @DrawableRes icon: Int = 0,
+    checked: Boolean,
+    onClick: (() -> Unit)? = null,
+    onCheckedChanged: (checked: Boolean) -> Unit,
+): Preferences.Item {
+  return Preferences.SwitchPreference(
+      id = id,
+      name = name,
+      isEnabled = isEnabled,
+      summary = summary,
+      icon = null,
+      iconRes = icon,
       checked = checked,
       onClick = onClick,
       onCheckedChanged = onCheckedChanged,

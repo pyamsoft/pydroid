@@ -26,8 +26,6 @@ import kotlinx.coroutines.launch
 internal class DataPolicyDialogViewModeler
 internal constructor(
     override val state: MutableDataPolicyDialogViewState,
-    private val privacyPolicyUrl: String,
-    private val termsConditionsUrl: String,
     private val provider: AppProvider,
     private val interactor: DataPolicyInteractor,
 ) : DataPolicyDialogViewState by state, AbstractViewModeler<DataPolicyDialogViewState>(state) {
@@ -58,13 +56,5 @@ internal constructor(
 
   internal fun handleHideNavigationError() {
     state.navigationError.value = null
-  }
-
-  internal fun handleViewTermsOfService(onOpenUrl: (String) -> Unit) {
-    onOpenUrl(termsConditionsUrl)
-  }
-
-  internal fun handleViewPrivacyPolicy(onOpenUrl: (String) -> Unit) {
-    onOpenUrl(privacyPolicyUrl)
   }
 }

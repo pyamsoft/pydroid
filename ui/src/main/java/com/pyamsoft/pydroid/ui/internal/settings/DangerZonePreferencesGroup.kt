@@ -17,15 +17,12 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.icons.Terminal
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
@@ -98,7 +95,7 @@ private fun rememberResetPreference(
         id = "reset_app",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Warning,
+        icon = R.drawable.warning_24px,
         onClick = { handleClick() },
     )
   }
@@ -126,7 +123,7 @@ private fun rememberDeveloperModePreference(
         id = "developer_mode",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Terminal,
+        icon = R.drawable.terminal_24px,
         checked = checked,
         onClick = { handleClick() },
         onCheckedChanged = { handleChange() },

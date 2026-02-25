@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,11 +26,6 @@ import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.icons.Download
-import com.pyamsoft.pydroid.ui.icons.LibraryBooks
-import com.pyamsoft.pydroid.ui.icons.Vibration
-import com.pyamsoft.pydroid.ui.icons.Visibility
-import com.pyamsoft.pydroid.ui.icons.Whatshot
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.listPreference
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -173,7 +167,7 @@ private fun rememberDarkThemePreference(
         id = "dark_mode",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Visibility,
+        icon = R.drawable.routine_24px,
         value = rawValue,
         entries = names.mapIndexed { index, n -> n to values[index] }.toMap(),
         checkboxes = materialYouCheckboxes,
@@ -206,7 +200,7 @@ private fun rememberLicensesPreference(
         id = "libraries",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.LibraryBooks,
+        icon = R.drawable.library_books_24px,
         onClick = { handleClick() },
     )
   }
@@ -230,7 +224,7 @@ private fun rememberUpdatePreference(
         id = "in_app_update",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Download,
+        icon = R.drawable.download_24px,
         onClick = { handleClick() },
     )
   }
@@ -254,7 +248,7 @@ private fun rememberChangeLogPreference(
         id = "show_changelog",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Whatshot,
+        icon = R.drawable.whatshot_24px,
         onClick = { handleClick() },
     )
   }
@@ -282,7 +276,7 @@ private fun rememberHapticPreference(
         id = "haptic_feedback",
         name = name,
         summary = if (checked) summaryOn else summaryOff,
-        icon = Icons.Outlined.Vibration,
+        icon = R.drawable.mobile_vibrate_24px,
         checked = checked,
         onClick = { handleClick() },
         onCheckedChanged = { handleClick() },

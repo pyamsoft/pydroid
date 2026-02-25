@@ -83,6 +83,7 @@ private fun rememberSocialMediaPreference(
     preference(
         id = "social_media",
         name = name,
+        icon = R.drawable.groups_24px,
         summary = summary,
         onClick = { handleClick() },
     )
@@ -106,6 +107,7 @@ private fun rememberBlogPreference(
     preference(
         id = "blog",
         name = name,
+        icon = R.drawable.article_shortcut_24px,
         summary = summary,
         onClick = { handleClick() },
     )

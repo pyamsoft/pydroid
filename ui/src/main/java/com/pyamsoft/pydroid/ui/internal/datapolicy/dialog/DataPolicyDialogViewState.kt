@@ -24,11 +24,21 @@ import kotlinx.coroutines.flow.StateFlow
 @Stable
 internal interface DataPolicyDialogViewState : AppViewState {
   val navigationError: StateFlow<Throwable?>
+  val tosUrl: StateFlow<String>
+  val privacyPolicyUrl: StateFlow<String>
 }
 
 @Stable
-internal class MutableDataPolicyDialogViewState internal constructor() : DataPolicyDialogViewState {
+internal class MutableDataPolicyDialogViewState
+internal constructor(
+    tosUrl: String,
+    privacyPolicyUrl: String,
+) : DataPolicyDialogViewState {
   override val name = MutableStateFlow("")
   override val icon = MutableStateFlow(0)
   override val navigationError = MutableStateFlow<Throwable?>(null)
+
+  // Injected but do NOT let these change at runtime
+  override val tosUrl: StateFlow<String> = MutableStateFlow(tosUrl)
+  override val privacyPolicyUrl: StateFlow<String> = MutableStateFlow(privacyPolicyUrl)
 }

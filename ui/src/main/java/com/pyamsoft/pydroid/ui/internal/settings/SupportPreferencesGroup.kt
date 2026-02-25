@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.annotation.CheckResult
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,7 +24,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
-import com.pyamsoft.pydroid.ui.icons.Redeem
 import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.preference.inAppPreference
 import com.pyamsoft.pydroid.ui.preference.preference
@@ -100,7 +97,7 @@ private fun rememberRatePreference(
         id = "rate_app",
         name = "Rate $applicationName",
         summary = summary,
-        icon = Icons.Outlined.Star,
+        icon = R.drawable.star_24px,
         onClick = { handleClick() },
     )
   }
@@ -124,7 +121,7 @@ private fun rememberDonatePreference(
         id = "tip_me",
         name = name,
         summary = summary,
-        icon = Icons.Outlined.Redeem,
+        icon = R.drawable.redeem_24px,
         onClick = { handleClick() },
     )
   }

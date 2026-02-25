@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.app
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
+import com.pyamsoft.pydroid.ui.icons.IconPainters
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
@@ -84,7 +83,7 @@ internal fun DialogToolbar(
               },
           ) {
             Icon(
-                imageVector = Icons.Filled.Close,
+                painter = IconPainters.close(),
                 contentDescription = stringResource(android.R.string.cancel),
             )
           }

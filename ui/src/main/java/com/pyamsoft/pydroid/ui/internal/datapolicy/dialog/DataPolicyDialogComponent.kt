@@ -52,11 +52,13 @@ internal interface DataPolicyDialogComponent {
       injector.imageLoader = params.imageLoader
       injector.viewModel =
           DataPolicyDialogViewModeler(
-              state = MutableDataPolicyDialogViewState(),
+              state =
+                  MutableDataPolicyDialogViewState(
+                      tosUrl = params.termsConditionsUrl,
+                      privacyPolicyUrl = params.privacyPolicyUrl,
+                  ),
               interactor = params.module.provideInteractor(),
               provider = provider,
-              privacyPolicyUrl = params.privacyPolicyUrl,
-              termsConditionsUrl = params.termsConditionsUrl,
           )
     }
 

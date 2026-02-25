@@ -37,10 +37,8 @@ dependencies {
 
   // Compose
   implementation(libs.compose.ui)
-  implementation(libs.compose.material3)
   implementation(libs.compose.animation)
-  implementation(libs.compose.material.icons)
-  // implementation(libs.compose.material.icons.extended)
+  implementation(libs.compose.material3)
 
   // Compose Preview
   compileOnly(libs.compose.ui.tooling.preview)

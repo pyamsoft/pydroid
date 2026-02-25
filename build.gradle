@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 import com.deezer.caupain.model.StabilityLevelPolicy
 import com.deezer.caupain.plugin.DependenciesUpdateTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -77,14 +78,6 @@ subprojects {
       coreLibraryDesugaringEnabled = true
     }
 
-    kotlin {
-      compilerOptions {
-        languageVersion = KotlinVersion.KOTLIN_2_3
-        jvmTarget = JvmTarget.JVM_21
-        freeCompilerArgs.add("-Xexplicit-api=strict")
-      }
-    }
-
     publishing {
       singleVariant("release") {
         withSourcesJar()
@@ -106,6 +99,14 @@ subprojects {
 
     buildFeatures {
       buildConfig = false
+    }
+  }
+
+  kotlin {
+    compilerOptions {
+      languageVersion = KotlinVersion.KOTLIN_2_3
+      jvmTarget = JvmTarget.JVM_21
+      freeCompilerArgs.add("-Xexplicit-api=strict")
     }
   }
 

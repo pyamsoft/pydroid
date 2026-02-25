@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.icons.IconPainters
+import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 
 @Composable
 internal fun DismissableInterruptCard(

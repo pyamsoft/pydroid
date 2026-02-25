@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.icons
+package com.pyamsoft.pydroid.ui.internal.icons
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
@@ -22,8 +22,8 @@ import androidx.compose.ui.res.painterResource
 import com.pyamsoft.pydroid.ui.R
 
 /** Painters for Material Symbols */
-public object IconPainters {
+internal object IconPainters {
 
   /** 24px Close Icon */
-  @Composable public fun close(): Painter = painterResource(R.drawable.close_24px)
+  @Composable internal fun close(): Painter = painterResource(R.drawable.close_24px)
 }

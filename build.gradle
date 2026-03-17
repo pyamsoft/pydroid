@@ -15,8 +15,8 @@
  */
 
 
-import com.deezer.caupain.model.StabilityLevelPolicy
 import com.deezer.caupain.plugin.DependenciesUpdateTask
+import com.deezer.caupain.policies.StabilityLevelPolicy
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 

@@ -14,7 +14,7 @@ dokka = "2.2.0"
 
 # AndroidX
 core = "1.18.0"
-annotation = "1.9.1"
+annotation = "1.10.0"
 activity = "1.13.0"
 lifecycle = "2.10.0"
 dataStore = "1.2.1"
@@ -58,7 +58,6 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 androidx-core = { group = "androidx.core", name = "core", version.ref = "core" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
 androidx-dataStore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "lifecycle" }
 androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }

@@ -169,14 +169,6 @@
   name="androidx_preference_description"
 >The AndroidX Preference library. Allow users to modify UI settings.</string>
 
-    <string name="androidx_core_ktx">AndroidX Core KTX</string>
-    <string
-  name="androidx_core_ktx_url"
->https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/</string>
-    <string
-  name="androidx_core_ktx_description"
->The AndroidX Core KTX library. Write more concise, idiomatic Kotlin code.</string>
-
     <string
   name="androidx_lifecycle_compose"
 >AndroidX Lifecycle Compose</string>

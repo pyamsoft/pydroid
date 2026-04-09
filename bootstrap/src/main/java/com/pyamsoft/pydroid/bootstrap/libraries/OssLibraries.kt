@@ -237,9 +237,9 @@ public object OssLibraries {
     )
 
     add(
-        context.getString(R.string.androidx_core_ktx),
-        context.getString(R.string.androidx_core_ktx_url),
-        context.getString(R.string.androidx_core_ktx_description),
+        context.getString(R.string.androidx_core),
+        context.getString(R.string.androidx_core_url),
+        context.getString(R.string.androidx_core_description),
     )
 
     add(

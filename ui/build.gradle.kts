@@ -50,7 +50,7 @@ dependencies {
   // Compose Image loading
   implementation(libs.coil.compose)
 
-  implementation(libs.androidx.core.ktx)
+  implementation(libs.androidx.core)
 
   api(project(":arch"))
   api(project(":billing"))

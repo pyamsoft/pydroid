@@ -170,14 +170,6 @@
   name="androidx_preference_description"
 >AndroidX 的偏好設定支援程式庫。允許使用者修改使用者界面的設定。</string>
 
-    <string name="androidx_core_ktx">AndroidX Core KTX</string>
-    <string
-  name="androidx_core_ktx_url"
->https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/</string>
-    <string
-  name="androidx_core_ktx_description"
->AndroidX Core 的 KTX 支援程式庫。提供撰寫更簡潔、口語化的 Kotlin 程式碼。</string>
-
     <string
   name="androidx_lifecycle_compose"
 >AndroidX Lifecycle Compose</string>

@@ -4,7 +4,7 @@ minSdk = "24"
 compileSdk = "36"
 
 # Android Gradle
-agp = "9.1.0"
+agp = "9.1.1"
 cacheFix = "3.0.3"
 
 # Kotlin
@@ -13,7 +13,7 @@ coroutines = "1.10.2"
 dokka = "2.2.0"
 
 # AndroidX
-core = "1.18.0" # core-ktx is ready in 1.19.X https://jakewharton.com/an-update-on-android-ktx/
+core = "1.18.0"       # core-ktx is ready in 1.19.X https://jakewharton.com/an-update-on-android-ktx/
 annotation = "1.10.0"
 activity = "1.13.0"
 lifecycle = "2.10.0"
@@ -81,3 +81,4 @@ google-inAppReview = { group = "com.google.android.play", name = "review", versi
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+

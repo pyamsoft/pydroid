@@ -16,12 +16,16 @@
 # limitations under the License.
 #
 
+BINDIR="$(realpath "$(dirname "$0")")"
+ROOT="$(realpath "$(dirname "${BINDIR}")")"
+readonly BINDIR
+readonly ROOT
+
 main() {
-  ./gradlew spotlessApply || return 1
-  ./bin/xmlfmt || return 1
+  "${ROOT}"/gradlew spotlessApply || return 1
+  "${BINDIR}"/xmlfmt || return 1
   return 0
 }
 
 main "$@" || exit 1
 exit 0
-

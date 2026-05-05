@@ -24,6 +24,5 @@ import org.junit.Test
 @SmallTest
 public class AndroidSanity {
 
-  @Test
-  public fun sanity(): Unit = runTest { assertEquals(3 + 3, 6) }
+  @Test public fun sanity(): Unit = runTest { assertEquals(3 + 3, 6) }
 }

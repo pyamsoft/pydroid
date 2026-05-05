@@ -38,6 +38,7 @@ spotless = "8.4.0"
 doctor = "0.12.1"
 jdkDesugar = "2.1.5"
 caupain = "1.9.1"
+detekt = "2.0.0-alpha.3"
 
 # Testing
 junit = "4.13.2"
@@ -53,6 +54,7 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 doctor = { id = "com.osacky.doctor", version.ref = "doctor" }
 caupain = { id = "com.deezer.caupain", version.ref = "caupain" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 
 [libraries]
 android-desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "jdkDesugar" }

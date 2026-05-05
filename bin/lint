@@ -1,0 +1,153 @@
+#!/bin/sh
+
+#
+# Copyright 2026 pyamsoft
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at:
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+set -e
+
+BINDIR="$(realpath "$(dirname "$0")")"
+ROOT="$(realpath "$(dirname "${BINDIR}")")"
+readonly BINDIR
+readonly ROOT
+
+_resolve_detekt_version() {
+  grep -o 'detekt = ".*"' "${ROOT}/gradle/libs.versions.toml" | awk '{ print $3 }' | sed 's/"//g' || return 1
+  return 0
+}
+
+_resolve_kotlin_lang_version() {
+  grep -o 'languageVersion = KotlinVersion.KOTLIN_.*' "${ROOT}/build.gradle" | sed 's/.*KOTLIN_//' | tr '_' '.' || return 1
+  return 0
+}
+
+_resolve_jvm_target_version() {
+  grep -o 'jvmTarget = JvmTarget.JVM_.*' "${ROOT}/build.gradle" | sed 's/.*JVM_//' || return 1
+  return 0
+}
+
+_download_detekt() {
+  _version="$1"
+
+  if [ -z "${_version}" ]; then
+    printf -- 'Must provide detekt version to download\n'
+    return 1
+  fi
+
+  # Download detekt to bind dir
+  curl -SLO "https://github.com/detekt/detekt/releases/download/v${_version}/detekt-cli-${_version}.zip" || {
+    printf -- 'Failed to download detekt %s\n' "${_version}"
+
+    # Clean up
+    rm -f "detekt-cli-${_version}.zip"
+
+    return 1
+  }
+
+  # Unzip it
+  unzip "detekt-cli-${_version}.zip" || {
+    printf -- 'Failed to unzip detekt %s\n' "${_version}"
+
+    # Clean up
+    rm -f "detekt-cli-${_version}.zip"
+    return 1
+  }
+
+  # Remove old directory
+  rm -rf "${BINDIR}/.detekt-cli"
+
+  # Prepare new detekt
+  mkdir -p "${BINDIR}/.detekt-cli/${_version}" || {
+    printf -- 'Failed to create detekt install directory %s\n' "${_version}"
+
+    # Clean up
+    rm -f "detekt-cli-${_version}.zip"
+
+    return 1
+  }
+
+  # Install files
+  mv detekt-cli-"${_version}/"* "${BINDIR}/.detekt-cli/${_version}" || {
+    printf -- 'Failed to install detekt %s\n' "${_version}"
+
+    # Remove directory
+    rmdir "detekt-cli-${_version}"
+
+    # Clean up
+    rm -f "detekt-cli-${_version}.zip"
+
+    return 1
+  }
+
+  # Remove directory
+  rmdir "detekt-cli-${_version}"
+
+  # Clean up
+  rm -f "detekt-cli-${_version}.zip"
+
+  return 0
+}
+
+_run_detekt() {
+  _detekt_version="$(_resolve_detekt_version)"
+
+  if [ -z "${_detekt_version}" ]; then
+    printf -- 'Unable to resolve detekt version.\n'
+    return 1
+  fi
+
+  if [ ! -d "${BINDIR}/.detekt-cli/${_detekt_version}" ]; then
+    _download_detekt "${_detekt_version}" || return 1
+  fi
+
+  _config="${ROOT}/tools/detekt/config.yml"
+
+  mkdir -p "${ROOT}/tools/detekt"
+  touch "${_config}"
+
+  _inputs=""
+  for _path in "$@"; do
+    if [ -z "${_inputs}" ]; then
+      _inputs="${_path}"
+    else
+      _inputs="${_path}:${_inputs}"
+    fi
+    unset _path
+  done
+  unset _path
+
+  exec "${BINDIR}/.detekt-cli/${_detekt_version}/bin/detekt-cli" \
+    --build-upon-default-config \
+    --config "${_config}" \
+    --language-version "$(_resolve_kotlin_lang_version)" \
+    --jvm-target "$(_resolve_jvm_target_version)" \
+    --fail-on-severity "Warning" \
+    --parallel \
+    -i "${_inputs}"
+  return 0
+}
+
+main() {
+  if [ -z "$1" ]; then
+    printf -- 'Must pass at least 1 target path to detekt.\n'
+    return 1
+  fi
+
+  _run_detekt "$@" || return 1
+  return 0
+}
+
+main "$@" || exit 1
+exit 0

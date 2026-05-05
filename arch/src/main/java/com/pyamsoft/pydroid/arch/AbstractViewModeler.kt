@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.compose.runtime.saveable.SaveableStateRegistry
+import com.pyamsoft.pydroid.core.LintIgnoreEmptyFunctionBlock
 
 /**
  * A base class ViewModeler which implements a simple Render function and can handle saving state
@@ -26,7 +27,7 @@ protected constructor(
     protected open val state: S,
 ) : ViewModeler {
 
-  @Suppress("detekt:EmptyFunctionBlock")
+  @LintIgnoreEmptyFunctionBlock
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}
 
   override fun registerSaveState(

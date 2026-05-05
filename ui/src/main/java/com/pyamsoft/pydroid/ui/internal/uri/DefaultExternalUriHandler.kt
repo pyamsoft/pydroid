@@ -52,7 +52,6 @@ internal constructor(
     confirmUri.value = ""
   }
 
-  @LintIgnoreTooGenericExceptionCaught
   override fun confirm(
       handler: UriHandler,
       uri: String,
@@ -71,7 +70,7 @@ internal constructor(
     try {
       Logger.d { "Confirmed: attempt open external URI: $uri" }
       handler.openUri(uri)
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       Logger.e(e) { "Error opening external URI: $uri" }
 
       toasting =

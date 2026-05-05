@@ -130,12 +130,11 @@ protected constructor(
         )
       }
 
-  @LintIgnoreTooGenericExceptionCaught
   final override suspend fun purchase(activity: ComponentActivity, sku: BillingSku): Unit =
       withContext(context = Dispatchers.Default) {
         try {
           onPurchase(activity, sku)
-        } catch (e: Throwable) {
+        } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
           Logger.e(e) { "Failed purchase flow for SKU: $sku" }
           emitError(RuntimeException(e.message ?: "An error occurred during purchasing."))
         }

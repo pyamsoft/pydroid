@@ -101,9 +101,8 @@ protected constructor(
 
   final override fun consumed(): Boolean = appUpdateConsumed.value
 
-  @LintIgnoreTooGenericExceptionCaught
   final override suspend fun launchUpdate(
-      activity: ComponentActivity
+      activity: ComponentActivity,
   ): ResultWrapper<AppUpdateResultStatus> =
       withContext(context = Dispatchers.Main) {
         if (appUpdateConsumed.compareAndSet(expect = false, update = true)) {
@@ -116,7 +115,7 @@ protected constructor(
             return@withContext startUpdateFlow(activity).onSuccess {
               onAfterUpdateFlowStarted(activity, it)
             }
-          } catch (e: Throwable) {
+          } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
             e.ifNotCancellation {
               Logger.e(e) { "Failed to launch in-app update prompt flow." }
               return@withContext ResultWrapper.failure(e)

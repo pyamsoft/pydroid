@@ -16,22 +16,23 @@
 
 package com.pyamsoft.pydroid.ui.internal.haptics
 
+import com.pyamsoft.pydroid.core.LintIgnoreEmptyFunctionBlock
 import com.pyamsoft.pydroid.ui.haptics.HapticManager
 
 /** For tests and @Preview modes */
 internal object NoopHapticManager : HapticManager {
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun toggleOff() {}
+  @LintIgnoreEmptyFunctionBlock override fun toggleOff() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun toggleOn() {}
+  @LintIgnoreEmptyFunctionBlock override fun toggleOn() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun confirmButtonPress() {}
+  @LintIgnoreEmptyFunctionBlock override fun confirmButtonPress() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun cancelButtonPress() {}
+  @LintIgnoreEmptyFunctionBlock override fun cancelButtonPress() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun actionButtonPress() {}
+  @LintIgnoreEmptyFunctionBlock override fun actionButtonPress() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun clockTick() {}
+  @LintIgnoreEmptyFunctionBlock override fun clockTick() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun longPress() {}
+  @LintIgnoreEmptyFunctionBlock override fun longPress() {}
 }

@@ -68,11 +68,10 @@ internal constructor(
    */
   @CheckResult
   @PublishedApi
-  @LintIgnoreTooGenericExceptionCaught
   internal inline fun internallyWrap(block: () -> ResultWrapper<T>): ResultWrapper<T> {
     return try {
       block()
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       ResultWrapper(data = null, error = e)
     }
   }
@@ -128,13 +127,12 @@ internal constructor(
    * an error ResultWrapper
    */
   @CheckResult
-  @LintIgnoreTooGenericExceptionCaught
   public inline fun recover(transform: (Throwable) -> T): ResultWrapper<T> {
     validateWrapper()
 
     return try {
       error.let { if (it == null) this else ResultWrapper(data = transform(it), error = null) }
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       ResultWrapper(data = null, error = e)
     }
   }
@@ -146,13 +144,12 @@ internal constructor(
    * an error ResultWrapper
    */
   @CheckResult
-  @LintIgnoreTooGenericExceptionCaught
   public inline fun <R : Any> map(transform: (T) -> R): ResultWrapper<R> {
     validateWrapper()
 
     return try {
       ResultWrapper(data = data?.let(transform), error = error)
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       ResultWrapper(data = null, error = e)
     }
   }

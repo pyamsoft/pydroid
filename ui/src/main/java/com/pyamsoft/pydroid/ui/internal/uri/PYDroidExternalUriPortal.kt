@@ -41,6 +41,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pyamsoft.pydroid.core.LintIgnoreEmptyFunctionBlock
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
@@ -228,7 +229,7 @@ private class TestExternalUriHandler(
     state.value = ""
   }
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun confirm(handler: UriHandler, uri: String) {}
+  @LintIgnoreEmptyFunctionBlock override fun confirm(handler: UriHandler, uri: String) {}
 
   override fun openUri(uri: String) {
     state.value = uri

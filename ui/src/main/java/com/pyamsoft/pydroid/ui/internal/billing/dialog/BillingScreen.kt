@@ -44,6 +44,7 @@ import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.core.LintIgnoreMaxLineLength
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
@@ -217,6 +218,7 @@ private fun BillingPopup(
   }
 
   if (purchase != null) {
+    @LintIgnoreMaxLineLength
     val message =
         when (purchase) {
           is BillingPurchase.Fake -> "Fake purchase ${purchase.sku.title}"

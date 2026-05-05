@@ -19,17 +19,72 @@ package com.pyamsoft.pydroid.core
 /**
  * An annotation for the linter to say that this function is allowed to throw "too wide" exceptions
  */
-@Retention(AnnotationRetention.SOURCE) public annotation class LintIgnoreTooGenericExceptionThrown
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.FIELD,
+)
+public annotation class LintIgnoreTooGenericExceptionThrown
 
 /**
  * An annotation for the linter to say that this function is allowed to catch "too wide" exceptions
  */
-@Retention(AnnotationRetention.SOURCE) public annotation class LintIgnoreTooGenericExceptionCaught
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.FIELD,
+)
+public annotation class LintIgnoreTooGenericExceptionCaught
 
 /** Annotation saying it's ok if this (target) has "too many functions" */
-@Target(AnnotationTarget.FILE, AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FILE, AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 public annotation class LintIgnoreTooManyFunctions
+
+/** Annotation saying it's ok if this (target) has "magic numbers" */
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+    AnnotationTarget.FILE,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.FIELD,
+)
+public annotation class LintIgnoreMagicNumber
+
+/** Annotation saying it's ok if this (target) has "long line length" */
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+    AnnotationTarget.FILE,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.CLASS,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.FIELD,
+)
+public annotation class LintIgnoreMaxLineLength
+
+/** Annotation saying it's ok if this (function) has an empty body */
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+public annotation class LintIgnoreEmptyFunctionBlock
+
+/** Annotation saying it's ok if this (target) has "swallowed exception(s)" */
+@Retention(AnnotationRetention.SOURCE)
+@Target(
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.EXPRESSION,
+    AnnotationTarget.LOCAL_VARIABLE,
+    AnnotationTarget.FIELD,
+)
+public annotation class LintIgnoreSwallowedException
 
 /**
  * Annotation saying it's ok if this (target) is "too long"

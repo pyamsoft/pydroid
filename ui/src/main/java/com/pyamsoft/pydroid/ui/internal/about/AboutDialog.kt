@@ -57,13 +57,12 @@ internal fun AboutDialog(
 
   val uriHandler = rememberUriHandler()
 
-  @LintIgnoreTooGenericExceptionCaught
   val handleOpenPage by rememberUpdatedState { url: String ->
     handleDismissFailedNavigation()
 
     try {
       uriHandler.openUri(url)
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       viewModel.handleFailedNavigation(e)
     }
   }

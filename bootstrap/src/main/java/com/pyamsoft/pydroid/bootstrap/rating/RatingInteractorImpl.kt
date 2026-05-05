@@ -30,12 +30,11 @@ internal constructor(
     private val rateMyApp: RateMyApp,
 ) : RatingInteractor {
 
-  @LintIgnoreTooGenericExceptionCaught
   override suspend fun askForRating(): ResultWrapper<AppRatingLauncher> =
       withContext(context = Dispatchers.Default) {
         return@withContext try {
           ResultWrapper.success(rateMyApp.startRating())
-        } catch (e: Throwable) {
+        } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
           e.ifNotCancellation {
             Logger.e(e) { "Failed to ask for rating" }
             ResultWrapper.failure(e)

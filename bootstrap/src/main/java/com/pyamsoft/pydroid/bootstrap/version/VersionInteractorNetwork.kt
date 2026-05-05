@@ -51,12 +51,11 @@ internal constructor(
         updater.completeUpgrade()
       }
 
-  @LintIgnoreTooGenericExceptionCaught
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.Default) {
         return@withContext try {
           ResultWrapper.success(updater.checkForUpdate())
-        } catch (e: Throwable) {
+        } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
           e.ifNotCancellation {
             Logger.e(e) { "Failed to check for updates" }
             ResultWrapper.failure(e)

@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.LintIgnoreEmptyFunctionBlock
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.Dispatchers
 
@@ -48,9 +49,9 @@ internal constructor(
           priceInCents = priceInDollars * 100,
       )
 
-  @Suppress("detekt:EmptyFunctionBlock") override suspend fun onClientConnect() {}
+  @LintIgnoreEmptyFunctionBlock override suspend fun onClientConnect() {}
 
-  @Suppress("detekt:EmptyFunctionBlock") override fun onClientDisconnect() {}
+  @LintIgnoreEmptyFunctionBlock override fun onClientDisconnect() {}
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) {
     launchInScope(context = Dispatchers.Default) {

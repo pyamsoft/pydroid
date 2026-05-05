@@ -5,6 +5,11 @@ naming:
   TopLevelPropertyNaming:
     constantPattern: "[A-Z][_A-Za-z0-9]*"
 
+empty-blocks:
+  EmptyFunctionBlock:
+    ignoreAnnotated:
+      - "LintIgnoreEmptyFunctionBlock"
+
 exceptions:
   TooGenericExceptionCaught:
     ignoreAnnotated:
@@ -12,7 +17,9 @@ exceptions:
   TooGenericExceptionThrown:
     ignoreAnnotated:
       - "LintIgnoreTooGenericExceptionThrown"
-      - "LintIgnoreTooGenericExceptionThrown"
+  SwallowedException:
+    ignoreAnnotated:
+      - "LintIgnoreSwallowedException"
 
 style:
   MagicNumber:
@@ -20,6 +27,8 @@ style:
     ignoreCompanionObjectPropertyDeclaration: true
     ignoreAnnotated:
       - "Preview"
+      - "PreviewSource"
+      - "LintIgnoreMagicNumber"
   UnusedPrivateFunction:
     ignoreAnnotated:
       - "Preview"
@@ -28,6 +37,9 @@ style:
     active: false
   ReturnCount:
     active: false
+  MaxLineLength:
+    ignoreAnnotated:
+      - "LintIgnoreMaxLineLength"
 
 complexity:
   LongParameterList:

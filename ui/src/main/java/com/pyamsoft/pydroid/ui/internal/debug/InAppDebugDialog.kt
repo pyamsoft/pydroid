@@ -60,6 +60,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
+import com.pyamsoft.pydroid.core.LintIgnoreMagicNumber
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
@@ -332,9 +333,12 @@ private fun InAppDebugScreen(
                   contentType = InAppDebugContentTypes.SPACER,
               ) {
                 // Padding to offset so the copy button doesn't cover
-                @Suppress("detekt:MagicNumber")
+                @LintIgnoreMagicNumber
                 Spacer(
-                    modifier = Modifier.height(MaterialTheme.keylines.content * 3),
+                    modifier =
+                        Modifier.height(
+                            MaterialTheme.keylines.content * 3,
+                        ),
                 )
               }
             } else {

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.debug
 import android.app.Application
 import android.util.Log
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.LintIgnoreSwallowedException
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -62,12 +63,10 @@ internal constructor(
   }
 
   @CheckResult
-  @Suppress("detekt:SwallowedException")
-  @LintIgnoreTooGenericExceptionCaught
   private fun getPYDroid(application: Application): PYDroid? {
     return try {
       ApplicationScope.retrieve(application)
-    } catch (e: Throwable) {
+    } catch (@LintIgnoreSwallowedException @LintIgnoreTooGenericExceptionCaught _: Throwable,) {
       // PYDroid isn't around yet, either not initialized (maybe we are logging before
       // installPYDroid) or never used
       null
@@ -155,7 +154,9 @@ internal constructor(
     val t = tag.orEmpty()
     when (priority) {
       Log.ASSERT,
-      Log.ERROR -> log(Level.ERROR, t, message, throwable)
+      Log.ERROR,
+      -> log(Level.ERROR, t, message, throwable)
+
       Log.WARN -> log(Level.WARNING, t, message, throwable)
       else -> log(Level.DEBUG, t, message, throwable)
     }

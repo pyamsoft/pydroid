@@ -158,7 +158,6 @@ internal constructor(
     }
   }
 
-  @LintIgnoreTooGenericExceptionCaught
   internal fun handleCompleteUpgrade(
       scope: CoroutineScope,
       onUpgradeCompleted: () -> Unit,
@@ -173,7 +172,7 @@ internal constructor(
       Logger.d { "Updating app, restart via update manager!" }
       try {
         interactor.completeUpdate()
-      } catch (e: Throwable) {
+      } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
         e.ifNotCancellation {
           Logger.e(e) { "Error during upgrade. Close application anyway to try again later." }
         }

@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.billing
 
+import com.pyamsoft.pydroid.core.LintIgnoreMaxLineLength
+
 /**
  * A representation of a successful billing purchase transaction
  *
@@ -37,6 +39,7 @@ package com.pyamsoft.pydroid.billing
  * at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:101) at
  * org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.create(VirtualFileKotlinClass.kt:61)
  */
+@LintIgnoreMaxLineLength
 public /* sealed */ interface BillingPurchase {
 
   /** Real purchase transaction event from the Play Billing library */

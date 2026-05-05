@@ -113,6 +113,10 @@ subprojects {
       jvmTarget = JvmTarget.JVM_21
       freeCompilerArgs.add("-Xexplicit-api=strict")
     }
+
+    abiValidation {
+      enabled = true
+    }
   }
 
   tasks.withType(JavaCompile).configureEach {

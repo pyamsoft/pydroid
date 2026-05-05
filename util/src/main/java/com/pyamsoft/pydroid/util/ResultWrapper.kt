@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.util
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 
 /** A simple Result style data wrapper */
 @ConsistentCopyVisibility
@@ -67,6 +68,7 @@ internal constructor(
    */
   @CheckResult
   @PublishedApi
+  @LintIgnoreTooGenericExceptionCaught
   internal inline fun internallyWrap(block: () -> ResultWrapper<T>): ResultWrapper<T> {
     return try {
       block()
@@ -126,6 +128,7 @@ internal constructor(
    * an error ResultWrapper
    */
   @CheckResult
+  @LintIgnoreTooGenericExceptionCaught
   public inline fun recover(transform: (Throwable) -> T): ResultWrapper<T> {
     validateWrapper()
 
@@ -143,6 +146,7 @@ internal constructor(
    * an error ResultWrapper
    */
   @CheckResult
+  @LintIgnoreTooGenericExceptionCaught
   public inline fun <R : Any> map(transform: (T) -> R): ResultWrapper<R> {
     validateWrapper()
 

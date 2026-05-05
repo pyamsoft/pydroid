@@ -25,6 +25,8 @@ import org.junit.Test
 
 public class ResultWrapperTest {
 
+  private class TestException : RuntimeException("TEST")
+
   @Test
   public fun do_not_do_this(): Unit = runTest {
     try {
@@ -46,7 +48,7 @@ public class ResultWrapperTest {
 
   @Test
   public fun create_failure(): Unit = runTest {
-    val t = RuntimeException("TEST")
+    val t = TestException()
     val r = ResultWrapper.failure<Nothing>(t)
     assertEquals(r.exceptionOrThrow(), t)
     assertNull(r.getOrNull())
@@ -61,7 +63,7 @@ public class ResultWrapperTest {
 
   @Test
   public fun map_failureNoOp(): Unit = runTest {
-    val t = RuntimeException("TEST")
+    val t = TestException()
     val r = ResultWrapper.failure<Int>(t).map { 1 }
     assertEquals(r.exceptionOrThrow(), t)
     assertNull(r.getOrNull())
@@ -69,7 +71,7 @@ public class ResultWrapperTest {
 
   @Test
   public fun map_recoverSuccess(): Unit = runTest {
-    val t = RuntimeException("TEST")
+    val t = TestException()
     val r = ResultWrapper.failure<Int>(t).recover { 1 }
     assertEquals(r.getOrThrow(), 1)
     assertNull(r.exceptionOrNull())
@@ -77,14 +79,14 @@ public class ResultWrapperTest {
 
   @Test
   public fun map_recoverMapFailureToSuccess(): Unit = runTest {
-    val r = ResultWrapper.success(0).map<Int> { throw RuntimeException("TEST") }.recover { 1 }
+    val r = ResultWrapper.success(0).map<Int> { throw TestException() }.recover { 1 }
     assertEquals(r.getOrThrow(), 1)
     assertNull(r.exceptionOrNull())
   }
 
   @Test
   public fun recover_throwsOnSuccess(): Unit = runTest {
-    val t = RuntimeException("Test")
+    val t = TestException()
     val r = ResultWrapper.success(0).map { 1 }.onSuccess { throw t }
 
     assertEquals(r.exceptionOrThrow(), t)
@@ -93,11 +95,7 @@ public class ResultWrapperTest {
 
   @Test
   public fun recover_recoverOnSuccess(): Unit = runTest {
-    val r =
-        ResultWrapper.success(0)
-            .map { 1 }
-            .onSuccess { throw RuntimeException("Test") }
-            .recover { 2 }
+    val r = ResultWrapper.success(0).map { 1 }.onSuccess { throw TestException() }.recover { 2 }
 
     assertEquals(r.getOrThrow(), 2)
     assertNull(r.exceptionOrNull())
@@ -105,12 +103,9 @@ public class ResultWrapperTest {
 
   @Test
   public fun recover_throwsOnError(): Unit = runTest {
-    val tt = RuntimeException("Test2")
+    val tt = TestException()
     val r =
-        ResultWrapper.success(0)
-            .map { 1 }
-            .onSuccess { throw RuntimeException("Test") }
-            .recover { throw tt }
+        ResultWrapper.success(0).map { 1 }.onSuccess { throw TestException() }.recover { throw tt }
 
     assertEquals(r.exceptionOrThrow(), tt)
     assertNull(r.getOrNull())
@@ -118,11 +113,11 @@ public class ResultWrapperTest {
 
   @Test
   public fun recover_recoverOnRecover(): Unit = runTest {
-    val tt = RuntimeException("Test2")
+    val tt = TestException()
     val r =
         ResultWrapper.success(0)
             .map { 1 }
-            .onSuccess { throw RuntimeException("Test") }
+            .onSuccess { throw TestException() }
             .recover { throw tt }
             .recover { 3 }
 
@@ -154,7 +149,7 @@ public class ResultWrapperTest {
   public fun map_onFailure(): Unit = runTest {
     var c = 0
     var s = 0
-    val t = RuntimeException("TEST")
+    val t = TestException()
     val r = ResultWrapper.failure<Nothing>(t).onSuccess { s = 1 }.onFailure { c = 1 }
 
     assertEquals(r.exceptionOrThrow(), t)
@@ -173,7 +168,7 @@ public class ResultWrapperTest {
     var r2e = 0
     var r2f = 0
 
-    val t = RuntimeException("TEST")
+    val t = TestException()
     val r1 =
         ResultWrapper.failure<Nothing>(t)
             .onSuccess { r1s = 1 }

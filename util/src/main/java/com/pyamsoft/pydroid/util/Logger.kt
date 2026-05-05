@@ -37,7 +37,7 @@ public object Logger {
   @CheckResult
   private fun Any.createStackTraceTag(): String {
     return this.run {
-      Throwable()
+      Throwable("CREATE STACK TRACE TAG")
           .stackTrace
           .first { it.className !in IGNORE_NAMES }
           .run { "($fileName:$lineNumber)" }

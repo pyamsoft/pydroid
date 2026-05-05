@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+@file:LintIgnoreTooManyFunctions
+
 package com.pyamsoft.pydroid.util
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 
 /** Run a block once on Lifecycle destroy */
 public inline fun LifecycleOwner.doOnDestroy(crossinline func: () -> Unit) {

@@ -5,6 +5,14 @@ naming:
   TopLevelPropertyNaming:
     constantPattern: "[A-Z][A-Za-z0-9]*"
 
+exceptions:
+  TooGenericExceptionCaught:
+    ignoreAnnotated:
+      - "LintIgnoreTooGenericExceptionCaught"
+  TooGenericExceptionThrown:
+    ignoreAnnotated:
+      - "LintIgnoreTooGenericExceptionThrown"
+
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
@@ -19,3 +27,4 @@ complexity:
   TooManyFunctions:
     ignoreAnnotated:
       - "Preview"
+      - "LintIgnoreTooManyFunctions"

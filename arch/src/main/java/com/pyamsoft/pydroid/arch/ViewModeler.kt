@@ -33,7 +33,8 @@ package com.pyamsoft.pydroid.arch
  * Activities should handle config changes themselves
  *
  * <activity ...
- * android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+ * android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|
+ * locale|layoutDirection|fontScale|screenLayout|density|uiMode"
  * > ... </activity>
  *
  * This is because of Composes composition nature, the context and resources are re-evaluated

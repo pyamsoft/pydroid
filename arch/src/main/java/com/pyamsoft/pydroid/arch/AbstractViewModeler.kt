@@ -26,6 +26,7 @@ protected constructor(
     protected open val state: S,
 ) : ViewModeler {
 
+  @Suppress("detekt:EmptyFunctionBlock")
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}
 
   override fun registerSaveState(

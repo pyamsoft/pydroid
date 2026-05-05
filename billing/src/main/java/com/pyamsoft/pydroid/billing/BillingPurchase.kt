@@ -16,8 +16,28 @@
 
 package com.pyamsoft.pydroid.billing
 
-/** A representation of a successful billing purchase transaction */
-public sealed interface BillingPurchase {
+/**
+ * A representation of a successful billing purchase transaction
+ *
+ * TODO(Peter): convert to a sealed interface
+ *
+ * We can't use a sealed interface here for some reason, as it breaks Dokka
+ *
+ * WARN: Could not read file:
+ * ~/PYDroid/billing/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar!/com/pyamsoft/pydroid/billing/BillingPurchase.class;
+ * size in bytes: 777; file type: CLASS java.lang.UnsupportedOperationException: PermittedSubclasses
+ * requires ASM9 at
+ * org.jetbrains.org.objectweb.asm.ClassVisitor.visitPermittedSubclass(ClassVisitor.java:266) at
+ * org.jetbrains.org.objectweb.asm.ClassReader.accept(ClassReader.java:684) at
+ * org.jetbrains.org.objectweb.asm.ClassReader.accept(ClassReader.java:402) at
+ * org.jetbrains.kotlin.load.kotlin.FileBasedKotlinClass.create(FileBasedKotlinClass.java:96) at
+ * org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory$create$1.invoke(VirtualFileKotlinClass.kt:67)
+ * at
+ * org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory$create$1.invoke(VirtualFileKotlinClass.kt:61)
+ * at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:101) at
+ * org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.create(VirtualFileKotlinClass.kt:61)
+ */
+public /* sealed */ interface BillingPurchase {
 
   /** Real purchase transaction event from the Play Billing library */
   @ConsistentCopyVisibility

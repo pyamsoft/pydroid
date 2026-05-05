@@ -29,7 +29,7 @@ internal constructor(
 
   override fun canPostNotification(): Boolean {
     // Check notification permission on API 33+
-    if (Build.VERSION.SDK_INT >= 33) {
+    if (Build.VERSION.SDK_INT >= POST_NOTIFICATION_PERMISSION_REQUIRED_API) {
       val permission =
           ContextCompat.checkSelfPermission(
               context,
@@ -43,4 +43,9 @@ internal constructor(
 
     return true
   }
+
+    companion object {
+        private const val POST_NOTIFICATION_PERMISSION_REQUIRED_API = 33
+
+    }
 }

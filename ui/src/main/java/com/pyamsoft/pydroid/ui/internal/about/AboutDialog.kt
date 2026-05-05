@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,30 +24,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
-import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
-import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
-
-internal class AboutDialogInjector : ComposableInjector() {
-
-  internal var viewModel: AboutViewModeler? = null
-
-  override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ApplicationScope.retrieve(activity.application)
-        .injector()
-        .plusAbout()
-        .create()
-        .inject(this)
-  }
-
-  override fun onDispose() {
-    viewModel = null
-  }
-}
 
 @Composable
 private fun MountHooks(
@@ -75,6 +56,8 @@ internal fun AboutDialog(
   }
 
   val uriHandler = rememberUriHandler()
+
+  @LintIgnoreTooGenericExceptionCaught
   val handleOpenPage by rememberUpdatedState { url: String ->
     handleDismissFailedNavigation()
 

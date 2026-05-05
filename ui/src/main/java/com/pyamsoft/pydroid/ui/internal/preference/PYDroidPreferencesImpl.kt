@@ -31,6 +31,8 @@ import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyPreferences
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
@@ -57,6 +59,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+@LintIgnoreTooManyFunctions
 internal class PYDroidPreferencesImpl
 internal constructor(
     context: Context,
@@ -116,6 +119,7 @@ internal constructor(
     )
   }
 
+  @LintIgnoreTooGenericExceptionCaught
   private inline fun <T : Any> setPreference(
       key: Preferences.Key<T>,
       fallbackValue: T,

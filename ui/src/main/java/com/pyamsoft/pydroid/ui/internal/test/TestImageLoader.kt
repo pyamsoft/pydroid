@@ -58,7 +58,7 @@ private class TestImageLoader(context: Context) : ImageLoader {
               )
             }
 
-        override fun dispose() {}
+        @Suppress("detekt:EmptyFunctionBlock") override fun dispose() {}
       }
 
   override val components = ComponentRegistry()
@@ -89,7 +89,7 @@ private class TestImageLoader(context: Context) : ImageLoader {
     return ImageLoader.Builder(context)
   }
 
-  override fun shutdown() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun shutdown() {}
 }
 
 /** Only use for tests/previews */

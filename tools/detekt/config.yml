@@ -3,7 +3,7 @@ naming:
     ignoreAnnotated:
       - "Composable"
   TopLevelPropertyNaming:
-    constantPattern: "[A-Z][A-Za-z0-9]*"
+    constantPattern: "[A-Z][_A-Za-z0-9]*"
 
 exceptions:
   TooGenericExceptionCaught:
@@ -12,21 +12,36 @@ exceptions:
   TooGenericExceptionThrown:
     ignoreAnnotated:
       - "LintIgnoreTooGenericExceptionThrown"
+      - "LintIgnoreTooGenericExceptionThrown"
 
 style:
   MagicNumber:
     ignorePropertyDeclaration: true
     ignoreCompanionObjectPropertyDeclaration: true
+    ignoreAnnotated:
+      - "Preview"
   UnusedPrivateFunction:
     ignoreAnnotated:
-      -  "Preview"
+      - "Preview"
+      - "PreviewSource"
   NewLineAtEndOfFile:
+    active: false
+  ReturnCount:
     active: false
 
 complexity:
   LongParameterList:
     ignoreDefaultParameters: true
+    ignoreAnnotated:
+      - "PreviewSource"
   TooManyFunctions:
     ignoreAnnotated:
       - "Preview"
+      - "PreviewSource"
       - "LintIgnoreTooManyFunctions"
+  LongMethod:
+    ignoreAnnotated:
+      - "Composable"
+      - "Preview"
+      - "PreviewSource"
+      - "LintIgnoreLongMethod"

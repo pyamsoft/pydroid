@@ -26,6 +26,7 @@ import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
@@ -100,6 +101,7 @@ protected constructor(
 
   final override fun consumed(): Boolean = appUpdateConsumed.value
 
+  @LintIgnoreTooGenericExceptionCaught
   final override suspend fun launchUpdate(
       activity: ComponentActivity
   ): ResultWrapper<AppUpdateResultStatus> =

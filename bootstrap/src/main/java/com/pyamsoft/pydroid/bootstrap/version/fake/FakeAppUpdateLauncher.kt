@@ -54,7 +54,7 @@ internal constructor(
 
     var downloaded = 0L
     while (downloaded < downloadCompletedAmount) {
-      delay(100L)
+      delay(timeMillis = 100L)
       downloaded += 1
       self.setBytesDownloaded(downloaded)
     }

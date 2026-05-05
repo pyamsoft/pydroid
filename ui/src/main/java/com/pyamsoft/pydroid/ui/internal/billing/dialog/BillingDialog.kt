@@ -16,8 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
-import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,45 +26,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import coil3.ImageLoader
-import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
-import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
-import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-internal class BillingDialogInjector : ComposableInjector() {
-
-  internal var purchaseClient: BillingLauncher? = null
-  internal var viewModel: BillingDialogViewModeler? = null
-  internal var imageLoader: ImageLoader? = null
-
-  @CheckResult
-  private fun getApplicationProvider(activity: ComponentActivity): AppProvider {
-    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
-  }
-
-  override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ActivityScope.retrieve(activity)
-        .injector()
-        .plusBillingDialog()
-        .create(getApplicationProvider(activity))
-        .inject(this)
-  }
-
-  override fun onDispose() {
-    viewModel = null
-    imageLoader = null
-    purchaseClient = null
-  }
-}
 
 @Composable
 private fun MountHooks(

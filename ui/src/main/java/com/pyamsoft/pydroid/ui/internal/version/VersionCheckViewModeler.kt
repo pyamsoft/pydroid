@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 import com.pyamsoft.pydroid.util.Logger
@@ -157,6 +158,7 @@ internal constructor(
     }
   }
 
+  @LintIgnoreTooGenericExceptionCaught
   internal fun handleCompleteUpgrade(
       scope: CoroutineScope,
       onUpgradeCompleted: () -> Unit,

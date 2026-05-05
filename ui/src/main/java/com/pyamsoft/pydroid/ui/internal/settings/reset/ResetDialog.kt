@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,27 +25,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
-import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
-import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
-
-internal class ResetDialogInjector : ComposableInjector() {
-
-  internal var viewModel: ResetViewModeler? = null
-
-  override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ApplicationScope.retrieve(activity.application)
-        .injector()
-        .plusReset()
-        .create()
-        .inject(this)
-  }
-
-  override fun onDispose() {
-    viewModel = null
-  }
-}
 
 @Composable
 internal fun ResetDialog(

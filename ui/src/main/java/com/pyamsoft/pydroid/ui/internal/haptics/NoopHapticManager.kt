@@ -20,17 +20,18 @@ import com.pyamsoft.pydroid.ui.haptics.HapticManager
 
 /** For tests and @Preview modes */
 internal object NoopHapticManager : HapticManager {
-  override fun toggleOff() {}
 
-  override fun toggleOn() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun toggleOff() {}
 
-  override fun confirmButtonPress() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun toggleOn() {}
 
-  override fun cancelButtonPress() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun confirmButtonPress() {}
 
-  override fun actionButtonPress() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun cancelButtonPress() {}
 
-  override fun clockTick() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun actionButtonPress() {}
 
-  override fun longPress() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun clockTick() {}
+
+  @Suppress("detekt:EmptyFunctionBlock") override fun longPress() {}
 }

@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
+@file:LintIgnoreTooManyFunctions
+
 package com.pyamsoft.pydroid.bootstrap.libraries
 
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.R
+import com.pyamsoft.pydroid.core.LintIgnoreLongMethod
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.util.contains
 
 /** Manage the various open source libraries */
@@ -212,6 +216,7 @@ public object OssLibraries {
     addUtilLibraries(context)
   }
 
+  @LintIgnoreLongMethod
   private fun addUiLibraries(context: Context) {
     if (addedUi) {
       return

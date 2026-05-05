@@ -37,7 +37,7 @@ internal constructor(
 
   override suspend fun onBeforeStartRating() {
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
-    delay(2000L)
+    delay(timeMillis = 2000L)
   }
 
   override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =

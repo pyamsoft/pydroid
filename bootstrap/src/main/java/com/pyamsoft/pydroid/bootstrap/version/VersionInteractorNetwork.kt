@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
@@ -50,6 +51,7 @@ internal constructor(
         updater.completeUpgrade()
       }
 
+  @LintIgnoreTooGenericExceptionCaught
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
       withContext(context = Dispatchers.Default) {
         return@withContext try {

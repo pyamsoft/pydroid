@@ -16,8 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
-import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,39 +24,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import coil3.ImageLoader
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
-import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
-
-internal class DataPolicyInjector : ComposableInjector() {
-
-  internal var viewModel: DataPolicyDialogViewModeler? = null
-  internal var imageLoader: ImageLoader? = null
-
-  @CheckResult
-  private fun getChangelogProvider(activity: ComponentActivity): ChangeLogProvider {
-    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
-  }
-
-  override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ApplicationScope.retrieve(activity.application)
-        .injector()
-        .plusDataPolicyDialog()
-        .create(getChangelogProvider(activity))
-        .inject(this)
-  }
-
-  override fun onDispose() {
-    viewModel = null
-    imageLoader = null
-  }
-}
 
 @Composable
 private fun MountHooks(

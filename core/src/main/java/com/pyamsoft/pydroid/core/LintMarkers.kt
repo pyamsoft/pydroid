@@ -26,7 +26,28 @@ package com.pyamsoft.pydroid.core
  */
 @Retention(AnnotationRetention.SOURCE) public annotation class LintIgnoreTooGenericExceptionCaught
 
-/** Annotation saying it's ok if this file has "too many functions" */
+/** Annotation saying it's ok if this (target) has "too many functions" */
 @Target(AnnotationTarget.FILE, AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
 public annotation class LintIgnoreTooManyFunctions
+
+/**
+ * Annotation saying it's ok if this (target) is "too long"
+ *
+ * Generally speaking, you should ONLY apply this to Composables.
+ */
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+public annotation class LintIgnoreLongMethod
+
+/**
+ * Annotation saying this (target) is the source of a Composable Preview
+ *
+ * A PreviewSource is a "normal" composable that accepts parameters that you ONLY call from a
+ * Preview function
+ *
+ * Generally speaking, you should ONLY apply this to Composables.
+ */
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+public annotation class PreviewSource

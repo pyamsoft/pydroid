@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
+@LintIgnoreTooManyFunctions
 internal class SettingsViewModeler
 internal constructor(
     override val state: MutableSettingsViewState,
@@ -52,12 +54,8 @@ internal constructor(
   )
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
-    if (
-        loadConfig.darkMode &&
-            loadConfig.inAppDebug &&
-            loadConfig.name &&
-            loadConfig.isHapticsEnabled
-    ) {
+    val isAppReady = loadConfig.name && loadConfig.isHapticsEnabled
+    if (isAppReady && loadConfig.darkMode && loadConfig.inAppDebug) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }
   }

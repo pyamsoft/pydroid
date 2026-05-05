@@ -44,8 +44,7 @@ internal constructor(
     return true
   }
 
-    companion object {
-        private const val POST_NOTIFICATION_PERMISSION_REQUIRED_API = 33
-
-    }
+  companion object {
+    private const val POST_NOTIFICATION_PERMISSION_REQUIRED_API = 33
+  }
 }

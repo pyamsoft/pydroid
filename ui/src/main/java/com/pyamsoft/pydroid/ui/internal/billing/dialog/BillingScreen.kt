@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:LintIgnoreTooManyFunctions
+
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
 import androidx.compose.foundation.layout.Box
@@ -35,7 +37,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +44,7 @@ import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
@@ -215,38 +217,13 @@ private fun BillingPopup(
   }
 
   if (purchase != null) {
-    val context = LocalContext.current
+    val message =
+        when (purchase) {
+          is BillingPurchase.Fake -> "Fake purchase ${purchase.sku.title}"
+          is BillingPurchase.PlayBillingConsumed -> stringResource(R.string.billing_thank_you)
+        }
 
-    LaunchedEffect(
-        context,
-        purchase,
-    ) {
-      val message =
-          when (purchase) {
-            is BillingPurchase.Fake -> "Fake purchase ${purchase.sku.title}"
-            is BillingPurchase.PlayBillingConsumed -> context.getString(R.string.billing_thank_you)
-            /*
-             * TODO(Peter): convert to a sealed interface
-             *
-             * We can't use a sealed interface here for some reason, as it breaks Dokka
-             *
-             * WARN: Could not read file: ~/PYDroid/billing/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar!/com/pyamsoft/pydroid/billing/BillingPurchase.class; size in bytes: 777; file type: CLASS
-             * java.lang.UnsupportedOperationException: PermittedSubclasses requires ASM9
-             * 	at org.jetbrains.org.objectweb.asm.ClassVisitor.visitPermittedSubclass(ClassVisitor.java:266)
-             * 	at org.jetbrains.org.objectweb.asm.ClassReader.accept(ClassReader.java:684)
-             * 	at org.jetbrains.org.objectweb.asm.ClassReader.accept(ClassReader.java:402)
-             * 	at org.jetbrains.kotlin.load.kotlin.FileBasedKotlinClass.create(FileBasedKotlinClass.java:96)
-             * 	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory$create$1.invoke(VirtualFileKotlinClass.kt:67)
-             * 	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory$create$1.invoke(VirtualFileKotlinClass.kt:61)
-             * 	at org.jetbrains.kotlin.util.PerformanceCounter.time(PerformanceCounter.kt:101)
-             * 	at org.jetbrains.kotlin.load.kotlin.VirtualFileKotlinClass$Factory.create(VirtualFileKotlinClass.kt:61)
-             */
-            else ->
-                throw AssertionError(
-                    "The only reason we can't use a sealed class is because Dokka breaks."
-                )
-          }
-
+    LaunchedEffect(message) {
       snackbarHostState.showSnackbar(
           message = message,
           duration = SnackbarDuration.Long,

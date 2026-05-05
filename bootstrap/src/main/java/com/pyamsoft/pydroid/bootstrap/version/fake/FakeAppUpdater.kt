@@ -54,7 +54,7 @@ internal constructor(
     manager.setUpdateAvailable(newVersion, AppUpdateType.FLEXIBLE)
 
     Logger.d { "In debug mode we fake a delay to mimic real world network turnaround time." }
-    delay(2000L)
+    delay(timeMillis = 2000L)
   }
 
   override fun createAppUpdateLauncher(info: AppUpdateInfo, updateType: Int): AppUpdateLauncher =

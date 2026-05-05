@@ -332,6 +332,7 @@ private fun InAppDebugScreen(
                   contentType = InAppDebugContentTypes.SPACER,
               ) {
                 // Padding to offset so the copy button doesn't cover
+                @Suppress("detekt:MagicNumber")
                 Spacer(
                     modifier = Modifier.height(MaterialTheme.keylines.content * 3),
                 )

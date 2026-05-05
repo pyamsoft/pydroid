@@ -25,6 +25,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
+import com.pyamsoft.pydroid.core.LintIgnoreLongMethod
 
 /**
  * Lifted and modified from
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.Dp
 
 /** Add only a Top Border */
 @CheckResult
+@LintIgnoreLongMethod
 public fun Modifier.topBorder(
     strokeWidth: Dp,
     color: Color,
@@ -146,6 +148,7 @@ public fun Modifier.topBorder(
 
 /** Add only a bottom Border */
 @CheckResult
+@LintIgnoreLongMethod
 public fun Modifier.bottomBorder(
     strokeWidth: Dp,
     color: Color,

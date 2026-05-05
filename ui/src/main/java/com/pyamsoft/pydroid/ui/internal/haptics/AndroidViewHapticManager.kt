@@ -58,9 +58,9 @@ internal constructor(
       return
     }
 
-    if (Build.VERSION.SDK_INT >= 34) {
+    if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_TOGGLE) {
       view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_OFF)
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+    } else if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_VIRTUAL_KEY_RELEASE) {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY_RELEASE)
     } else {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -72,7 +72,7 @@ internal constructor(
       return
     }
 
-    if (Build.VERSION.SDK_INT >= 34) {
+    if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_TOGGLE) {
       view.performHapticFeedback(HapticFeedbackConstants.TOGGLE_ON)
     } else {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -89,9 +89,9 @@ internal constructor(
       return
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_CONFIRM) {
       view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+    } else if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_VIRTUAL_KEY_RELEASE) {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY_RELEASE)
     } else {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -103,7 +103,7 @@ internal constructor(
       return
     }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT >= API_HAS_HAPTIC_CONFIRM) {
       view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
     } else {
       view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -124,5 +124,11 @@ internal constructor(
     }
 
     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+  }
+
+  companion object {
+    private const val API_HAS_HAPTIC_TOGGLE = 34
+    private const val API_HAS_HAPTIC_CONFIRM = 30
+    private const val API_HAS_HAPTIC_VIRTUAL_KEY_RELEASE = 27
   }
 }

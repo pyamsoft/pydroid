@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
+import com.pyamsoft.pydroid.core.PreviewSource
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
@@ -266,6 +267,7 @@ private fun RenderItem(
 }
 
 @Composable
+@PreviewSource
 private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   CompositionLocalProvider(
       LocalPreferenceEnabledStatus provides true,

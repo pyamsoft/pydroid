@@ -51,7 +51,7 @@ private fun Badge(
       modifier =
           modifier
               .background(
-                  brush = SolidColor(Color(0xFF4CAF50)),
+                  brush = SolidColor(Color(color = 0xFF4CAF50)),
                   shape = MaterialTheme.shapes.small,
               )
               .padding(

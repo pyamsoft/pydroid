@@ -228,7 +228,7 @@ private class TestExternalUriHandler(
     state.value = ""
   }
 
-  override fun confirm(handler: UriHandler, uri: String) {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun confirm(handler: UriHandler, uri: String) {}
 
   override fun openUri(uri: String) {
     state.value = uri

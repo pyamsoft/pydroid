@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.debug
 import android.app.Application
 import android.util.Log
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
@@ -61,6 +62,8 @@ internal constructor(
   }
 
   @CheckResult
+  @Suppress("detekt:SwallowedException")
+  @LintIgnoreTooGenericExceptionCaught
   private fun getPYDroid(application: Application): PYDroid? {
     return try {
       ApplicationScope.retrieve(application)

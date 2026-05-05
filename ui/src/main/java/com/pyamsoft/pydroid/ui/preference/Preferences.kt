@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:LintIgnoreTooManyFunctions
+
 /** Allows Preferences to use VectorDrawables as icons on API < 21 */
 package com.pyamsoft.pydroid.ui.preference
 
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 
 /** A Preferences model */
 @Stable

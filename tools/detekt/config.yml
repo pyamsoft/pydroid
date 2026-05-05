@@ -20,6 +20,8 @@ style:
   UnusedPrivateFunction:
     ignoreAnnotated:
       -  "Preview"
+  NewLineAtEndOfFile:
+    active: false
 
 complexity:
   LongParameterList:

@@ -48,13 +48,13 @@ internal constructor(
           priceInCents = priceInDollars * 100,
       )
 
-  override suspend fun onClientConnect() {}
+  @Suppress("detekt:EmptyFunctionBlock") override suspend fun onClientConnect() {}
 
-  override fun onClientDisconnect() {}
+  @Suppress("detekt:EmptyFunctionBlock") override fun onClientDisconnect() {}
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) {
     launchInScope(context = Dispatchers.Default) {
-      if (sku.price > 30 * PRICE_SCALE) {
+      if (sku.price > FAIL_PURCHASE_OVER) {
         Logger.w { "Purchase response not OK: $sku" }
         emitError(RuntimeException("Error purchasing ${sku.title}"))
       } else {
@@ -72,18 +72,18 @@ internal constructor(
                 state = BillingState.CONNECTED,
                 list =
                     listOf(
-                        makeFakeSku(1),
-                        makeFakeSku(3),
-                        makeFakeSku(5),
-                        makeFakeSku(10),
-                        makeFakeSku(15),
-                        makeFakeSku(20),
-                        makeFakeSku(30),
-                        makeFakeSku(50),
-                        makeFakeSku(100),
-                        makeFakeSku(250),
-                        makeFakeSku(300),
-                        makeFakeSku(500),
+                        makeFakeSku(priceInDollars = 1),
+                        makeFakeSku(priceInDollars = 3),
+                        makeFakeSku(priceInDollars = 5),
+                        makeFakeSku(priceInDollars = 10),
+                        makeFakeSku(priceInDollars = 15),
+                        makeFakeSku(priceInDollars = 20),
+                        makeFakeSku(priceInDollars = 30),
+                        makeFakeSku(priceInDollars = 50),
+                        makeFakeSku(priceInDollars = 100),
+                        makeFakeSku(priceInDollars = 250),
+                        makeFakeSku(priceInDollars = 300),
+                        makeFakeSku(priceInDollars = 500),
                     ),
             ),
     )
@@ -91,6 +91,6 @@ internal constructor(
 
   companion object {
 
-    private const val PRICE_SCALE: Long = 1_000_000
+    private const val FAIL_PURCHASE_OVER: Long = 30_000_000
   }
 }

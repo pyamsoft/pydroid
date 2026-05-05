@@ -21,6 +21,8 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -39,6 +41,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@LintIgnoreTooManyFunctions
 internal abstract class AbstractBillingInteractor
 protected constructor(
     context: Context,
@@ -100,9 +103,9 @@ protected constructor(
 
     billingScope.launch(context = Dispatchers.Default) {
       val waitTime = backoffCount
-      backoffCount *= 2
+      backoffCount *= BACKOFF_SCALE
 
-      if (backoffCount < 1024) {
+      if (backoffCount < BACKOFF_LIMIT) {
         Logger.d { "Wait to reconnect for $waitTime seconds" }
         delay(waitTime.seconds)
 
@@ -127,6 +130,7 @@ protected constructor(
         )
       }
 
+  @LintIgnoreTooGenericExceptionCaught
   final override suspend fun purchase(activity: ComponentActivity, sku: BillingSku): Unit =
       withContext(context = Dispatchers.Default) {
         try {
@@ -175,6 +179,8 @@ protected constructor(
 
   companion object {
 
+    private const val BACKOFF_SCALE = 2
+    private const val BACKOFF_LIMIT = 1024
     private const val DEV_SUFFIX = ".dev"
   }
 }

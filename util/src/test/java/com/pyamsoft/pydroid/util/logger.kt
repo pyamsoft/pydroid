@@ -16,10 +16,10 @@
 
 package com.pyamsoft.pydroid.util
 
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Test
 
 public class LoggerTest {
 
@@ -42,7 +42,7 @@ public class LoggerTest {
     }
   }
 
-  @BeforeTest
+  @Before
   public fun onBefore() {
     Logger.resetLogger()
   }

@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pydroid.core
 
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 public class JVMSanity {
 
-  @Test public fun sanity(): Unit = runTest { assertEquals(2 + 2, 4) }
+  @Test
+  public fun sanity(): Unit = runTest { assertEquals(2 + 2, 4) }
 }

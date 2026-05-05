@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.core
 
-import kotlin.test.Test
 import kotlin.test.assertNotNull
 import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 public class EnforcerTest {
 

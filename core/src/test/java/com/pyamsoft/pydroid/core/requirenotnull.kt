@@ -16,12 +16,12 @@
 
 package com.pyamsoft.pydroid.core
 
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertIsNot
 import kotlin.test.assertSame
 import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 public class RequireNotNullTest {
 

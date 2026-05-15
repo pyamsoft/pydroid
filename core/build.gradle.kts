@@ -22,6 +22,8 @@ android {
     // https://developer.android.com/training/testing/instrumented-tests
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
+
+  testOptions { unitTests { isIncludeAndroidResources = true } }
 }
 
 dependencies {
@@ -33,10 +35,13 @@ dependencies {
 
   // Testing
   testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.android)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
 
   androidTestImplementation(libs.androidx.testRunner)
   androidTestImplementation(libs.kotlin.test)
   androidTestImplementation(libs.kotlinx.coroutines.test)
+  androidTestImplementation(libs.kotlinx.coroutines.android)
 }

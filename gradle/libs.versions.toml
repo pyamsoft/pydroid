@@ -28,7 +28,7 @@ composeMaterial3 = "1.4.0"
 # Google
 inAppUpdate = "2.1.0"
 inAppReview = "2.0.2"
-billing = "8.3.0"
+billing = "9.0.0"
 
 # Images
 coil = "3.4.0"

@@ -97,6 +97,7 @@ private fun rememberRatePreference(
     applicationName: CharSequence,
     onClick: () -> Unit,
 ): Preferences.Item {
+  val title = stringResource(R.string.rating_title, applicationName)
   val summary = stringResource(R.string.rating_summary)
 
   val handleClick by rememberUpdatedState(onClick)
@@ -107,7 +108,7 @@ private fun rememberRatePreference(
   ) {
     preference(
         id = "rate_app",
-        name = "Rate $applicationName",
+        name = title,
         summary = summary,
         icon = R.drawable.star_24px,
         onClick = { handleClick() },

@@ -172,12 +172,33 @@ internal constructor(
   }
 
   override fun listenForBillingUpsellChanges(): Flow<Boolean> =
-      getPreference(
-              key = KEY_BILLING_SHOW_UPSELL_COUNT,
-              value = DEFAULT_BILLING_SHOW_UPSELL_COUNT,
-          )
-          .map { it >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD }
+      combineTransform(
+              getPreference(key = KEY_BILLING_SHOW_UPSELL_COUNT, value = DEFAULT_BILLING_SHOW_UPSELL_COUNT),
+          listenForBillingUpsellDisabledChanges(),
+          ) { count, disabled ->
+            if (disabled) {
+              // If billing upsell is disabled, we NEVER show it
+              emit(false)
+            } else {
+              emit(count >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD)
+            }
+          }
           .flowOn(context = Dispatchers.IO)
+
+  override fun listenForBillingUpsellDisabledChanges(): Flow<Boolean> =
+      getPreference(
+              key = KEY_BILLING_UPSELL_DISABLED,
+              value = DEFAULT_BILLING_UPSELL_DISABLED,
+          )
+          .flowOn(context = Dispatchers.IO)
+
+  override fun setBillingUpsellDisabled(disabled: Boolean) {
+    setPreference(
+        key = KEY_BILLING_UPSELL_DISABLED,
+        fallbackValue = DEFAULT_BILLING_UPSELL_DISABLED,
+        value = { disabled },
+    )
+  }
 
   override fun maybeShowBillingUpsell() {
     setPreference(
@@ -389,6 +410,9 @@ internal constructor(
     private val KEY_BILLING_SHOW_UPSELL_COUNT = intPreferencesKey("billing_show_upsell_v1")
     private const val DEFAULT_BILLING_SHOW_UPSELL_COUNT = 0
     private const val VALUE_BILLING_SHOW_UPSELL_THRESHOLD = 20
+
+    private val KEY_BILLING_UPSELL_DISABLED = booleanPreferencesKey("billing_upsell_disabled_v1")
+    private const val DEFAULT_BILLING_UPSELL_DISABLED = false
 
     private val KEY_IN_APP_DEBUGGING = booleanPreferencesKey("in_app_debugging_v1")
     private const val DEFAULT_IN_APP_DEBUGGING_ENABLED = false

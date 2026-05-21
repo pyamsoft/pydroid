@@ -30,4 +30,10 @@ internal interface BillingPreferences {
 
   /** Reset the billing upsell once it is shown */
   fun resetBillingShown()
+
+  /** Listen for changes to the billing upsell disabled preference */
+  @CheckResult fun listenForBillingUpsellDisabledChanges(): Flow<Boolean>
+
+  /** Set whether the billing upsell is disabled */
+  fun setBillingUpsellDisabled(disabled: Boolean)
 }

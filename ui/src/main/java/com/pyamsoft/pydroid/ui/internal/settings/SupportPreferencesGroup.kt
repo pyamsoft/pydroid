@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.preference.Preferences
+import com.pyamsoft.pydroid.ui.preference.checkBoxPreference
 import com.pyamsoft.pydroid.ui.preference.inAppPreference
 import com.pyamsoft.pydroid.ui.preference.preference
 import com.pyamsoft.pydroid.ui.preference.preferenceGroup
@@ -34,8 +35,10 @@ import com.pyamsoft.pydroid.ui.preference.preferenceGroup
 internal fun rememberSupportPreferencesGroup(
     options: PYDroidActivityOptions,
     applicationName: CharSequence,
+    isBillingUpsellDisabled: Boolean,
     onDonateClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
+    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
 ): Preferences.Group {
   val ratePreference =
       rememberRatePreference(
@@ -48,12 +51,20 @@ internal fun rememberSupportPreferencesGroup(
           onClick = onDonateClicked,
       )
 
+  val billingUpsellDisabledPreference =
+      rememberBillingUpsellDisabledPreference(
+          isBillingUpsellDisabled = isBillingUpsellDisabled,
+          onCheckedChanged = onBillingUpsellDisabledChanged,
+      )
+
   val preferences =
       remember(
           options.disableBilling,
           options.disableRating,
           ratePreference,
           donatePreference,
+          isBillingUpsellDisabled,
+          billingUpsellDisabledPreference,
       ) {
         mutableListOf<Preferences.Item>().apply {
           if (!options.disableRating) {
@@ -62,6 +73,7 @@ internal fun rememberSupportPreferencesGroup(
 
           if (!options.disableBilling) {
             add(donatePreference)
+            add(billingUpsellDisabledPreference)
           }
         }
       }
@@ -123,6 +135,33 @@ private fun rememberDonatePreference(
         summary = summary,
         icon = R.drawable.redeem_24px,
         onClick = { handleClick() },
+    )
+  }
+}
+
+@Composable
+@CheckResult
+private fun rememberBillingUpsellDisabledPreference(
+    isBillingUpsellDisabled: Boolean,
+    onCheckedChanged: (Boolean) -> Unit,
+): Preferences.Item {
+  val name = stringResource(R.string.billing_upsell_disabled_title)
+  val summary = stringResource(R.string.billing_upsell_disabled_summary)
+
+  val handleCheckedChanged by rememberUpdatedState(onCheckedChanged)
+
+  return remember(
+      name,
+      summary,
+      isBillingUpsellDisabled,
+  ) {
+    checkBoxPreference(
+        id = "billing_upsell_disabled",
+        name = name,
+        summary = summary,
+        icon = null,
+        checked = isBillingUpsellDisabled,
+        onCheckedChanged = { checked -> handleCheckedChanged(checked) },
     )
   }
 }

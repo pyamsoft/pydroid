@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.LintIgnoreLongMethod
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
+import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +46,7 @@ internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val debugPreferences: DebugPreferences,
     private val hapticPreferences: HapticPreferences,
+    private val billingPreferences: BillingPreferences,
 ) : SettingsViewState by state, AbstractViewModeler<SettingsViewState>(state) {
 
   private data class LoadConfig(
@@ -51,10 +54,11 @@ internal constructor(
       var inAppDebug: Boolean = false,
       var darkMode: Boolean = false,
       var isHapticsEnabled: Boolean = false,
+      var billingUpsellDisabled: Boolean = false,
   )
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
-    val isAppReady = loadConfig.name && loadConfig.isHapticsEnabled
+    val isAppReady = loadConfig.name && loadConfig.isHapticsEnabled && loadConfig.billingUpsellDisabled
     if (isAppReady && loadConfig.darkMode && loadConfig.inAppDebug) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }
@@ -95,6 +99,7 @@ internal constructor(
     }
   }
 
+  @LintIgnoreLongMethod
   internal fun bind(scope: CoroutineScope) {
     val s = state
 
@@ -129,6 +134,17 @@ internal constructor(
 
         if (!config.isHapticsEnabled) {
           config.isHapticsEnabled = true
+          markConfigLoaded(config)
+        }
+      }
+    }
+
+    scope.launch(context = Dispatchers.Default) {
+      billingPreferences.listenForBillingUpsellDisabledChanges().collect {
+        s.isBillingUpsellDisabled.value = it
+
+        if (!config.billingUpsellDisabled) {
+          config.billingUpsellDisabled = true
           markConfigLoaded(config)
         }
       }
@@ -237,6 +253,10 @@ internal constructor(
 
   fun handleMaterialYouChange(enabled: Boolean) {
     theming.setMaterialYou(enabled)
+  }
+
+  fun handleBillingUpsellDisabledChanged(disabled: Boolean) {
+    billingPreferences.setBillingUpsellDisabled(disabled)
   }
 
   companion object {

@@ -81,6 +81,7 @@ internal fun SettingsScreen(
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
+    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onUpdateCheckComplete: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
@@ -93,6 +94,7 @@ internal fun SettingsScreen(
 
   val isHapticsEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
+  val isBillingUpsellDisabled by state.isBillingUpsellDisabled.collectAsStateWithLifecycle()
 
   Crossfade(
       modifier = modifier,
@@ -119,6 +121,7 @@ internal fun SettingsScreen(
             customPostContent = customPostContent,
             isInAppDebugChecked = isInAppDebugEnabled,
             isHapticsEnabled = isHapticsEnabled,
+            isBillingUpsellDisabled = isBillingUpsellDisabled,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
             onDarkModeChanged = onDarkModeChanged,
@@ -139,6 +142,7 @@ internal fun SettingsScreen(
             onInAppDebuggingClicked = onInAppDebuggingClicked,
             onInAppDebuggingChanged = onInAppDebuggingChanged,
             onHapticsChanged = onHapticsChanged,
+            onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
             onUpdateCheckComplete = onUpdateCheckComplete,
         )
       }
@@ -176,6 +180,7 @@ private fun SettingsList(
     hideUpgradeInformation: Boolean,
     isInAppDebugChecked: Boolean,
     isHapticsEnabled: Boolean,
+    isBillingUpsellDisabled: Boolean,
     applicationName: CharSequence,
     darkMode: Theming.Mode,
     isMaterialYou: Boolean,
@@ -197,6 +202,7 @@ private fun SettingsList(
     onOpenMarketPage: () -> Unit,
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
+    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onUpdateCheckComplete: () -> Unit,
 ) {
   val applicationPrefs =
@@ -219,8 +225,10 @@ private fun SettingsList(
       rememberSupportPreferencesGroup(
           options = options,
           applicationName = applicationName,
+          isBillingUpsellDisabled = isBillingUpsellDisabled,
           onDonateClicked = onDonateClicked,
           onOpenMarketPage = onOpenMarketPage,
+          onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
       )
 
   val infoPreferences =
@@ -410,6 +418,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       onInAppDebuggingChanged = {},
       onHapticsChanged = {},
       onMaterialYouChange = {},
+      onBillingUpsellDisabledChanged = {},
       onUpdateCheckComplete = {},
   )
 }

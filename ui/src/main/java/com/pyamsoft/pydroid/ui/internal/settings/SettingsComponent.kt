@@ -78,6 +78,7 @@ internal interface SettingsComponent {
               changeLogInteractor = params.changeLogModule.provideInteractor(),
               debugPreferences = params.debugPreferences,
               hapticPreferences = params.hapticPreferences,
+              billingPreferences = params.billingPreferences,
           )
       injector.versionViewModel =
           VersionCheckViewModeler(

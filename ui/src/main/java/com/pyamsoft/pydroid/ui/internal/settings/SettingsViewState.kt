@@ -33,6 +33,7 @@ internal interface SettingsViewState : UiViewState {
 
   val isHapticsEnabled: StateFlow<Boolean>
   val isInAppDebuggingEnabled: StateFlow<Boolean>
+  val isBillingUpsellDisabled: StateFlow<Boolean>
 
   val isShowingResetDialog: StateFlow<Boolean>
   val isShowingAboutDialog: StateFlow<Boolean>
@@ -58,6 +59,7 @@ internal class MutableSettingsViewState internal constructor() : SettingsViewSta
 
   override val isHapticsEnabled = MutableStateFlow(false)
   override val isInAppDebuggingEnabled = MutableStateFlow(false)
+  override val isBillingUpsellDisabled = MutableStateFlow(false)
 
   override val isShowingResetDialog = MutableStateFlow(false)
   override val isShowingAboutDialog = MutableStateFlow(false)

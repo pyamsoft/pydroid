@@ -152,6 +152,7 @@ public fun SettingsPage(
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
       onHapticsChanged = { viewModel.handleHapticsChanged(it) },
+      onBillingUpsellDisabledChanged = { viewModel.handleBillingUpsellDisabledChanged(it) },
       onUpdateCheckComplete = { versionViewModel.handleManualUpdateCheckComplete() },
       extraDebugContent = extraDebugContent,
   )
@@ -190,6 +191,7 @@ private fun SettingsContent(
     onOpenMarketPage: () -> Unit,
     onInAppDebuggingChanged: () -> Unit,
     onInAppDebuggingClicked: () -> Unit,
+    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onDismissAboutDialog: () -> Unit,
     onDismissBillingDialog: () -> Unit,
     onDismissChangeLogDialog: () -> Unit,
@@ -249,6 +251,7 @@ private fun SettingsContent(
       onInAppDebuggingChanged = onInAppDebuggingChanged,
       onInAppDebuggingClicked = onInAppDebuggingClicked,
       onHapticsChanged = onHapticsChanged,
+      onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
       onUpdateCheckComplete = onUpdateCheckComplete,
   )
 

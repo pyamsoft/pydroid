@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
@@ -45,7 +44,6 @@ import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.settings.version.VersionCheckingSettingsState
-import com.pyamsoft.pydroid.ui.preference.Preferences
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
@@ -68,8 +66,6 @@ public fun SettingsPage(
     dialogModifier: Modifier = Modifier,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
-    customPrePreferences: List<Preferences> = remember { mutableStateListOf() },
-    customPostPreferences: List<Preferences> = remember { mutableStateListOf() },
     customTopItemMargin: Dp = ZeroSize,
     customBottomItemMargin: Dp = ZeroSize,
     extraDebugContent: LazyListScope.() -> Unit = {},
@@ -112,8 +108,6 @@ public fun SettingsPage(
       hideUpgradeInformation = hideUpgradeInformation,
       customTopItemMargin = customTopItemMargin,
       customBottomItemMargin = customBottomItemMargin,
-      customPrePreferences = customPrePreferences,
-      customPostPreferences = customPostPreferences,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = {
         if (options.disableVersionCheck) {
@@ -170,8 +164,6 @@ private fun SettingsContent(
     options: PYDroidActivityOptions,
     hideUpgradeInformation: Boolean,
     hideClearAll: Boolean,
-    customPrePreferences: List<Preferences>,
-    customPostPreferences: List<Preferences>,
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
     onMaterialYouChange: (Boolean) -> Unit,
@@ -231,8 +223,6 @@ private fun SettingsContent(
       hideUpgradeInformation = hideUpgradeInformation,
       topItemMargin = customTopItemMargin,
       bottomItemMargin = customBottomItemMargin,
-      customPreContent = customPrePreferences,
-      customPostContent = customPostPreferences,
       onMaterialYouChange = onMaterialYouChange,
       onDarkModeChanged = onDarkModeChanged,
       onLicensesClicked = onLicensesClicked,

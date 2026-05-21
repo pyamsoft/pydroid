@@ -61,8 +61,6 @@ internal fun SettingsScreen(
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
-    customPreContent: List<Preferences>,
-    customPostContent: List<Preferences>,
     onMaterialYouChange: (Boolean) -> Unit,
     onDarkModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -117,8 +115,6 @@ internal fun SettingsScreen(
             options = options,
             topItemMargin = topItemMargin,
             bottomItemMargin = bottomItemMargin,
-            customPreContent = customPreContent,
-            customPostContent = customPostContent,
             isInAppDebugChecked = isInAppDebugEnabled,
             isHapticsEnabled = isHapticsEnabled,
             isBillingUpsellDisabled = isBillingUpsellDisabled,
@@ -174,8 +170,6 @@ private fun SettingsList(
     options: PYDroidActivityOptions,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
-    customPreContent: List<Preferences>,
-    customPostContent: List<Preferences>,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     isInAppDebugChecked: Boolean,
@@ -259,8 +253,6 @@ private fun SettingsList(
 
   val preferences =
       remember(
-          customPreContent,
-          customPostContent,
           applicationPrefs,
           supportPrefs,
           infoPreferences,
@@ -268,13 +260,11 @@ private fun SettingsList(
           dangerZonePreferences,
       ) {
         mutableStateListOf<Preferences>().apply {
-          addAll(customPreContent)
           add(applicationPrefs)
           add(supportPrefs)
           add(infoPreferences)
           add(socialMediaPreferences)
           add(dangerZonePreferences)
-          addAll(customPostContent)
         }
       }
 
@@ -398,8 +388,6 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       hideUpgradeInformation = false,
       topItemMargin = ZeroSize,
       bottomItemMargin = ZeroSize,
-      customPreContent = remember { mutableStateListOf() },
-      customPostContent = remember { mutableStateListOf() },
       onDarkModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},

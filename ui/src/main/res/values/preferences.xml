@@ -43,7 +43,9 @@
 
   <!-- TODO(Peter): Need zh-rTW translation -->
   <string name="billing_upsell_disabled_title">Disable Tip Jar Upsell</string>
-  <string name="billing_upsell_disabled_summary">Stop showing the tip jar popup</string>
+  <string
+    name="billing_upsell_disabled_summary"
+  >Stop showing the tip jar popup</string>
 
   <string name="bugreport_title">Submit a Bug Report</string>
   <string

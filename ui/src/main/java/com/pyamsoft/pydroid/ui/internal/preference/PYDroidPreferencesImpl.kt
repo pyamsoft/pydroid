@@ -173,8 +173,11 @@ internal constructor(
 
   override fun listenForBillingUpsellChanges(): Flow<Boolean> =
       combineTransform(
-              getPreference(key = KEY_BILLING_SHOW_UPSELL_COUNT, value = DEFAULT_BILLING_SHOW_UPSELL_COUNT),
-          listenForBillingUpsellDisabledChanges(),
+              getPreference(
+                  key = KEY_BILLING_SHOW_UPSELL_COUNT,
+                  value = DEFAULT_BILLING_SHOW_UPSELL_COUNT,
+              ),
+              listenForBillingUpsellDisabledChanges(),
           ) { count, disabled ->
             if (disabled) {
               // If billing upsell is disabled, we NEVER show it
@@ -377,9 +380,14 @@ internal constructor(
   override fun listenShowBillingUpsell(): Flow<Boolean> =
       combineTransform(
               listenForInAppDebuggingEnabled(),
+              listenForBillingUpsellDisabledChanges(),
               getPreference(DEBUG_KEY_SHOW_BILLING_UPSELL, false),
-          ) { isDebugEnabled, show ->
-            emit(isDebugEnabled && show)
+          ) { isDebugEnabled, show, disabled ->
+            if (disabled) {
+              emit(false)
+            } else {
+              emit(isDebugEnabled && show)
+            }
           }
           .flowOn(context = Dispatchers.IO)
 

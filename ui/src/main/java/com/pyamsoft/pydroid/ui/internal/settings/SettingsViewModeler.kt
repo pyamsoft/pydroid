@@ -58,7 +58,8 @@ internal constructor(
   )
 
   private fun markConfigLoaded(loadConfig: LoadConfig) {
-    val isAppReady = loadConfig.name && loadConfig.isHapticsEnabled && loadConfig.billingUpsellDisabled
+    val isAppReady =
+        loadConfig.name && loadConfig.isHapticsEnabled && loadConfig.billingUpsellDisabled
     if (isAppReady && loadConfig.darkMode && loadConfig.inAppDebug) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }

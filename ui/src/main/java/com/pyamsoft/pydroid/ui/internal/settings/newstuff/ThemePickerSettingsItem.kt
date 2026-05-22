@@ -16,16 +16,33 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.newstuff
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
 import com.pyamsoft.pydroid.ui.settings.SimpleSettingsRowItem
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -48,11 +65,95 @@ internal fun ThemePickerSettingsItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
       ) {
-        // TODO 3 custom squares representing each theme mode
-        //      Highlight selected one
-
         // TODO far end, checkbox for Material You theming
+        ThemeSelection(
+          modifier = Modifier
+            .padding(end = MaterialTheme.keylines.content)
+            .background(
+              color = Color.White,
+              shape = MaterialTheme.shapes.small,
+            ),
+          isCurrentMode = remember(themeMode) { themeMode == Theming.Mode.LIGHT },
+        )
+
+        ThemeSelection(
+          modifier = Modifier
+            .padding(end = MaterialTheme.keylines.content)
+            .background(
+              color = Color.Black,
+              shape = MaterialTheme.shapes.small,
+            ),
+          isCurrentMode = remember(themeMode) { themeMode == Theming.Mode.DARK },
+        )
+
+        ThemeSelection(
+          modifier = Modifier
+            .padding(end = MaterialTheme.keylines.content)
+            .clip(shape = MaterialTheme.shapes.small)
+            .drawBehind {
+              val width = size.width
+              val height = size.height
+
+              val splitTopX = width * 0.80F
+              val splitBottomX = width * 0.20F
+
+              // White triangle
+              drawPath(
+                path = Path().apply {
+                  moveTo(0F, 0F)
+                  lineTo(splitTopX, 0F)
+                  lineTo(splitBottomX, height)
+                  lineTo(0F, height)
+                  close()
+                },
+                color = Color.White
+              )
+
+              // Black triangle
+              drawPath(
+                path = Path().apply {
+                  moveTo(splitTopX, 0F)
+                  lineTo(width, 0F)
+                  lineTo(width, height)
+                  lineTo(splitBottomX, height)
+                  close()
+                },
+                color = Color.Black
+              )
+            }
+          ,
+          isCurrentMode = remember(themeMode) { themeMode == Theming.Mode.SYSTEM },
+        )
       }
     }
   )
+}
+
+@Composable
+private fun ThemeSelection(
+  modifier: Modifier = Modifier,
+  isCurrentMode: Boolean,
+) {
+  Box(
+    modifier = modifier
+      .size(ListItemDefaults.DefaultSize)
+      .border(
+        width = if (isCurrentMode) 4.dp else 1.dp,
+        color = MaterialTheme.colorScheme.primary,
+        shape = MaterialTheme.shapes.small,
+      ),
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewThemePickerSettingsItem() {
+  Column(
+    modifier = Modifier.background(color = Color.White),
+  ) {
+    ThemePickerSettingsItem(
+      state = MutableSettingsViewState(),
+      onThemeModeChanged = {},
+    )
+  }
 }

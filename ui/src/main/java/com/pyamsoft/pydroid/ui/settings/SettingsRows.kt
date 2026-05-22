@@ -68,7 +68,10 @@ public fun CustomSettingsRowItem(
   Row(
     modifier = modifier
       .maybeClickable(onClick)
-      .padding(all = MaterialTheme.keylines.baseline),
+      .padding(
+        vertical = MaterialTheme.keylines.baseline,
+        horizontal = MaterialTheme.keylines.typography,
+      ),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Start,
   ) {
@@ -83,7 +86,7 @@ public fun CustomSettingsRowItem(
 
     Column(
       modifier = Modifier
-        .padding(start = MaterialTheme.keylines.baseline)
+        .padding(start = MaterialTheme.keylines.typography)
         .weight(1F),
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.Start,
@@ -98,7 +101,7 @@ public fun CustomSettingsRowItem(
         Column(
           modifier =
             Modifier.padding(
-              top = MaterialTheme.keylines.baseline,
+              top = MaterialTheme.keylines.typography,
             ),
         ) {
           descriptionContent()
@@ -111,7 +114,7 @@ public fun CustomSettingsRowItem(
         modifier =
           Modifier
             .padding(
-              horizontal = MaterialTheme.keylines.baseline,
+              horizontal = MaterialTheme.keylines.typography,
             )
             .size(ListItemDefaults.LeadingSize),
         contentAlignment = Alignment.Center,
@@ -173,7 +176,6 @@ public fun SimpleSettingsRowItem(
     onClick = onClick,
   )
 }
-
 
 /**
  * A basic settings item with icon, title, and optional description

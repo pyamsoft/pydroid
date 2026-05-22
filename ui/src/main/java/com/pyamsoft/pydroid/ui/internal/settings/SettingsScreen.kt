@@ -109,6 +109,7 @@ internal fun SettingsScreen(
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
             snackbarHost = snackbarHostState,
+            appViewState = appViewState,
             versionCheckingState = versionCheckingState,
             applicationName = applicationName,
             themeMode = themeMode,
@@ -167,6 +168,7 @@ private fun Loading() {
 private fun SettingsList(
     modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
+    appViewState: SettingsAppViewState,
     versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
     topItemMargin: Dp,
@@ -273,6 +275,7 @@ private fun SettingsList(
       modifier = modifier,
   ) {
     PreferenceScreen(
+        appViewState = appViewState,
         topItemMargin = topItemMargin,
         bottomItemMargin = bottomItemMargin,
         preferences = preferences,

@@ -35,7 +35,9 @@ import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
-import com.pyamsoft.pydroid.ui.internal.settings.newstuff.renderNewSettingsTest
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
+import com.pyamsoft.pydroid.ui.internal.settings.newstuff.renderAppSettings
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.util.collectAsStateMap
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
@@ -53,6 +55,7 @@ private enum class PreferenceScreenContentTypes {
 public fun PreferenceScreen(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    appViewState: SettingsAppViewState,
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
     preferences: List<Preferences>,
@@ -66,6 +69,7 @@ public fun PreferenceScreen(
   PreferenceScreenInternal(
       modifier = modifier,
       dialogModifier = dialogModifier,
+      appViewState = appViewState,
       topItemMargin = topItemMargin,
       bottomItemMargin = bottomItemMargin,
       preferences = preferences,
@@ -80,6 +84,7 @@ private fun PreferenceScreenInternal(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
     state: PreferenceViewState,
+    appViewState: SettingsAppViewState,
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     preferences: List<Preferences>,
@@ -121,7 +126,9 @@ private fun PreferenceScreenInternal(
   LazyColumn(
       modifier = modifier,
   ) {
-    renderNewSettingsTest()
+    renderAppSettings(
+      state = appViewState,
+    )
 
     if (topItemMargin > ZeroSize) {
       item(
@@ -276,6 +283,7 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
       LocalPreferenceEnabledStatus provides true,
   ) {
     PreferenceScreen(
+        appViewState = MutableSettingsViewState(),
         preferences =
             listOf(
                     preferenceGroup(

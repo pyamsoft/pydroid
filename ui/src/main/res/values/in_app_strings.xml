@@ -17,4 +17,6 @@
 <resources>
   <string name="in_app_badge">IN-APP PURCHASE</string>
   <string name="rate_app">Rate App</string>
+
+  <string name="external_link_badge">EXTERNAL LINK</string>
 </resources>

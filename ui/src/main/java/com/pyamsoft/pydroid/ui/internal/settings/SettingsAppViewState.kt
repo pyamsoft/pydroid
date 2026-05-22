@@ -22,8 +22,8 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlinx.coroutines.flow.StateFlow
 
 @Stable
-internal interface SettingsAppViewState : UiViewState {
-  val themeMode: StateFlow<Theming.Mode>
-  val isMaterialYou: StateFlow<Boolean>
-  val isHapticsEnabled: StateFlow<Boolean>
+public interface SettingsAppViewState : UiViewState {
+  public val themeMode: StateFlow<Theming.Mode>
+  public val isMaterialYou: StateFlow<Boolean>
+  public val isHapticsEnabled: StateFlow<Boolean>
 }

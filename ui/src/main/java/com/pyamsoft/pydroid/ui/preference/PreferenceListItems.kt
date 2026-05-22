@@ -52,7 +52,7 @@ import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
-import com.pyamsoft.pydroid.ui.internal.app.InAppBadge
+import com.pyamsoft.pydroid.ui.settings.InAppBadge
 import com.pyamsoft.pydroid.ui.internal.widget.CardDialog
 import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.CHECKBOX
 import com.pyamsoft.pydroid.ui.preference.PreferenceDialogItemStyle.RADIO

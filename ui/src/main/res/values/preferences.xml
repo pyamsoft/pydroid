@@ -80,9 +80,9 @@
     name="social_media_b_summary"
   >Follow the pyamsoft official blog for updates!</string>
 
-  <string name="dark_mode_key">dark_mode_v2</string>
-  <string name="dark_mode_title">Theme</string>
-  <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
+  <string name="theme_mode_key">dark_mode_v2</string>
+  <string name="theme_mode_title">Theme</string>
+  <string name="theme_mode_summary">Apply either a Light or Dark theme!</string>
 
   <string name="dev_mode_title">Debug Mode</string>
   <string
@@ -91,13 +91,13 @@
     WILL IMPACT PERFORMANCE.</string>
   <string name="enable_material_you">Enable Material You</string>
 
-  <string-array name="dark_mode_names_v1">
+  <string-array name="theme_mode_names_v1">
     <item name="light">Light Theme</item>
     <item name="dark">Dark Theme</item>
     <item name="system">System Default</item>
   </string-array>
 
-  <string-array name="dark_mode_values_v1">
+  <string-array name="theme_mode_values_v1">
     <item name="light">light</item>
     <item name="dark">dark</item>
     <item name="system">system</item>

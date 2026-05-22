@@ -74,9 +74,9 @@
     name="social_media_b_summary"
   >跟隨 pyamsoft 的官方部落格以獲取最新資訊！</string>
 
-  <string name="dark_mode_key">dark_mode_v2</string>
-  <string name="dark_mode_title">佈景主題</string>
-  <string name="dark_mode_summary">套用亮色或是深色的佈景主題！</string>
+  <string name="theme_mode_key">theme_mode_v2</string>
+  <string name="theme_mode_title">佈景主題</string>
+  <string name="theme_mode_summary">套用亮色或是深色的佈景主題！</string>
 
   <string name="dev_mode_title">除錯模式</string>
   <string
@@ -84,13 +84,13 @@
   >啟用查閱除錯用資訊的模式。 這 會 對 性 能 造 成 負 面 影 響 。</string>
   <string name="enable_material_you">啟用 Material You</string>
 
-  <string-array name="dark_mode_names_v1">
+  <string-array name="theme_mode_names_v1">
     <item name="light">亮色佈景主題</item>
     <item name="dark">暗色佈景主題</item>
     <item name="system">系統預設值</item>
   </string-array>
 
-  <string-array name="dark_mode_values_v1">
+  <string-array name="theme_mode_values_v1">
     <item name="light">light</item>
     <item name="dark">dark</item>
     <item name="system">system</item>

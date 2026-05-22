@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.ui.R
 /** Painters for Material Symbols */
 internal object IconPainters {
 
-  /** 24px Close Icon */
   @Composable internal fun close(): Painter = painterResource(R.drawable.close_24px)
+
+  @Composable internal fun themeMode(): Painter = painterResource(R.drawable.routine_24px)
 }

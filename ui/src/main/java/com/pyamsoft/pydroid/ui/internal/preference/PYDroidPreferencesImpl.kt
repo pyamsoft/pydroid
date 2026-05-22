@@ -72,7 +72,7 @@ internal constructor(
     DebugPreferences,
     HapticPreferences {
 
-  private val themeModeKey = stringPreferencesKey(context.getString(R.string.dark_mode_key))
+  private val themeModeKey = stringPreferencesKey(context.getString(R.string.theme_mode_key))
 
   private val Context.dataStore: DataStore<Preferences> by
       preferencesDataStore(

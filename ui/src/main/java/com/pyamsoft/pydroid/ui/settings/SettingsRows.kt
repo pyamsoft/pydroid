@@ -53,58 +53,6 @@ private fun Modifier.maybeClickable(onClick: (() -> Unit)?): Modifier {
 }
 
 /**
- * A basic settings item with icon, title, and optional description
- */
-@Composable
-private fun DefaultSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  afterTitle: (@Composable () -> Unit)? = null,
-  afterDescription: (@Composable () -> Unit)? = null,
-  trailing: (@Composable () -> Unit)? = null,
-  onClick: (() -> Unit)? = null,
-) {
-  val textColor = LocalContentColor.current
-
-  CustomSettingsRowItem(
-    modifier = modifier,
-    icon = {
-      Icon(
-        painter = icon,
-        contentDescription = title,
-        tint = textColor,
-      )
-    },
-    title = {
-      Text(
-        text = title,
-        style =
-          MaterialTheme.typography.bodyMedium.copy(
-            color = textColor,
-          ),
-      )
-
-      afterTitle?.invoke()
-    },
-    description = {
-      Text(
-        text = description,
-        style =
-          MaterialTheme.typography.bodySmall.copy(
-            color = textColor,
-          ),
-      )
-
-      afterDescription?.invoke()
-    },
-    trailing = trailing,
-    onClick = onClick,
-  )
-}
-
-/**
  * Render a settings row item using slots
  */
 @Composable
@@ -178,6 +126,59 @@ public fun CustomSettingsRowItem(
  * A basic settings item with icon, title, and optional description
  */
 @Composable
+public fun SimpleSettingsRowItem(
+  modifier: Modifier = Modifier,
+  icon: Painter,
+  title: String,
+  description: String = "",
+  afterTitle: (@Composable () -> Unit)? = null,
+  afterDescription: (@Composable () -> Unit)? = null,
+  trailing: (@Composable () -> Unit)? = null,
+  onClick: (() -> Unit)? = null,
+) {
+  val textColor = LocalContentColor.current
+
+  CustomSettingsRowItem(
+    modifier = modifier,
+    icon = {
+      Icon(
+        painter = icon,
+        contentDescription = title,
+        tint = textColor,
+      )
+    },
+    title = {
+      Text(
+        text = title,
+        style =
+          MaterialTheme.typography.bodyMedium.copy(
+            color = textColor,
+          ),
+      )
+
+      afterTitle?.invoke()
+    },
+    description = {
+      Text(
+        text = description,
+        style =
+          MaterialTheme.typography.bodySmall.copy(
+            color = textColor,
+          ),
+      )
+
+      afterDescription?.invoke()
+    },
+    trailing = trailing,
+    onClick = onClick,
+  )
+}
+
+
+/**
+ * A basic settings item with icon, title, and optional description
+ */
+@Composable
 public fun SettingsRowItem(
   modifier: Modifier = Modifier,
   icon: Painter,
@@ -185,7 +186,7 @@ public fun SettingsRowItem(
   description: String = "",
   onClick: (() -> Unit)? = null,
 ) {
-  DefaultSettingsRowItem(
+  SimpleSettingsRowItem(
     modifier = modifier,
     icon = icon,
     title = title,
@@ -210,7 +211,7 @@ public fun CheckboxSettingsRowItem(
 ) {
   val hapticManager = LocalHapticManager.current
 
-  DefaultSettingsRowItem(
+  SimpleSettingsRowItem(
     modifier = modifier,
     icon = icon,
     title = title,
@@ -252,7 +253,7 @@ public fun SwitchSettingsRowItem(
 ) {
   val hapticManager = LocalHapticManager.current
 
-  DefaultSettingsRowItem(
+  SimpleSettingsRowItem(
     modifier = modifier,
     icon = icon,
     title = title,
@@ -291,7 +292,7 @@ public fun BadgeSettingsRowItem(
   badge: @Composable () -> Unit,
   onClick: (() -> Unit)? = null,
 ) {
-  DefaultSettingsRowItem(
+  SimpleSettingsRowItem(
     modifier = modifier,
     icon = icon,
     title = title,
@@ -310,11 +311,11 @@ public fun BadgeSettingsRowItem(
 
 @Preview
 @Composable
-private fun PreviewDefaultSettingsItems() {
+private fun PreviewSettingsRows() {
   Column(
     modifier = Modifier.background(color = Color.White),
   ) {
-    DefaultSettingsRowItem(
+    SimpleSettingsRowItem(
       icon = IconPainters.close(),
       title = "DEFAULT TITLE",
       description = "DEFAULT DESCRIPTION"

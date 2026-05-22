@@ -134,10 +134,10 @@ private fun rememberDarkThemePreference(
     onModeChange: (Theming.Mode) -> Unit,
     onMaterialYouChange: (Boolean) -> Unit,
 ): Preferences.Item {
-  val name = stringResource(R.string.dark_mode_title)
-  val summary = stringResource(R.string.dark_mode_summary)
-  val names = stringArrayResource(R.array.dark_mode_names_v1)
-  val values = stringArrayResource(R.array.dark_mode_values_v1)
+  val name = stringResource(R.string.theme_mode_title)
+  val summary = stringResource(R.string.theme_mode_summary)
+  val names = stringArrayResource(R.array.theme_mode_names_v1)
+  val values = stringArrayResource(R.array.theme_mode_values_v1)
   val rawValue = remember(themeMode) { themeMode.toRawString() }
 
   val handleModeChange by rememberUpdatedState(onModeChange)

@@ -57,12 +57,13 @@ internal fun SettingsScreen(
     topItemMargin: Dp,
     bottomItemMargin: Dp,
     state: SettingsViewState,
+    appViewState: SettingsAppViewState,
     versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean,
     onMaterialYouChange: (Boolean) -> Unit,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onThemeModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
@@ -87,10 +88,10 @@ internal fun SettingsScreen(
   val loadingState by state.loadingState.collectAsStateWithLifecycle()
   val applicationName by state.applicationName.collectAsStateWithLifecycle()
 
-  val darkMode by state.darkMode.collectAsStateWithLifecycle()
-  val isMaterialYou by state.isMaterialYou.collectAsStateWithLifecycle()
+  val themeMode by appViewState.themeMode.collectAsStateWithLifecycle()
+  val isMaterialYou by appViewState.isMaterialYou.collectAsStateWithLifecycle()
+  val isHapticsEnabled by appViewState.isHapticsEnabled.collectAsStateWithLifecycle()
 
-  val isHapticsEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
   val isInAppDebugEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
   val isBillingUpsellDisabled by state.isBillingUpsellDisabled.collectAsStateWithLifecycle()
 
@@ -110,7 +111,7 @@ internal fun SettingsScreen(
             snackbarHost = snackbarHostState,
             versionCheckingState = versionCheckingState,
             applicationName = applicationName,
-            darkMode = darkMode,
+            themeMode = themeMode,
             isMaterialYou = isMaterialYou,
             options = options,
             topItemMargin = topItemMargin,
@@ -120,7 +121,7 @@ internal fun SettingsScreen(
             isBillingUpsellDisabled = isBillingUpsellDisabled,
             hideClearAll = hideClearAll,
             hideUpgradeInformation = hideUpgradeInformation,
-            onDarkModeChanged = onDarkModeChanged,
+            onThemeModeChanged = onThemeModeChanged,
             onMaterialYouChange = onMaterialYouChange,
             onLicensesClicked = onLicensesClicked,
             onCheckUpdateClicked = onCheckUpdateClicked,
@@ -176,10 +177,10 @@ private fun SettingsList(
     isHapticsEnabled: Boolean,
     isBillingUpsellDisabled: Boolean,
     applicationName: CharSequence,
-    darkMode: Theming.Mode,
+    themeMode: Theming.Mode,
     isMaterialYou: Boolean,
     onMaterialYouChange: (Boolean) -> Unit,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onThemeModeChanged: (Theming.Mode) -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -205,11 +206,11 @@ private fun SettingsList(
           isHapticsEnabled = isHapticsEnabled,
           hideUpgradeInformation = hideUpgradeInformation,
           applicationName = applicationName,
-          darkMode = darkMode,
+          themeMode = themeMode,
           isMaterialYou = isMaterialYou,
           onHapticsChanged = onHapticsChanged,
           onMaterialYouChange = onMaterialYouChange,
-          onDarkModeChanged = onDarkModeChanged,
+          onThemeModeChanged = onThemeModeChanged,
           onLicensesClicked = onLicensesClicked,
           onCheckUpdateClicked = onCheckUpdateClicked,
           onShowChangeLogClicked = onShowChangeLogClicked,
@@ -375,20 +376,23 @@ private fun CheckingUpdateStatus(
 
 @Composable
 private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) {
+  val state =
+      MutableSettingsViewState().apply {
+        this.loadingState.value = loadingState
+        applicationName.value = "TEST"
+        themeMode.value = Theming.Mode.LIGHT
+      }
+
   SettingsScreen(
       options = PYDroidActivityOptions(),
-      state =
-          MutableSettingsViewState().apply {
-            this.loadingState.value = loadingState
-            applicationName.value = "TEST"
-            darkMode.value = Theming.Mode.LIGHT
-          },
+      state = state,
+      appViewState = state,
       versionCheckingState = VersionCheckingSettingsState.empty(),
       hideClearAll = false,
       hideUpgradeInformation = false,
       topItemMargin = ZeroSize,
       bottomItemMargin = ZeroSize,
-      onDarkModeChanged = {},
+      onThemeModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},
       onShowChangeLogClicked = {},

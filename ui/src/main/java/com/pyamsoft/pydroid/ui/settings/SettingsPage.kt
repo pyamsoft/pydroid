@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugDialog
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInjector
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
@@ -100,6 +101,7 @@ public fun SettingsPage(
       modifier = modifier,
       dialogModifier = dialogModifier,
       state = viewModel,
+      appViewState = viewModel,
       billingState = billingViewModel,
       changeLogState = changeLogViewModel,
       versionCheckViewState = versionViewModel,
@@ -135,8 +137,8 @@ public fun SettingsPage(
       onDismissAboutDialog = { viewModel.handleCloseAboutDialog() },
       onDismissBillingDialog = { billingViewModel.handleCloseDialog() },
       onDismissChangeLogDialog = { changeLogViewModel.handleCloseDialog() },
-      onDarkModeChanged = {
-        viewModel.handleChangeDarkMode(
+      onThemeModeChanged = {
+        viewModel.handleChangeThemeMode(
             scope = lifecycleScope,
             mode = it,
         )
@@ -158,6 +160,7 @@ private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
     state: SettingsViewState,
+    appViewState: SettingsAppViewState,
     versionCheckViewState: VersionCheckViewState,
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
@@ -167,7 +170,7 @@ private fun SettingsContent(
     customTopItemMargin: Dp,
     customBottomItemMargin: Dp,
     onMaterialYouChange: (Boolean) -> Unit,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onThemeModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
@@ -218,13 +221,14 @@ private fun SettingsContent(
       modifier = modifier,
       versionCheckingState = versionCheckingState,
       state = state,
+      appViewState = appViewState,
       options = options,
       hideClearAll = hideClearAll,
       hideUpgradeInformation = hideUpgradeInformation,
       topItemMargin = customTopItemMargin,
       bottomItemMargin = customBottomItemMargin,
       onMaterialYouChange = onMaterialYouChange,
-      onDarkModeChanged = onDarkModeChanged,
+      onThemeModeChanged = onThemeModeChanged,
       onLicensesClicked = onLicensesClicked,
       onCheckUpdateClicked = onCheckUpdateClicked,
       onShowChangeLogClicked = onShowChangeLogClicked,

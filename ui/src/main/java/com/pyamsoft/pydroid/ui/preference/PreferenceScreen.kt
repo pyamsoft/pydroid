@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceInjector
 import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
+import com.pyamsoft.pydroid.ui.internal.settings.newstuff.renderNewSettingsTest
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.util.collectAsStateMap
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
@@ -120,6 +121,8 @@ private fun PreferenceScreenInternal(
   LazyColumn(
       modifier = modifier,
   ) {
+    renderNewSettingsTest()
+
     if (topItemMargin > ZeroSize) {
       item(
           contentType = PreferenceScreenContentTypes.TOP_SPACER,

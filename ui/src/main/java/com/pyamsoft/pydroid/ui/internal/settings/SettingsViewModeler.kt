@@ -47,12 +47,15 @@ internal constructor(
     private val debugPreferences: DebugPreferences,
     private val hapticPreferences: HapticPreferences,
     private val billingPreferences: BillingPreferences,
-) : SettingsViewState by state, AbstractViewModeler<SettingsViewState>(state) {
+) :
+    SettingsViewState by state,
+    SettingsAppViewState by state,
+    AbstractViewModeler<SettingsViewState>(state) {
 
   private data class LoadConfig(
       var name: Boolean = false,
       var inAppDebug: Boolean = false,
-      var darkMode: Boolean = false,
+      var themeMode: Boolean = false,
       var isHapticsEnabled: Boolean = false,
       var billingUpsellDisabled: Boolean = false,
   )
@@ -60,7 +63,7 @@ internal constructor(
   private fun markConfigLoaded(loadConfig: LoadConfig) {
     val isAppReady =
         loadConfig.name && loadConfig.isHapticsEnabled && loadConfig.billingUpsellDisabled
-    if (isAppReady && loadConfig.darkMode && loadConfig.inAppDebug) {
+    if (isAppReady && loadConfig.themeMode && loadConfig.inAppDebug) {
       state.loadingState.value = SettingsViewState.LoadingState.DONE
     }
   }
@@ -161,15 +164,15 @@ internal constructor(
         .also { f ->
           scope.launch(context = Dispatchers.Default) {
             f.collect { list ->
-              if (!config.darkMode) {
-                config.darkMode = true
+              if (!config.themeMode) {
+                config.themeMode = true
                 markConfigLoaded(config)
               }
 
               val mode = list[0].cast<Theming.Mode>().requireNotNull()
               val isMaterialYou = list[1].cast<Boolean>().requireNotNull()
 
-              state.darkMode.value = mode
+              state.themeMode.value = mode
               state.isMaterialYou.value = isMaterialYou
             }
           }
@@ -181,11 +184,11 @@ internal constructor(
     debugPreferences.setInAppDebuggingEnabled(newEnabled)
   }
 
-  internal fun handleChangeDarkMode(
+  internal fun handleChangeThemeMode(
       scope: CoroutineScope,
       mode: Theming.Mode,
   ) {
-    theming.setDarkTheme(scope, mode)
+    theming.setThemeMode(scope, mode)
   }
 
   internal fun handleOpenDataPolicyDialog() {

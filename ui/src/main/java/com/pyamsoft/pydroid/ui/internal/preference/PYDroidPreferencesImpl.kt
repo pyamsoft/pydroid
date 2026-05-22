@@ -72,7 +72,7 @@ internal constructor(
     DebugPreferences,
     HapticPreferences {
 
-  private val darkModeKey = stringPreferencesKey(context.getString(R.string.dark_mode_key))
+  private val themeModeKey = stringPreferencesKey(context.getString(R.string.dark_mode_key))
 
   private val Context.dataStore: DataStore<Preferences> by
       preferencesDataStore(
@@ -91,7 +91,7 @@ internal constructor(
                 SharedPreferencesMigration(
                     keysToMigrate =
                         setOf(
-                            darkModeKey.name,
+                            themeModeKey.name,
                             KEY_MATERIAL_YOU.name,
                             KEY_HAPTICS_ENABLED.name,
                             LAST_SHOWN_CHANGELOG.name,
@@ -252,17 +252,17 @@ internal constructor(
     )
   }
 
-  override fun listenForDarkModeChanges(): Flow<Mode> =
+  override fun listenForThemeModeChanges(): Flow<Mode> =
       getPreference(
-              key = darkModeKey,
+              key = themeModeKey,
               value = DEFAULT_DARK_MODE,
           )
           .map { it.toThemingMode() }
           .flowOn(context = Dispatchers.IO)
 
-  override fun setDarkMode(mode: Mode) {
+  override fun setThemeMode(mode: Mode) {
     setPreference(
-        key = darkModeKey,
+        key = themeModeKey,
         fallbackValue = DEFAULT_DARK_MODE,
         value = { mode.toRawString() },
     )

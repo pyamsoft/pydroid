@@ -24,10 +24,10 @@ import kotlinx.coroutines.flow.Flow
 internal interface ThemingPreferences {
 
   /** Is application in dark mode */
-  @CheckResult fun listenForDarkModeChanges(): Flow<Mode>
+  @CheckResult fun listenForThemeModeChanges(): Flow<Mode>
 
   /** Set application dark mode preference */
-  fun setDarkMode(mode: Mode)
+  fun setThemeMode(mode: Mode)
 
   /** Is application in material you mode */
   @CheckResult fun listenForMaterialYouChanges(): Flow<Boolean>

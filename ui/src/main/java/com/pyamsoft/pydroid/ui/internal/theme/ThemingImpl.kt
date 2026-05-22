@@ -49,12 +49,12 @@ internal constructor(
   }
 
   /** Is activity dark mode */
-  override fun isDarkTheme(activity: Activity): Theming.Mode {
-    return isDarkTheme(activity.resources.configuration)
+  override fun getThemeMode(activity: Activity): Theming.Mode {
+    return getThemeMode(activity.resources.configuration)
   }
 
   /** Is activity dark mode */
-  override fun isDarkTheme(configuration: Configuration): Theming.Mode {
+  override fun getThemeMode(configuration: Configuration): Theming.Mode {
     val uiMode = configuration.uiMode
     return when (uiMode and Configuration.UI_MODE_NIGHT_MASK) {
       Configuration.UI_MODE_NIGHT_YES -> Theming.Mode.DARK
@@ -64,11 +64,11 @@ internal constructor(
   }
 
   /** Which mode are we in right now? */
-  override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForDarkModeChanges()
+  override fun listenForModeChanges(): Flow<Theming.Mode> = preferences.listenForThemeModeChanges()
 
   /** Set application wide dark mode */
-  override fun setDarkTheme(scope: CoroutineScope, mode: Theming.Mode) {
-    preferences.setDarkMode(mode)
+  override fun setThemeMode(scope: CoroutineScope, mode: Theming.Mode) {
+    preferences.setThemeMode(mode)
 
     scope.launch(context = Dispatchers.Default) {
       // Needs to run on main thread

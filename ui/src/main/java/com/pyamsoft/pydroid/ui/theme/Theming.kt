@@ -31,16 +31,16 @@ public interface Theming {
   public suspend fun init()
 
   /** Is activity dark mode */
-  @CheckResult public fun isDarkTheme(activity: Activity): Mode
+  @CheckResult public fun getThemeMode(activity: Activity): Mode
 
   /** Is activity dark mode */
-  @CheckResult public fun isDarkTheme(configuration: Configuration): Mode
+  @CheckResult public fun getThemeMode(configuration: Configuration): Mode
 
   /** Get current mode */
   @CheckResult public fun listenForModeChanges(): Flow<Mode>
 
   /** Set application wide dark mode */
-  public fun setDarkTheme(scope: CoroutineScope, mode: Mode)
+  public fun setThemeMode(scope: CoroutineScope, mode: Mode)
 
   /** Get current material-you preference */
   @CheckResult public fun listenForMaterialYouChanges(): Flow<Boolean>

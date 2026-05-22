@@ -43,10 +43,10 @@ internal fun rememberApplicationPreferencesGroup(
     isHapticsEnabled: Boolean,
     hideUpgradeInformation: Boolean,
     applicationName: CharSequence,
-    darkMode: Theming.Mode,
+    themeMode: Theming.Mode,
     isMaterialYou: Boolean,
     onMaterialYouChange: (Boolean) -> Unit,
-    onDarkModeChanged: (Theming.Mode) -> Unit,
+    onThemeModeChanged: (Theming.Mode) -> Unit,
     onHapticsChanged: (Boolean) -> Unit,
     onLicensesClicked: () -> Unit,
     onCheckUpdateClicked: () -> Unit,
@@ -55,9 +55,9 @@ internal fun rememberApplicationPreferencesGroup(
 
   val darkThemePreference =
       rememberDarkThemePreference(
-          darkMode = darkMode,
+          themeMode = themeMode,
           isMaterialYou = isMaterialYou,
-          onModeChange = onDarkModeChanged,
+          onModeChange = onThemeModeChanged,
           onMaterialYouChange = onMaterialYouChange,
       )
 
@@ -129,7 +129,7 @@ internal fun rememberApplicationPreferencesGroup(
 @Composable
 @CheckResult
 private fun rememberDarkThemePreference(
-    darkMode: Theming.Mode,
+    themeMode: Theming.Mode,
     isMaterialYou: Boolean,
     onModeChange: (Theming.Mode) -> Unit,
     onMaterialYouChange: (Boolean) -> Unit,
@@ -138,7 +138,7 @@ private fun rememberDarkThemePreference(
   val summary = stringResource(R.string.dark_mode_summary)
   val names = stringArrayResource(R.array.dark_mode_names_v1)
   val values = stringArrayResource(R.array.dark_mode_values_v1)
-  val rawValue = remember(darkMode) { darkMode.toRawString() }
+  val rawValue = remember(themeMode) { themeMode.toRawString() }
 
   val handleModeChange by rememberUpdatedState(onModeChange)
   val handleMaterialYouChange by rememberUpdatedState(onMaterialYouChange)

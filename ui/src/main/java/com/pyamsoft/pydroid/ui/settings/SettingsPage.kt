@@ -67,8 +67,7 @@ private fun MountHooks(
 public fun SettingsPage(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
-    hideUpgradeInformation: Boolean = false,
-    hideClearAll: Boolean = false,
+    listState: LazyListState = rememberLazyListState(),
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   // Use the LifecycleOwner.CoroutineScope (Activity usually)
@@ -100,6 +99,7 @@ public fun SettingsPage(
   SettingsContent(
       modifier = modifier,
       dialogModifier = dialogModifier,
+      listState = listState,
       state = viewModel,
       uiViewState = viewModel,
       inAppInteractionViewState = viewModel,
@@ -157,7 +157,7 @@ public fun SettingsPage(
 private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
-    listState: LazyListState = rememberLazyListState(),
+    listState: LazyListState,
     state: SettingsViewState,
     uiViewState: SettingsUIViewState,
     dangerZoneViewState: SettingsDangerZoneViewState,

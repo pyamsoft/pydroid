@@ -45,7 +45,7 @@ internal fun LazyListScope.renderDangerZoneSettings(
     val isInAppDebuggingEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
 
     SettingsCard(
-        modifier = modifier.padding(top = MaterialTheme.keylines.content),
+        modifier = modifier.padding(vertical = MaterialTheme.keylines.content),
     ) {
       SwitchSettingsRowItem(
           icon = IconPainters.debugMode(),

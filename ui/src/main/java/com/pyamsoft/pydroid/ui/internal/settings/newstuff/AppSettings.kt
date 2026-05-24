@@ -17,22 +17,32 @@
 package com.pyamsoft.pydroid.ui.internal.settings.newstuff
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal fun LazyListScope.renderAppSettings(
   modifier: Modifier = Modifier,
   state: SettingsAppViewState,
+  onThemeModeChanged: (Theming.Mode) -> Unit,
+  onMaterialYouChanged: (Boolean) -> Unit,
 ) {
   item {
     Card(
-      modifier = modifier.padding(top = MaterialTheme.keylines.content),
+      modifier = modifier.padding(all = MaterialTheme.keylines.content),
       border =
         BorderStroke(
           width = 2.dp,
@@ -40,7 +50,27 @@ internal fun LazyListScope.renderAppSettings(
         ),
       shape = MaterialTheme.shapes.large,
     ) {
-
+      Column {
+        ThemePickerSettingsItem(
+          state = state,
+          onThemeModeChanged = onThemeModeChanged,
+          onMaterialYouChanged = onMaterialYouChanged,
+        )
+      }
     }
+  }
+}
+
+@Preview
+@Composable
+private fun PreviewAppSettings() {
+  LazyColumn(
+    modifier = Modifier.background(Color.White),
+  ) {
+    renderAppSettings(
+      state = MutableSettingsViewState(),
+      onThemeModeChanged = {},
+      onMaterialYouChanged = {},
+    )
   }
 }

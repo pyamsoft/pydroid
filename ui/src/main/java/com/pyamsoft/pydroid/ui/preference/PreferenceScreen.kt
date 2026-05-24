@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.internal.preference.PreferenceViewState
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
 import com.pyamsoft.pydroid.ui.internal.settings.newstuff.renderAppSettings
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.util.collectAsStateMap
 import com.pyamsoft.pydroid.ui.util.rememberAsStateList
@@ -59,6 +60,10 @@ public fun PreferenceScreen(
     topItemMargin: Dp = ZeroSize,
     bottomItemMargin: Dp = ZeroSize,
     preferences: List<Preferences>,
+
+  // New stuff
+  onThemeModeChanged: (Theming.Mode) -> Unit,
+  onMaterialYouChanged: (Boolean) -> Unit,
 ) {
   val component = rememberComposableInjector { PreferenceInjector() }
 
@@ -76,6 +81,9 @@ public fun PreferenceScreen(
       state = viewModel,
       onOpenDialog = { viewModel.handleShowDialog(it) },
       onCloseDialog = { viewModel.handleDismissDialog(it) },
+    // New stuff
+    onThemeModeChanged = onThemeModeChanged,
+    onMaterialYouChanged = onMaterialYouChanged,
   )
 }
 
@@ -90,6 +98,10 @@ private fun PreferenceScreenInternal(
     preferences: List<Preferences>,
     onOpenDialog: (String) -> Unit,
     onCloseDialog: (String) -> Unit,
+
+  // New stuff
+  onThemeModeChanged: (Theming.Mode) -> Unit,
+  onMaterialYouChanged: (Boolean) -> Unit,
 ) {
   val shownDialogs = state.dialogStates.collectAsStateMap()
 
@@ -128,6 +140,8 @@ private fun PreferenceScreenInternal(
   ) {
     renderAppSettings(
       state = appViewState,
+      onThemeModeChanged = onThemeModeChanged,
+      onMaterialYouChanged = onMaterialYouChanged,
     )
 
     if (topItemMargin > ZeroSize) {
@@ -284,6 +298,8 @@ private fun PreviewPreferenceScreen(isEnabled: Boolean) {
   ) {
     PreferenceScreen(
         appViewState = MutableSettingsViewState(),
+      onThemeModeChanged = {},
+      onMaterialYouChanged = {},
         preferences =
             listOf(
                     preferenceGroup(

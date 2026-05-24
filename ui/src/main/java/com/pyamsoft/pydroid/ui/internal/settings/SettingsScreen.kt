@@ -53,35 +53,35 @@ import com.pyamsoft.pydroid.util.Logger
 
 @Composable
 internal fun SettingsScreen(
-    modifier: Modifier = Modifier,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    state: SettingsViewState,
-    appViewState: SettingsAppViewState,
-    versionCheckingState: VersionCheckingSettingsState,
-    options: PYDroidActivityOptions,
-    hideClearAll: Boolean,
-    hideUpgradeInformation: Boolean,
-    onMaterialYouChange: (Boolean) -> Unit,
-    onThemeModeChanged: (Theming.Mode) -> Unit,
-    onLicensesClicked: () -> Unit,
-    onCheckUpdateClicked: () -> Unit,
-    onShowChangeLogClicked: () -> Unit,
-    onResetClicked: () -> Unit,
-    onDonateClicked: () -> Unit,
-    onBugReportClicked: () -> Unit,
-    onViewSourceClicked: () -> Unit,
-    onViewDataPolicyClicked: () -> Unit,
-    onViewPrivacyPolicyClicked: () -> Unit,
-    onViewTermsOfServiceClicked: () -> Unit,
-    onViewSocialMediaClicked: () -> Unit,
-    onViewBlogClicked: () -> Unit,
-    onOpenMarketPage: () -> Unit,
-    onInAppDebuggingClicked: () -> Unit,
-    onInAppDebuggingChanged: () -> Unit,
-    onHapticsChanged: (Boolean) -> Unit,
-    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
-    onUpdateCheckComplete: () -> Unit,
+  modifier: Modifier = Modifier,
+  topItemMargin: Dp,
+  bottomItemMargin: Dp,
+  state: SettingsViewState,
+  appViewState: SettingsAppViewState,
+  versionCheckingState: VersionCheckingSettingsState,
+  options: PYDroidActivityOptions,
+  hideClearAll: Boolean,
+  hideUpgradeInformation: Boolean,
+  onMaterialYouChange: (Boolean) -> Unit,
+  onThemeModeChanged: (Theming.Mode) -> Unit,
+  onLicensesClicked: () -> Unit,
+  onCheckUpdateClicked: () -> Unit,
+  onShowChangeLogClicked: () -> Unit,
+  onResetClicked: () -> Unit,
+  onDonateClicked: () -> Unit,
+  onBugReportClicked: () -> Unit,
+  onViewSourceClicked: () -> Unit,
+  onViewDataPolicyClicked: () -> Unit,
+  onViewPrivacyPolicyClicked: () -> Unit,
+  onViewTermsOfServiceClicked: () -> Unit,
+  onViewSocialMediaClicked: () -> Unit,
+  onViewBlogClicked: () -> Unit,
+  onOpenMarketPage: () -> Unit,
+  onInAppDebuggingClicked: () -> Unit,
+  onInAppDebuggingChanged: () -> Unit,
+  onHapticsChanged: (Boolean) -> Unit,
+  onBillingUpsellDisabledChanged: (Boolean) -> Unit,
+  onUpdateCheckComplete: () -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
 
@@ -96,52 +96,53 @@ internal fun SettingsScreen(
   val isBillingUpsellDisabled by state.isBillingUpsellDisabled.collectAsStateWithLifecycle()
 
   Crossfade(
-      modifier = modifier,
-      label = "Settings",
-      targetState = loadingState,
+    modifier = modifier,
+    label = "Settings",
+    targetState = loadingState,
   ) { loading ->
     when (loading) {
       SettingsViewState.LoadingState.NONE,
-      SettingsViewState.LoadingState.LOADING -> {
+      SettingsViewState.LoadingState.LOADING,
+        -> {
         Loading()
       }
 
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
-            snackbarHost = snackbarHostState,
-            appViewState = appViewState,
-            versionCheckingState = versionCheckingState,
-            applicationName = applicationName,
-            themeMode = themeMode,
-            isMaterialYou = isMaterialYou,
-            options = options,
-            topItemMargin = topItemMargin,
-            bottomItemMargin = bottomItemMargin,
-            isInAppDebugChecked = isInAppDebugEnabled,
-            isHapticsEnabled = isHapticsEnabled,
-            isBillingUpsellDisabled = isBillingUpsellDisabled,
-            hideClearAll = hideClearAll,
-            hideUpgradeInformation = hideUpgradeInformation,
-            onThemeModeChanged = onThemeModeChanged,
-            onMaterialYouChange = onMaterialYouChange,
-            onLicensesClicked = onLicensesClicked,
-            onCheckUpdateClicked = onCheckUpdateClicked,
-            onShowChangeLogClicked = onShowChangeLogClicked,
-            onResetClicked = onResetClicked,
-            onDonateClicked = onDonateClicked,
-            onBugReportClicked = onBugReportClicked,
-            onViewSourceClicked = onViewSourceClicked,
-            onViewDataPolicyClicked = onViewDataPolicyClicked,
-            onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-            onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-            onViewSocialMediaClicked = onViewSocialMediaClicked,
-            onViewBlogClicked = onViewBlogClicked,
-            onOpenMarketPage = onOpenMarketPage,
-            onInAppDebuggingClicked = onInAppDebuggingClicked,
-            onInAppDebuggingChanged = onInAppDebuggingChanged,
-            onHapticsChanged = onHapticsChanged,
-            onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
-            onUpdateCheckComplete = onUpdateCheckComplete,
+          snackbarHost = snackbarHostState,
+          appViewState = appViewState,
+          versionCheckingState = versionCheckingState,
+          applicationName = applicationName,
+          themeMode = themeMode,
+          isMaterialYou = isMaterialYou,
+          options = options,
+          topItemMargin = topItemMargin,
+          bottomItemMargin = bottomItemMargin,
+          isInAppDebugChecked = isInAppDebugEnabled,
+          isHapticsEnabled = isHapticsEnabled,
+          isBillingUpsellDisabled = isBillingUpsellDisabled,
+          hideClearAll = hideClearAll,
+          hideUpgradeInformation = hideUpgradeInformation,
+          onThemeModeChanged = onThemeModeChanged,
+          onMaterialYouChange = onMaterialYouChange,
+          onLicensesClicked = onLicensesClicked,
+          onCheckUpdateClicked = onCheckUpdateClicked,
+          onShowChangeLogClicked = onShowChangeLogClicked,
+          onResetClicked = onResetClicked,
+          onDonateClicked = onDonateClicked,
+          onBugReportClicked = onBugReportClicked,
+          onViewSourceClicked = onViewSourceClicked,
+          onViewDataPolicyClicked = onViewDataPolicyClicked,
+          onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+          onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+          onViewSocialMediaClicked = onViewSocialMediaClicked,
+          onViewBlogClicked = onViewBlogClicked,
+          onOpenMarketPage = onOpenMarketPage,
+          onInAppDebuggingClicked = onInAppDebuggingClicked,
+          onInAppDebuggingChanged = onInAppDebuggingChanged,
+          onHapticsChanged = onHapticsChanged,
+          onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
+          onUpdateCheckComplete = onUpdateCheckComplete,
         )
       }
     }
@@ -151,14 +152,15 @@ internal fun SettingsScreen(
 @Composable
 private fun Loading() {
   Box(
-      modifier =
-          Modifier.systemBarsPadding()
-              .fillMaxHeight()
-              .fillMaxWidth()
-              .padding(
-                  all = MaterialTheme.keylines.content,
-              ),
-      contentAlignment = Alignment.Center,
+    modifier =
+      Modifier
+        .systemBarsPadding()
+        .fillMaxHeight()
+        .fillMaxWidth()
+        .padding(
+          all = MaterialTheme.keylines.content,
+        ),
+    contentAlignment = Alignment.Center,
   ) {
     CircularProgressIndicator()
   }
@@ -166,136 +168,139 @@ private fun Loading() {
 
 @Composable
 private fun SettingsList(
-    modifier: Modifier = Modifier,
-    snackbarHost: SnackbarHostState,
-    appViewState: SettingsAppViewState,
-    versionCheckingState: VersionCheckingSettingsState,
-    options: PYDroidActivityOptions,
-    topItemMargin: Dp,
-    bottomItemMargin: Dp,
-    hideClearAll: Boolean,
-    hideUpgradeInformation: Boolean,
-    isInAppDebugChecked: Boolean,
-    isHapticsEnabled: Boolean,
-    isBillingUpsellDisabled: Boolean,
-    applicationName: CharSequence,
-    themeMode: Theming.Mode,
-    isMaterialYou: Boolean,
-    onMaterialYouChange: (Boolean) -> Unit,
-    onThemeModeChanged: (Theming.Mode) -> Unit,
-    onHapticsChanged: (Boolean) -> Unit,
-    onLicensesClicked: () -> Unit,
-    onCheckUpdateClicked: () -> Unit,
-    onShowChangeLogClicked: () -> Unit,
-    onResetClicked: () -> Unit,
-    onDonateClicked: () -> Unit,
-    onBugReportClicked: () -> Unit,
-    onViewSourceClicked: () -> Unit,
-    onViewDataPolicyClicked: () -> Unit,
-    onViewPrivacyPolicyClicked: () -> Unit,
-    onViewTermsOfServiceClicked: () -> Unit,
-    onViewSocialMediaClicked: () -> Unit,
-    onViewBlogClicked: () -> Unit,
-    onOpenMarketPage: () -> Unit,
-    onInAppDebuggingClicked: () -> Unit,
-    onInAppDebuggingChanged: () -> Unit,
-    onBillingUpsellDisabledChanged: (Boolean) -> Unit,
-    onUpdateCheckComplete: () -> Unit,
+  modifier: Modifier = Modifier,
+  snackbarHost: SnackbarHostState,
+  appViewState: SettingsAppViewState,
+  versionCheckingState: VersionCheckingSettingsState,
+  options: PYDroidActivityOptions,
+  topItemMargin: Dp,
+  bottomItemMargin: Dp,
+  hideClearAll: Boolean,
+  hideUpgradeInformation: Boolean,
+  isInAppDebugChecked: Boolean,
+  isHapticsEnabled: Boolean,
+  isBillingUpsellDisabled: Boolean,
+  applicationName: CharSequence,
+  themeMode: Theming.Mode,
+  isMaterialYou: Boolean,
+  onMaterialYouChange: (Boolean) -> Unit,
+  onThemeModeChanged: (Theming.Mode) -> Unit,
+  onHapticsChanged: (Boolean) -> Unit,
+  onLicensesClicked: () -> Unit,
+  onCheckUpdateClicked: () -> Unit,
+  onShowChangeLogClicked: () -> Unit,
+  onResetClicked: () -> Unit,
+  onDonateClicked: () -> Unit,
+  onBugReportClicked: () -> Unit,
+  onViewSourceClicked: () -> Unit,
+  onViewDataPolicyClicked: () -> Unit,
+  onViewPrivacyPolicyClicked: () -> Unit,
+  onViewTermsOfServiceClicked: () -> Unit,
+  onViewSocialMediaClicked: () -> Unit,
+  onViewBlogClicked: () -> Unit,
+  onOpenMarketPage: () -> Unit,
+  onInAppDebuggingClicked: () -> Unit,
+  onInAppDebuggingChanged: () -> Unit,
+  onBillingUpsellDisabledChanged: (Boolean) -> Unit,
+  onUpdateCheckComplete: () -> Unit,
 ) {
   val applicationPrefs =
-      rememberApplicationPreferencesGroup(
-          options = options,
-          isHapticsEnabled = isHapticsEnabled,
-          hideUpgradeInformation = hideUpgradeInformation,
-          applicationName = applicationName,
-          themeMode = themeMode,
-          isMaterialYou = isMaterialYou,
-          onHapticsChanged = onHapticsChanged,
-          onMaterialYouChange = onMaterialYouChange,
-          onThemeModeChanged = onThemeModeChanged,
-          onLicensesClicked = onLicensesClicked,
-          onCheckUpdateClicked = onCheckUpdateClicked,
-          onShowChangeLogClicked = onShowChangeLogClicked,
-      )
+    rememberApplicationPreferencesGroup(
+      options = options,
+      isHapticsEnabled = isHapticsEnabled,
+      hideUpgradeInformation = hideUpgradeInformation,
+      applicationName = applicationName,
+      themeMode = themeMode,
+      isMaterialYou = isMaterialYou,
+      onHapticsChanged = onHapticsChanged,
+      onMaterialYouChange = onMaterialYouChange,
+      onThemeModeChanged = onThemeModeChanged,
+      onLicensesClicked = onLicensesClicked,
+      onCheckUpdateClicked = onCheckUpdateClicked,
+      onShowChangeLogClicked = onShowChangeLogClicked,
+    )
 
   val supportPrefs =
-      rememberSupportPreferencesGroup(
-          options = options,
-          applicationName = applicationName,
-          isBillingUpsellDisabled = isBillingUpsellDisabled,
-          onDonateClicked = onDonateClicked,
-          onOpenMarketPage = onOpenMarketPage,
-          onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
-      )
+    rememberSupportPreferencesGroup(
+      options = options,
+      applicationName = applicationName,
+      isBillingUpsellDisabled = isBillingUpsellDisabled,
+      onDonateClicked = onDonateClicked,
+      onOpenMarketPage = onOpenMarketPage,
+      onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
+    )
 
   val infoPreferences =
-      rememberInfoPreferencesGroup(
-          options = options,
-          applicationName = applicationName,
-          onBugReportClicked = onBugReportClicked,
-          onViewSourceClicked = onViewSourceClicked,
-          onViewDataPolicyClicked = onViewDataPolicyClicked,
-          onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
-          onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
-      )
+    rememberInfoPreferencesGroup(
+      options = options,
+      applicationName = applicationName,
+      onBugReportClicked = onBugReportClicked,
+      onViewSourceClicked = onViewSourceClicked,
+      onViewDataPolicyClicked = onViewDataPolicyClicked,
+      onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
+      onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
+    )
 
   val socialMediaPreferences =
-      rememberSocialMediaPreferencesGroup(
-          onViewSocialMediaClicked = onViewSocialMediaClicked,
-          onViewBlogClicked = onViewBlogClicked,
-      )
+    rememberSocialMediaPreferencesGroup(
+      onViewSocialMediaClicked = onViewSocialMediaClicked,
+      onViewBlogClicked = onViewBlogClicked,
+    )
 
   val dangerZonePreferences =
-      rememberDangerZonePreferencesGroup(
-          isInAppDebugChecked = isInAppDebugChecked,
-          hideClearAll = hideClearAll,
-          onResetClicked = onResetClicked,
-          onInAppDebuggingChanged = onInAppDebuggingChanged,
-          onInAppDebuggingClicked = onInAppDebuggingClicked,
-      )
+    rememberDangerZonePreferencesGroup(
+      isInAppDebugChecked = isInAppDebugChecked,
+      hideClearAll = hideClearAll,
+      onResetClicked = onResetClicked,
+      onInAppDebuggingChanged = onInAppDebuggingChanged,
+      onInAppDebuggingClicked = onInAppDebuggingClicked,
+    )
 
   val preferences =
-      remember(
-          applicationPrefs,
-          supportPrefs,
-          infoPreferences,
-          socialMediaPreferences,
-          dangerZonePreferences,
-      ) {
-        mutableStateListOf<Preferences>().apply {
-          add(applicationPrefs)
-          add(supportPrefs)
-          add(infoPreferences)
-          add(socialMediaPreferences)
-          add(dangerZonePreferences)
-        }
+    remember(
+      applicationPrefs,
+      supportPrefs,
+      infoPreferences,
+      socialMediaPreferences,
+      dangerZonePreferences,
+    ) {
+      mutableStateListOf<Preferences>().apply {
+        add(applicationPrefs)
+        add(supportPrefs)
+        add(infoPreferences)
+        add(socialMediaPreferences)
+        add(dangerZonePreferences)
       }
+    }
 
   Box(
-      modifier = modifier,
+    modifier = modifier,
   ) {
     PreferenceScreen(
-        appViewState = appViewState,
-        topItemMargin = topItemMargin,
-        bottomItemMargin = bottomItemMargin,
-        preferences = preferences,
+      appViewState = appViewState,
+      topItemMargin = topItemMargin,
+      bottomItemMargin = bottomItemMargin,
+      preferences = preferences,
+      // New stuff
+      onThemeModeChanged = onThemeModeChanged,
+      onMaterialYouChanged = onMaterialYouChange,
     )
 
     CheckingUpdateStatus(
-        modifier = Modifier.align(Alignment.BottomCenter),
-        snackbarHost = snackbarHost,
-        versionCheckingState = versionCheckingState,
-        onUpdateCheckComplete = onUpdateCheckComplete,
+      modifier = Modifier.align(Alignment.BottomCenter),
+      snackbarHost = snackbarHost,
+      versionCheckingState = versionCheckingState,
+      onUpdateCheckComplete = onUpdateCheckComplete,
     )
   }
 }
 
 @Composable
 private fun CheckingUpdateStatus(
-    modifier: Modifier = Modifier,
-    snackbarHost: SnackbarHostState,
-    versionCheckingState: VersionCheckingSettingsState,
-    onUpdateCheckComplete: () -> Unit,
+  modifier: Modifier = Modifier,
+  snackbarHost: SnackbarHostState,
+  versionCheckingState: VersionCheckingSettingsState,
+  onUpdateCheckComplete: () -> Unit,
 ) {
   val isChecking = versionCheckingState.isChecking
   val isEmptyUpdate = versionCheckingState.isEmptyUpdate
@@ -314,15 +319,15 @@ private fun CheckingUpdateStatus(
   val checkingForUpdatesMessage = stringResource(R.string.checking_for_updates)
   val emptyUpdateMessage = stringResource(R.string.empty_update)
   val updateAvailableMessage =
-      stringResource(R.string.an_update_to_version_is_available, newVersion)
+    stringResource(R.string.an_update_to_version_is_available, newVersion)
 
   LaunchedEffect(
-      isChecking,
-      isEmptyUpdate,
-      newVersion,
-      checkingForUpdatesMessage,
-      emptyUpdateMessage,
-      updateAvailableMessage,
+    isChecking,
+    isEmptyUpdate,
+    newVersion,
+    checkingForUpdatesMessage,
+    emptyUpdateMessage,
+    updateAvailableMessage,
   ) {
     val message: String
     when (isChecking) {
@@ -359,8 +364,8 @@ private fun CheckingUpdateStatus(
 
     if (message.isNotBlank()) {
       snackbarHost.showSnackbar(
-          message = message,
-          duration = SnackbarDuration.Short,
+        message = message,
+        duration = SnackbarDuration.Short,
       )
 
       // After the snackbar is shown in DONE state
@@ -372,49 +377,49 @@ private fun CheckingUpdateStatus(
   }
 
   SnackbarHost(
-      modifier = modifier,
-      hostState = snackbarHost,
+    modifier = modifier,
+    hostState = snackbarHost,
   )
 }
 
 @Composable
 private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) {
   val state =
-      MutableSettingsViewState().apply {
-        this.loadingState.value = loadingState
-        applicationName.value = "TEST"
-        themeMode.value = Theming.Mode.LIGHT
-      }
+    MutableSettingsViewState().apply {
+      this.loadingState.value = loadingState
+      applicationName.value = "TEST"
+      themeMode.value = Theming.Mode.LIGHT
+    }
 
   SettingsScreen(
-      options = PYDroidActivityOptions(),
-      state = state,
-      appViewState = state,
-      versionCheckingState = VersionCheckingSettingsState.empty(),
-      hideClearAll = false,
-      hideUpgradeInformation = false,
-      topItemMargin = ZeroSize,
-      bottomItemMargin = ZeroSize,
-      onThemeModeChanged = {},
-      onLicensesClicked = {},
-      onCheckUpdateClicked = {},
-      onShowChangeLogClicked = {},
-      onResetClicked = {},
-      onOpenMarketPage = {},
-      onDonateClicked = {},
-      onBugReportClicked = {},
-      onViewSourceClicked = {},
-      onViewDataPolicyClicked = {},
-      onViewPrivacyPolicyClicked = {},
-      onViewTermsOfServiceClicked = {},
-      onViewSocialMediaClicked = {},
-      onViewBlogClicked = {},
-      onInAppDebuggingClicked = {},
-      onInAppDebuggingChanged = {},
-      onHapticsChanged = {},
-      onMaterialYouChange = {},
-      onBillingUpsellDisabledChanged = {},
-      onUpdateCheckComplete = {},
+    options = PYDroidActivityOptions(),
+    state = state,
+    appViewState = state,
+    versionCheckingState = VersionCheckingSettingsState.empty(),
+    hideClearAll = false,
+    hideUpgradeInformation = false,
+    topItemMargin = ZeroSize,
+    bottomItemMargin = ZeroSize,
+    onThemeModeChanged = {},
+    onLicensesClicked = {},
+    onCheckUpdateClicked = {},
+    onShowChangeLogClicked = {},
+    onResetClicked = {},
+    onOpenMarketPage = {},
+    onDonateClicked = {},
+    onBugReportClicked = {},
+    onViewSourceClicked = {},
+    onViewDataPolicyClicked = {},
+    onViewPrivacyPolicyClicked = {},
+    onViewTermsOfServiceClicked = {},
+    onViewSocialMediaClicked = {},
+    onViewBlogClicked = {},
+    onInAppDebuggingClicked = {},
+    onInAppDebuggingChanged = {},
+    onHapticsChanged = {},
+    onMaterialYouChange = {},
+    onBillingUpsellDisabledChanged = {},
+    onUpdateCheckComplete = {},
   )
 }
 

@@ -51,8 +51,6 @@ import com.pyamsoft.pydroid.ui.internal.debug.DebugInteractor
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine
 import com.pyamsoft.pydroid.ui.internal.debug.MutableDebugViewState
-import com.pyamsoft.pydroid.ui.internal.preference.MutablePreferenceViewState
-import com.pyamsoft.pydroid.ui.internal.preference.PreferencesComponent
 import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityComponents
 import com.pyamsoft.pydroid.ui.internal.rating.MutableRatingViewState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
@@ -86,8 +84,6 @@ internal interface AppComponent {
   @CheckResult fun plusVersionCheck(): VersionCheckComponent.Factory
 
   @CheckResult fun plusSettings(): SettingsComponent.Factory
-
-  @CheckResult fun plusPreferences(): PreferencesComponent.Factory
 
   @CheckResult fun plusInAppDebug(): DebugComponent.Factory
 
@@ -228,11 +224,6 @@ internal interface AppComponent {
             module = params.dataPolicyModule,
         )
 
-    private val preferenceParams =
-        PreferencesComponent.Factory.Parameters(
-            state = MutablePreferenceViewState(),
-        )
-
     private val inAppDebugParams =
         DebugComponent.Factory.Parameters(
             state =
@@ -335,10 +326,6 @@ internal interface AppComponent {
 
     override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
       return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
-    }
-
-    override fun plusPreferences(): PreferencesComponent.Factory {
-      return PreferencesComponent.Impl.FactoryImpl(preferenceParams)
     }
 
     override fun plusInAppDebug(): DebugComponent.Factory {

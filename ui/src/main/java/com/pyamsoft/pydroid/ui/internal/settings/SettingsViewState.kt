@@ -26,10 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Stable
 internal interface SettingsViewState : UiViewState {
   val loadingState: StateFlow<LoadingState>
-  val applicationName: StateFlow<CharSequence>
-
-  val isInAppDebuggingEnabled: StateFlow<Boolean>
-  val isBillingUpsellDisabled: StateFlow<Boolean>
+  val applicationName: StateFlow<String>
 
   val isShowingResetDialog: StateFlow<Boolean>
   val isShowingAboutDialog: StateFlow<Boolean>
@@ -47,16 +44,24 @@ internal interface SettingsViewState : UiViewState {
 
 @Stable
 internal class MutableSettingsViewState internal constructor() :
-    SettingsViewState, SettingsAppViewState {
+    SettingsViewState,
+    SettingsUIViewState,
+    SettingsInAppInteractionViewState,
+    SettingsDangerZoneViewState {
 
+  // Settings
+  override val loadingState = MutableStateFlow(SettingsViewState.LoadingState.NONE)
+  override val applicationName = MutableStateFlow("")
+
+  // UI
   override val themeMode = MutableStateFlow(Theming.Mode.SYSTEM)
   override val isMaterialYou = MutableStateFlow(false)
   override val isHapticsEnabled = MutableStateFlow(false)
 
-  override val loadingState = MutableStateFlow(SettingsViewState.LoadingState.NONE)
-  override val applicationName = MutableStateFlow("")
-  override val isInAppDebuggingEnabled = MutableStateFlow(false)
+  // InAppInteraction
   override val isBillingUpsellDisabled = MutableStateFlow(false)
+
+  override val isInAppDebuggingEnabled = MutableStateFlow(false)
 
   override val isShowingResetDialog = MutableStateFlow(false)
   override val isShowingAboutDialog = MutableStateFlow(false)

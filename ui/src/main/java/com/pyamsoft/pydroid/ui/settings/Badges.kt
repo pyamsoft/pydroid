@@ -34,66 +34,60 @@ import androidx.compose.ui.unit.sp
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 
-/**
- * Small font size for small label chippy
- */
+/** Small font size for small label chippy */
 private val BADGE_FONT_SIZE = 8.sp
 
 @Composable
 private fun Badge(
-  modifier: Modifier = Modifier,
-  @StringRes text: Int,
-  color: Color,
+    modifier: Modifier = Modifier,
+    @StringRes text: Int,
+    color: Color,
 ) {
   Box(
-    modifier =
-      modifier
-        .background(
-          brush = SolidColor(color),
-          shape = MaterialTheme.shapes.small,
-        )
-        .padding(
-          horizontal = MaterialTheme.keylines.typography,
-          vertical = MaterialTheme.keylines.typography / 2,
-        ),
-    contentAlignment = Alignment.Center,
+      modifier =
+          modifier
+              .background(
+                  brush = SolidColor(color),
+                  shape = MaterialTheme.shapes.small,
+              )
+              .padding(
+                  horizontal = MaterialTheme.keylines.typography,
+                  vertical = MaterialTheme.keylines.typography / 2,
+              ),
+      contentAlignment = Alignment.Center,
   ) {
     Text(
-      text = stringResource(text),
-      style =
-        MaterialTheme.typography.labelSmall.copy(
-          color = Color.White,
-          fontSize = BADGE_FONT_SIZE,
-        ),
+        text = stringResource(text),
+        style =
+            MaterialTheme.typography.labelSmall.copy(
+                color = Color.White,
+                fontSize = BADGE_FONT_SIZE,
+            ),
     )
   }
 }
 
-/**
- * Badge for in-app purchases
- */
+/** Badge for in-app purchases */
 @Composable
 public fun InAppBadge(
-  modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
   Badge(
-    modifier = modifier,
-    text = R.string.in_app_badge,
-    color = Color(color = 0xFF4CAF50),
+      modifier = modifier,
+      text = R.string.in_app_badge,
+      color = Color(color = 0xFF4CAF50),
   )
 }
 
-/**
- * Badge for external links
- */
+/** Badge for external links */
 @Composable
 public fun ExternalLinkBadge(
-  modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
   Badge(
-    modifier = modifier,
-    text = R.string.external_link_badge,
-    color = Color(color = 0xFF2196F3),
+      modifier = modifier,
+      text = R.string.external_link_badge,
+      color = Color(color = 0xFF2196F3),
   )
 }
 
@@ -101,16 +95,10 @@ public fun ExternalLinkBadge(
 @Composable
 private fun PreviewInAppBadge() {
   Column(
-    modifier = Modifier.background(color = Color.White),
+      modifier = Modifier.background(color = Color.White),
   ) {
-    Text(
-      style = MaterialTheme.typography.bodyLarge,
-      text = "Body Large"
-    )
-    Text(
-      style = MaterialTheme.typography.labelSmall,
-      text = "Label Small"
-    )
+    Text(style = MaterialTheme.typography.bodyLarge, text = "Body Large")
+    Text(style = MaterialTheme.typography.labelSmall, text = "Label Small")
     InAppBadge()
   }
 }
@@ -119,16 +107,10 @@ private fun PreviewInAppBadge() {
 @Composable
 private fun PreviewExternalLinkBadge() {
   Column(
-    modifier = Modifier.background(color = Color.White),
+      modifier = Modifier.background(color = Color.White),
   ) {
-    Text(
-      style = MaterialTheme.typography.bodyLarge,
-      text = "Body Large"
-    )
-    Text(
-      style = MaterialTheme.typography.labelSmall,
-      text = "Label Small"
-    )
+    Text(style = MaterialTheme.typography.bodyLarge, text = "Body Large")
+    Text(style = MaterialTheme.typography.labelSmall, text = "Label Small")
     ExternalLinkBadge()
   }
 }

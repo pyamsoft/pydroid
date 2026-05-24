@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.preference
+package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.ui.inject.ComposableInjector
-import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import androidx.compose.runtime.Stable
+import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
-internal class PreferenceInjector internal constructor() : ComposableInjector() {
-
-  internal var viewModel: PreferenceViewModeler? = null
-
-  override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ActivityScope.retrieve(activity).injector().plusPreferences().create().inject(this)
-  }
-
-  override fun onDispose() {
-    viewModel = null
-  }
+@Stable
+public interface SettingsInAppInteractionViewState : UiViewState {
+  public val isBillingUpsellDisabled: StateFlow<Boolean>
 }

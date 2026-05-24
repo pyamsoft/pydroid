@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -38,15 +39,16 @@ import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugDialog
-import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsDangerZoneViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInjector
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsScreen
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsUIViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewModeler
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetDialog
 import com.pyamsoft.pydroid.ui.internal.settings.version.VersionCheckingSettingsState
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.theme.ZeroSize
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
@@ -67,8 +69,6 @@ public fun SettingsPage(
     dialogModifier: Modifier = Modifier,
     hideUpgradeInformation: Boolean = false,
     hideClearAll: Boolean = false,
-    customTopItemMargin: Dp = ZeroSize,
-    customBottomItemMargin: Dp = ZeroSize,
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
   // Use the LifecycleOwner.CoroutineScope (Activity usually)
@@ -101,15 +101,13 @@ public fun SettingsPage(
       modifier = modifier,
       dialogModifier = dialogModifier,
       state = viewModel,
-      appViewState = viewModel,
+      uiViewState = viewModel,
+      inAppInteractionViewState = viewModel,
+      dangerZoneViewState = viewModel,
       billingState = billingViewModel,
       changeLogState = changeLogViewModel,
       versionCheckViewState = versionViewModel,
       options = options,
-      hideClearAll = hideClearAll,
-      hideUpgradeInformation = hideUpgradeInformation,
-      customTopItemMargin = customTopItemMargin,
-      customBottomItemMargin = customBottomItemMargin,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = {
         if (options.disableVersionCheck) {
@@ -144,7 +142,7 @@ public fun SettingsPage(
         )
       },
       onMaterialYouChange = { viewModel.handleMaterialYouChange(it) },
-      onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled() },
+      onInAppDebuggingChanged = { viewModel.handleChangeInAppDebugEnabled(it) },
       onDismissInAppDebuggingDialog = { viewModel.handleCloseInAppDebuggingDialog() },
       onInAppDebuggingClicked = { viewModel.handleOpenInAppDebuggingDialog() },
       onHapticsChanged = { viewModel.handleHapticsChanged(it) },
@@ -159,16 +157,15 @@ public fun SettingsPage(
 private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
     state: SettingsViewState,
-    appViewState: SettingsAppViewState,
+    uiViewState: SettingsUIViewState,
+    dangerZoneViewState: SettingsDangerZoneViewState,
+    inAppInteractionViewState: SettingsInAppInteractionViewState,
     versionCheckViewState: VersionCheckViewState,
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
     options: PYDroidActivityOptions,
-    hideUpgradeInformation: Boolean,
-    hideClearAll: Boolean,
-    customTopItemMargin: Dp,
-    customBottomItemMargin: Dp,
     onMaterialYouChange: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -184,7 +181,7 @@ private fun SettingsContent(
     onViewSocialMediaClicked: () -> Unit,
     onViewBlogClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
-    onInAppDebuggingChanged: () -> Unit,
+    onInAppDebuggingChanged: (Boolean) -> Unit,
     onInAppDebuggingClicked: () -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onDismissAboutDialog: () -> Unit,
@@ -220,13 +217,12 @@ private fun SettingsContent(
   SettingsScreen(
       modifier = modifier,
       versionCheckingState = versionCheckingState,
+      listState = listState,
       state = state,
-      appViewState = appViewState,
+      uiViewState = uiViewState,
+      inAppInteractionViewState = inAppInteractionViewState,
+      dangerZoneViewState = dangerZoneViewState,
       options = options,
-      hideClearAll = hideClearAll,
-      hideUpgradeInformation = hideUpgradeInformation,
-      topItemMargin = customTopItemMargin,
-      bottomItemMargin = customBottomItemMargin,
       onMaterialYouChange = onMaterialYouChange,
       onThemeModeChanged = onThemeModeChanged,
       onLicensesClicked = onLicensesClicked,

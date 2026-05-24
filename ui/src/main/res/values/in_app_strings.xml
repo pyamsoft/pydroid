@@ -18,5 +18,6 @@
   <string name="in_app_badge">IN-APP PURCHASE</string>
   <string name="rate_app">Rate App</string>
 
-  <string name="external_link_badge">EXTERNAL LINK</string>
+  <!-- TODO(Peter): Need zh-rTW translation -->
+  <string name="external_link_badge">LINK</string>
 </resources>

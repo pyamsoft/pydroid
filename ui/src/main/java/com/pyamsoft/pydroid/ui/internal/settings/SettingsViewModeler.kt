@@ -49,7 +49,9 @@ internal constructor(
     private val billingPreferences: BillingPreferences,
 ) :
     SettingsViewState by state,
-    SettingsAppViewState by state,
+    SettingsUIViewState by state,
+    SettingsInAppInteractionViewState by state,
+    SettingsDangerZoneViewState by state,
     AbstractViewModeler<SettingsViewState>(state) {
 
   private data class LoadConfig(
@@ -179,8 +181,8 @@ internal constructor(
         }
   }
 
-  internal fun handleChangeInAppDebugEnabled() {
-    val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { !it }
+  internal fun handleChangeInAppDebugEnabled(enabled: Boolean) {
+    val newEnabled = state.isInAppDebuggingEnabled.updateAndGet { enabled }
     debugPreferences.setInAppDebuggingEnabled(newEnabled)
   }
 

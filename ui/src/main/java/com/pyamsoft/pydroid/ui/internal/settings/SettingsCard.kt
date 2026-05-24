@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.newstuff
+package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -30,47 +29,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pyamsoft.pydroid.theme.keylines
-import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
-import com.pyamsoft.pydroid.ui.internal.settings.SettingsAppViewState
-import com.pyamsoft.pydroid.ui.theme.Theming
 
-internal fun LazyListScope.renderAppSettings(
-  modifier: Modifier = Modifier,
-  state: SettingsAppViewState,
-  onThemeModeChanged: (Theming.Mode) -> Unit,
-  onMaterialYouChanged: (Boolean) -> Unit,
+@Composable
+internal fun SettingsCard(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
-  item {
-    Card(
-      modifier = modifier.padding(all = MaterialTheme.keylines.content),
+  Card(
+      modifier = modifier.padding(horizontal = MaterialTheme.keylines.content),
       border =
-        BorderStroke(
-          width = 2.dp,
-          color = MaterialTheme.colorScheme.primaryContainer,
-        ),
+          BorderStroke(
+              width = 2.dp,
+              color = MaterialTheme.colorScheme.primaryContainer,
+          ),
       shape = MaterialTheme.shapes.large,
-    ) {
-      Column {
-        ThemePickerSettingsItem(
-          state = state,
-          onThemeModeChanged = onThemeModeChanged,
-          onMaterialYouChanged = onMaterialYouChanged,
-        )
-      }
-    }
+  ) {
+    Column { content() }
   }
 }
 
 @Preview
 @Composable
-private fun PreviewAppSettings() {
-  LazyColumn(
-    modifier = Modifier.background(Color.White),
-  ) {
-    renderAppSettings(
-      state = MutableSettingsViewState(),
-      onThemeModeChanged = {},
-      onMaterialYouChanged = {},
-    )
-  }
+private fun PreviewSettingsCard() {
+  SettingsCard(
+      modifier = Modifier.background(Color.White),
+  ) {}
 }

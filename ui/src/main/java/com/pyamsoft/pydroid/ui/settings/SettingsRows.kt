@@ -52,57 +52,54 @@ private fun Modifier.maybeClickable(onClick: (() -> Unit)?): Modifier {
   return self.clickable(onClick = onClick)
 }
 
-/**
- * Render a settings row item using slots
- */
+/** Render a settings row item using slots */
 @Composable
 public fun CustomSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: (@Composable () -> Unit)?,
-  title: @Composable () -> Unit,
-  afterTitle: (@Composable () -> Unit)? = null,
-  description: (@Composable () -> Unit)?,
-  trailing: (@Composable () -> Unit)?,
-  onClick: (() -> Unit)?,
+    modifier: Modifier = Modifier,
+    icon: (@Composable () -> Unit)?,
+    title: @Composable () -> Unit,
+    afterTitle: (@Composable () -> Unit)? = null,
+    description: (@Composable () -> Unit)?,
+    trailing: (@Composable () -> Unit)?,
+    onClick: (() -> Unit)?,
 ) {
   Row(
-    modifier = modifier
-      .maybeClickable(onClick)
-      .padding(
-        vertical = MaterialTheme.keylines.baseline,
-        horizontal = MaterialTheme.keylines.typography,
-      ),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Start,
+      modifier =
+          modifier
+              .maybeClickable(onClick)
+              .padding(
+                  vertical = MaterialTheme.keylines.baseline,
+                  horizontal = MaterialTheme.keylines.typography,
+              ),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Start,
   ) {
     icon?.also { iconContent ->
       Box(
-        modifier = Modifier.size(ListItemDefaults.LeadingSize),
-        contentAlignment = Alignment.Center,
+          modifier = Modifier.size(ListItemDefaults.LeadingSize),
+          contentAlignment = Alignment.Center,
       ) {
         iconContent()
       }
     }
 
     Column(
-      modifier = Modifier
-        .padding(start = MaterialTheme.keylines.typography)
-        .weight(1F),
-      verticalArrangement = Arrangement.Top,
-      horizontalAlignment = Alignment.Start,
+        modifier = Modifier.padding(start = MaterialTheme.keylines.typography).weight(1F),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
     ) {
       Row(
-        verticalAlignment = Alignment.CenterVertically,
+          verticalAlignment = Alignment.CenterVertically,
       ) {
         title()
       }
 
       description?.also { descriptionContent ->
         Column(
-          modifier =
-            Modifier.padding(
-              top = MaterialTheme.keylines.typography,
-            ),
+            modifier =
+                Modifier.padding(
+                    top = MaterialTheme.keylines.typography,
+                ),
         ) {
           descriptionContent()
         }
@@ -111,13 +108,12 @@ public fun CustomSettingsRowItem(
 
     trailing?.also { trailingContent ->
       Box(
-        modifier =
-          Modifier
-            .padding(
-              horizontal = MaterialTheme.keylines.typography,
-            )
-            .size(ListItemDefaults.LeadingSize),
-        contentAlignment = Alignment.Center,
+          modifier =
+              Modifier.padding(
+                      horizontal = MaterialTheme.keylines.typography,
+                  )
+                  .size(ListItemDefaults.LeadingSize),
+          contentAlignment = Alignment.Center,
       ) {
         trailingContent()
       }
@@ -125,189 +121,177 @@ public fun CustomSettingsRowItem(
   }
 }
 
-/**
- * A basic settings item with icon, title, and optional description
- */
+/** A basic settings item with icon, title, and optional description */
 @Composable
 public fun SimpleSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  afterTitle: (@Composable () -> Unit)? = null,
-  afterDescription: (@Composable () -> Unit)? = null,
-  trailing: (@Composable () -> Unit)? = null,
-  onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    description: String = "",
+    afterTitle: (@Composable () -> Unit)? = null,
+    afterDescription: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) {
   val textColor = LocalContentColor.current
 
   CustomSettingsRowItem(
-    modifier = modifier,
-    icon = {
-      Icon(
-        painter = icon,
-        contentDescription = title,
-        tint = textColor,
-      )
-    },
-    title = {
-      Text(
-        text = title,
-        style =
-          MaterialTheme.typography.bodyMedium.copy(
-            color = textColor,
-          ),
-      )
+      modifier = modifier,
+      icon = {
+        Icon(
+            painter = icon,
+            contentDescription = title,
+            tint = textColor,
+        )
+      },
+      title = {
+        Text(
+            text = title,
+            style =
+                MaterialTheme.typography.bodyMedium.copy(
+                    color = textColor,
+                ),
+        )
 
-      afterTitle?.invoke()
-    },
-    description = {
-      Text(
-        text = description,
-        style =
-          MaterialTheme.typography.bodySmall.copy(
-            color = textColor,
-          ),
-      )
+        afterTitle?.invoke()
+      },
+      description = {
+        Text(
+            text = description,
+            style =
+                MaterialTheme.typography.bodySmall.copy(
+                    color = textColor,
+                ),
+        )
 
-      afterDescription?.invoke()
-    },
-    trailing = trailing,
-    onClick = onClick,
+        afterDescription?.invoke()
+      },
+      trailing = trailing,
+      onClick = onClick,
   )
 }
 
-/**
- * A basic settings item with icon, title, and optional description
- */
+/** A basic settings item with icon, title, and optional description */
 @Composable
 public fun SettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    description: String = "",
+    onClick: (() -> Unit)? = null,
 ) {
   SimpleSettingsRowItem(
-    modifier = modifier,
-    icon = icon,
-    title = title,
-    description = description,
-    trailing = null,
-    onClick = onClick,
+      modifier = modifier,
+      icon = icon,
+      title = title,
+      description = description,
+      trailing = null,
+      onClick = onClick,
   )
 }
 
-/**
- * A checkbox settings item with icon, title, and optional description
- */
+/** A checkbox settings item with icon, title, and optional description */
 @Composable
 public fun CheckboxSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  checked: Boolean,
-  onChange: ((Boolean) -> Unit)? = null,
-  onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    description: String = "",
+    checked: Boolean,
+    onChange: ((Boolean) -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) {
   val hapticManager = LocalHapticManager.current
 
   SimpleSettingsRowItem(
-    modifier = modifier,
-    icon = icon,
-    title = title,
-    description = description,
-    trailing = {
-      Checkbox(
-        modifier =
-          Modifier.padding(
-            start = MaterialTheme.keylines.typography,
-            end = MaterialTheme.keylines.baseline,
-          ),
-        checked = checked,
-        onCheckedChange = { newChecked ->
-          if (newChecked) {
-            hapticManager?.toggleOn()
-          } else {
-            hapticManager?.toggleOff()
-          }
-          onChange?.invoke(newChecked)
-        },
-      )
-    },
-    onClick = onClick,
+      modifier = modifier,
+      icon = icon,
+      title = title,
+      description = description,
+      trailing = {
+        Checkbox(
+            modifier =
+                Modifier.padding(
+                    horizontal = MaterialTheme.keylines.baseline,
+                ),
+            checked = checked,
+            onCheckedChange = { newChecked ->
+              if (newChecked) {
+                hapticManager?.toggleOn()
+              } else {
+                hapticManager?.toggleOff()
+              }
+              onChange?.invoke(newChecked)
+            },
+        )
+      },
+      onClick = onClick,
   )
 }
 
-/**
- * A switch settings item with icon, title, and optional description
- */
+/** A switch settings item with icon, title, and optional description */
 @Composable
 public fun SwitchSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  checked: Boolean,
-  onChange: ((Boolean) -> Unit)? = null,
-  onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    description: String = "",
+    checked: Boolean,
+    onChange: ((Boolean) -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) {
   val hapticManager = LocalHapticManager.current
 
   SimpleSettingsRowItem(
-    modifier = modifier,
-    icon = icon,
-    title = title,
-    description = description,
-    trailing = {
-      Switch(
-        modifier =
-          Modifier.padding(
-            start = MaterialTheme.keylines.typography,
-            end = MaterialTheme.keylines.baseline,
-          ),
-        checked = checked,
-        onCheckedChange = { newChecked ->
-          if (newChecked) {
-            hapticManager?.toggleOn()
-          } else {
-            hapticManager?.toggleOff()
-          }
-          onChange?.invoke(newChecked)
-        },
-      )
-    },
-    onClick = onClick,
+      modifier = modifier,
+      icon = icon,
+      title = title,
+      description = description,
+      trailing = {
+        Switch(
+            modifier =
+                Modifier.padding(
+                    horizontal = MaterialTheme.keylines.baseline,
+                ),
+            checked = checked,
+            onCheckedChange = { newChecked ->
+              if (newChecked) {
+                hapticManager?.toggleOn()
+              } else {
+                hapticManager?.toggleOff()
+              }
+              onChange?.invoke(newChecked)
+            },
+        )
+      },
+      onClick = onClick,
   )
 }
 
-/**
- * A basic settings item with icon, title, and optional description
- */
+/** A basic settings item with icon, title, and optional description */
 @Composable
 public fun BadgeSettingsRowItem(
-  modifier: Modifier = Modifier,
-  icon: Painter,
-  title: String,
-  description: String = "",
-  badge: @Composable () -> Unit,
-  onClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    icon: Painter,
+    title: String,
+    description: String = "",
+    badge: @Composable () -> Unit,
+    onClick: (() -> Unit)? = null,
 ) {
   SimpleSettingsRowItem(
-    modifier = modifier,
-    icon = icon,
-    title = title,
-    description = description,
-    afterTitle = {
-      Box(
-        modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
-      ) {
-        badge()
-      }
-    },
-    trailing = null,
-    onClick = onClick,
+      modifier = modifier,
+      icon = icon,
+      title = title,
+      description = description,
+      afterTitle = {
+        Box(
+            modifier = Modifier.padding(start = MaterialTheme.keylines.baseline),
+        ) {
+          badge()
+        }
+      },
+      trailing = null,
+      onClick = onClick,
   )
 }
 
@@ -315,43 +299,42 @@ public fun BadgeSettingsRowItem(
 @Composable
 private fun PreviewSettingsRows() {
   Column(
-    modifier = Modifier.background(color = Color.White),
+      modifier = Modifier.background(color = Color.White),
   ) {
     SimpleSettingsRowItem(
-      icon = IconPainters.close(),
-      title = "DEFAULT TITLE",
-      description = "DEFAULT DESCRIPTION"
+        icon = IconPainters.close(),
+        title = "DEFAULT TITLE",
+        description = "DEFAULT DESCRIPTION",
     )
 
     CheckboxSettingsRowItem(
-      icon = IconPainters.close(),
-      title = "CHECKBOX TITLE",
-      description = "CHECKBOX DESCRIPTION",
-      checked = true,
-      onChange = {},
+        icon = IconPainters.close(),
+        title = "CHECKBOX TITLE",
+        description = "CHECKBOX DESCRIPTION",
+        checked = true,
+        onChange = {},
     )
 
     SwitchSettingsRowItem(
-      icon = IconPainters.close(),
-      title = "SWITCH TITLE",
-      description = "SWITCH DESCRIPTION",
-      checked = false,
-      onChange = {},
+        icon = IconPainters.close(),
+        title = "SWITCH TITLE",
+        description = "SWITCH DESCRIPTION",
+        checked = false,
+        onChange = {},
     )
 
     BadgeSettingsRowItem(
-      icon = IconPainters.close(),
-      title = "IN APP BADGE TITLE",
-      description = "IN APP BADGE DESCRIPTION",
-      badge = { InAppBadge() },
+        icon = IconPainters.close(),
+        title = "IN APP BADGE TITLE",
+        description = "IN APP BADGE DESCRIPTION",
+        badge = { InAppBadge() },
     )
 
     BadgeSettingsRowItem(
-      icon = IconPainters.close(),
-      title = "EXTERNAL LINK BADGE TITLE",
-      description = "EXTERNAL LINK BADGE DESCRIPTION",
-      badge = { ExternalLinkBadge() },
+        icon = IconPainters.close(),
+        title = "EXTERNAL LINK BADGE TITLE",
+        description = "EXTERNAL LINK BADGE DESCRIPTION",
+        badge = { ExternalLinkBadge() },
     )
   }
 }
-

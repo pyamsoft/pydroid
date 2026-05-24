@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.preference
+package com.pyamsoft.pydroid.ui.internal.settings
 
-import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.Stable
+import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.flow.StateFlow
 
-/** Preference is enabled local */
-@JvmField internal val LocalPreferenceEnabledStatus = compositionLocalOf { true }
+@Stable
+public interface SettingsDangerZoneViewState : UiViewState {
+  public val isInAppDebuggingEnabled: StateFlow<Boolean>
+}

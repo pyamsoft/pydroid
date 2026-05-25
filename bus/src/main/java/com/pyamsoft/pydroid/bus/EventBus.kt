@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.bus
 
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bus.internal.DefaultEventBus
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -26,4 +28,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
  * framework like Dagger to easily inject it as a 'resolver' of a dependency
  */
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
-public interface EventBus<T : Any> : EventConsumer<T>, MutableSharedFlow<T>
+public interface EventBus<T : Any> : EventConsumer<T>, MutableSharedFlow<T> {
+
+  public companion object {
+
+    /** Create a new event bus */
+    @JvmStatic
+    @CheckResult
+    public fun <T : Any> create(): EventBus<T> {
+      return DefaultEventBus()
+    }
+  }
+}

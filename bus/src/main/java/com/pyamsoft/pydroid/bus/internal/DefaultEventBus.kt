@@ -24,9 +24,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /** Simple implementation of the EventBus interface */
-public class DefaultEventBus<T : Any>
+internal class DefaultEventBus<T : Any>
 @JvmOverloads
-public constructor(
+internal constructor(
     replay: Int = 0,
     extraBufferCapacity: Int = 0,
     onBufferOverflow: BufferOverflow = BufferOverflow.SUSPEND,

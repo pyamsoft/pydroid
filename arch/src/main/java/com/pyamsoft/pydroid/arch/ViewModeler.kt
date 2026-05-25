@@ -32,10 +32,9 @@ package com.pyamsoft.pydroid.arch
  * With the change to Jetpack Compose though, a new recommendation comes from the compose team, that
  * Activities should handle config changes themselves
  *
- * <activity ...
+ * in AndroidManifest.xml
  * android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|
  * locale|layoutDirection|fontScale|screenLayout|density|uiMode"
- * > ... </activity>
  *
  * This is because of Composes composition nature, the context and resources are re-evaluated
  * correctly on each pass, which was originally the one downside of handling config changes yourself

@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
-import com.pyamsoft.pydroid.bus.internal.DefaultEventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
@@ -151,8 +151,8 @@ internal interface PYDroidComponent {
           enforcer = enforcer,
           context = context,
           theming = theming,
-          billingErrorBus = DefaultEventBus(),
-          billingPurchaseBus = DefaultEventBus(),
+          billingErrorBus = EventBus.create(),
+          billingPurchaseBus = EventBus.create(),
           changeLogModule = changeLogModule,
           imageLoader = imageLoader,
           version = params.version,

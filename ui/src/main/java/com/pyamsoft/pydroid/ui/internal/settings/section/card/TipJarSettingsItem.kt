@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
@@ -47,6 +48,7 @@ internal fun TipJarSettingsItem(
     onDonateClicked: () -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
   val isBillingUpsellDisabled by state.isBillingUpsellDisabled.collectAsStateWithLifecycle()
 
   Column(
@@ -74,7 +76,14 @@ internal fun TipJarSettingsItem(
 
       Checkbox(
           checked = isBillingUpsellDisabled,
-          onCheckedChange = onBillingUpsellDisabledChanged,
+          onCheckedChange = { newChecked ->
+            if (newChecked) {
+              hapticManager?.toggleOn()
+            } else {
+              hapticManager?.toggleOff()
+            }
+            onBillingUpsellDisabledChanged(newChecked)
+          },
       )
     }
   }

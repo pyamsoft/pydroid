@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
+import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
@@ -61,24 +61,20 @@ internal fun TipJarSettingsItem(
     )
 
     Row(
-        modifier = Modifier.padding(horizontal = MaterialTheme.keylines.content),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-      Checkbox(
-          modifier = Modifier.padding(end = MaterialTheme.keylines.baseline),
-          checked = isBillingUpsellDisabled,
-          onCheckedChange = onBillingUpsellDisabledChanged,
+      Text(
+          modifier =
+              Modifier.padding(
+                  start = ListItemDefaults.LeadingSize + MaterialTheme.keylines.baseline
+              ),
+          text = stringResource(R.string.billing_upsell_disabled_summary),
+          style = MaterialTheme.typography.labelSmall,
       )
 
-      Text(
-          text = stringResource(R.string.billing_upsell_disabled_summary),
-          style =
-              MaterialTheme.typography.labelSmall.copy(
-                  color =
-                      MaterialTheme.typography.labelSmall.color.copy(
-                          alpha = TypographyDefaults.ALPHA_DISABLED,
-                      ),
-              ),
+      Checkbox(
+          checked = isBillingUpsellDisabled,
+          onCheckedChange = onBillingUpsellDisabledChanged,
       )
     }
   }

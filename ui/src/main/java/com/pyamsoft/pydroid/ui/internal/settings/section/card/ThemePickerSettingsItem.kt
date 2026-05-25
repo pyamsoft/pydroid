@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings
+package com.pyamsoft.pydroid.ui.internal.settings.section.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,6 +45,8 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsUIViewState
 import com.pyamsoft.pydroid.ui.settings.SimpleSettingsRowItem
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou

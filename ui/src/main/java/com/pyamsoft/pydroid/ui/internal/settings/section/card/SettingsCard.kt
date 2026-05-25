@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings
+package com.pyamsoft.pydroid.ui.internal.settings.section.card
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

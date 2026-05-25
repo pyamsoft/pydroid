@@ -39,9 +39,6 @@ internal object IconPainters {
 
   @Composable internal fun tipJar(): Painter = painterResource(R.drawable.redeem_24px)
 
-  @Composable
-  internal fun tipJarDisabled(): Painter = painterResource(R.drawable.visibility_off_24px)
-
   @Composable internal fun debugMode(): Painter = painterResource(R.drawable.terminal_24px)
 
   @Composable internal fun resetAll(): Painter = painterResource(R.drawable.warning_24px)

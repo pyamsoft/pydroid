@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings
+package com.pyamsoft.pydroid.ui.internal.settings.section
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -22,33 +22,31 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
+import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
+import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
+import com.pyamsoft.pydroid.ui.internal.settings.section.card.TipJarSettingsItem
 import com.pyamsoft.pydroid.ui.settings.BadgeSettingsRowItem
-import com.pyamsoft.pydroid.ui.settings.CheckboxSettingsRowItem
 import com.pyamsoft.pydroid.ui.settings.ExternalLinkBadge
-import com.pyamsoft.pydroid.ui.settings.InAppBadge
 
 internal fun LazyListScope.renderInAppInteractionSettings(
     modifier: Modifier = Modifier,
     options: PYDroidActivityOptions,
     appName: String,
     state: SettingsInAppInteractionViewState,
-    onDonateClicked: () -> Unit,
     onOpenMarketPage: () -> Unit,
+    onDonateClicked: () -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
 ) {
   item {
-    val isBillingUpsellDisabled by state.isBillingUpsellDisabled.collectAsStateWithLifecycle()
-
     SettingsCard(
         modifier = modifier.padding(top = MaterialTheme.keylines.content),
     ) {
@@ -63,21 +61,10 @@ internal fun LazyListScope.renderInAppInteractionSettings(
       }
 
       if (!options.disableBilling) {
-        BadgeSettingsRowItem(
-            icon = IconPainters.tipJar(),
-            title = stringResource(R.string.donate_title),
-            description = stringResource(R.string.donate_summary),
-            onClick = onDonateClicked,
-            badge = { InAppBadge() },
-        )
-
-        CheckboxSettingsRowItem(
-            icon = IconPainters.tipJarDisabled(),
-            title = stringResource(R.string.billing_upsell_disabled_title),
-            description = stringResource(R.string.billing_upsell_disabled_summary),
-            checked = isBillingUpsellDisabled,
-            onChange = onBillingUpsellDisabledChanged,
-            onClick = { onBillingUpsellDisabledChanged(!isBillingUpsellDisabled) },
+        TipJarSettingsItem(
+            state = state,
+            onDonateClicked = onDonateClicked,
+            onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
         )
       }
     }

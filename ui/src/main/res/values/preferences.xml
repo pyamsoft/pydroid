@@ -35,6 +35,7 @@
   <string name="check_version_title">Check for Updates</string>
   <string name="check_version_summary">Always have the fanciest stuff!</string>
 
+  <!-- TODO(Peter): Need zh-rTW translation -->
   <string name="rating_title">Rate %1$s</string>
   <string name="rating_summary">Liking the App? Leave a Review!</string>
 
@@ -43,7 +44,6 @@
     applications. Show your support with a tip!</string>
 
   <!-- TODO(Peter): Need zh-rTW translation -->
-  <string name="billing_upsell_disabled_title">Disable Tip Jar Upsell</string>
   <string
     name="billing_upsell_disabled_summary"
   >Stop showing the tip jar popup</string>

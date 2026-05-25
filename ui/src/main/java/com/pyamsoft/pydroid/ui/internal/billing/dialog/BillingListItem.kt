@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.theme.keylines
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 
 @Composable
 internal fun BillingListItem(
@@ -38,10 +39,14 @@ internal fun BillingListItem(
     sku: BillingSku,
     onPurchase: (BillingSku) -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
   Row(
       modifier =
           modifier
-              .clickable { onPurchase(sku) }
+              .clickable {
+                hapticManager?.actionButtonPress()
+                onPurchase(sku)
+              }
               .padding(vertical = MaterialTheme.keylines.baseline)
               .padding(horizontal = MaterialTheme.keylines.content),
       verticalAlignment = Alignment.CenterVertically,

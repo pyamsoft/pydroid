@@ -42,6 +42,7 @@ import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 
+@Composable
 @CheckResult
 private fun Modifier.maybeClickable(onClick: (() -> Unit)?): Modifier {
   val self = this
@@ -49,7 +50,13 @@ private fun Modifier.maybeClickable(onClick: (() -> Unit)?): Modifier {
     return self
   }
 
-  return self.clickable(onClick = onClick)
+  val hapticManager = LocalHapticManager.current
+  return self.clickable(
+      onClick = {
+        hapticManager?.actionButtonPress()
+        onClick()
+      },
+  )
 }
 
 /** Render a settings row item using slots */

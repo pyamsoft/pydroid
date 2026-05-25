@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 pyamsoft
+ * Copyright 2026 pyamsoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertIsNot
 import kotlin.test.assertSame
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 public class RequireNotNullTest {
 
   @Test
-  public fun rnn_noopNonNull(): Unit = runTest {
+  public fun requireNotNull_noopNonNull(): TestResult = runTest {
     val i = emptyList<Nothing>()
     val nn = i.requireNotNull()
     assertEquals(i, nn)
@@ -34,7 +35,7 @@ public class RequireNotNullTest {
   }
 
   @Test
-  public fun rnn_nullThrows(): Unit = runTest {
+  public fun requireNotNull_nullThrows(): TestResult = runTest {
     val i: String? = null
     try {
       i.requireNotNull()
@@ -46,7 +47,7 @@ public class RequireNotNullTest {
   }
 
   @Test
-  public fun rnn_nullThrowsWithMessage(): Unit = runTest {
+  public fun requireNotNull_nullThrowsWithMessage(): TestResult = runTest {
     val i: String? = null
     try {
       i.requireNotNull { "MY MESSAGE" }

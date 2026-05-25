@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.core
 
 import kotlin.test.assertFails
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import org.junit.Test
@@ -34,7 +35,7 @@ public class EnforcerTest {
 
   /** In a production application, the enforcer should be a no-op */
   @Test
-  public fun noop_doesNothing() {
+  public fun noop_doesNothing(): TestResult = runTest {
     val noop = createThreadEnforcer(debug = false)
     noop.assertOnMainThread()
     noop.assertOffMainThread()
@@ -42,7 +43,7 @@ public class EnforcerTest {
 
   /** During debugging/development, the enforcer should ACTUALLY throw though */
   @Test
-  public fun real_enforcesThreadingModel(): Unit = runTest {
+  public fun real_enforcesThreadingModel(): TestResult = runTest {
     val enforcer = createThreadEnforcer(debug = true)
     withContext(Dispatchers.Main) {
       // Should not throw

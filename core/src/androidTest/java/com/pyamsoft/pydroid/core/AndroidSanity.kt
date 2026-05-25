@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 pyamsoft
+ * Copyright 2026 pyamsoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,5 @@ import org.junit.Test
 @SmallTest
 public class AndroidSanity {
 
-  @Test public fun sanity(): Unit = runTest { assertEquals(3 + 3, 6) }
+  @Test public fun sanity(): TestResult = runTest { assertEquals(3 + 3, 6) }
 }

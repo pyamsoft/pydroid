@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 pyamsoft
+ * Copyright 2026 pyamsoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 package com.pyamsoft.pydroid.core
 
 import kotlin.test.assertEquals
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 public class JVMSanity {
 
-  @Test public fun sanity(): Unit = runTest { assertEquals(2 + 2, 4) }
+  @Test public fun sanity(): TestResult = runTest { assertEquals(2 + 2, 4) }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 pyamsoft
+ * Copyright 2026 pyamsoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.util
 
 import kotlin.test.assertEquals
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -48,24 +49,24 @@ public class LoggerTest {
   }
 
   @Test
-  public fun d_doesNothingWithoutImpl(): Unit = runTest {
+  public fun d_doesNothingWithoutImpl(): TestResult = runTest {
     Logger.d { throw AssertionError("Does nothing without implementation") }
   }
 
   @Test
-  public fun w_doesNothingWithoutImpl(): Unit = runTest {
+  public fun w_doesNothingWithoutImpl(): TestResult = runTest {
     Logger.w { throw AssertionError("Does nothing without implementation") }
   }
 
   @Test
-  public fun e_doesNothingWithoutImpl(): Unit = runTest {
+  public fun e_doesNothingWithoutImpl(): TestResult = runTest {
     Logger.e(RuntimeException("Test")) {
       throw AssertionError("Does nothing without implementation")
     }
   }
 
   @Test
-  public fun d_implCalled(): Unit = runTest {
+  public fun d_implCalled(): TestResult = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.d { "Test D" }
@@ -75,7 +76,7 @@ public class LoggerTest {
   }
 
   @Test
-  public fun w_implCalled(): Unit = runTest {
+  public fun w_implCalled(): TestResult = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.w { "Test W" }
@@ -85,7 +86,7 @@ public class LoggerTest {
   }
 
   @Test
-  public fun e_implCalled(): Unit = runTest {
+  public fun e_implCalled(): TestResult = runTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.e(RuntimeException("Test")) { "Test E" }

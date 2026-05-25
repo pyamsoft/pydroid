@@ -50,10 +50,7 @@ private fun Badge(
                   brush = SolidColor(color),
                   shape = MaterialTheme.shapes.small,
               )
-              .padding(
-                  horizontal = MaterialTheme.keylines.typography,
-                  vertical = MaterialTheme.keylines.typography / 2,
-              ),
+              .padding(horizontal = MaterialTheme.keylines.typography),
       contentAlignment = Alignment.Center,
   ) {
     Text(

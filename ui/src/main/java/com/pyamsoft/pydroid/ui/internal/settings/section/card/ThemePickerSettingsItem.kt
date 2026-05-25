@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.ListItemDefaults
+import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsUIViewState
@@ -166,13 +167,17 @@ private fun ThemeSelection(
     currentMode: Theming.Mode,
     onThemeModeChanged: (Theming.Mode) -> Unit,
 ) {
+  val hapticManager = LocalHapticManager.current
   val isCurrentMode = remember(currentMode, targetMode) { currentMode == targetMode }
 
   Box(
       modifier =
           modifier
               .size(ListItemDefaults.DefaultSize)
-              .clickable(enabled = !isCurrentMode) { onThemeModeChanged(targetMode) }
+              .clickable(enabled = !isCurrentMode) {
+                hapticManager?.actionButtonPress()
+                onThemeModeChanged(targetMode)
+              }
               .border(
                   width = if (isCurrentMode) 4.dp else 1.dp,
                   color = MaterialTheme.colorScheme.primary,
@@ -191,6 +196,7 @@ private fun MaterialYou(
     return
   }
 
+  val hapticManager = LocalHapticManager.current
   val checked by state.isMaterialYou.collectAsStateWithLifecycle()
 
   Row(
@@ -199,7 +205,14 @@ private fun MaterialYou(
   ) {
     Checkbox(
         checked = checked,
-        onCheckedChange = onMaterialYouChanged,
+        onCheckedChange = { newChecked ->
+          if (newChecked) {
+            hapticManager?.toggleOn()
+          } else {
+            hapticManager?.toggleOff()
+          }
+          onMaterialYouChanged(newChecked)
+        },
     )
 
     Text(

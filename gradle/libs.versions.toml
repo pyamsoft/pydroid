@@ -31,7 +31,7 @@ inAppReview = "2.0.2"
 billing = "9.0.0"
 
 # Images
-coil = "3.4.0"
+coil = "3.5.0"
 
 # Developer Tools
 spotless = "8.6.0"

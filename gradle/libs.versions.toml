@@ -16,29 +16,29 @@ dokka = "2.2.0"
 core = "1.19.0"
 annotation = "1.10.0"
 activity = "1.13.0"
-lifecycle = "2.10.0"
+lifecycle = "2.11.0"
 dataStore = "1.2.1"
 preference = "1.2.1"
 testRunner = "1.7.0"
 
 # Compose
-compose = "1.11.2"
+compose = "1.11.3"
 composeMaterial3 = "1.4.0"
 
 # Google
 inAppUpdate = "2.1.0"
 inAppReview = "2.0.2"
-billing = "9.0.0"
+billing = "9.1.0"
 
 # Images
 coil = "3.5.0"
 
 # Developer Tools
-spotless = "8.6.0"
+spotless = "8.7.0"
 doctor = "0.12.1"
 jdkDesugar = "2.1.5"
 caupain = "1.9.1"
-detekt = "2.0.0-alpha.4"
+detekt = "2.0.0-alpha.5"
 
 # Testing
 junit = "4.13.2"

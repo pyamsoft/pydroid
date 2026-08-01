@@ -34,7 +34,7 @@ billing = "9.1.0"
 coil = "3.5.0"
 
 # Developer Tools
-spotless = "8.8.0"
+spotless = "8.9.0"
 jdkDesugar = "2.1.5"
 caupain = "1.9.1"
 detekt = "2.0.0-alpha.5"

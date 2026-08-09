@@ -90,16 +90,6 @@ internal fun SettingsScreen(
   val loadingState by state.loadingState.collectAsStateWithLifecycle()
   val applicationName by state.applicationName.collectAsStateWithLifecycle()
 
-  val themeMode by uiViewState.themeMode.collectAsStateWithLifecycle()
-  val isMaterialYou by uiViewState.isMaterialYou.collectAsStateWithLifecycle()
-  val isHapticsEnabled by uiViewState.isHapticsEnabled.collectAsStateWithLifecycle()
-
-  val isBillingUpsellDisabled by
-      inAppInteractionViewState.isBillingUpsellDisabled.collectAsStateWithLifecycle()
-
-  val isInAppDebugEnabled by
-      dangerZoneViewState.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
-
   Crossfade(
       modifier = modifier,
       label = "Settings",
@@ -121,12 +111,7 @@ internal fun SettingsScreen(
             dangerZoneViewState = dangerZoneViewState,
             versionCheckingState = versionCheckingState,
             applicationName = applicationName,
-            themeMode = themeMode,
-            isMaterialYou = isMaterialYou,
             options = options,
-            isInAppDebugChecked = isInAppDebugEnabled,
-            isHapticsEnabled = isHapticsEnabled,
-            isBillingUpsellDisabled = isBillingUpsellDisabled,
             onThemeModeChanged = onThemeModeChanged,
             onMaterialYouChanged = onMaterialYouChange,
             onLicensesClicked = onLicensesClicked,

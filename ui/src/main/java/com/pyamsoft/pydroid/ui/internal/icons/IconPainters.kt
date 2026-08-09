@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.ui.internal.icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.ui.R
 
 /** Painters for Material Symbols */
+@LintIgnoreTooManyFunctions
 internal object IconPainters {
 
   @Composable internal fun close(): Painter = painterResource(R.drawable.close_24px)

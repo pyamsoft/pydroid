@@ -65,7 +65,6 @@ public fun CustomSettingsRowItem(
     modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)?,
     title: @Composable () -> Unit,
-    afterTitle: (@Composable () -> Unit)? = null,
     description: (@Composable () -> Unit)?,
     trailing: (@Composable () -> Unit)?,
     onClick: (() -> Unit)?,

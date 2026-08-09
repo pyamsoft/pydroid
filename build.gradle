@@ -125,7 +125,7 @@ subprojects {
 
           artifactId project.name
           groupId "com.github.pyamsoft.pydroid"
-          version "29.5.1"
+          version "29.5.2"
         }
       }
     }

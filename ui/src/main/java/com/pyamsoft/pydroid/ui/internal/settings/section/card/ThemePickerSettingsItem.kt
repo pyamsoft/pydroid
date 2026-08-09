@@ -62,6 +62,7 @@ internal fun ThemePickerSettingsItem(
   val title = stringResource(R.string.theme_mode_title)
 
   SimpleSettingsRowItem(
+      modifier = modifier,
       icon = IconPainters.themeMode(),
       title = title,
       afterDescription = {
@@ -88,6 +89,7 @@ private fun ThemeSelectionRow(
   val themeMode by state.themeMode.collectAsStateWithLifecycle()
 
   Row(
+      modifier = modifier,
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {

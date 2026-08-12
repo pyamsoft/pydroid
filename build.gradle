@@ -117,6 +117,10 @@ subprojects {
     options.deprecation = true
   }
 
+  tasks.withType(Test).configureEach {
+    maxHeapSize = "2g"
+  }
+
   project.afterEvaluate {
     publishing {
       publications {

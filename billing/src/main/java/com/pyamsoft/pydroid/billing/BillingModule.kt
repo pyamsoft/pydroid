@@ -28,41 +28,23 @@ import com.pyamsoft.pydroid.util.isDebugMode
 public class BillingModule(params: Parameters) {
 
   private val connector: BillingConnector
-  private val launcher: BillingLauncher
-  private val interactor: BillingInteractor
 
   init {
     val impl =
         if (params.context.isDebugMode()) {
           FakeBillingInteractor(
-              context = params.context.applicationContext,
               errorBus = params.errorBus,
               purchaseBus = params.purchaseBus,
           )
         } else {
           PlayStoreBillingInteractor(
               enforcer = params.enforcer,
-              context = params.context.applicationContext,
               errorBus = params.errorBus,
               purchaseBus = params.purchaseBus,
           )
         }
 
-    interactor = impl
-    launcher = impl
     connector = impl
-  }
-
-  /** Provide a billing instance */
-  @CheckResult
-  public fun provideInteractor(): BillingInteractor {
-    return interactor
-  }
-
-  /** Provide a launcher instance */
-  @CheckResult
-  public fun provideLauncher(): BillingLauncher {
-    return launcher
   }
 
   /** Provide a connector instance */

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.billing.dialog
 import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
+import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.app.AppProvider
 
@@ -28,7 +29,11 @@ internal interface BillingDialogComponent {
 
   interface Factory {
 
-    @CheckResult fun create(provider: AppProvider): BillingDialogComponent
+    @CheckResult
+    fun create(
+        provider: AppProvider,
+        connected: ConnectedBillingInteractor,
+    ): BillingDialogComponent
 
     @ConsistentCopyVisibility
     data class Parameters
@@ -44,16 +49,17 @@ internal interface BillingDialogComponent {
   private constructor(
       private val params: Factory.Parameters,
       private val provider: AppProvider,
+      private val connected: ConnectedBillingInteractor,
   ) : BillingDialogComponent {
 
     override fun inject(injector: BillingDialogInjector) {
       injector.imageLoader = params.imageLoader
-      injector.purchaseClient = params.billingModule.provideLauncher()
+      injector.purchaseClient = connected
       injector.viewModel =
           BillingDialogViewModeler(
               state = params.state,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
-              interactor = params.billingModule.provideInteractor(),
+              interactor = connected,
               provider = provider,
           )
     }
@@ -63,8 +69,11 @@ internal interface BillingDialogComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(provider: AppProvider): BillingDialogComponent {
-        return Impl(params, provider)
+      override fun create(
+          provider: AppProvider,
+          connected: ConnectedBillingInteractor,
+      ): BillingDialogComponent {
+        return Impl(params, provider, connected)
       }
     }
   }

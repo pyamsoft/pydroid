@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.pydroid
 
+import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
@@ -25,6 +26,7 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 @ConsistentCopyVisibility
 internal data class PYDroidActivityComponents
 internal constructor(
+    internal val connectedBilling: ConnectedBillingInteractor,
     internal val billingUpsell: BillingUpsell,
     internal val rating: RatingDelegate,
     internal val dataPolicy: ShowDataPolicy,

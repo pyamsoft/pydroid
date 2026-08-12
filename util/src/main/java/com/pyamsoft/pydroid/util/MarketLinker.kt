@@ -22,6 +22,9 @@ import androidx.annotation.CheckResult
 /** Links to play store market pages */
 public object MarketLinker {
 
+  // Developer builds are "<package-name>.dev"
+  public const val DEV_SUFFIX: String = ".dev"
+
   private const val MARKET_URL = "market://details?id="
   private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=8240502725675466993"
 
@@ -37,13 +40,7 @@ public object MarketLinker {
       context: Context,
       packageName: String = context.packageName,
   ): String {
-    val targetName =
-        if (packageName.endsWith(".dev")) {
-          packageName.substringBefore(".dev")
-        } else {
-          packageName
-        }
-
+    val targetName = packageName.removeSuffix(DEV_SUFFIX)
     return "$MARKET_URL$targetName"
   }
 

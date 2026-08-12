@@ -23,6 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
@@ -234,13 +235,15 @@ internal interface AppComponent {
             interactor = params.debugInteractor,
         )
 
-    private fun connectBilling(activity: ComponentActivity) {
+    @CheckResult
+    private fun connectBilling(activity: ComponentActivity): ConnectedBillingInteractor {
       if (options.disableBilling) {
         Logger.w { "Application has disabled the billing component" }
-      } else {
-        Logger.d { "Attempt Billing Connection" }
-        billingModule.provideConnector().bind(activity)
+        return ConnectedBillingInteractor.NO_OP
       }
+
+      Logger.d { "Attempt Billing Connection" }
+      return billingModule.provideConnector().bind(activity)
     }
 
     override fun create(activity: ComponentActivity): PYDroidActivityComponents {
@@ -257,7 +260,7 @@ internal interface AppComponent {
           )
 
       // Connect the In-App Billing
-      activity.doOnCreate { connectBilling(activity) }
+      val connectedBilling = connectBilling(activity)
 
       // Fake force-showing in-app rating
       activity.doOnCreate {
@@ -276,6 +279,7 @@ internal interface AppComponent {
       }
 
       return PYDroidActivityComponents(
+          connectedBilling = connectedBilling,
           rating = rating,
           dataPolicy =
               ShowDataPolicy(

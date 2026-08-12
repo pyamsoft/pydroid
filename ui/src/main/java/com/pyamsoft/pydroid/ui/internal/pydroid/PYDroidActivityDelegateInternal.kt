@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.pydroid
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityDelegate
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
@@ -46,12 +47,14 @@ internal constructor(
   private var showDataPolicy: ShowDataPolicy?
   private var billingUpsell: BillingUpsell?
 
+  private var connectedBilling: ConnectedBillingInteractor?
+
   init {
     val components = component.create(activity)
 
-    val rd = components.rating
+    connectedBilling = components.connectedBilling
 
-    ratingDelegate = rd
+    ratingDelegate = components.rating
     versionUpgradeAvailable = components.versionUpgrader
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
@@ -60,6 +63,8 @@ internal constructor(
     activity.doOnDestroy {
       appComponent = null
       appProvider = null
+
+      connectedBilling = null
 
       ratingDelegate = null
       versionUpgradeAvailable = null
@@ -78,6 +83,14 @@ internal constructor(
   @CheckResult
   internal fun injector(): AppComponent {
     return appComponent.requireNotNull { "AppComponent is NULL, was this destroyed?" }
+  }
+
+  /** Expose the ConnectedBillingInteractor */
+  @CheckResult
+  internal fun connectedBilling(): ConnectedBillingInteractor {
+    return connectedBilling.requireNotNull {
+      "ConnectedBillingInteractor is NULL, was this destroyed?"
+    }
   }
 
   /** Used in NewVersionWidget */

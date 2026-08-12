@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.billing
 
 import androidx.activity.ComponentActivity
+import androidx.annotation.CheckResult
 
 /** Abstracts the Play Store Billing client */
 public interface BillingConnector {
@@ -26,5 +27,5 @@ public interface BillingConnector {
    *
    * Will automatically manage connections
    */
-  public fun bind(activity: ComponentActivity)
+  @CheckResult public fun bind(activity: ComponentActivity): ConnectedBillingInteractor
 }

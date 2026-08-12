@@ -20,26 +20,30 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingLauncher
-import com.pyamsoft.pydroid.ui.app.AppProvider
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
 
-internal class BillingDialogInjector : ComposableInjector() {
+internal class BillingDialogInjector internal constructor() : ComposableInjector() {
 
   internal var purchaseClient: BillingLauncher? = null
   internal var viewModel: BillingDialogViewModeler? = null
   internal var imageLoader: ImageLoader? = null
 
   @CheckResult
-  private fun getApplicationProvider(activity: ComponentActivity): AppProvider {
-    return ObjectGraph.ActivityScope.retrieve(activity).changeLogProvider()
+  private fun getActivityGraph(activity: ComponentActivity): PYDroidActivityDelegateInternal {
+    return ObjectGraph.ActivityScope.retrieve(activity)
   }
 
   override fun onInject(activity: ComponentActivity) {
-    ObjectGraph.ActivityScope.retrieve(activity)
+    val graph = getActivityGraph(activity)
+    graph
         .injector()
         .plusBillingDialog()
-        .create(getApplicationProvider(activity))
+        .create(
+            provider = graph.changeLogProvider(),
+            connected = graph.connectedBilling(),
+        )
         .inject(this)
   }
 

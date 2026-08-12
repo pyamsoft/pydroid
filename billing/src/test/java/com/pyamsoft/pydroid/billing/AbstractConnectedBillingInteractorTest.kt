@@ -73,7 +73,6 @@ private class TestConnectedBillingInteractor(
 
   // Alias method to expose an otherwise "protected" function
   fun testGetSkuList() = getSkuList()
-
 }
 
 @RunWith(RobolectricTestRunner::class)

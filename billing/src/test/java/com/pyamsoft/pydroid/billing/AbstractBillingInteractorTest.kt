@@ -29,17 +29,15 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Tracks if it has been connected by a test activitiy component
- */
+/** Tracks if it has been connected by a test activitiy component */
 private class RecordingConnectedBillingInteractor :
-  ConnectedBillingInteractor by ConnectedBillingInteractor.NO_OP {
+    ConnectedBillingInteractor by ConnectedBillingInteractor.NO_OP {
 
-    enum class State {
-      NONE,
-      CONNECTED,
-      DISCONNECTED
-    }
+  enum class State {
+    NONE,
+    CONNECTED,
+    DISCONNECTED,
+  }
 
   val state = AtomicReference<State>(State.NONE)
 
@@ -52,21 +50,19 @@ private class RecordingConnectedBillingInteractor :
   }
 }
 
-/**
- * Simple no-op test interactor
- */
+/** Simple no-op test interactor */
 private class TestBillingInteractor(
-  private val connected: RecordingConnectedBillingInteractor,
+    private val connected: RecordingConnectedBillingInteractor,
 ) :
-  AbstractBillingInteractor(
-    errorBus = EventBus.create(),
-    purchaseBus = EventBus.create(),
-  ) {
+    AbstractBillingInteractor(
+        errorBus = EventBus.create(),
+        purchaseBus = EventBus.create(),
+    ) {
 
   override fun connect(
-    activity: ComponentActivity,
-    errorBus: EventBus<Throwable>,
-    purchaseBus: EventBus<BillingPurchase>,
+      activity: ComponentActivity,
+      errorBus: EventBus<Throwable>,
+      purchaseBus: EventBus<BillingPurchase>,
   ): ConnectedBillingInteractor = connected
 }
 
@@ -75,10 +71,10 @@ private class TestBillingInteractor(
 public class AbstractBillingInteractorTest {
 
   private fun awaitTrue(
-    state: AtomicReference<State>,
-    awaitState: State,
-    timeout: Duration,
-    ) {
+      state: AtomicReference<State>,
+      awaitState: State,
+      timeout: Duration,
+  ) {
     val deadline = System.currentTimeMillis() + timeout.inWholeMilliseconds
     var myState = state.get()
     while (System.currentTimeMillis() < deadline) {
@@ -91,7 +87,9 @@ public class AbstractBillingInteractorTest {
       myState = state.get()
     }
 
-    throw AssertionError("Condition was not met within $timeout: expect=${awaitState} actual=$myState")
+    throw AssertionError(
+        "Condition was not met within $timeout: expect=${awaitState} actual=$myState"
+    )
   }
 
   @Test

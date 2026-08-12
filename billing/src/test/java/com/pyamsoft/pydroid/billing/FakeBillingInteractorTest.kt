@@ -43,9 +43,9 @@ public class FakeBillingInteractorTest {
       purchaseBus: EventBus<BillingPurchase> = Companion.create(),
   ) =
       FakeBillingInteractor(
-        errorBus = errorBus,
-        purchaseBus = purchaseBus,
-      )
+              errorBus = errorBus,
+              purchaseBus = purchaseBus,
+          )
           .bind(activity)
 
   @Test
@@ -67,7 +67,7 @@ public class FakeBillingInteractorTest {
 
     connected.refresh()
     val cheapSku =
-      connected.watchSkuList().first { it.status == BillingState.CONNECTED }.skus.first()
+        connected.watchSkuList().first { it.status == BillingState.CONNECTED }.skus.first()
 
     val received = async { purchaseBus.first() }
     purchaseBus.subscriptionCount.first { it == 1 }
@@ -84,7 +84,7 @@ public class FakeBillingInteractorTest {
 
     connected.refresh()
     val expensiveSku =
-      connected.watchSkuList().first { it.status == BillingState.CONNECTED }.skus.last()
+        connected.watchSkuList().first { it.status == BillingState.CONNECTED }.skus.last()
 
     val received = async { errorBus.first() }
     errorBus.subscriptionCount.first { it == 1 }

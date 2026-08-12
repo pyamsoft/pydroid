@@ -14,13 +14,24 @@
  * limitations under the License.
  */
 
-android { namespace = "com.pyamsoft.pydroid.bus" }
+package com.pyamsoft.pydroid.bus
 
-dependencies {
-  api(project(":core"))
+import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestResult
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
-  // Testing
-  testImplementation(libs.kotlin.test)
-  testImplementation(libs.kotlinx.coroutines.test)
-  testImplementation(libs.junit)
+public class EventBusTest {
+
+  @Test
+  public fun create_emitAndCollect_deliversValue(): TestResult = runTest {
+    val bus = EventBus.create<Int>()
+
+    val job = launch { assertEquals(1, bus.first()) }
+    bus.subscriptionCount.first { it == 1 }
+    bus.emit(1)
+    job.join()
+  }
 }

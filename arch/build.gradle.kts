@@ -28,4 +28,8 @@ dependencies {
 
   api(project(":bus"))
   api(project(":util"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.junit)
 }

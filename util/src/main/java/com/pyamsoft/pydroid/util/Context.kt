@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.util
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.requireNotNull
 
 /** The application is in debug mode if the DEBUGGABLE flag is set */
 @CheckResult
@@ -28,17 +27,15 @@ public fun Context.isDebugMode(): Boolean {
   return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }
 
-private var applicationName: String? = null
-
 @CheckResult
 private fun resolveApplicationName(): (Context) -> String {
-
+  var applicationName: String? = null
   return fun(context: Context): String {
     if (applicationName == null) {
       applicationName = context.applicationInfo.loadLabel(context.packageManager).toString()
     }
 
-    return applicationName.requireNotNull()
+    return applicationName
   }
 }
 

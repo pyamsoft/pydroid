@@ -20,4 +20,9 @@ dependencies {
   implementation(libs.androidx.core)
 
   api(project(":util"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
 }

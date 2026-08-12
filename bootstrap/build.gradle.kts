@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-android { namespace = "com.pyamsoft.pydroid.bootstrap" }
+android {
+  namespace = "com.pyamsoft.pydroid.bootstrap"
+
+  testOptions { unitTests { isIncludeAndroidResources = true } }
+}
 
 dependencies {
   implementation(libs.androidx.activity)
@@ -26,4 +30,10 @@ dependencies {
   implementation(libs.compose.runtime.annotation)
 
   api(project(":util"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
 }

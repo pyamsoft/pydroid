@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.bootstrap.libraries
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.annotation.VisibleForTesting
 import com.pyamsoft.pydroid.bootstrap.R
 import com.pyamsoft.pydroid.core.LintIgnoreLongMethod
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
@@ -417,6 +418,7 @@ public object OssLibraries {
   /** Add a new library to the list of libraries used by the application */
   @JvmStatic
   @JvmOverloads
+  @Synchronized
   public fun add(
       name: String,
       url: String,
@@ -440,6 +442,7 @@ public object OssLibraries {
   /** Get the list of libraries used in the application */
   @JvmStatic
   @CheckResult
+  @Synchronized
   public fun libraries(context: Context): Set<OssLibrary> {
     // Since we are in the bootstrap module, this always happens
     addBootstrapLibraries(context)
@@ -472,6 +475,32 @@ public object OssLibraries {
       addUiLibraries(context)
     }
 
-    return libraries
+    return libraries.toSet()
+  }
+
+  /** Reset all tracked library/flag state. Only intended for use from tests. */
+  @VisibleForTesting
+  @Synchronized
+  internal fun resetForTests() {
+    libraries.clear()
+
+    usingArch = false
+    usingNotify = false
+    usingUi = false
+    usingTheme = false
+    usingBus = false
+    usingBilling = false
+    usingUtil = false
+
+    addedBus = false
+    addedBilling = false
+    addedBuild = false
+    addedCore = false
+    addedBootstrap = false
+    addedArch = false
+    addedNotify = false
+    addedUi = false
+    addedTheme = false
+    addedUtil = false
   }
 }

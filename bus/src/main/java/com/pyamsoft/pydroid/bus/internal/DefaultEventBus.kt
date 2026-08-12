@@ -42,7 +42,8 @@ internal constructor(
 
   override val subscriptionCount: StateFlow<Int> = bus.subscriptionCount
 
-  override val replayCache: List<T> = bus.replayCache
+  override val replayCache: List<T>
+    get() = bus.replayCache
 
   override suspend fun collect(collector: FlowCollector<T>): Nothing = bus.collect(collector)
 

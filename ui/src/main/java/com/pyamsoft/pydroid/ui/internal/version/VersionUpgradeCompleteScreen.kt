@@ -67,15 +67,14 @@ internal fun VersionUpgradeCompleteScreen(
     Column(
         modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.content),
     ) {
-      val text =
-          launcher.let { l ->
-            if (l == null) {
-              // Should basically never happen
-              stringResource(R.string.your_upgrade_is_ready)
-            } else {
-              stringResource(R.string.your_upgrade_to_version_is_ready, l.availableUpdateVersion())
-            }
-          }
+      val text = launcher.let { l ->
+        if (l == null) {
+          // Should basically never happen
+          stringResource(R.string.your_upgrade_is_ready)
+        } else {
+          stringResource(R.string.your_upgrade_to_version_is_ready, l.availableUpdateVersion())
+        }
+      }
 
       Text(
           text = text,

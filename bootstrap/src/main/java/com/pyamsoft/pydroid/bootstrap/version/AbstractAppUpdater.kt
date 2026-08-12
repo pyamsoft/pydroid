@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
-import androidx.annotation.VisibleForTesting
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.InstallStateUpdatedListener
@@ -141,10 +140,8 @@ protected constructor(
 
   companion object {
 
-    /** Compute download progress, guarding against a not-yet-known total byte count. */
-    @VisibleForTesting
     @CheckResult
-    internal fun calculateDownloadProgress(bytesDownloaded: Long, totalBytes: Long): Float {
+    private fun calculateDownloadProgress(bytesDownloaded: Long, totalBytes: Long): Float {
       return if (totalBytes <= 0L) 0F else bytesDownloaded / totalBytes.toFloat()
     }
 

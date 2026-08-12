@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.bootstrap.libraries
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.pyamsoft.pydroid.bootstrap.R
 import com.pyamsoft.pydroid.core.LintIgnoreLongMethod
@@ -479,8 +480,9 @@ public object OssLibraries {
   }
 
   /** Reset all tracked library/flag state. Only intended for use from tests. */
-  @VisibleForTesting
   @Synchronized
+  @VisibleForTesting
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
   internal fun resetForTests() {
     libraries.clear()
 

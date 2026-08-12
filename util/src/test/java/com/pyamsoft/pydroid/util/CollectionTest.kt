@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-android {
-  namespace = "com.pyamsoft.pydroid.util"
+package com.pyamsoft.pydroid.util
 
-  defaultConfig {
-    // Android Testing
-    // https://developer.android.com/training/testing/instrumented-tests
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+import org.junit.Test
+
+public class CollectionTest {
+
+  @Test
+  public fun contains_emptyCollection_isFalse() {
+    assertFalse(emptyList<Int>().contains { it == 1 })
   }
-}
 
-dependencies {
-  implementation(libs.androidx.lifecycle)
-  implementation(libs.androidx.activity)
+  @Test
+  public fun contains_matchFound_isTrue() {
+    assertTrue(listOf(1, 2, 3).contains { it == 2 })
+  }
 
-  // Testing
-  testImplementation(libs.kotlin.test)
-  testImplementation(libs.kotlinx.coroutines.android)
-  testImplementation(libs.kotlinx.coroutines.test)
-  testImplementation(libs.junit)
-  testImplementation(libs.robolectric)
-
-  api(project(":core"))
+  @Test
+  public fun contains_noMatch_isFalse() {
+    assertFalse(listOf(1, 2, 3).contains { it == 4 })
+  }
 }

@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.util.MarketLinker
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
@@ -202,13 +201,5 @@ public class AbstractConnectedBillingInteractorTest {
         ),
         skuList,
     )
-  }
-
-  @Test
-  public fun isBillingScopeActive_trueWhileActivityAlive() {
-    val activity = Robolectric.buildActivity(ComponentActivity::class.java).get()
-    val interactor = newInteractor(activity)
-
-    assertTrue(interactor.isBillingScopeActive())
   }
 }

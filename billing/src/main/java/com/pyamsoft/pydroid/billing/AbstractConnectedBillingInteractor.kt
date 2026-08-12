@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.billing
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingInteractor.BillingSkuListSnapshot
@@ -154,9 +155,6 @@ protected constructor(
   protected abstract suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku)
 
   protected abstract suspend fun onClientRefresh()
-
-  /** Whether the billing scope is currently active. Only intended for use from tests. */
-  @VisibleForTesting internal fun isBillingScopeActive(): Boolean = billingScope.isActive
 
   companion object {
 

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionThrown
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -53,7 +54,12 @@ public class VersionInteractorNetworkTest {
 
   @Test
   public fun checkVersion_failure_returnsFailureWrapper(): TestResult = runTest {
-    val interactor = VersionInteractorNetwork(FakeAppUpdater { throw RuntimeException("boom") })
+    val interactor =
+        VersionInteractorNetwork(
+            FakeAppUpdater {
+              @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
+            }
+        )
 
     val result = interactor.checkVersion()
 

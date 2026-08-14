@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
+import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionThrown
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -44,7 +45,12 @@ public class RatingInteractorImplTest {
 
   @Test
   public fun askForRating_failure_returnsFailureWrapper(): TestResult = runTest {
-    val interactor = RatingInteractorImpl(FakeRateMyApp { throw RuntimeException("boom") })
+    val interactor =
+        RatingInteractorImpl(
+            FakeRateMyApp {
+              @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
+            }
+        )
 
     val result = interactor.askForRating()
 

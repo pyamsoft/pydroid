@@ -18,8 +18,6 @@ package com.pyamsoft.pydroid.billing
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
-import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingInteractor.BillingSkuListSnapshot
 import com.pyamsoft.pydroid.bus.EventBus
@@ -39,7 +37,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 

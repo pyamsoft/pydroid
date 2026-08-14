@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.billing.BillingInteractor.BillingSkuListSnapshot
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.MarketLinker
 import com.pyamsoft.pydroid.util.ifNotCancellation
@@ -32,7 +33,6 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +46,7 @@ protected constructor(
     activity: ComponentActivity,
     private val errorBus: EventBus<Throwable>,
     private val purchaseBus: EventBus<BillingPurchase>,
+    protected val dispatchers: AppDispatchers,
 ) : ConnectedBillingInteractor {
 
   private val appSkuList: List<String>
@@ -81,7 +82,7 @@ protected constructor(
   protected fun onDisconnected() {
     Logger.w { "Billing client was disconnected!" }
 
-    billingScope.launch(context = Dispatchers.Default) {
+    billingScope.launch(context = dispatchers.default) {
       val waitTime = backoffCount.get()
       val newBackoffCount = backoffCount.updateAndGet { it * BACKOFF_SCALE }
 
@@ -89,7 +90,7 @@ protected constructor(
         Logger.d { "Wait to reconnect for $waitTime seconds" }
         delay(waitTime.seconds)
 
-        withContext(context = Dispatchers.Default) {
+        withContext(context = dispatchers.default) {
           Logger.d { "Try connecting again" }
           onClientConnect()
         }
@@ -100,7 +101,7 @@ protected constructor(
   }
 
   final override suspend fun refresh() =
-      withContext(context = Dispatchers.Default) { onClientRefresh() }
+      withContext(context = dispatchers.default) { onClientRefresh() }
 
   final override fun watchSkuList(): Flow<BillingSkuListSnapshot> = skuFlow.map {
     BillingSkuListSnapshot(
@@ -110,7 +111,7 @@ protected constructor(
   }
 
   final override suspend fun purchase(activity: ComponentActivity, sku: BillingSku): Unit =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         try {
           onPurchase(activity, sku)
         } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionThrown
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -45,7 +46,12 @@ public class VersionInteractorNetworkTest {
   @Test
   public fun checkVersion_success_returnsSuccessWrapper(): TestResult = runTest {
     val launcher = AppUpdateLauncher.empty()
-    val interactor = VersionInteractorNetwork(FakeAppUpdater { launcher })
+    val interactor =
+        VersionInteractorNetwork(
+            updater = FakeAppUpdater { launcher },
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
+        )
 
     val result = interactor.checkVersion()
 
@@ -56,9 +62,13 @@ public class VersionInteractorNetworkTest {
   public fun checkVersion_failure_returnsFailureWrapper(): TestResult = runTest {
     val interactor =
         VersionInteractorNetwork(
-            FakeAppUpdater {
-              @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
-            }
+            updater =
+                FakeAppUpdater {
+                  @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
+                },
+
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
         )
 
     val result = interactor.checkVersion()
@@ -70,7 +80,11 @@ public class VersionInteractorNetworkTest {
   @Test
   public fun checkVersion_cancellation_propagatesInsteadOfSwallowing(): TestResult = runTest {
     val interactor =
-        VersionInteractorNetwork(FakeAppUpdater { throw CancellationException("cancelled") })
+        VersionInteractorNetwork(
+            updater = FakeAppUpdater { throw CancellationException("cancelled") },
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
+        )
 
     assertFailsWith<CancellationException> { interactor.checkVersion() }
   }

@@ -22,6 +22,7 @@ import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AbstractRateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.delay
 
@@ -29,9 +30,11 @@ internal class FakeRateMyApp
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
+    dispatchers: AppDispatchers,
 ) :
     AbstractRateMyApp<FakeReviewManager>(
         enforcer = enforcer,
+        dispatchers = dispatchers,
         resolveReviewManager = { FakeReviewManager(context.applicationContext) },
     ) {
 
@@ -43,6 +46,7 @@ internal constructor(
   override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =
       FakeAppRatingLauncher(
           manager = manager,
+          dispatchers = dispatchers,
           info = info,
       )
 }

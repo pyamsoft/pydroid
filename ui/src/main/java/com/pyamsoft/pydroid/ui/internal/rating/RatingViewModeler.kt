@@ -20,15 +20,16 @@ import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.rating.RatingViewState
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingViewModeler
 internal constructor(
     override val state: MutableRatingViewState,
     private val interactor: RatingInteractor,
+    private val dispatchers: AppDispatchers,
 ) : RatingViewState by state, AbstractViewModeler<RatingViewState>(state) {
 
   internal fun loadInAppRating(
@@ -41,7 +42,7 @@ internal constructor(
     }
 
     s.isLoading.value = true
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       interactor
           .askForRating()
           .onSuccess { Logger.d { "Launch in-app rating: $it" } }

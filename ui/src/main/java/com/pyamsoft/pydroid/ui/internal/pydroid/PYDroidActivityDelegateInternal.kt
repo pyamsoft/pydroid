@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class PYDroidActivityDelegateInternal
@@ -46,6 +47,7 @@ internal constructor(
   private var showUpdateChangeLog: ShowUpdateChangeLog?
   private var showDataPolicy: ShowDataPolicy?
   private var billingUpsell: BillingUpsell?
+  private var dispatchers: AppDispatchers?
 
   private var connectedBilling: ConnectedBillingInteractor?
 
@@ -59,6 +61,7 @@ internal constructor(
     showUpdateChangeLog = components.showUpdateChangeLog
     billingUpsell = components.billingUpsell
     showDataPolicy = components.dataPolicy
+    dispatchers = components.dispatchers
 
     activity.doOnDestroy {
       appComponent = null
@@ -70,6 +73,7 @@ internal constructor(
       versionUpgradeAvailable = null
       billingUpsell = null
       showDataPolicy = null
+      dispatchers = null
     }
   }
 
@@ -119,6 +123,11 @@ internal constructor(
     return billingUpsell.requireNotNull { "BillingUpsell is NULL, was this destroyed?" }
   }
 
+  @CheckResult
+  internal fun dispatchers(): AppDispatchers {
+    return dispatchers.requireNotNull { "Dispatchers is NULL, was this destroyed?" }
+  }
+
   /**
    * Rating Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that
    * is up to Google
@@ -126,6 +135,6 @@ internal constructor(
   override fun loadInAppRating() {
     ratingDelegate
         .requireNotNull { "RatingDelegate is NULL, was this destroyed?" }
-        .loadInAppRating()
+        .loadInAppRating(dispatchers())
   }
 }

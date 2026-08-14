@@ -43,11 +43,11 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.toRawString
 import com.pyamsoft.pydroid.ui.theme.toThemingMode
 import com.pyamsoft.pydroid.ui.util.canUseMaterialYou
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -64,6 +64,7 @@ internal class PYDroidPreferencesImpl
 internal constructor(
     context: Context,
     private val versionCode: Int,
+    private val dispatchers: AppDispatchers,
 ) :
     ThemingPreferences,
     BillingPreferences,
@@ -115,7 +116,7 @@ internal constructor(
 
   private val scope by lazy {
     CoroutineScope(
-        context = SupervisorJob() + Dispatchers.IO + CoroutineName(this::class.java.name),
+        context = SupervisorJob() + dispatchers.io + CoroutineName(this::class.java.name),
     )
   }
 
@@ -124,7 +125,7 @@ internal constructor(
       fallbackValue: T,
       crossinline value: suspend (Preferences) -> T,
   ) {
-    scope.launch(context = Dispatchers.IO) {
+    scope.launch(context = dispatchers.io) {
       try {
         prefs.edit { it[key] = value(it) }
       } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable) {
@@ -161,7 +162,7 @@ internal constructor(
               key = KEY_IN_APP_DEBUGGING,
               value = DEFAULT_IN_APP_DEBUGGING_ENABLED,
           )
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setInAppDebuggingEnabled(enabled: Boolean) {
     setPreference(
@@ -186,14 +187,14 @@ internal constructor(
               emit(count >= VALUE_BILLING_SHOW_UPSELL_THRESHOLD)
             }
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun listenForBillingUpsellDisabledChanges(): Flow<Boolean> =
       getPreference(
               key = KEY_BILLING_UPSELL_DISABLED,
               value = DEFAULT_BILLING_UPSELL_DISABLED,
           )
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setBillingUpsellDisabled(disabled: Boolean) {
     setPreference(
@@ -242,7 +243,7 @@ internal constructor(
             }
           }
           .map { it in 1 until versionCode }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun markChangeLogShown() {
     setPreference(
@@ -258,7 +259,7 @@ internal constructor(
               value = DEFAULT_DARK_MODE,
           )
           .map { it.toThemingMode() }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setThemeMode(mode: Mode) {
     setPreference(
@@ -273,7 +274,7 @@ internal constructor(
               key = KEY_DATA_POLICY_CONSENTED,
               value = DEFAULT_DATA_POLICY_CONSENTED,
           )
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun respondToPolicy(accepted: Boolean) {
     setPreference(
@@ -288,7 +289,7 @@ internal constructor(
               key = KEY_HAPTICS_ENABLED,
               value = DEFAULT_HAPTICS_ENABLED,
           )
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun enableHaptics() {
     setHapticsEnabled(true)
@@ -303,7 +304,7 @@ internal constructor(
               key = KEY_MATERIAL_YOU,
               value = DEFAULT_MATERIAL_YOU,
           )
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setMaterialYou(enabled: Boolean) {
     setPreference(
@@ -333,7 +334,7 @@ internal constructor(
               emit(request)
             }
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setUpgradeScenarioAvailable(fake: FakeUpgradeRequest?) {
     setPreference(
@@ -350,7 +351,7 @@ internal constructor(
           ) { isDebugEnabled, show ->
             emit(isDebugEnabled && show)
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setShowChangelogUpsell(show: Boolean) {
     setPreference(
@@ -367,7 +368,7 @@ internal constructor(
           ) { isDebugEnabled, show ->
             emit(isDebugEnabled && show)
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setTryShowRatingUpsell(show: Boolean) {
     setPreference(
@@ -389,7 +390,7 @@ internal constructor(
               emit(isDebugEnabled && show)
             }
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
 
   override fun setShowBillingUpsell(show: Boolean) {
     setPreference(

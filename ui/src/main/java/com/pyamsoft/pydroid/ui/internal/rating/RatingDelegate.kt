@@ -20,9 +20,9 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnDestroy
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingDelegate(
@@ -49,10 +49,11 @@ internal class RatingDelegate(
 
   private fun showRating(
       activity: ComponentActivity,
+      dispatchers: AppDispatchers,
       launcher: AppRatingLauncher,
   ) {
     // Enforce that we do this on the Main thread
-    activity.lifecycleScope.launch(context = Dispatchers.Main) {
+    activity.lifecycleScope.launch(context = dispatchers.main) {
       launcher
           .rate(activity)
           .onSuccess { Logger.d { "Call was made for in-app rating request" } }
@@ -64,7 +65,9 @@ internal class RatingDelegate(
    * Attempt to call in-app rating dialog. Does not always result in showing the Dialog, that is up
    * to Google
    */
-  fun loadInAppRating() {
+  fun loadInAppRating(
+      dispatchers: AppDispatchers,
+  ) {
     if (disabled) {
       Logger.w { "Application has disabled the Rating component" }
       return
@@ -75,7 +78,7 @@ internal class RatingDelegate(
         .requireNotNull()
         .loadInAppRating(
             scope = act.lifecycleScope,
-            onLaunchInAppRating = { showRating(act, it) },
+            onLaunchInAppRating = { showRating(act, dispatchers, it) },
         )
   }
 }

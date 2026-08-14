@@ -20,9 +20,9 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -31,6 +31,7 @@ internal constructor(
     override val state: MutableBillingViewState,
     private val preferences: BillingPreferences,
     private val isFakeUpsell: Flow<Boolean>?,
+    private val dispatchers: AppDispatchers,
 ) : BillingViewState by state, AbstractViewModeler<BillingViewState>(state) {
 
   override fun registerSaveState(
@@ -54,7 +55,7 @@ internal constructor(
     val s = state
 
     preferences.listenForBillingUpsellChanges().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { show ->
           if (show) {
             Logger.d { "Showing Billing upsell" }
@@ -65,7 +66,7 @@ internal constructor(
     }
 
     isFakeUpsell?.also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { show ->
           if (show) {
             Logger.d { "Fake a billing upsell, force show" }

@@ -43,5 +43,6 @@ public fun BillingUpsellWidget(
   billing.RenderBillingUpsellWidget(
       modifier = modifier,
       dialogModifier = dialogModifier,
+      dispatchers = delegate.dispatchers(),
   )
 }

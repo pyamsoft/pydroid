@@ -21,14 +21,15 @@ import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.core.cast
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class ChangeLogViewModeler
 internal constructor(
     override val state: MutableChangeLogViewState,
     private val interactor: ChangeLogInteractor,
+    private val dispatchers: AppDispatchers,
 ) : ChangeLogViewState by state, AbstractViewModeler<ChangeLogViewState>(state) {
 
   override fun registerSaveState(
@@ -50,7 +51,7 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     interactor.listenShowChangeLogChanges().also { f ->
-      scope.launch(context = Dispatchers.Default) { f.collect { state.isShowUpsell.value = it } }
+      scope.launch(context = dispatchers.default) { f.collect { state.isShowUpsell.value = it } }
     }
   }
 

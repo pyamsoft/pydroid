@@ -18,15 +18,16 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class ResetViewModeler
 internal constructor(
     override val state: MutableResetViewState,
     private val interactor: SettingsInteractor,
+    private val dispatchers: AppDispatchers,
 ) : ResetViewState by state, AbstractViewModeler<ResetViewState>(state) {
 
   internal fun handleFullReset(scope: CoroutineScope) {
@@ -36,7 +37,7 @@ internal constructor(
     }
 
     state.reset.value = true
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       Logger.d { "Completely reset application" }
       interactor.wipeData()
     }

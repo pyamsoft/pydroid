@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface DataPolicyDialogComponent {
 
@@ -39,6 +40,7 @@ internal interface DataPolicyDialogComponent {
         internal val termsConditionsUrl: String,
         internal val imageLoader: ImageLoader,
         internal val module: DataPolicyModule,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -59,6 +61,7 @@ internal interface DataPolicyDialogComponent {
                   ),
               interactor = params.module.provideInteractor(),
               provider = provider,
+              dispatchers = params.dispatchers,
           )
     }
 

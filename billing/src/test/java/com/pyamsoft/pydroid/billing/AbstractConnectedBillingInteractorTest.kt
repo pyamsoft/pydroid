@@ -16,8 +16,10 @@
 
 package com.pyamsoft.pydroid.billing
 
+import android.os.Build
 import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.MarketLinker
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.assertEquals
@@ -45,11 +47,13 @@ private class TestConnectedBillingInteractor(
     activity: ComponentActivity,
     errorBus: EventBus<Throwable>,
     purchaseBus: EventBus<BillingPurchase>,
+    dispatchers: AppDispatchers,
     private val onPurchaseAction: suspend () -> Unit = {},
 ) :
     AbstractConnectedBillingInteractor(
         activity = activity,
         errorBus = errorBus,
+        dispatchers = dispatchers,
         purchaseBus = purchaseBus,
     ) {
 
@@ -75,19 +79,26 @@ private class TestConnectedBillingInteractor(
 }
 
 @RunWith(RobolectricTestRunner::class)
-@Config(minSdk = 26)
+@Config(
+    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+    minSdk = Build.VERSION_CODES.O,
+    maxSdk = Build.VERSION_CODES.BAKLAVA,
+)
 public class AbstractConnectedBillingInteractorTest {
 
   private fun newInteractor(
       activity: ComponentActivity,
       errorBus: EventBus<Throwable> = EventBus.create(),
       purchaseBus: EventBus<BillingPurchase> = EventBus.create(),
+      // TODO(Peter): Do we need test control over dispatchers here?
+      dispatchers: AppDispatchers = AppDispatchers.create(),
       onPurchaseAction: suspend () -> Unit = {},
   ) =
       TestConnectedBillingInteractor(
           activity = activity,
           errorBus = errorBus,
           purchaseBus = purchaseBus,
+          dispatchers = dispatchers,
           onPurchaseAction = onPurchaseAction,
       )
 

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface ChangeLogComponent {
 
@@ -33,6 +34,7 @@ internal interface ChangeLogComponent {
     internal constructor(
         internal val changeLogModule: ChangeLogModule,
         internal val state: MutableChangeLogViewState,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -46,6 +48,7 @@ internal interface ChangeLogComponent {
           ChangeLogViewModeler(
               interactor = params.changeLogModule.provideInteractor(),
               state = params.state,
+              dispatchers = params.dispatchers,
           )
     }
 

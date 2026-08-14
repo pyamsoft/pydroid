@@ -20,14 +20,15 @@ import androidx.compose.runtime.saveable.SaveableStateRegistry
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class DataPolicyViewModeler
 internal constructor(
     override val state: MutableDataPolicyViewState,
     private val interactor: DataPolicyInteractor,
+    private val dispatchers: AppDispatchers,
 ) : DataPolicyViewState by state, AbstractViewModeler<DataPolicyViewState>(state) {
 
   override fun registerSaveState(
@@ -49,7 +50,7 @@ internal constructor(
       scope: CoroutineScope,
   ) {
     interactor.listenForPolicyAcceptedChanges().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { accepted ->
           state.isAccepted.value =
               if (accepted) DataPolicyViewState.AcceptedState.ACCEPTED

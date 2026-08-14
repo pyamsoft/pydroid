@@ -16,11 +16,13 @@
 
 package com.pyamsoft.pydroid.billing
 
+import android.os.Build
 import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.billing.BillingPurchase.Fake
 import com.pyamsoft.pydroid.billing.fake.FakeBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.bus.EventBus.Companion
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlinx.coroutines.async
@@ -34,17 +36,24 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(minSdk = 26)
+@Config(
+    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+    minSdk = Build.VERSION_CODES.O,
+    maxSdk = Build.VERSION_CODES.BAKLAVA,
+)
 public class FakeBillingInteractorTest {
 
   private fun newConnected(
       activity: ComponentActivity,
       errorBus: EventBus<Throwable> = Companion.create(),
       purchaseBus: EventBus<BillingPurchase> = Companion.create(),
+      // TODO(Peter): Do we need test control over dispatchers here?
+      dispatchers: AppDispatchers = AppDispatchers.create(),
   ) =
       FakeBillingInteractor(
               errorBus = errorBus,
               purchaseBus = purchaseBus,
+              dispatchers = dispatchers,
           )
           .bind(activity)
 

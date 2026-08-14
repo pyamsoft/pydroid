@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.ui.internal.billing.ShowBillingUpsell
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
@@ -98,6 +99,7 @@ internal constructor(
   @Composable
   private fun RenderContent(
       modifier: Modifier = Modifier,
+      dispatchers: AppDispatchers,
       state: BillingViewState,
       onDismissDialog: () -> Unit,
       content: @Composable () -> Unit,
@@ -109,6 +111,7 @@ internal constructor(
     if (showDialog) {
       BillingDialog(
           modifier = modifier,
+          dispatchers = dispatchers,
           onDismiss = onDismissDialog,
       )
     }
@@ -122,6 +125,7 @@ internal constructor(
   @Composable
   public fun Render(
       modifier: Modifier = Modifier,
+      dispatchers: AppDispatchers = AppDispatchers.create(),
       content: ShowBillingWidget,
   ) {
     if (disabled) {
@@ -136,6 +140,7 @@ internal constructor(
     RenderContent(
         modifier = modifier,
         state = vm,
+        dispatchers = dispatchers,
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
       content(
@@ -153,10 +158,12 @@ internal constructor(
   @Composable
   public fun RenderBillingUpsellWidget(
       modifier: Modifier = Modifier,
+      dispatchers: AppDispatchers = AppDispatchers.create(),
       dialogModifier: Modifier = Modifier,
   ) {
     Render(
         modifier = dialogModifier,
+        dispatchers = dispatchers,
     ) { state, onShowBilling, onDismiss ->
       ShowBillingUpsell(
           modifier = modifier,

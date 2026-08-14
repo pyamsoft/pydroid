@@ -35,10 +35,10 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpdateProgressScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeAvailableScreen
 import com.pyamsoft.pydroid.ui.internal.version.VersionUpgradeCompleteScreen
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /** Upon download action started, this callback will run */
@@ -133,6 +133,7 @@ internal constructor(
    */
   @Composable
   public fun Render(
+      dispatchers: AppDispatchers = AppDispatchers.create(),
       content: VersionUpgradeWidget,
   ) {
     if (disabled) {
@@ -149,7 +150,7 @@ internal constructor(
     val handleStartInAppUpdateDownload by rememberUpdatedState { launcher: AppUpdateLauncher ->
       // Don't use scope since if this leaves Composition it would die
       // Enforce that we do this on the Main thread
-      activity.lifecycleScope.launch(context = Dispatchers.Main) {
+      activity.lifecycleScope.launch(context = dispatchers.main) {
         launcher
             .launchUpdate(activity)
             .onSuccess { status ->
@@ -211,8 +212,11 @@ internal constructor(
   @Composable
   public fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
+      dispatchers: AppDispatchers = AppDispatchers.create(),
   ) {
-    Render { state, onDownloadStarted, onUpgradeStarted, onRestartDownload ->
+    Render(
+        dispatchers = dispatchers,
+    ) { state, onDownloadStarted, onUpgradeStarted, onRestartDownload ->
       VersionUpgradeAvailableScreen(
           modifier = modifier,
           state = state,

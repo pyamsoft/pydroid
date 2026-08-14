@@ -23,20 +23,24 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class PlayStoreAppUpdater
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
+    dispatchers: AppDispatchers,
 ) :
     AbstractAppUpdater<AppUpdateManager>(
         enforcer = enforcer,
+        dispatchers = dispatchers,
         resolveAppUpdateManager = { AppUpdateManagerFactory.create(context.applicationContext) },
     ) {
 
   override fun createAppUpdateLauncher(info: AppUpdateInfo, updateType: Int): AppUpdateLauncher =
       PlayStoreAppUpdateLauncher(
           manager = manager,
+          dispatchers = dispatchers,
           info = info,
           type = updateType,
       )

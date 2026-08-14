@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionThrown
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -36,7 +37,12 @@ public class RatingInteractorImplTest {
   @Test
   public fun askForRating_success_returnsSuccessWrapper(): TestResult = runTest {
     val launcher = AppRatingLauncher.empty()
-    val interactor = RatingInteractorImpl(FakeRateMyApp { launcher })
+    val interactor =
+        RatingInteractorImpl(
+            rateMyApp = FakeRateMyApp { launcher },
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
+        )
 
     val result = interactor.askForRating()
 
@@ -47,9 +53,13 @@ public class RatingInteractorImplTest {
   public fun askForRating_failure_returnsFailureWrapper(): TestResult = runTest {
     val interactor =
         RatingInteractorImpl(
-            FakeRateMyApp {
-              @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
-            }
+            rateMyApp =
+                FakeRateMyApp {
+                  @LintIgnoreTooGenericExceptionThrown throw RuntimeException("boom")
+                },
+
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
         )
 
     val result = interactor.askForRating()
@@ -61,7 +71,11 @@ public class RatingInteractorImplTest {
   @Test
   public fun askForRating_cancellation_propagatesInsteadOfSwallowing(): TestResult = runTest {
     val interactor =
-        RatingInteractorImpl(FakeRateMyApp { throw CancellationException("cancelled") })
+        RatingInteractorImpl(
+            rateMyApp = FakeRateMyApp { throw CancellationException("cancelled") },
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
+        )
 
     assertFailsWith<CancellationException> { interactor.askForRating() }
   }

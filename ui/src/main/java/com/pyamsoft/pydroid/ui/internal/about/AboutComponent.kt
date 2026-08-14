@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface AboutComponent {
 
@@ -32,6 +33,7 @@ internal interface AboutComponent {
     data class Parameters
     internal constructor(
         internal val module: AboutModule,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -45,6 +47,7 @@ internal interface AboutComponent {
           AboutViewModeler(
               state = MutableAboutViewState(),
               interactor = params.module.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
     }
 

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.flow.Flow
 
 /** Change log module */
@@ -27,6 +28,7 @@ public class ChangeLogModule(params: Parameters) {
       ChangeLogInteractorImpl(
           context = params.context,
           preferences = params.preferences,
+          dispatchers = params.dispatchers,
           isFakeChangeLogAvailable = params.isFakeChangeLogAvailable,
       )
 
@@ -42,6 +44,7 @@ public class ChangeLogModule(params: Parameters) {
   public constructor(
       internal val context: Context,
       internal val preferences: ChangeLogPreferences,
+      internal val dispatchers: AppDispatchers,
       /** If this field is set, the changelog module will always request to show a changelog */
       internal val isFakeChangeLogAvailable: Flow<Boolean>? = null,
   )

@@ -45,8 +45,8 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.cast
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @LintIgnoreTooManyFunctions
@@ -56,11 +56,13 @@ internal constructor(
     activity: ComponentActivity,
     errorBus: EventBus<Throwable>,
     purchaseBus: EventBus<BillingPurchase>,
+    dispatchers: AppDispatchers,
 ) :
     AbstractConnectedBillingInteractor(
         activity = activity,
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers = dispatchers,
     ),
     BillingClientStateListener,
     PurchasesUpdatedListener,
@@ -136,12 +138,12 @@ internal constructor(
 
   override fun onConsumeResponse(result: BillingResult, token: String) {
     if (result.isOk()) {
-      launchInScope(context = Dispatchers.Default) {
+      launchInScope(context = dispatchers.default) {
         Logger.d { "Purchase consumed $token" }
         emitPurchase(PlayBillingConsumed(token))
       }
     } else {
-      launchInScope(context = Dispatchers.Default) {
+      launchInScope(context = dispatchers.default) {
         Logger.w { "Consume response not OK: ${result.debugMessage}" }
         emitError(RuntimeException(result.debugMessage))
       }
@@ -168,7 +170,7 @@ internal constructor(
   }
 
   override suspend fun onClientRefresh() =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         if (!client.isReady) {
           Logger.w { "Client is not ready yet, so we are not refreshing sku and purchases" }
           return@withContext
@@ -178,7 +180,7 @@ internal constructor(
       }
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         val realSku = sku.cast<PlayBillingSku>()
         if (realSku == null) {
           emitError(ERROR_WRONG_SKU_TYPE)
@@ -195,7 +197,7 @@ internal constructor(
 
         val params = BillingFlowParams.newBuilder().setProductDetailsParamsList(products).build()
 
-        withContext(context = Dispatchers.Main) {
+        withContext(context = dispatchers.main) {
           Logger.d { "Launch purchase flow ${realSku.id}" }
 
           // onPurchasesUpdated
@@ -209,7 +211,7 @@ internal constructor(
     if (result.isOk()) {
       if (purchases != null) {
         if (purchases.isEmpty()) {
-          launchInScope(context = Dispatchers.Default) {
+          launchInScope(context = dispatchers.default) {
             Logger.w { "Purchase list was empty!" }
             emitError(ERROR_BAD_PURCHASE_LIST)
           }
@@ -218,7 +220,7 @@ internal constructor(
           handlePurchases(purchases)
         }
       } else {
-        launchInScope(context = Dispatchers.Default) {
+        launchInScope(context = dispatchers.default) {
           Logger.w { "Purchase list was null!" }
           emitError(ERROR_BAD_PURCHASE_LIST)
         }
@@ -227,7 +229,7 @@ internal constructor(
       if (result.isUserCancelled()) {
         Logger.d { "User has cancelled purchase flow." }
       } else {
-        launchInScope(context = Dispatchers.Default) {
+        launchInScope(context = dispatchers.default) {
           Logger.w { "Purchase response not OK: ${result.debugMessage}" }
           emitError(RuntimeException(result.debugMessage))
         }

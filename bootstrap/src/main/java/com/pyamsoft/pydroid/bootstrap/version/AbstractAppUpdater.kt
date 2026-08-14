@@ -26,16 +26,17 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 internal abstract class AbstractAppUpdater<T : AppUpdateManager>
 protected constructor(
     enforcer: ThreadEnforcer,
+    protected val dispatchers: AppDispatchers,
     resolveAppUpdateManager: () -> T,
 ) : AppUpdater {
 
@@ -45,7 +46,7 @@ protected constructor(
   }
 
   final override suspend fun completeUpgrade() =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = dispatchers.main) {
         suspendCancellableCoroutine { continuation ->
           manager
               .completeUpdate()
@@ -70,7 +71,7 @@ protected constructor(
       onDownloadCancelled: () -> Unit,
       onDownloadFailed: () -> Unit,
   ) =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         suspendCancellableCoroutine<Unit> { continuation ->
           val listener =
               createStatusListener(
@@ -91,7 +92,7 @@ protected constructor(
       }
 
   final override suspend fun checkForUpdate(): AppUpdateLauncher =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = dispatchers.io) {
         onBeforeCheckForUpdate()
 
         return@withContext suspendCancellableCoroutine { continuation ->

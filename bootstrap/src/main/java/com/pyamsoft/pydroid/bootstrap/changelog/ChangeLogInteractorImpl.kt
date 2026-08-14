@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
-import kotlinx.coroutines.Dispatchers
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.flowOn
@@ -26,9 +26,10 @@ import kotlinx.coroutines.flow.flowOn
 internal class ChangeLogInteractorImpl
 internal constructor(
     context: Context,
+    dispatchers: AppDispatchers,
     private val preferences: ChangeLogPreferences,
     private val isFakeChangeLogAvailable: Flow<Boolean>?,
-) : ChangeLogInteractor, AppInteractorImpl(context) {
+) : ChangeLogInteractor, AppInteractorImpl(context, dispatchers) {
 
   override fun listenShowChangeLogChanges(): Flow<Boolean> {
     val faked = isFakeChangeLogAvailable
@@ -41,7 +42,7 @@ internal constructor(
             // Or if it's faked
             emit(isFaked || show)
           }
-          .flowOn(context = Dispatchers.IO)
+          .flowOn(context = dispatchers.io)
     } else {
       preferences.listenForShowChangelogChanges()
     }

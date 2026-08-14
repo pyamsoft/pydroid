@@ -31,8 +31,8 @@ import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.util.rememberResolvedActivity
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -60,6 +60,7 @@ private fun MountHooks(
 @Composable
 internal fun BillingDialog(
     modifier: Modifier = Modifier,
+    dispatchers: AppDispatchers,
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { BillingDialogInjector() }
@@ -85,7 +86,7 @@ internal fun BillingDialog(
         onPurchase = { sku ->
           // Enforce on main thread since billing is Google
           // Use the Activity scope so that we are not randomly cancelled mid purchase
-          activity.lifecycleScope.launch(context = Dispatchers.Main) {
+          activity.lifecycleScope.launch(context = dispatchers.main) {
             Logger.d { "Start purchase flow for $sku" }
             purchaseClient.purchase(activity, sku)
           }

@@ -16,9 +16,11 @@
 
 package com.pyamsoft.pydroid.billing
 
+import android.os.Build
 import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.billing.RecordingConnectedBillingInteractor.State
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.util.AppDispatchers
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertSame
 import kotlin.time.Duration
@@ -53,10 +55,12 @@ private class RecordingConnectedBillingInteractor :
 /** Simple no-op test interactor */
 private class TestBillingInteractor(
     private val connected: RecordingConnectedBillingInteractor,
+    dispatchers: AppDispatchers,
 ) :
     AbstractBillingInteractor(
         errorBus = EventBus.create(),
         purchaseBus = EventBus.create(),
+        dispatchers = dispatchers,
     ) {
 
   override fun connect(
@@ -67,7 +71,11 @@ private class TestBillingInteractor(
 }
 
 @RunWith(RobolectricTestRunner::class)
-@Config(minSdk = 26)
+@Config(
+    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+    minSdk = Build.VERSION_CODES.O,
+    maxSdk = Build.VERSION_CODES.BAKLAVA,
+)
 public class AbstractBillingInteractorTest {
 
   private fun awaitTrue(
@@ -95,7 +103,12 @@ public class AbstractBillingInteractorTest {
   @Test
   public fun bind_fullFlow() {
     val connected = RecordingConnectedBillingInteractor()
-    val interactor = TestBillingInteractor(connected)
+    val interactor =
+        TestBillingInteractor(
+            connected = connected,
+            // TODO(Peter): Do we need test control over dispatchers?
+            dispatchers = AppDispatchers.create(),
+        )
     val controller = Robolectric.buildActivity(ComponentActivity::class.java)
     val activity = controller.get()
 

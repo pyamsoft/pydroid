@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.bootstrap.rating.play
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AbstractAppRatingLauncher
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class PlayStoreAppRatingLauncher
 internal constructor(
     manager: ReviewManager,
     info: ReviewInfo,
-) : AbstractAppRatingLauncher(manager, info)
+    dispatchers: AppDispatchers,
+) : AbstractAppRatingLauncher(manager, info, dispatchers)

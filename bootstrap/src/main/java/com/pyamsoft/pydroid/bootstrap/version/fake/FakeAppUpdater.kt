@@ -23,6 +23,7 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -32,11 +33,13 @@ internal class FakeAppUpdater
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
+    dispatchers: AppDispatchers,
     private val version: Int,
     private val fakeUpgradeRequest: Flow<FakeUpgradeRequest>,
 ) :
     AbstractAppUpdater<FakeAppUpdateManager>(
         enforcer = enforcer,
+        dispatchers = dispatchers,
         resolveAppUpdateManager = { FakeAppUpdateManager(context.applicationContext) },
     ) {
 
@@ -62,6 +65,7 @@ internal constructor(
           manager = manager,
           info = info,
           type = updateType,
+          dispatchers = dispatchers,
           fakeUpgradeRequest = fakeUpgradeRequest,
       )
 }

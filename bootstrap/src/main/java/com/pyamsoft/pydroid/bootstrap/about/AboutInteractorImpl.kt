@@ -19,16 +19,17 @@ package com.pyamsoft.pydroid.bootstrap.about
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import kotlinx.coroutines.Dispatchers
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.withContext
 
 internal class AboutInteractorImpl
 internal constructor(
     private val appContext: Context,
+    private val dispatchers: AppDispatchers,
 ) : AboutInteractor {
 
   override suspend fun loadLicenses(): List<OssLibrary> =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         return@withContext OssLibraries.libraries(appContext).sortedBy { it.name.lowercase() }
       }
 }

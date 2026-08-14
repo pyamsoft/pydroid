@@ -19,15 +19,16 @@ package com.pyamsoft.pydroid.bootstrap.version
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class VersionInteractorNetwork
 internal constructor(
     private val updater: AppUpdater,
+    private val dispatchers: AppDispatchers,
 ) : VersionInteractor {
 
   override suspend fun watchDownloadStatus(
@@ -36,7 +37,7 @@ internal constructor(
       onDownloadCancelled: () -> Unit,
       onDownloadFailed: () -> Unit,
   ) =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         updater.watchDownloadStatus(
             onDownloadProgress = onDownloadProgress,
             onDownloadCompleted = onDownloadCompleted,
@@ -46,13 +47,13 @@ internal constructor(
       }
 
   override suspend fun completeUpdate() =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         Logger.d { "GOING DOWN FOR UPDATE" }
         updater.completeUpgrade()
       }
 
   override suspend fun checkVersion(): ResultWrapper<AppUpdateLauncher> =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         return@withContext try {
           ResultWrapper.success(updater.checkForUpdate())
         } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {

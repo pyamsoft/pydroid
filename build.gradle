@@ -118,7 +118,7 @@ subprojects {
   }
 
   tasks.withType(Test).configureEach {
-    maxHeapSize = "2g"
+    maxHeapSize = "4g"
   }
 
   project.afterEvaluate {

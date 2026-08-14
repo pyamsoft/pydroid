@@ -23,14 +23,15 @@ import android.view.View
 import com.pyamsoft.pydroid.ui.haptics.HapticManager
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class AndroidViewHapticManager
 internal constructor(
     private val scope: CoroutineScope,
     private val view: View,
+    private val dispatchers: AppDispatchers,
 ) : HapticManager {
 
   private var isHapticsEnabled = false
@@ -49,7 +50,7 @@ internal constructor(
     }
 
     preferences?.listenForHapticsChanges()?.also { f ->
-      scope.launch(context = Dispatchers.Default) { f.collect { isHapticsEnabled = it } }
+      scope.launch(context = dispatchers.default) { f.collect { isHapticsEnabled = it } }
     }
   }
 

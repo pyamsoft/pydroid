@@ -39,10 +39,10 @@ import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.settings.reset.ResetComponent
 import com.pyamsoft.pydroid.ui.internal.theme.ThemingImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.PYDroidLogger
 import com.pyamsoft.pydroid.util.isDebugMode
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -79,6 +79,7 @@ internal interface PYDroidComponent {
         override val termsConditionsUrl: String,
         override val version: Int,
         override val logger: PYDroidLogger?,
+        override val dispatchers: AppDispatchers,
         internal val application: Application,
     ) : PYDroid.InternalParameters
   }
@@ -94,7 +95,7 @@ internal interface PYDroidComponent {
 
     private val imageLoader: ImageLoader by lazy { ImageLoader(params.application) }
 
-    private val theming: Theming by lazy { ThemingImpl(preferences) }
+    private val theming: Theming by lazy { ThemingImpl(preferences, params.dispatchers) }
 
     private val isDebugMode by lazy { context.isDebugMode() }
 
@@ -102,6 +103,7 @@ internal interface PYDroidComponent {
       PYDroidPreferencesImpl(
           context = params.application,
           versionCode = params.version,
+          dispatchers = params.dispatchers,
       )
     }
 
@@ -110,6 +112,7 @@ internal interface PYDroidComponent {
     private val debugInteractor by lazy {
       DebugInteractorImpl(
           enforcer = enforcer,
+          dispatchers = params.dispatchers,
           context = params.application,
       )
     }
@@ -119,6 +122,7 @@ internal interface PYDroidComponent {
           params =
               AboutModule.Parameters(
                   context = context,
+                  dispatchers = params.dispatchers,
               ),
       )
     }
@@ -129,6 +133,7 @@ internal interface PYDroidComponent {
               DataPolicyModule.Parameters(
                   context = context,
                   preferences = preferences,
+                  dispatchers = params.dispatchers,
               ),
       )
     }
@@ -139,6 +144,7 @@ internal interface PYDroidComponent {
               ChangeLogModule.Parameters(
                   context = context,
                   preferences = preferences,
+                  dispatchers = params.dispatchers,
                   isFakeChangeLogAvailable =
                       if (isDebugMode) preferences.listenShowChangelogUpsell() else null,
               ),
@@ -166,12 +172,14 @@ internal interface PYDroidComponent {
           logLinesBus = inAppLogLines,
           debugInteractor = debugInteractor,
           hapticPreferences = preferences,
+          dispatchers = params.dispatchers,
       )
     }
 
     private val aboutParams by lazy {
       AboutComponent.Factory.Parameters(
           module = aboutModule,
+          dispatchers = params.dispatchers,
       )
     }
 
@@ -179,6 +187,7 @@ internal interface PYDroidComponent {
       DataPolicyDialogComponent.Factory.Parameters(
           imageLoader = imageLoader,
           module = dataPolicyModule,
+          dispatchers = params.dispatchers,
           privacyPolicyUrl = params.privacyPolicyUrl,
           termsConditionsUrl = params.termsConditionsUrl,
       )
@@ -186,6 +195,7 @@ internal interface PYDroidComponent {
 
     private val resetParams by lazy {
       ResetComponent.Factory.Parameters(
+          dispatchers = params.dispatchers,
           module =
               SettingsModule(
                   params =
@@ -217,6 +227,10 @@ internal interface PYDroidComponent {
             override fun inAppDebugStatus(): InAppDebugStatus {
               return preferences
             }
+
+            override fun dispatchers(): AppDispatchers {
+              return params.dispatchers
+            }
           }
         }
 
@@ -228,8 +242,7 @@ internal interface PYDroidComponent {
 
     init {
       params.logger?.also { Logger.setLogger(it) }
-
-      MainScope().launch(context = Dispatchers.Default) { theming.init() }
+      MainScope().launch(context = params.dispatchers.default) { theming.init() }
     }
 
     override fun plusApp(): AppComponent.Factory {

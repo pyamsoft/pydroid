@@ -23,20 +23,24 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.pyamsoft.pydroid.bootstrap.rating.AbstractRateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class PlayStoreRateMyApp
 internal constructor(
     enforcer: ThreadEnforcer,
     context: Context,
+    dispatchers: AppDispatchers,
 ) :
     AbstractRateMyApp<ReviewManager>(
         enforcer = enforcer,
+        dispatchers = dispatchers,
         resolveReviewManager = { ReviewManagerFactory.create(context.applicationContext) },
     ) {
 
   override fun createRatingLauncher(info: ReviewInfo): AppRatingLauncher =
       PlayStoreAppRatingLauncher(
           manager = manager,
+          dispatchers = dispatchers,
           info = info,
       )
 }

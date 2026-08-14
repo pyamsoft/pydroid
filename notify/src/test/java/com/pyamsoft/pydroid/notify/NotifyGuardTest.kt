@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.notify
 
+import android.os.Build
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import org.junit.Test
@@ -27,14 +28,22 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 public class NotifyGuardTest {
 
-  @Config(sdk = [28])
+  @Config(
+      // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+      minSdk = Build.VERSION_CODES.O,
+      maxSdk = Build.VERSION_CODES.S_V2,
+  )
   @Test
   public fun canPostNotification_belowApi33_isTrue() {
     val guard = NotifyGuard.createDefault(RuntimeEnvironment.getApplication())
     assertTrue(guard.canPostNotification())
   }
 
-  @Config(sdk = [33])
+  @Config(
+      // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+      minSdk = Build.VERSION_CODES.TIRAMISU,
+      maxSdk = Build.VERSION_CODES.BAKLAVA,
+  )
   @Test
   public fun canPostNotification_api33WithoutPermission_isFalse() {
     val guard = NotifyGuard.createDefault(RuntimeEnvironment.getApplication())

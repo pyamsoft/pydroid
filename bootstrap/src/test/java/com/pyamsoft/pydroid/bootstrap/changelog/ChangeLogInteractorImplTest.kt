@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.bootstrap.changelog
 
+import android.os.Build
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +42,11 @@ private class FakeChangeLogPreferences : ChangeLogPreferences {
 }
 
 @RunWith(RobolectricTestRunner::class)
-@Config(minSdk = 26)
+@Config(
+    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+    minSdk = Build.VERSION_CODES.O,
+    maxSdk = Build.VERSION_CODES.BAKLAVA,
+)
 public class ChangeLogInteractorImplTest {
 
   @Test
@@ -50,6 +56,8 @@ public class ChangeLogInteractorImplTest {
         ChangeLogInteractorImpl(
             context = RuntimeEnvironment.getApplication(),
             preferences = preferences,
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
             isFakeChangeLogAvailable = null,
         )
 
@@ -66,6 +74,8 @@ public class ChangeLogInteractorImplTest {
         ChangeLogInteractorImpl(
             context = RuntimeEnvironment.getApplication(),
             preferences = preferences,
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
             isFakeChangeLogAvailable = MutableStateFlow(true),
         )
 
@@ -79,6 +89,8 @@ public class ChangeLogInteractorImplTest {
         ChangeLogInteractorImpl(
             context = RuntimeEnvironment.getApplication(),
             preferences = preferences,
+            // TODO(Peter): Do we need test control over dispatchers here?
+            dispatchers = AppDispatchers.create(),
             isFakeChangeLogAvailable = null,
         )
 

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.settings
 
 import android.app.ActivityManager
+import android.os.Build
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
@@ -28,7 +29,11 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(minSdk = 26)
+@Config(
+    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
+    minSdk = Build.VERSION_CODES.O,
+    maxSdk = Build.VERSION_CODES.BAKLAVA,
+)
 public class SettingsInteractorImplTest {
 
   @Test

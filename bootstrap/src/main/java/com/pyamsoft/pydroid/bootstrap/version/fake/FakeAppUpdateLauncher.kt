@@ -23,9 +23,9 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -34,10 +34,11 @@ import kotlinx.coroutines.launch
 internal class FakeAppUpdateLauncher
 internal constructor(
     private val manager: FakeAppUpdateManager,
+    dispatchers: AppDispatchers,
     info: AppUpdateInfo,
     @AppUpdateType type: Int,
     private val fakeUpgradeRequest: Flow<FakeUpgradeRequest>,
-) : AbstractAppUpdateLauncher(manager, info, type) {
+) : AbstractAppUpdateLauncher(dispatchers, manager, info, type) {
 
   private suspend fun FakeAppUpdateManager.fakeDownload(
       totalBytes: Long,
@@ -134,7 +135,7 @@ internal constructor(
       // In the background, we "download"
       // Use the activity scope to fake this so that this background activity
       // does not prevent the actual flow from returning
-      activity.lifecycleScope.launch(context = Dispatchers.IO) {
+      activity.lifecycleScope.launch(context = dispatchers.io) {
         Logger.d { "User has accepted the fake in-app update prompt: $request" }
         manager.fakeUpdate(request)
       }

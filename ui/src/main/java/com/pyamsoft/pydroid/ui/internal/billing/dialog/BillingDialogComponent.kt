@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface BillingDialogComponent {
 
@@ -42,6 +43,7 @@ internal interface BillingDialogComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val billingModule: BillingModule,
         internal val imageLoader: ImageLoader,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -60,6 +62,7 @@ internal interface BillingDialogComponent {
               state = params.state,
               changeLogInteractor = params.changeLogModule.provideInteractor(),
               interactor = connected,
+              dispatchers = params.dispatchers,
               provider = provider,
           )
     }

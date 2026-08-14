@@ -62,9 +62,9 @@ import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -114,6 +114,7 @@ internal interface AppComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val dataPolicyModule: DataPolicyModule,
         internal val enforcer: ThreadEnforcer,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -137,6 +138,7 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 errorBus = params.billingErrorBus,
                 purchaseBus = params.billingPurchaseBus,
+                dispatchers = params.dispatchers,
             ),
         )
 
@@ -147,6 +149,7 @@ internal interface AppComponent {
             RatingModule.Parameters(
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
+                dispatchers = params.dispatchers,
             ),
         )
 
@@ -158,6 +161,7 @@ internal interface AppComponent {
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
                 version = params.version,
+                dispatchers = params.dispatchers,
                 fakeUpgradeRequest =
                     if (params.isDebugMode) params.debugPreferences.listenUpgradeScenarioAvailable()
                     else null,
@@ -170,12 +174,14 @@ internal interface AppComponent {
             changeLogModule = params.changeLogModule,
             imageLoader = params.imageLoader,
             state = MutableBillingDialogViewState(),
+            dispatchers = params.dispatchers,
         )
 
     private val billingParams =
         BillingComponent.Factory.Parameters(
             preferences = params.billingPreferences,
             state = billingState,
+            dispatchers = params.dispatchers,
             isFakeBillingUpsell =
                 if (params.isDebugMode) params.debugPreferences.listenShowBillingUpsell() else null,
         )
@@ -197,12 +203,14 @@ internal interface AppComponent {
             changeLogState = changeLogState,
             debugPreferences = params.debugPreferences,
             hapticPreferences = params.hapticPreferences,
+            dispatchers = params.dispatchers,
         )
 
     private val changeLogParams =
         ChangeLogComponent.Factory.Parameters(
             changeLogModule = params.changeLogModule,
             state = changeLogState,
+            dispatchers = params.dispatchers,
         )
 
     private val changeLogDialogParams =
@@ -211,18 +219,21 @@ internal interface AppComponent {
             imageLoader = params.imageLoader,
             version = params.version,
             state = MutableChangeLogDialogViewState(),
+            dispatchers = params.dispatchers,
         )
 
     private val versionCheckParams =
         VersionCheckComponent.Factory.Parameters(
             module = versionModule,
             state = versionCheckState,
+            dispatchers = params.dispatchers,
         )
 
     private val dataPolicyParams =
         DataPolicyComponent.Factory.Parameters(
             state = MutableDataPolicyViewState(),
             module = params.dataPolicyModule,
+            dispatchers = params.dispatchers,
         )
 
     private val inAppDebugParams =
@@ -233,6 +244,7 @@ internal interface AppComponent {
                 ),
             preferences = params.debugPreferences,
             interactor = params.debugInteractor,
+            dispatchers = params.dispatchers,
         )
 
     @CheckResult
@@ -254,6 +266,7 @@ internal interface AppComponent {
               viewModel =
                   RatingViewModeler(
                       state = MutableRatingViewState(),
+                      dispatchers = params.dispatchers,
                       interactor = ratingModule.provideInteractor(),
                   ),
               disabled = options.disableRating,
@@ -266,11 +279,11 @@ internal interface AppComponent {
       activity.doOnCreate {
         if (params.isDebugMode) {
           params.debugPreferences.listenTryShowRatingUpsell().also { f ->
-            activity.lifecycleScope.launch(context = Dispatchers.Main) {
+            activity.lifecycleScope.launch(context = params.dispatchers.main) {
               f.collect { show ->
                 if (show) {
                   Logger.d { "Try to force-show an In-App Rating" }
-                  rating.loadInAppRating()
+                  rating.loadInAppRating(params.dispatchers)
                 }
               }
             }
@@ -301,6 +314,7 @@ internal interface AppComponent {
                   activity,
                   disabled = options.disableVersionCheck,
               ),
+          dispatchers = params.dispatchers,
       )
     }
 

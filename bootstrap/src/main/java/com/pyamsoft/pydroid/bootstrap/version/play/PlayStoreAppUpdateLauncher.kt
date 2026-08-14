@@ -20,10 +20,12 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdateLauncher
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class PlayStoreAppUpdateLauncher
 internal constructor(
     manager: AppUpdateManager,
+    dispatchers: AppDispatchers,
     info: AppUpdateInfo,
     @AppUpdateType type: Int,
-) : AbstractAppUpdateLauncher(manager, info, type)
+) : AbstractAppUpdateLauncher(dispatchers, manager, info, type)

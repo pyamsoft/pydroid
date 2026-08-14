@@ -27,8 +27,8 @@ import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.updateAndGet
@@ -47,6 +47,7 @@ internal constructor(
     private val debugPreferences: DebugPreferences,
     private val hapticPreferences: HapticPreferences,
     private val billingPreferences: BillingPreferences,
+    private val dispatchers: AppDispatchers,
 ) :
     SettingsViewState by state,
     SettingsUIViewState by state,
@@ -113,7 +114,7 @@ internal constructor(
     val config = LoadConfig()
     s.loadingState.value = SettingsViewState.LoadingState.LOADING
 
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       val name = changeLogInteractor.getDisplayName()
       s.applicationName.value = name
 
@@ -123,7 +124,7 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       debugPreferences.listenForInAppDebuggingEnabled().collect { enabled ->
         s.isInAppDebuggingEnabled.value = enabled
 
@@ -134,7 +135,7 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       hapticPreferences.listenForHapticsChanges().collect {
         s.isHapticsEnabled.value = it
 
@@ -145,7 +146,7 @@ internal constructor(
       }
     }
 
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       billingPreferences.listenForBillingUpsellDisabledChanges().collect {
         s.isBillingUpsellDisabled.value = it
 
@@ -162,9 +163,9 @@ internal constructor(
         ) { mode, isMaterialYou ->
           emit(listOf(mode, isMaterialYou))
         }
-        .flowOn(context = Dispatchers.Default)
+        .flowOn(context = dispatchers.default)
         .also { f ->
-          scope.launch(context = Dispatchers.Default) {
+          scope.launch(context = dispatchers.default) {
             f.collect { list ->
               if (!config.themeMode) {
                 config.themeMode = true

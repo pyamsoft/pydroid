@@ -21,8 +21,8 @@ import android.content.res.Configuration
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,15 +32,16 @@ import kotlinx.coroutines.withContext
 internal class ThemingImpl
 internal constructor(
     private val preferences: ThemingPreferences,
+    private val dispatchers: AppDispatchers,
 ) : Theming {
 
   override suspend fun init() {
     listenForModeChanges().also { f ->
-      withContext(context = Dispatchers.IO) {
+      withContext(context = dispatchers.io) {
         // Make sure we set the AppCompatDelegate from the saved preference mode
         val mode = f.first()
 
-        withContext(context = Dispatchers.Default) {
+        withContext(context = dispatchers.default) {
           // Needs to run on main thread
           applyDarkTheme(mode)
         }
@@ -70,7 +71,7 @@ internal constructor(
   override fun setThemeMode(scope: CoroutineScope, mode: Theming.Mode) {
     preferences.setThemeMode(mode)
 
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       // Needs to run on main thread
       applyDarkTheme(mode)
     }
@@ -84,7 +85,7 @@ internal constructor(
   }
 
   private suspend fun applyDarkTheme(mode: Theming.Mode) =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = dispatchers.main) {
         val appCompatMode = mode.toAppCompatMode()
         AppCompatDelegate.setDefaultNightMode(appCompatMode)
       }

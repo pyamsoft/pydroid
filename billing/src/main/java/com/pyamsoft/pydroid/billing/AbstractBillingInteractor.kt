@@ -21,10 +21,10 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @LintIgnoreTooManyFunctions
@@ -32,6 +32,7 @@ internal abstract class AbstractBillingInteractor
 protected constructor(
     private val errorBus: EventBus<Throwable>,
     private val purchaseBus: EventBus<BillingPurchase>,
+    protected val dispatchers: AppDispatchers,
 ) : BillingConnector {
 
   final override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
@@ -44,7 +45,7 @@ protected constructor(
 
     activity.lifecycle.doOnCreate {
       Logger.d { "Attempt to connect Billing on Activity create" }
-      activity.lifecycleScope.launch(context = Dispatchers.Default) { connected.onClientConnect() }
+      activity.lifecycleScope.launch(context = dispatchers.default) { connected.onClientConnect() }
     }
 
     activity.lifecycle.doOnDestroy {

@@ -21,6 +21,7 @@ import coil3.ImageLoader
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 /** Provide constructed objects from PYDroid to outside consumers */
 public interface ModuleProvider {
@@ -42,5 +43,8 @@ public interface ModuleProvider {
 
     /** In-App Debug Status */
     @CheckResult public fun inAppDebugStatus(): InAppDebugStatus
+
+    /** Coroutine Dispatchers */
+    @CheckResult public fun dispatchers(): AppDispatchers
   }
 }

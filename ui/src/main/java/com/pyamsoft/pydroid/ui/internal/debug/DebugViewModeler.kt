@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.ui.internal.debug
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
@@ -28,44 +28,45 @@ internal constructor(
     override val state: MutableDebugViewState,
     private val interactor: DebugInteractor,
     private val preferences: DebugPreferences,
+    private val dispatchers: AppDispatchers,
 ) : DebugViewState by state, AbstractViewModeler<DebugViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
     val s = state
 
     preferences.listenForInAppDebuggingEnabled().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { s.isInAppDebuggingEnabled.value = it }
       }
     }
 
     preferences.listenUpgradeScenarioAvailable().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { s.debugFakeVersionUpdate.value = it }
       }
     }
 
     preferences.listenTryShowRatingUpsell().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { s.isDebugFakeShowRatingUpsell.value = it }
       }
     }
 
     preferences.listenShowBillingUpsell().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { s.isDebugFakeShowBillingUpsell.value = it }
       }
     }
 
     preferences.listenShowChangelogUpsell().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { s.isDebugFakeShowChangelog.value = it }
       }
     }
   }
 
   internal fun handleCopy(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       val lines = state.inAppDebuggingLogLines.value
       interactor.copyInAppDebugMessagesToClipboard(lines)
     }

@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface ChangeLogDialogComponent {
 
@@ -36,6 +37,7 @@ internal interface ChangeLogDialogComponent {
         internal val changeLogModule: ChangeLogModule,
         internal val imageLoader: ImageLoader,
         internal val version: Int,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -52,6 +54,7 @@ internal interface ChangeLogDialogComponent {
               state = params.state,
               interactor = params.changeLogModule.provideInteractor(),
               provider = provider,
+              dispatchers = params.dispatchers,
               version = params.version,
           )
     }

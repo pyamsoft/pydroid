@@ -19,12 +19,14 @@ package com.pyamsoft.pydroid.bootstrap.rating.fake
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AbstractAppRatingLauncher
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class FakeAppRatingLauncher
 internal constructor(
     manager: FakeReviewManager,
     info: ReviewInfo,
-) : AbstractAppRatingLauncher(manager, info) {
+    dispatchers: AppDispatchers,
+) : AbstractAppRatingLauncher(manager, info, dispatchers) {
 
   // NOTE(Peter): Is there any kind of customization we can do here?
 

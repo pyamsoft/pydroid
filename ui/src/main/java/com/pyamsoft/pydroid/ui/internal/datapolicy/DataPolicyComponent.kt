@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface DataPolicyComponent {
 
@@ -33,6 +34,7 @@ internal interface DataPolicyComponent {
     internal constructor(
         internal val state: MutableDataPolicyViewState,
         internal val module: DataPolicyModule,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -46,6 +48,7 @@ internal interface DataPolicyComponent {
           DataPolicyViewModeler(
               state = params.state,
               interactor = params.module.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
     }
 

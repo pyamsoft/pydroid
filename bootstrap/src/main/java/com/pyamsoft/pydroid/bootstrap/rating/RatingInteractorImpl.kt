@@ -19,19 +19,20 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class RatingInteractorImpl
 internal constructor(
     private val rateMyApp: RateMyApp,
+    private val dispatchers: AppDispatchers,
 ) : RatingInteractor {
 
   override suspend fun askForRating(): ResultWrapper<AppRatingLauncher> =
-      withContext(context = Dispatchers.Default) {
+      withContext(context = dispatchers.default) {
         return@withContext try {
           ResultWrapper.success(rateMyApp.startRating())
         } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {

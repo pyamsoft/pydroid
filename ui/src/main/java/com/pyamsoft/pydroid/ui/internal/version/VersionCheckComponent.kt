@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface VersionCheckComponent {
 
@@ -33,6 +34,7 @@ internal interface VersionCheckComponent {
     internal constructor(
         internal val module: VersionModule,
         internal val state: MutableVersionCheckViewState,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -46,6 +48,7 @@ internal interface VersionCheckComponent {
           VersionCheckViewModeler(
               state = params.state,
               interactor = params.module.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
     }
 

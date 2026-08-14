@@ -52,6 +52,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.MarketLinker
 
@@ -67,6 +68,7 @@ private fun MountHooks(
 public fun SettingsPage(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    dispatchers: AppDispatchers = AppDispatchers.create(),
     listState: LazyListState = rememberLazyListState(),
     extraDebugContent: LazyListScope.() -> Unit = {},
 ) {
@@ -99,6 +101,7 @@ public fun SettingsPage(
   SettingsContent(
       modifier = modifier,
       dialogModifier = dialogModifier,
+      dispatchers = dispatchers,
       listState = listState,
       state = viewModel,
       uiViewState = viewModel,
@@ -157,6 +160,7 @@ public fun SettingsPage(
 private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    dispatchers: AppDispatchers,
     listState: LazyListState,
     state: SettingsViewState,
     uiViewState: SettingsUIViewState,
@@ -269,6 +273,7 @@ private fun SettingsContent(
   if (showBillingDialog) {
     BillingDialog(
         modifier = dialogModifier,
+        dispatchers = dispatchers,
         onDismiss = onDismissBillingDialog,
     )
   }

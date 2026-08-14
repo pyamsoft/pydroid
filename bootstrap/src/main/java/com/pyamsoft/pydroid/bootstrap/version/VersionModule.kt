@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.version.fake.FakeAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.flow.Flow
 
 /** In-App update module */
@@ -36,16 +37,22 @@ public class VersionModule(params: Parameters) {
               enforcer = params.enforcer,
               context = params.context.applicationContext,
               version = params.version,
+              dispatchers = params.dispatchers,
               fakeUpgradeRequest = params.fakeUpgradeRequest,
           )
         } else {
           PlayStoreAppUpdater(
               enforcer = params.enforcer,
               context = params.context.applicationContext,
+              dispatchers = params.dispatchers,
           )
         }
 
-    val network = VersionInteractorNetwork(updater)
+    val network =
+        VersionInteractorNetwork(
+            updater = updater,
+            dispatchers = params.dispatchers,
+        )
     impl = VersionInteractorImpl(network)
   }
 
@@ -62,6 +69,7 @@ public class VersionModule(params: Parameters) {
       internal val context: Context,
       internal val version: Int,
       internal val enforcer: ThreadEnforcer,
+      internal val dispatchers: AppDispatchers,
       /** If this field is set, the version module will always deliver an update */
       internal val fakeUpgradeRequest: Flow<FakeUpgradeRequest>? = null,
   )

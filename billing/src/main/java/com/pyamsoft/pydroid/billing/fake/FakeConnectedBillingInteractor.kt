@@ -26,19 +26,21 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreEmptyFunctionBlock
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
-import kotlinx.coroutines.Dispatchers
 
 internal class FakeConnectedBillingInteractor
 internal constructor(
     activity: ComponentActivity,
     errorBus: EventBus<Throwable>,
     purchaseBus: EventBus<BillingPurchase>,
+    dispatchers: AppDispatchers,
 ) :
     AbstractConnectedBillingInteractor(
         activity = activity,
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers,
     ) {
 
   @CheckResult
@@ -50,7 +52,7 @@ internal constructor(
       )
 
   override suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku) {
-    launchInScope(context = Dispatchers.Default) {
+    launchInScope(context = dispatchers.default) {
       if (sku.price > FAIL_PURCHASE_OVER) {
         Logger.w { "Purchase response not OK: $sku" }
         emitError(RuntimeException("Error purchasing ${sku.title}"))

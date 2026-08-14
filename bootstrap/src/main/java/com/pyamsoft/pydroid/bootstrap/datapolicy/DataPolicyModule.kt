@@ -18,11 +18,17 @@ package com.pyamsoft.pydroid.bootstrap.datapolicy
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 /** Data policy module */
 public class DataPolicyModule(params: Parameters) {
 
-  private val impl = DataPolicyInteractorImpl(params.context, params.preferences)
+  private val impl =
+      DataPolicyInteractorImpl(
+          params.context,
+          params.dispatchers,
+          params.preferences,
+      )
 
   /** Provide a data policy interactor */
   @CheckResult
@@ -34,5 +40,6 @@ public class DataPolicyModule(params: Parameters) {
   public data class Parameters(
       internal val context: Context,
       internal val preferences: DataPolicyPreferences,
+      internal val dispatchers: AppDispatchers,
   )
 }

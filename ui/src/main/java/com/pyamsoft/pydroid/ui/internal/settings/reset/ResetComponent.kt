@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.settings.reset
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface ResetComponent {
 
@@ -31,6 +32,7 @@ internal interface ResetComponent {
     data class Parameters
     internal constructor(
         internal val module: SettingsModule,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -44,6 +46,7 @@ internal interface ResetComponent {
           ResetViewModeler(
               state = MutableResetViewState(),
               interactor = params.module.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
     }
 

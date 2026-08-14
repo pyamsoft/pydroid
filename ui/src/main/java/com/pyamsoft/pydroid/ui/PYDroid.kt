@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.PYDroidLogger
 
 /** PYDroid library entry point */
@@ -66,6 +67,9 @@ internal constructor(
 
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
+
+      /** Coroutine dispatchers */
+      override val dispatchers: AppDispatchers,
   ) : InternalParameters
 
   /** Parameters for PYDroid */
@@ -76,6 +80,7 @@ internal constructor(
     val termsConditionsUrl: String
     val version: Int
     val logger: PYDroidLogger?
+    val dispatchers: AppDispatchers
   }
 }
 

@@ -22,15 +22,16 @@ import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlin.coroutines.resume
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 internal abstract class AbstractRateMyApp<T : ReviewManager>
 protected constructor(
     enforcer: ThreadEnforcer,
+    protected val dispatchers: AppDispatchers,
     resolveReviewManager: () -> T,
 ) : RateMyApp {
 
@@ -40,7 +41,7 @@ protected constructor(
   }
 
   final override suspend fun startRating(): AppRatingLauncher =
-      withContext(context = Dispatchers.IO) {
+      withContext(context = dispatchers.io) {
         onBeforeStartRating()
         return@withContext suspendCancellableCoroutine { continuation ->
           manager

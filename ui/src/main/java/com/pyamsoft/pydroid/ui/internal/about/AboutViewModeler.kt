@@ -18,14 +18,15 @@ package com.pyamsoft.pydroid.ui.internal.about
 
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class AboutViewModeler
 internal constructor(
     override val state: MutableAboutViewState,
     private val interactor: AboutInteractor,
+    private val dispatchers: AppDispatchers,
 ) : AboutViewState by state, AbstractViewModeler<AboutViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
@@ -34,7 +35,7 @@ internal constructor(
     }
 
     state.loadingState.value = AboutViewState.LoadingState.LOADING
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       state.apply {
         try {
           licenses.value = interactor.loadLicenses()

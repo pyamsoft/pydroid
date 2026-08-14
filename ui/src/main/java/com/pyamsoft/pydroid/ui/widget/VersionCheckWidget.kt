@@ -41,5 +41,6 @@ public fun VersionCheckWidget(
 
   versionUpgrader.RenderVersionCheckWidget(
       modifier = modifier,
+      dispatchers = delegate.dispatchers(),
   )
 }

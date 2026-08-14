@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 @LintIgnoreTooManyFunctions
 internal class PlayStoreBillingInteractor
@@ -30,10 +31,12 @@ internal constructor(
     private val enforcer: ThreadEnforcer,
     errorBus: EventBus<Throwable>,
     purchaseBus: EventBus<BillingPurchase>,
+    dispatchers: AppDispatchers,
 ) :
     AbstractBillingInteractor(
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers = dispatchers,
     ) {
 
   override fun connect(
@@ -46,6 +49,7 @@ internal constructor(
         activity = activity,
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers = dispatchers,
     )
   }
 }

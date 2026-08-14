@@ -23,10 +23,10 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -34,6 +34,7 @@ internal class VersionCheckViewModeler
 internal constructor(
     override val state: MutableVersionCheckViewState,
     private val interactor: VersionInteractor,
+    private val dispatchers: AppDispatchers,
 ) : VersionCheckViewState by state, AbstractViewModeler<VersionCheckViewState>(state) {
 
   @CheckResult
@@ -74,7 +75,7 @@ internal constructor(
 
   internal fun bind(scope: CoroutineScope) {
     val s = state
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       interactor.watchDownloadStatus(
           onDownloadProgress = { percent ->
             if (!s.isUpdateReadyToInstall.value) {
@@ -124,7 +125,7 @@ internal constructor(
     }
 
     Logger.d { "Begin check for updates" }
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       if (!canCheckForUpdates(force)) {
         return@launch
       }
@@ -168,7 +169,7 @@ internal constructor(
     }
 
     state.isUpgraded.value = true
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       Logger.d { "Updating app, restart via update manager!" }
       try {
         interactor.completeUpdate()

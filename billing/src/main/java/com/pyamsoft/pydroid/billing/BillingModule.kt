@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.billing.fake.FakeBillingInteractor
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Billing module */
@@ -35,12 +36,14 @@ public class BillingModule(params: Parameters) {
           FakeBillingInteractor(
               errorBus = params.errorBus,
               purchaseBus = params.purchaseBus,
+              dispatchers = params.dispatchers,
           )
         } else {
           PlayStoreBillingInteractor(
               enforcer = params.enforcer,
               errorBus = params.errorBus,
               purchaseBus = params.purchaseBus,
+              dispatchers = params.dispatchers,
           )
         }
 
@@ -59,5 +62,6 @@ public class BillingModule(params: Parameters) {
       internal val enforcer: ThreadEnforcer,
       internal val errorBus: EventBus<Throwable>,
       internal val purchaseBus: EventBus<BillingPurchase>,
+      internal val dispatchers: AppDispatchers,
   )
 }

@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.ui.internal.haptics.AndroidViewHapticManager
 import com.pyamsoft.pydroid.ui.internal.haptics.NoopHapticManager
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 /**
  * Right now compose only has support for a few [HapticFeedbackType], which are too limited.
@@ -33,7 +34,7 @@ import com.pyamsoft.pydroid.ui.internal.haptics.NoopHapticManager
  * do this here, and avoid the old Int based interface via the manager functions
  */
 @Composable
-public fun rememberHapticManager(): HapticManager {
+public fun rememberHapticManager(dispatchers: AppDispatchers): HapticManager {
   // Is in edit mode
   if (LocalInspectionMode.current) {
     return remember { NoopHapticManager }
@@ -49,10 +50,12 @@ public fun rememberHapticManager(): HapticManager {
   return remember(
       view,
       lifecycleScope,
+      dispatchers,
   ) {
     AndroidViewHapticManager(
         scope = lifecycleScope,
         view = view,
+        dispatchers = dispatchers,
     )
   }
 }

@@ -18,13 +18,15 @@ package com.pyamsoft.pydroid.bootstrap.datapolicy
 
 import android.content.Context
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.flow.Flow
 
 internal class DataPolicyInteractorImpl
 internal constructor(
     context: Context,
+    dispatchers: AppDispatchers,
     private val preferences: DataPolicyPreferences,
-) : DataPolicyInteractor, AppInteractorImpl(context) {
+) : DataPolicyInteractor, AppInteractorImpl(context, dispatchers) {
 
   override fun listenForPolicyAcceptedChanges(): Flow<Boolean> =
       preferences.listenForPolicyAcceptedChanges()

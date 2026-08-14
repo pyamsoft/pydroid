@@ -27,17 +27,18 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 
 internal abstract class AbstractAppUpdateLauncher
 protected constructor(
+    protected val dispatchers: AppDispatchers,
     private val manager: AppUpdateManager,
     private val info: AppUpdateInfo,
     @param:AppUpdateType private val type: Int,
@@ -104,7 +105,7 @@ protected constructor(
   final override suspend fun launchUpdate(
       activity: ComponentActivity,
   ): ResultWrapper<AppUpdateResultStatus> =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = dispatchers.main) {
         if (appUpdateConsumed.compareAndSet(expect = false, update = true)) {
           try {
             val earlyUpdateOverride = onBeforeUpdateFlowStarted()

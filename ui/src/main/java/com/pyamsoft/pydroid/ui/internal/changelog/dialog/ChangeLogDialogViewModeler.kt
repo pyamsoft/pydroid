@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class ChangeLogDialogViewModeler
@@ -29,10 +29,11 @@ internal constructor(
     private val interactor: ChangeLogInteractor,
     private val provider: ChangeLogProvider,
     private val version: Int,
+    private val dispatchers: AppDispatchers,
 ) : ChangeLogDialogViewState by state, AbstractViewModeler<ChangeLogDialogViewState>(state) {
 
   fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       val displayName = interactor.getDisplayName()
       state.apply {
         name.value = displayName

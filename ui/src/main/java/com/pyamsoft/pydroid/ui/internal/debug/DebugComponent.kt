@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.debug
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface DebugComponent {
 
@@ -32,6 +33,7 @@ internal interface DebugComponent {
         internal val state: MutableDebugViewState,
         internal val preferences: DebugPreferences,
         internal val interactor: DebugInteractor,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -46,6 +48,7 @@ internal interface DebugComponent {
               state = params.state,
               preferences = params.preferences,
               interactor = params.interactor,
+              dispatchers = params.dispatchers,
           )
     }
 

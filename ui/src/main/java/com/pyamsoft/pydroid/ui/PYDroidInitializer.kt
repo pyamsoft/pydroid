@@ -51,6 +51,7 @@ internal constructor(
                       termsConditionsUrl = params.termsConditionsUrl,
                       version = params.version,
                       logger = params.logger,
+                      dispatchers = params.dispatchers,
                   ),
               )
 

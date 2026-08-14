@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.DEBUG
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.ERROR
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level.WARNING
-import kotlinx.coroutines.Dispatchers
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.withContext
 
 /** Interactor for Debug operations */
@@ -34,6 +34,7 @@ internal class DebugInteractorImpl
 internal constructor(
     enforcer: ThreadEnforcer,
     private val context: Context,
+    private val dispatchers: AppDispatchers,
 ) : DebugInteractor {
 
   private val clipboardManager by lazy {
@@ -56,7 +57,7 @@ internal constructor(
   }
 
   override suspend fun copyInAppDebugMessagesToClipboard(lines: List<InAppDebugLogLine>) =
-      withContext(context = Dispatchers.Main) {
+      withContext(context = dispatchers.main) {
         clipboardManager.setPrimaryClip(
             ClipData.newPlainText(
                 "Developer Messages",

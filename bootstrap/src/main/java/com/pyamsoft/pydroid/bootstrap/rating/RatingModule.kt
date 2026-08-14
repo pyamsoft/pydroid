@@ -21,6 +21,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.rating.fake.FakeRateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.play.PlayStoreRateMyApp
 import com.pyamsoft.pydroid.core.ThreadEnforcer
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Rating module */
@@ -34,15 +35,21 @@ public class RatingModule(params: Parameters) {
           FakeRateMyApp(
               enforcer = params.enforcer,
               context = params.context.applicationContext,
+              dispatchers = params.dispatchers,
           )
         } else {
           PlayStoreRateMyApp(
               enforcer = params.enforcer,
               context = params.context.applicationContext,
+              dispatchers = params.dispatchers,
           )
         }
 
-    impl = RatingInteractorImpl(rateMyApp)
+    impl =
+        RatingInteractorImpl(
+            rateMyApp = rateMyApp,
+            dispatchers = params.dispatchers,
+        )
   }
 
   /** Provide a rating interactor */
@@ -55,5 +62,6 @@ public class RatingModule(params: Parameters) {
   public data class Parameters(
       internal val context: Context,
       internal val enforcer: ThreadEnforcer,
+      internal val dispatchers: AppDispatchers,
   )
 }

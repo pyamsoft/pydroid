@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 @ConsistentCopyVisibility
 internal data class PYDroidActivityComponents
@@ -32,4 +33,5 @@ internal constructor(
     internal val dataPolicy: ShowDataPolicy,
     internal val versionUpgrader: VersionUpgradeAvailable,
     internal val showUpdateChangeLog: ShowUpdateChangeLog,
+    internal val dispatchers: AppDispatchers,
 )

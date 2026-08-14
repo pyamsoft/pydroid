@@ -21,15 +21,18 @@ import com.pyamsoft.pydroid.billing.AbstractBillingInteractor
 import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal class FakeBillingInteractor
 internal constructor(
     errorBus: EventBus<Throwable>,
     purchaseBus: EventBus<BillingPurchase>,
+    dispatchers: AppDispatchers,
 ) :
     AbstractBillingInteractor(
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers = dispatchers,
     ) {
 
   override fun connect(
@@ -41,6 +44,7 @@ internal constructor(
         activity = activity,
         errorBus = errorBus,
         purchaseBus = purchaseBus,
+        dispatchers = dispatchers,
     )
   }
 }

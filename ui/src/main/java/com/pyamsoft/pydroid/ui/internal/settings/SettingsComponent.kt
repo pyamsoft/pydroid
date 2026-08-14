@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.internal.debug.DebugPreferences
 import com.pyamsoft.pydroid.ui.internal.version.MutableVersionCheckViewState
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 internal interface SettingsComponent {
 
@@ -57,6 +58,7 @@ internal interface SettingsComponent {
         internal val billingState: MutableBillingViewState,
         internal val changeLogState: MutableChangeLogViewState,
         internal val debugPreferences: DebugPreferences,
+        internal val dispatchers: AppDispatchers,
     )
   }
 
@@ -79,22 +81,26 @@ internal interface SettingsComponent {
               debugPreferences = params.debugPreferences,
               hapticPreferences = params.hapticPreferences,
               billingPreferences = params.billingPreferences,
+              dispatchers = params.dispatchers,
           )
       injector.versionViewModel =
           VersionCheckViewModeler(
               state = params.versionCheckState,
               interactor = params.versionModule.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
       injector.billingViewModel =
           BillingViewModeler(
               state = params.billingState,
               preferences = params.billingPreferences,
+              dispatchers = params.dispatchers,
               isFakeUpsell = params.debugPreferences.listenShowBillingUpsell(),
           )
       injector.changeLogViewModel =
           ChangeLogViewModeler(
               state = params.changeLogState,
               interactor = params.changeLogModule.provideInteractor(),
+              dispatchers = params.dispatchers,
           )
     }
 

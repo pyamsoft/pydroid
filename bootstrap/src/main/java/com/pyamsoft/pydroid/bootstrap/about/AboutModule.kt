@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 /** About module */
 public class AboutModule(
@@ -27,6 +28,7 @@ public class AboutModule(
   private val impl =
       AboutInteractorImpl(
           appContext = params.context,
+          dispatchers = params.dispatchers,
       )
 
   /** Provide an instance of an AboutInteractor */
@@ -36,5 +38,8 @@ public class AboutModule(
   }
 
   /** Module parameters */
-  public data class Parameters(internal val context: Context)
+  public data class Parameters(
+      internal val context: Context,
+      internal val dispatchers: AppDispatchers,
+  )
 }

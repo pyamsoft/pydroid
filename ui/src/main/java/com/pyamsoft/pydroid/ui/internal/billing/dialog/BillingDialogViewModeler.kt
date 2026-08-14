@@ -20,9 +20,9 @@ import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class BillingDialogViewModeler
@@ -31,10 +31,11 @@ internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     private val provider: AppProvider,
+    private val dispatchers: AppDispatchers,
 ) : BillingDialogViewState by state, AbstractViewModeler<BillingDialogViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       val displayName = changeLogInteractor.getDisplayName()
       state.apply {
         name.value = displayName
@@ -43,7 +44,7 @@ internal constructor(
     }
 
     interactor.watchSkuList().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { snapshot ->
           val status = snapshot.status
           val list = snapshot.skus
@@ -57,7 +58,7 @@ internal constructor(
     }
 
     interactor.watchBillingErrors().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { err ->
           Logger.e(err) { "Billing error received" }
           state.apply {
@@ -70,7 +71,7 @@ internal constructor(
     }
 
     interactor.watchBillingPurchases().also { f ->
-      scope.launch(context = Dispatchers.Default) {
+      scope.launch(context = dispatchers.default) {
         f.collect { purchase ->
           Logger.d { "Billing purchase received: $purchase" }
           state.apply {
@@ -96,7 +97,7 @@ internal constructor(
     }
 
     state.isRefreshing.value = true
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       try {
         interactor.refresh()
       } finally {

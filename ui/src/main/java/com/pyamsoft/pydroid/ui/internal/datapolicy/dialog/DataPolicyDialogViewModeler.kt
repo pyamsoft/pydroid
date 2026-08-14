@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 import com.pyamsoft.pydroid.arch.AbstractViewModeler
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyInteractor
 import com.pyamsoft.pydroid.ui.app.AppProvider
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class DataPolicyDialogViewModeler
@@ -28,10 +28,11 @@ internal constructor(
     override val state: MutableDataPolicyDialogViewState,
     private val provider: AppProvider,
     private val interactor: DataPolicyInteractor,
+    private val dispatchers: AppDispatchers,
 ) : DataPolicyDialogViewState by state, AbstractViewModeler<DataPolicyDialogViewState>(state) {
 
   internal fun bind(scope: CoroutineScope) {
-    scope.launch(context = Dispatchers.Default) {
+    scope.launch(context = dispatchers.default) {
       val displayName = interactor.getDisplayName()
       state.apply {
         name.value = displayName

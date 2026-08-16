@@ -66,14 +66,14 @@ internal constructor(
       /** Application version code */
       override val version: Int,
 
+      /** Coroutine dispatchers (create once at Application level and re-use) */
+      override val dispatchers: AppDispatchers,
+
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
 
       /** Billing mode (override to test) */
       override val billingMode: BillingMode? = null,
-
-      /** Coroutine dispatchers (create once at Application level and re-use) */
-      override val dispatchers: AppDispatchers,
   ) : InternalParameters
 
   /** Parameters for PYDroid */

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.debug
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLoggerImpl
+import com.pyamsoft.pydroid.util.AppDispatchers
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
 public interface InAppDebugLogger {
@@ -36,8 +37,8 @@ public interface InAppDebugLogger {
     /** Create the logger but do not expose the internal implementation */
     @JvmStatic
     @CheckResult
-    public fun Application.createInAppDebugLogger(): InAppDebugLogger {
-      return InAppDebugLoggerImpl(this)
+    public fun Application.createInAppDebugLogger(dispatchers: AppDispatchers): InAppDebugLogger {
+      return InAppDebugLoggerImpl(this, dispatchers)
     }
   }
 }

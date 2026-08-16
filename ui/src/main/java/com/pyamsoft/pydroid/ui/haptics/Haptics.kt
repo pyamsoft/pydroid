@@ -18,11 +18,10 @@ package com.pyamsoft.pydroid.ui.haptics
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalView
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.ui.internal.haptics.AndroidViewHapticManager
 import com.pyamsoft.pydroid.ui.internal.haptics.NoopHapticManager
 import com.pyamsoft.pydroid.util.AppDispatchers
@@ -41,19 +40,15 @@ public fun rememberHapticManager(dispatchers: AppDispatchers): HapticManager {
   }
 
   val view = LocalView.current
-
-  // Use the LifecycleOwner.CoroutineScope (Activity usually)
-  // so that the scope does not die because of navigation events
-  val owner = LocalLifecycleOwner.current
-  val lifecycleScope = owner.lifecycleScope
+  val scope = rememberCoroutineScope()
 
   return remember(
       view,
-      lifecycleScope,
+      scope,
       dispatchers,
   ) {
     AndroidViewHapticManager(
-        scope = lifecycleScope,
+        scope = scope,
         view = view,
         dispatchers = dispatchers,
     )

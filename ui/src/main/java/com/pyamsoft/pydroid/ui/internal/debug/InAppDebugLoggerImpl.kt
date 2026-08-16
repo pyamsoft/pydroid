@@ -27,21 +27,21 @@ import com.pyamsoft.pydroid.ui.debug.InAppDebugLogger
 import com.pyamsoft.pydroid.ui.debug.InAppDebugStatus
 import com.pyamsoft.pydroid.ui.internal.debug.InAppDebugLogLine.Level
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
+import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 
 /** A logger which captures internal log messages and publishes them on a bus to an in-app view */
 internal class InAppDebugLoggerImpl
 internal constructor(
     application: Application,
+    private val dispatchers: AppDispatchers,
 ) : InAppDebugLogger {
 
   // Inject target
@@ -52,12 +52,12 @@ internal constructor(
   private val isLoggingEnabled = MutableStateFlow(false)
 
   @CheckResult
-  @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+  @OptIn(ExperimentalCoroutinesApi::class)
   private fun scope(): CoroutineScope {
     return CoroutineScope(
         context =
             SupervisorJob() +
-                newSingleThreadContext(this::class.java.name) +
+                dispatchers.default.limitedParallelism(1) +
                 CoroutineName(this::class.java.name),
     )
   }

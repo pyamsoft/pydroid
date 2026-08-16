@@ -16,14 +16,12 @@
 
 package com.pyamsoft.pydroid.billing
 
-import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.fake.FakeBillingInteractor
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.AppDispatchers
-import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Billing module */
 public class BillingModule(params: Parameters) {
@@ -32,19 +30,21 @@ public class BillingModule(params: Parameters) {
 
   init {
     val impl =
-        if (params.context.isDebugMode()) {
-          FakeBillingInteractor(
-              errorBus = params.errorBus,
-              purchaseBus = params.purchaseBus,
-              dispatchers = params.dispatchers,
-          )
-        } else {
-          PlayStoreBillingInteractor(
-              enforcer = params.enforcer,
-              errorBus = params.errorBus,
-              purchaseBus = params.purchaseBus,
-              dispatchers = params.dispatchers,
-          )
+        when (params.mode) {
+          BillingMode.FAKE ->
+              FakeBillingInteractor(
+                  errorBus = params.errorBus,
+                  purchaseBus = params.purchaseBus,
+                  dispatchers = params.dispatchers,
+              )
+
+          BillingMode.PLAY_STORE ->
+              PlayStoreBillingInteractor(
+                  enforcer = params.enforcer,
+                  errorBus = params.errorBus,
+                  purchaseBus = params.purchaseBus,
+                  dispatchers = params.dispatchers,
+              )
         }
 
     connector = impl
@@ -58,10 +58,10 @@ public class BillingModule(params: Parameters) {
 
   /** Module parameters */
   public data class Parameters(
-      internal val context: Context,
       internal val enforcer: ThreadEnforcer,
       internal val errorBus: EventBus<Throwable>,
       internal val purchaseBus: EventBus<BillingPurchase>,
       internal val dispatchers: AppDispatchers,
+      internal val mode: BillingMode,
   )
 }

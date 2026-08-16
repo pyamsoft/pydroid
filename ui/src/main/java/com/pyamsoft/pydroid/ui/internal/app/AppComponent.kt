@@ -21,6 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.lifecycle.lifecycleScope
 import coil3.ImageLoader
+import com.pyamsoft.pydroid.billing.BillingMode
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.billing.BillingPurchase
 import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
@@ -115,6 +116,7 @@ internal interface AppComponent {
         internal val dataPolicyModule: DataPolicyModule,
         internal val enforcer: ThreadEnforcer,
         internal val dispatchers: AppDispatchers,
+        internal val billingMode: BillingMode,
     )
   }
 
@@ -134,11 +136,11 @@ internal interface AppComponent {
     private val billingModule =
         BillingModule(
             BillingModule.Parameters(
-                context = params.context.applicationContext,
                 enforcer = params.enforcer,
                 errorBus = params.billingErrorBus,
                 purchaseBus = params.billingPurchaseBus,
                 dispatchers = params.dispatchers,
+                mode = params.billingMode,
             ),
         )
 

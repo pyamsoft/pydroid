@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.Context
 import androidx.annotation.CheckResult
 import coil3.ImageLoader
+import com.pyamsoft.pydroid.billing.BillingMode
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
@@ -73,6 +74,7 @@ internal interface PYDroidComponent {
     @ConsistentCopyVisibility
     data class Parameters
     internal constructor(
+        internal val application: Application,
         override val privacyPolicyUrl: String,
         override val bugReportUrl: String,
         override val viewSourceUrl: String,
@@ -80,7 +82,7 @@ internal interface PYDroidComponent {
         override val version: Int,
         override val logger: PYDroidLogger?,
         override val dispatchers: AppDispatchers,
-        internal val application: Application,
+        override val billingMode: BillingMode,
     ) : PYDroid.InternalParameters
   }
 
@@ -173,6 +175,7 @@ internal interface PYDroidComponent {
           debugInteractor = debugInteractor,
           hapticPreferences = preferences,
           dispatchers = params.dispatchers,
+          billingMode = params.billingMode,
       )
     }
 

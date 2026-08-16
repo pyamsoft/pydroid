@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import com.pyamsoft.pydroid.billing.BillingMode
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.isDebugMode
 
@@ -40,6 +41,11 @@ internal constructor(
         setStrictMode()
       }
 
+      var billingMode = params.billingMode
+      if (billingMode == null) {
+        billingMode = if (application.isDebugMode()) BillingMode.FAKE else BillingMode.PLAY_STORE
+      }
+
       val impl =
           PYDroidComponent.ComponentImpl.FactoryImpl()
               .create(
@@ -52,6 +58,7 @@ internal constructor(
                       version = params.version,
                       logger = params.logger,
                       dispatchers = params.dispatchers,
+                      billingMode = billingMode,
                   ),
               )
 

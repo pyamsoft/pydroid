@@ -56,11 +56,12 @@ internal fun LazyListScope.renderExternalLinksSettings(
           onClick = onLicensesClicked,
       )
 
-      SimpleSettingsRowItem(
+      BadgeSettingsRowItem(
           icon = IconPainters.viewSourceCode(),
           title = stringResource(R.string.view_source_title),
           description = stringResource(R.string.view_source_summary),
           onClick = onViewSourceClicked,
+          badge = { ExternalLinkBadge() },
       )
 
       if (!options.disableDataPolicy) {

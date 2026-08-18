@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
@@ -40,6 +41,7 @@ import com.pyamsoft.pydroid.ui.settings.ExternalLinkBadge
 internal fun LazyListScope.renderInAppInteractionSettings(
     modifier: Modifier = Modifier,
     options: PYDroidActivityOptions,
+    activityState: PYDroidActivityState,
     appName: String,
     state: SettingsInAppInteractionViewState,
     onOpenMarketPage: () -> Unit,
@@ -60,7 +62,7 @@ internal fun LazyListScope.renderInAppInteractionSettings(
         )
       }
 
-      if (!options.disableBilling) {
+      if (!options.disableBilling || !activityState.isLiveBilling) {
         TipJarSettingsItem(
             state = state,
             onDonateClicked = onDonateClicked,
@@ -71,9 +73,8 @@ internal fun LazyListScope.renderInAppInteractionSettings(
   }
 }
 
-@Preview
 @Composable
-private fun PreviewInAppInteractionSettings() {
+private fun PreviewInAppInteractionSettings(isLiveBilling: Boolean) {
   LazyColumn(
       modifier = Modifier.background(Color.White),
   ) {
@@ -84,6 +85,26 @@ private fun PreviewInAppInteractionSettings() {
         onDonateClicked = {},
         onOpenMarketPage = {},
         onBillingUpsellDisabledChanged = {},
+        activityState =
+            PYDroidActivityState(
+                isLiveBilling = isLiveBilling,
+            ),
     )
   }
+}
+
+@Preview
+@Composable
+private fun PreviewInAppInteractionSettingsWithBilling() {
+  PreviewInAppInteractionSettings(
+      isLiveBilling = true,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewInAppInteractionSettingsNoBilling() {
+  PreviewInAppInteractionSettings(
+      isLiveBilling = false,
+  )
 }

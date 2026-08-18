@@ -20,6 +20,7 @@ import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.AppDispatchers
@@ -27,6 +28,7 @@ import com.pyamsoft.pydroid.util.AppDispatchers
 @ConsistentCopyVisibility
 internal data class PYDroidActivityComponents
 internal constructor(
+    internal val activityState: PYDroidActivityState,
     internal val connectedBilling: ConnectedBillingInteractor,
     internal val billingUpsell: BillingUpsell,
     internal val rating: RatingDelegate,

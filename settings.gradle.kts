@@ -31,6 +31,10 @@ include(":arch")
 
 include(":billing")
 
+include(":billing-noop")
+
+include(":billing-play")
+
 include(":bootstrap")
 
 include(":bus")

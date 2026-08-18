@@ -18,18 +18,17 @@ package com.pyamsoft.pydroid.billing
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.fake.FakeBillingInteractor
-import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.AppDispatchers
 
 /** Billing module */
-public class BillingModule(params: Parameters) {
+public abstract class BillingModule(params: Parameters) {
 
   private val connector: BillingConnector
 
   init {
-    val impl =
+    connector =
         when (params.mode) {
           BillingMode.FAKE ->
               FakeBillingInteractor(
@@ -37,17 +36,8 @@ public class BillingModule(params: Parameters) {
                   purchaseBus = params.purchaseBus,
                   dispatchers = params.dispatchers,
               )
-
-          BillingMode.PLAY_STORE ->
-              PlayStoreBillingInteractor(
-                  enforcer = params.enforcer,
-                  errorBus = params.errorBus,
-                  purchaseBus = params.purchaseBus,
-                  dispatchers = params.dispatchers,
-              )
+          BillingMode.REAL -> newConnector(params)
         }
-
-    connector = impl
   }
 
   /** Provide a connector instance */
@@ -56,12 +46,17 @@ public class BillingModule(params: Parameters) {
     return connector
   }
 
+  /** Is this a "live" client, or is it no-op */
+  @CheckResult public abstract fun isLive(): Boolean
+
+  @CheckResult protected abstract fun newConnector(params: Parameters): BillingConnector
+
   /** Module parameters */
   public data class Parameters(
-      internal val enforcer: ThreadEnforcer,
-      internal val errorBus: EventBus<Throwable>,
-      internal val purchaseBus: EventBus<BillingPurchase>,
-      internal val dispatchers: AppDispatchers,
+      val enforcer: ThreadEnforcer,
+      val errorBus: EventBus<Throwable>,
+      val purchaseBus: EventBus<BillingPurchase>,
+      val dispatchers: AppDispatchers,
       internal val mode: BillingMode,
   )
 }

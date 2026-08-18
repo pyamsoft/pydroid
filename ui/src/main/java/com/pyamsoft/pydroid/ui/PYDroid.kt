@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.BillingMode
+import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.PYDroidLogger
@@ -69,6 +70,9 @@ internal constructor(
       /** Coroutine dispatchers (create once at Application level and re-use) */
       override val dispatchers: AppDispatchers,
 
+      /** Implementation of billing (play or no-op) * */
+      override val billing: (params: BillingModule.Parameters) -> BillingModule,
+
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
 
@@ -83,9 +87,9 @@ internal constructor(
     val privacyPolicyUrl: String
     val termsConditionsUrl: String
     val version: Int
-    val logger: PYDroidLogger?
     val dispatchers: AppDispatchers
-
+    val billing: (params: BillingModule.Parameters) -> BillingModule
+    val logger: PYDroidLogger?
     val billingMode: BillingMode?
   }
 }

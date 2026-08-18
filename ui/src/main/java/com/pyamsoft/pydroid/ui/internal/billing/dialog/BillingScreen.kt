@@ -222,7 +222,7 @@ private fun BillingPopup(
     val message =
         when (purchase) {
           is BillingPurchase.Fake -> "Fake purchase ${purchase.sku.title}"
-          is BillingPurchase.PlayBillingConsumed -> stringResource(R.string.billing_thank_you)
+          is BillingPurchase.RealPurchase -> stringResource(R.string.billing_thank_you)
           /*
            * TODO(Peter): convert to a sealed interface
            *

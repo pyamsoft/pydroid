@@ -120,8 +120,8 @@ public class AbstractConnectedBillingInteractorTest {
 
     interactor.testEmitStateUpdate(
         BillingFlowState(
-            state = BillingState.CONNECTED,
-            list = listOf(sku),
+            status = BillingState.CONNECTED,
+            skus = listOf(sku),
         ),
     )
 

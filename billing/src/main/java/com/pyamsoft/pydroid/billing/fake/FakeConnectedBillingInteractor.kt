@@ -68,8 +68,8 @@ internal constructor(
     emitStateUpdate(
         state =
             BillingFlowState(
-                state = BillingState.CONNECTED,
-                list =
+                status = BillingState.CONNECTED,
+                skus =
                     listOf(
                         makeFakeSku(priceInDollars = 1),
                         makeFakeSku(priceInDollars = 3),

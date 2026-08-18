@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.billing
 
 import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingInteractor.BillingSkuListSnapshot
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -35,7 +34,7 @@ public interface ConnectedBillingInteractor : BillingInteractor, BillingLauncher
 
           override fun onClientDisconnect() {}
 
-          override fun watchSkuList(): Flow<BillingSkuListSnapshot> {
+          override fun watchSkuList(): Flow<BillingFlowState> {
             return emptyFlow()
           }
 

@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.billing.dialog.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.datapolicy.dialog.DataPolicyDisclosureDialog
@@ -81,6 +82,7 @@ public fun SettingsPage(
 
   val component = rememberComposableInjector { SettingsInjector() }
   val options = rememberNotNull(component.options)
+  val activityState = rememberNotNull(component.activityState)
 
   val viewModel = rememberNotNull(component.viewModel)
   val versionViewModel = rememberNotNull(component.versionViewModel)
@@ -111,6 +113,7 @@ public fun SettingsPage(
       changeLogState = changeLogViewModel,
       versionCheckViewState = versionViewModel,
       options = options,
+      activityState = activityState,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = {
         if (options.disableVersionCheck) {
@@ -170,6 +173,7 @@ private fun SettingsContent(
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
     options: PYDroidActivityOptions,
+    activityState: PYDroidActivityState,
     onMaterialYouChange: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -227,6 +231,7 @@ private fun SettingsContent(
       inAppInteractionViewState = inAppInteractionViewState,
       dangerZoneViewState = dangerZoneViewState,
       options = options,
+      activityState = activityState,
       onMaterialYouChange = onMaterialYouChange,
       onThemeModeChanged = onThemeModeChanged,
       onLicensesClicked = onLicensesClicked,

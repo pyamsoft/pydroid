@@ -36,14 +36,14 @@ internal constructor(
         application: Application,
         params: PYDroid.Parameters,
     ): PYDroidInitializer {
-
-      if (application.isDebugMode()) {
+      val isDebug = application.isDebugMode()
+      if (isDebug) {
         setStrictMode()
       }
 
       var billingMode = params.billingMode
       if (billingMode == null) {
-        billingMode = if (application.isDebugMode()) BillingMode.FAKE else BillingMode.PLAY_STORE
+        billingMode = if (isDebug) BillingMode.FAKE else BillingMode.REAL
       }
 
       val impl =
@@ -58,6 +58,7 @@ internal constructor(
                       version = params.version,
                       logger = params.logger,
                       dispatchers = params.dispatchers,
+                      billing = params.billing,
                       billingMode = billingMode,
                   ),
               )

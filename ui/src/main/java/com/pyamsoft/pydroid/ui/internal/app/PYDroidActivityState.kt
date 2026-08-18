@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.ui.internal.app
 
-/** A snapshot of the billing SKU list */
-public data class BillingFlowState
-public constructor(
-    val status: BillingState,
-    val skus: List<BillingSku>,
+@ConsistentCopyVisibility
+internal data class PYDroidActivityState
+internal constructor(
+    val isLiveBilling: Boolean,
 )

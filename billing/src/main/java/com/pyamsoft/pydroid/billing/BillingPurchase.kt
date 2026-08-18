@@ -43,9 +43,8 @@ import com.pyamsoft.pydroid.core.LintIgnoreMaxLineLength
 public /* sealed */ interface BillingPurchase {
 
   /** Real purchase transaction event from the Play Billing library */
-  @ConsistentCopyVisibility
-  public data class PlayBillingConsumed
-  internal constructor(
+  public data class RealPurchase
+  public constructor(
       val purchaseToken: String,
   ) : BillingPurchase
 

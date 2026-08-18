@@ -19,8 +19,6 @@ android { namespace = "com.pyamsoft.pydroid.billing" }
 dependencies {
   implementation(libs.androidx.activity)
 
-  implementation(libs.google.billing)
-
   // Compose Annotations
   implementation(libs.compose.runtime.annotation)
 

@@ -38,7 +38,6 @@ import com.android.billingclient.api.QueryProductDetailsResult
 import com.pyamsoft.pydroid.billing.AbstractConnectedBillingInteractor
 import com.pyamsoft.pydroid.billing.BillingFlowState
 import com.pyamsoft.pydroid.billing.BillingPurchase
-import com.pyamsoft.pydroid.billing.BillingPurchase.PlayBillingConsumed
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
@@ -140,7 +139,7 @@ internal constructor(
     if (result.isOk()) {
       launchInScope(context = dispatchers.default) {
         Logger.d { "Purchase consumed $token" }
-        emitPurchase(PlayBillingConsumed(token))
+        emitPurchase(BillingPurchase.RealPurchase(token))
       }
     } else {
       launchInScope(context = dispatchers.default) {

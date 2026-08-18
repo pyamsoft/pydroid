@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+android { namespace = "com.pyamsoft.pydroid.billing.noop" }
 
-/** A snapshot of the billing SKU list */
-public data class BillingFlowState
-public constructor(
-    val status: BillingState,
-    val skus: List<BillingSku>,
-)
+dependencies {
+  implementation(libs.androidx.activity)
+
+  // Compose Annotations
+  implementation(libs.compose.runtime.annotation)
+
+  api(project(":billing"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
+}

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.billing
 import androidx.activity.ComponentActivity
 import androidx.annotation.CheckResult
 import androidx.lifecycle.lifecycleScope
-import com.pyamsoft.pydroid.billing.BillingInteractor.BillingSkuListSnapshot
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
@@ -33,15 +32,15 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @LintIgnoreTooManyFunctions
-internal abstract class AbstractConnectedBillingInteractor
+public abstract class AbstractConnectedBillingInteractor
 protected constructor(
     activity: ComponentActivity,
     private val errorBus: EventBus<Throwable>,
@@ -54,8 +53,8 @@ protected constructor(
   private val skuFlow: MutableStateFlow<BillingFlowState> =
       MutableStateFlow(
           BillingFlowState(
-              state = BillingState.LOADING,
-              list = emptyList(),
+              status = BillingState.LOADING,
+              skus = emptyList(),
           ),
       )
 
@@ -100,15 +99,10 @@ protected constructor(
     }
   }
 
-  final override suspend fun refresh() =
+  final override suspend fun refresh(): Unit =
       withContext(context = dispatchers.default) { onClientRefresh() }
 
-  final override fun watchSkuList(): Flow<BillingSkuListSnapshot> = skuFlow.map {
-    BillingSkuListSnapshot(
-        status = it.state,
-        skus = it.list,
-    )
-  }
+  final override fun watchSkuList(): Flow<BillingFlowState> = skuFlow
 
   final override suspend fun purchase(activity: ComponentActivity, sku: BillingSku): Unit =
       withContext(context = dispatchers.default) {
@@ -148,13 +142,13 @@ protected constructor(
       context: CoroutineContext = EmptyCoroutineContext,
       start: CoroutineStart = CoroutineStart.DEFAULT,
       block: suspend CoroutineScope.() -> Unit,
-  ) = billingScope.launch(context, start, block)
+  ): Job = billingScope.launch(context, start, block)
 
   protected abstract suspend fun onPurchase(activity: ComponentActivity, sku: BillingSku)
 
   protected abstract suspend fun onClientRefresh()
 
-  companion object {
+  public companion object {
 
     private const val BACKOFF_SCALE = 2
     private const val BACKOFF_LIMIT = 1024

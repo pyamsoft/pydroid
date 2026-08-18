@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.settings.section.renderDangerZoneSettings
 import com.pyamsoft.pydroid.ui.internal.settings.section.renderExternalLinksSettings
 import com.pyamsoft.pydroid.ui.internal.settings.section.renderInAppInteractionSettings
@@ -64,6 +65,7 @@ internal fun SettingsScreen(
     inAppInteractionViewState: SettingsInAppInteractionViewState,
     versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
+    activityState: PYDroidActivityState,
     onMaterialYouChange: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
     onLicensesClicked: () -> Unit,
@@ -112,6 +114,7 @@ internal fun SettingsScreen(
             versionCheckingState = versionCheckingState,
             applicationName = applicationName,
             options = options,
+            activityState = activityState,
             onThemeModeChanged = onThemeModeChanged,
             onMaterialYouChanged = onMaterialYouChange,
             onLicensesClicked = onLicensesClicked,
@@ -164,6 +167,7 @@ private fun SettingsList(
     dangerZoneViewState: SettingsDangerZoneViewState,
     versionCheckingState: VersionCheckingSettingsState,
     options: PYDroidActivityOptions,
+    activityState: PYDroidActivityState,
     applicationName: String,
     onMaterialYouChanged: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
@@ -207,6 +211,7 @@ private fun SettingsList(
 
       renderInAppInteractionSettings(
           options = options,
+          activityState = activityState,
           appName = applicationName,
           state = inAppInteractionViewState,
           onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
@@ -334,7 +339,10 @@ private fun CheckingUpdateStatus(
 }
 
 @Composable
-private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) {
+private fun PreviewSettingsScreen(
+    loadingState: SettingsViewState.LoadingState,
+    isLiveBilling: Boolean,
+) {
   val state =
       MutableSettingsViewState().apply {
         this.loadingState.value = loadingState
@@ -350,6 +358,7 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
       inAppInteractionViewState = state,
       dangerZoneViewState = state,
       versionCheckingState = VersionCheckingSettingsState.empty(),
+      activityState = PYDroidActivityState(isLiveBilling = isLiveBilling),
       onThemeModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},
@@ -375,18 +384,54 @@ private fun PreviewSettingsScreen(loadingState: SettingsViewState.LoadingState) 
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenDefault() {
-  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.NONE)
+private fun PreviewSettingsScreenDefaultWithBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.NONE,
+      isLiveBilling = true,
+  )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoading() {
-  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.LOADING)
+private fun PreviewSettingsScreenDefaultNoBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.NONE,
+      isLiveBilling = false,
+  )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoaded() {
-  PreviewSettingsScreen(loadingState = SettingsViewState.LoadingState.DONE)
+private fun PreviewSettingsScreenLoadingWithBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.LOADING,
+      isLiveBilling = true,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadingNoBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.LOADING,
+      isLiveBilling = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadedWithBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.DONE,
+      isLiveBilling = true,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadedNoBilling() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.DONE,
+      isLiveBilling = false,
+  )
 }

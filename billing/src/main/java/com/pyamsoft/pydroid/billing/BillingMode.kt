@@ -18,5 +18,5 @@ package com.pyamsoft.pydroid.billing
 
 public enum class BillingMode {
   FAKE,
-  PLAY_STORE,
+  REAL,
 }

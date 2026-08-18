@@ -116,6 +116,7 @@ internal interface AppComponent {
         internal val dataPolicyModule: DataPolicyModule,
         internal val enforcer: ThreadEnforcer,
         internal val dispatchers: AppDispatchers,
+        internal val billing: (params: BillingModule.Parameters) -> BillingModule,
         internal val billingMode: BillingMode,
     )
   }
@@ -134,7 +135,7 @@ internal interface AppComponent {
     // Make this module each time since if it falls out of scope, the in-app billing system
     // will crash
     private val billingModule =
-        BillingModule(
+        params.billing(
             BillingModule.Parameters(
                 enforcer = params.enforcer,
                 errorBus = params.billingErrorBus,
@@ -250,9 +251,17 @@ internal interface AppComponent {
         )
 
     @CheckResult
-    private fun connectBilling(activity: ComponentActivity): ConnectedBillingInteractor {
+    private fun connectBilling(
+        activityState: PYDroidActivityState,
+        activity: ComponentActivity,
+    ): ConnectedBillingInteractor {
       if (options.disableBilling) {
         Logger.w { "Application has disabled the billing component" }
+        return ConnectedBillingInteractor.NO_OP
+      }
+
+      if (!activityState.isLiveBilling) {
+        Logger.w { "Not a live billing module" }
         return ConnectedBillingInteractor.NO_OP
       }
 
@@ -260,7 +269,17 @@ internal interface AppComponent {
       return billingModule.provideConnector().bind(activity)
     }
 
+    @CheckResult
+    private fun captureActivityState(): PYDroidActivityState {
+      val isLiveBilling = billingModule.isLive()
+      return PYDroidActivityState(
+          isLiveBilling = isLiveBilling,
+      )
+    }
+
     override fun create(activity: ComponentActivity): PYDroidActivityComponents {
+      val activityState = captureActivityState()
+
       // Create rating here since we may use it to try force show an in-app rating
       val rating =
           RatingDelegate(
@@ -275,7 +294,7 @@ internal interface AppComponent {
           )
 
       // Connect the In-App Billing
-      val connectedBilling = connectBilling(activity)
+      val connectedBilling = connectBilling(activityState, activity)
 
       // Fake force-showing in-app rating
       activity.doOnCreate {
@@ -294,6 +313,7 @@ internal interface AppComponent {
       }
 
       return PYDroidActivityComponents(
+          activityState = activityState,
           connectedBilling = connectedBilling,
           rating = rating,
           dataPolicy =

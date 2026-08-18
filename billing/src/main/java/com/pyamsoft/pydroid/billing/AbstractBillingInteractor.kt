@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.launch
 
 @LintIgnoreTooManyFunctions
-internal abstract class AbstractBillingInteractor
+public abstract class AbstractBillingInteractor
 protected constructor(
     private val errorBus: EventBus<Throwable>,
     private val purchaseBus: EventBus<BillingPurchase>,

@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 public interface BillingInteractor {
 
   /** Get the list of SKU */
-  @CheckResult public fun watchSkuList(): Flow<BillingSkuListSnapshot>
+  @CheckResult public fun watchSkuList(): Flow<BillingFlowState>
 
   /** Watch for errors in the billing client */
   @CheckResult public fun watchBillingErrors(): Flow<Throwable>
@@ -33,12 +33,4 @@ public interface BillingInteractor {
 
   /** Refresh the SKU list */
   public suspend fun refresh()
-
-  /** A snapshot of the billing SKU list */
-  @ConsistentCopyVisibility
-  public data class BillingSkuListSnapshot
-  internal constructor(
-      val status: BillingState,
-      val skus: List<BillingSku>,
-  )
 }

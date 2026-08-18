@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
 import com.pyamsoft.pydroid.ui.internal.app.AppComponent
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.rating.RatingDelegate
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeAvailable
 import com.pyamsoft.pydroid.util.AppDispatchers
@@ -49,11 +50,13 @@ internal constructor(
   private var billingUpsell: BillingUpsell?
   private var dispatchers: AppDispatchers?
 
+  private var activityState: PYDroidActivityState?
   private var connectedBilling: ConnectedBillingInteractor?
 
   init {
     val components = component.create(activity)
 
+    activityState = components.activityState
     connectedBilling = components.connectedBilling
 
     ratingDelegate = components.rating
@@ -67,6 +70,7 @@ internal constructor(
       appComponent = null
       appProvider = null
 
+      activityState = null
       connectedBilling = null
 
       ratingDelegate = null
@@ -94,6 +98,14 @@ internal constructor(
   internal fun connectedBilling(): ConnectedBillingInteractor {
     return connectedBilling.requireNotNull {
       "ConnectedBillingInteractor is NULL, was this destroyed?"
+    }
+  }
+
+  /** Expose the ActivityState */
+  @CheckResult
+  internal fun activityState(): PYDroidActivityState {
+    return activityState.requireNotNull {
+      "ActivityState is NULL, was this destroyed?"
     }
   }
 

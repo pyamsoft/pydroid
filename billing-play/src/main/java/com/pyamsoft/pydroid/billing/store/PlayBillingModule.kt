@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.store
 
-/** A snapshot of the billing SKU list */
-public data class BillingFlowState
-public constructor(
-    val status: BillingState,
-    val skus: List<BillingSku>,
-)
+import com.pyamsoft.pydroid.billing.BillingConnector
+import com.pyamsoft.pydroid.billing.BillingModule
+
+public class PlayBillingModule(params: Parameters) : BillingModule(params) {
+
+  override fun isLive(): Boolean = true
+
+  override fun newConnector(params: Parameters): BillingConnector {
+    return PlayStoreBillingInteractor(
+        enforcer = params.enforcer,
+        errorBus = params.errorBus,
+        purchaseBus = params.purchaseBus,
+        dispatchers = params.dispatchers,
+    )
+  }
+}

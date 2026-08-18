@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.noop
 
-/** A snapshot of the billing SKU list */
-public data class BillingFlowState
-public constructor(
-    val status: BillingState,
-    val skus: List<BillingSku>,
-)
+import androidx.activity.ComponentActivity
+import com.pyamsoft.pydroid.billing.BillingConnector
+import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+
+internal class NoopBillingInteractor internal constructor() : BillingConnector {
+
+  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
+    return ConnectedBillingInteractor.NO_OP
+  }
+}

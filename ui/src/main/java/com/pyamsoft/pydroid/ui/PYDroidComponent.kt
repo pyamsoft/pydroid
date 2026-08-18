@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import coil3.ImageLoader
 import com.pyamsoft.pydroid.billing.BillingMode
+import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
@@ -82,6 +83,7 @@ internal interface PYDroidComponent {
         override val version: Int,
         override val logger: PYDroidLogger?,
         override val dispatchers: AppDispatchers,
+        override val billing: (params: BillingModule.Parameters) -> BillingModule,
         override val billingMode: BillingMode,
     ) : PYDroid.InternalParameters
   }
@@ -175,6 +177,7 @@ internal interface PYDroidComponent {
           debugInteractor = debugInteractor,
           hapticPreferences = preferences,
           dispatchers = params.dispatchers,
+          billing = params.billing,
           billingMode = params.billingMode,
       )
     }

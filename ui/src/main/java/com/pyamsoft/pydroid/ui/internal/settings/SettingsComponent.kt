@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
 import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
 import com.pyamsoft.pydroid.ui.internal.billing.MutableBillingViewState
@@ -38,7 +39,10 @@ internal interface SettingsComponent {
 
   interface Factory {
 
-    @CheckResult fun create(): SettingsComponent
+    @CheckResult
+    fun create(
+        activityState: PYDroidActivityState,
+    ): SettingsComponent
 
     @ConsistentCopyVisibility
     data class Parameters
@@ -65,9 +69,11 @@ internal interface SettingsComponent {
   class Impl
   private constructor(
       private val params: Factory.Parameters,
+      private val activityState: PYDroidActivityState,
   ) : SettingsComponent {
 
     override fun inject(injector: SettingsInjector) {
+      injector.activityState = activityState
       injector.options = params.options
       injector.viewModel =
           SettingsViewModeler(
@@ -109,8 +115,8 @@ internal interface SettingsComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(): SettingsComponent {
-        return Impl(params)
+      override fun create(activityState: PYDroidActivityState): SettingsComponent {
+        return Impl(params, activityState)
       }
     }
   }

@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.defaults.TypographyDefaults
 import com.pyamsoft.pydroid.ui.haptics.LocalHapticManager
 import com.pyamsoft.pydroid.ui.internal.app.AppHeader
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.test.createNewTestImageLoader
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
@@ -49,6 +50,7 @@ private enum class ChangeLogScreenItems {
 @JvmOverloads
 internal fun ChangeLogScreen(
     modifier: Modifier = Modifier,
+    activityState: PYDroidActivityState,
     state: ChangeLogDialogViewState,
     imageLoader: ImageLoader,
     onRateApp: () -> Unit,
@@ -67,6 +69,7 @@ internal fun ChangeLogScreen(
       afterScroll = {
         Actions(
             modifier = Modifier.fillMaxWidth().padding(MaterialTheme.keylines.baseline),
+            activityState = activityState,
             applicationVersionCode = versionCode,
             onRateApp = onRateApp,
             onClose = onClose,
@@ -89,6 +92,7 @@ internal fun ChangeLogScreen(
 @Composable
 private fun Actions(
     modifier: Modifier = Modifier,
+    activityState: PYDroidActivityState,
     applicationVersionCode: Int,
     onRateApp: () -> Unit,
     onClose: () -> Unit,
@@ -107,15 +111,21 @@ private fun Actions(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {
-    TextButton(
-        onClick = {
-          hapticManager?.confirmButtonPress()
-          onRateApp()
-        },
-    ) {
-      Text(
-          text = stringResource(R.string.rate_app),
-      )
+    // Even though it's called "isLiveBilling" what this really means here is
+    // "is this a Google Play build"
+    //
+    // if it is NOT, we hide this, since ratings are not needed
+    if (activityState.isLiveBilling) {
+      TextButton(
+          onClick = {
+            hapticManager?.confirmButtonPress()
+            onRateApp()
+          },
+      ) {
+        Text(
+            text = stringResource(R.string.rate_app),
+        )
+      }
     }
 
     Spacer(modifier = Modifier.weight(1F))
@@ -141,7 +151,10 @@ private fun Actions(
 }
 
 @Composable
-private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
+private fun PreviewChangeLogScreen(
+    changeLog: List<ChangeLogLine>,
+    isLiveBilling: Boolean,
+) {
   ChangeLogScreen(
       state =
           MutableChangeLogDialogViewState().apply {
@@ -150,6 +163,10 @@ private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
             this.changeLog.value = changeLog
           },
       imageLoader = createNewTestImageLoader(),
+      activityState =
+          PYDroidActivityState(
+              isLiveBilling = isLiveBilling,
+          ),
       onRateApp = {},
       onClose = {},
   )
@@ -157,14 +174,27 @@ private fun PreviewChangeLogScreen(changeLog: List<ChangeLogLine>) {
 
 @Preview
 @Composable
-private fun PreviewChangeLogScreenEmpty() {
-  PreviewChangeLogScreen(changeLog = emptyList())
+private fun PreviewChangeLogScreenEmptyWithBilling() {
+  PreviewChangeLogScreen(
+      changeLog = emptyList(),
+      isLiveBilling = true,
+  )
 }
 
 @Preview
 @Composable
-private fun PreviewChangeLogScreenContent() {
+private fun PreviewChangeLogScreenEmptyNoBilling() {
   PreviewChangeLogScreen(
+      changeLog = emptyList(),
+      isLiveBilling = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewChangeLogScreenContentWithBilling() {
+  PreviewChangeLogScreen(
+      isLiveBilling = true,
       changeLog =
           listOf(
               ChangeLogLine(
@@ -179,6 +209,29 @@ private fun PreviewChangeLogScreenContent() {
                   ChangeLogLine.Type.FEATURE,
                   "Just a new Feature, Lots of content content content wow",
               ),
-          )
+          ),
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewChangeLogScreenContentNoBilling() {
+  PreviewChangeLogScreen(
+      isLiveBilling = false,
+      changeLog =
+          listOf(
+              ChangeLogLine(
+                  ChangeLogLine.Type.CHANGE,
+                  "Just a simple Change, Lots of content content content wow",
+              ),
+              ChangeLogLine(
+                  ChangeLogLine.Type.BUGFIX,
+                  "Just a text Bugfix, Lots of content content content wow",
+              ),
+              ChangeLogLine(
+                  ChangeLogLine.Type.FEATURE,
+                  "Just a new Feature, Lots of content content content wow",
+              ),
+          ),
   )
 }

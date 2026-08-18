@@ -26,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.MarketLinker
@@ -44,6 +45,7 @@ private fun MountHooks(
 @Composable
 internal fun ChangeLogDialog(
     modifier: Modifier = Modifier,
+    activityState: PYDroidActivityState,
     onDismiss: () -> Unit,
 ) {
   val component = rememberComposableInjector { ChangeLogDialogInjector() }
@@ -65,6 +67,7 @@ internal fun ChangeLogDialog(
     ChangeLogScreen(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel,
+        activityState = activityState,
         imageLoader = imageLoader,
         onRateApp = { uriHandler.openUri(MarketLinker.getStorePageLink(context)) },
         onClose = onDismiss,

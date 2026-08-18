@@ -21,15 +21,18 @@ import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
 import com.pyamsoft.pydroid.core.requireNotNull
+import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModeler
 import com.pyamsoft.pydroid.ui.internal.changelog.ShowChangeLogScreen
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
+import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
@@ -89,6 +92,7 @@ internal constructor(
   @Composable
   private fun RenderContent(
       modifier: Modifier,
+      activityState: PYDroidActivityState,
       state: ChangeLogViewState,
       onDismissDialog: () -> Unit,
       content: @Composable () -> Unit,
@@ -100,6 +104,7 @@ internal constructor(
     if (showDialog) {
       ChangeLogDialog(
           modifier = modifier,
+          activityState = activityState,
           onDismiss = onDismissDialog,
       )
     }
@@ -121,12 +126,16 @@ internal constructor(
       return
     }
 
+    val delegate = rememberPYDroidDelegate()
+    val activityState = remember(delegate) { delegate.activityState() }
+
     val vm = rememberNotNull(viewModel)
     SaveStateDisposableEffect(vm)
 
     RenderContent(
         modifier = modifier,
         state = vm,
+        activityState = activityState,
         onDismissDialog = { vm.handleCloseDialog() },
     ) {
       content(

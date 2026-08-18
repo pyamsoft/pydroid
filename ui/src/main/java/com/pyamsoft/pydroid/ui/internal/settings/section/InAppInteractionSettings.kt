@@ -48,26 +48,32 @@ internal fun LazyListScope.renderInAppInteractionSettings(
     onDonateClicked: () -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
 ) {
-  item {
-    SettingsCard(
-        modifier = modifier.padding(top = MaterialTheme.keylines.content),
-    ) {
-      if (!options.disableRating) {
-        BadgeSettingsRowItem(
-            icon = IconPainters.rateApp(),
-            title = stringResource(R.string.rating_title, appName),
-            description = stringResource(R.string.rating_summary),
-            onClick = onOpenMarketPage,
-            badge = { ExternalLinkBadge() },
-        )
-      }
+  // Even though it's called "isLiveBilling" what this really means here is
+  // "is this a Google Play build"
+  //
+  // if it is NOT, we hide both of these since ratings are not needed and there is no in-app billing
+  if (activityState.isLiveBilling) {
+    item {
+      SettingsCard(
+          modifier = modifier.padding(top = MaterialTheme.keylines.content),
+      ) {
+        if (!options.disableRating) {
+          BadgeSettingsRowItem(
+              icon = IconPainters.rateApp(),
+              title = stringResource(R.string.rating_title, appName),
+              description = stringResource(R.string.rating_summary),
+              onClick = onOpenMarketPage,
+              badge = { ExternalLinkBadge() },
+          )
+        }
 
-      if (!options.disableBilling && activityState.isLiveBilling) {
-        TipJarSettingsItem(
-            state = state,
-            onDonateClicked = onDonateClicked,
-            onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
-        )
+        if (!options.disableBilling) {
+          TipJarSettingsItem(
+              state = state,
+              onDonateClicked = onDonateClicked,
+              onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
+          )
+        }
       }
     }
   }

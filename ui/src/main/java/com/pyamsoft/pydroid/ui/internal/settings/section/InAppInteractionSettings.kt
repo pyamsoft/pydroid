@@ -62,7 +62,7 @@ internal fun LazyListScope.renderInAppInteractionSettings(
         )
       }
 
-      if (!options.disableBilling || !activityState.isLiveBilling) {
+      if (!options.disableBilling && activityState.isLiveBilling) {
         TipJarSettingsItem(
             state = state,
             onDonateClicked = onDonateClicked,

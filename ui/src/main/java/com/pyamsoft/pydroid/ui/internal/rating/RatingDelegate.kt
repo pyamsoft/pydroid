@@ -75,13 +75,13 @@ internal class RatingDelegate(
       return
     }
 
+    if (!isLiveModule) {
+      Logger.w { "Not a live rating module" }
+      return
+    }
+
     val act = hostingActivity.requireNotNull()
     act.doOnCreate {
-      if (!isLiveModule) {
-        Logger.w { "Not a live rating module" }
-        return@doOnCreate
-      }
-
       ratingViewModel
           .requireNotNull()
           .loadInAppRating(

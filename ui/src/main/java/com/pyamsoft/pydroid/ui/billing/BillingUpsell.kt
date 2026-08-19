@@ -80,13 +80,13 @@ internal constructor(
       }
 
       val repeatedActions =
-        object : DefaultLifecycleObserver {
+          object : DefaultLifecycleObserver {
 
-          // Do on each start
-          override fun onStart(owner: LifecycleOwner) {
-            viewModel.requireNotNull().handleMaybeShowUpsell()
+            // Do on each start
+            override fun onStart(owner: LifecycleOwner) {
+              viewModel.requireNotNull().handleMaybeShowUpsell()
+            }
           }
-        }
 
       activity.lifecycle.addObserver(repeatedActions)
       activity.doOnDestroy {

@@ -67,8 +67,7 @@ protected constructor(
     Logger.d { "Construct new interactor and billing client" }
 
     val rawPackageName = activity.applicationContext.packageName
-    val packageName =
-        rawPackageName.removeSuffix(MarketLinker.DEV_SUFFIX).removeSuffix(MarketLinker.OSS_SUFFIX)
+    val packageName = rawPackageName.removeSuffix(MarketLinker.DEV_SUFFIX)
 
     appSkuList =
         listOf(

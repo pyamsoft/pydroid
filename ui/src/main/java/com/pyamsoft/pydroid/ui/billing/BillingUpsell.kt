@@ -78,9 +78,8 @@ internal constructor(
                 scope = activity.lifecycleScope,
             )
       }
-    }
 
-    val repeatedActions =
+      val repeatedActions =
         object : DefaultLifecycleObserver {
 
           // Do on each start
@@ -89,11 +88,12 @@ internal constructor(
           }
         }
 
-    activity.lifecycle.addObserver(repeatedActions)
-    activity.doOnDestroy {
-      activity.lifecycle.removeObserver(repeatedActions)
+      activity.lifecycle.addObserver(repeatedActions)
+      activity.doOnDestroy {
+        activity.lifecycle.removeObserver(repeatedActions)
 
-      viewModel = null
+        viewModel = null
+      }
     }
   }
 

@@ -111,11 +111,8 @@ private fun Actions(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Start,
   ) {
-    // Even though it's called "isLiveBilling" what this really means here is
-    // "is this a Google Play build"
-    //
-    // if it is NOT, we hide this, since ratings are not needed
-    if (activityState.isLiveBilling) {
+    // If this is not a google play build, hide rating upsell
+    if (activityState.isLiveRating) {
       TextButton(
           onClick = {
             hapticManager?.confirmButtonPress()

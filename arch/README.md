@@ -5,22 +5,50 @@ PYDroid standard architecture for an MVVM UI design pattern
 ## Install
 
 In your module's `build.gradle`:
-
 ```groovy
 repositories {
-
-    maven {
-        url 'https://jitpack.io'
-        content {
-            includeGroup("com.github.pyamsoft.pydroid")
-            includeGroup("com.github.pyamsoft")
-        }
+  // Jitpack
+  maven {
+    setUrl("https://jitpack.io")
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+      includeGroup("com.github.pyamsoft")
     }
+  }
 }
 
 dependencies {
     implementation "com.github.pyamsoft.pydroid:arch:<version>"
 }
+```
+
+OR the new way:
+
+In your module's `build.gradle`:
+```groovy
+repositories {
+  // Jitpack
+  maven {
+    setUrl("https://jitpack.io")
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+      includeGroup("com.github.pyamsoft")
+    }
+  }
+}
+
+dependencies {
+    implementation(libs.pydroid.arch)
+}
+```
+
+in `gradle/libs.versions.toml`
+```toml
+[versions]
+pydroid = "<version>"
+
+[libraries]
+pydroid-arch = { group = "com.github.pyamsoft.pydroid", name = "arch", version.ref = "pydroid" }
 ```
 
 ## How to Use

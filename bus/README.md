@@ -10,9 +10,9 @@ A simple event bus powered by coroutines
 In your module's `build.gradle`:
 ```groovy
 repositories {
-
+  // Jitpack
   maven {
-    url 'https://jitpack.io'
+    setUrl("https://jitpack.io")
     content {
       includeGroup("com.github.pyamsoft.pydroid")
       includeGroup("com.github.pyamsoft")
@@ -23,6 +23,35 @@ repositories {
 dependencies {
     implementation "com.github.pyamsoft.pydroid:bus:<version>"
 }
+```
+
+OR the new way:
+
+In your module's `build.gradle`:
+```groovy
+repositories {
+  // Jitpack
+  maven {
+    setUrl("https://jitpack.io")
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+      includeGroup("com.github.pyamsoft")
+    }
+  }
+}
+
+dependencies {
+    implementation(libs.pydroid.bus)
+}
+```
+
+in `gradle/libs.versions.toml`
+```toml
+[versions]
+pydroid = "<version>"
+
+[libraries]
+pydroid-bus = { group = "com.github.pyamsoft.pydroid", name = "bus", version.ref = "pydroid" }
 ```
 
 ## How to Use

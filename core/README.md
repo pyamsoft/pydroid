@@ -10,9 +10,9 @@ This is the core that all other PYDroid libraries are built on.
 In your module's `build.gradle`:
 ```groovy
 repositories {
-
+  // Jitpack
   maven {
-    url 'https://jitpack.io'
+    setUrl("https://jitpack.io")
     content {
       includeGroup("com.github.pyamsoft.pydroid")
       includeGroup("com.github.pyamsoft")
@@ -23,6 +23,35 @@ repositories {
 dependencies {
     implementation "com.github.pyamsoft.pydroid:core:<version>"
 }
+```
+
+OR the new way:
+
+In your module's `build.gradle`:
+```groovy
+repositories {
+  // Jitpack
+  maven {
+    setUrl("https://jitpack.io")
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+      includeGroup("com.github.pyamsoft")
+    }
+  }
+}
+
+dependencies {
+    implementation(libs.pydroid.core)
+}
+```
+
+in `gradle/libs.versions.toml`
+```toml
+[versions]
+pydroid = "<version>"
+
+[libraries]
+pydroid-core = { group = "com.github.pyamsoft.pydroid", name = "core", version.ref = "pydroid" }
 ```
 
 ## How to Use

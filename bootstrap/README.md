@@ -11,9 +11,9 @@ The data layers for bootstrapping a new application quickly
 In your module's `build.gradle`:
 ```groovy
 repositories {
-
+  // Jitpack
   maven {
-    url 'https://jitpack.io'
+    setUrl("https://jitpack.io")
     content {
       includeGroup("com.github.pyamsoft.pydroid")
       includeGroup("com.github.pyamsoft")
@@ -24,6 +24,35 @@ repositories {
 dependencies {
     implementation "com.github.pyamsoft.pydroid:bootstrap:<version>"
 }
+```
+
+OR the new way:
+
+In your module's `build.gradle`:
+```groovy
+repositories {
+  // Jitpack
+  maven {
+    setUrl("https://jitpack.io")
+    content {
+      includeGroup("com.github.pyamsoft.pydroid")
+      includeGroup("com.github.pyamsoft")
+    }
+  }
+}
+
+dependencies {
+    implementation(libs.pydroid.bootstrap)
+}
+```
+
+in `gradle/libs.versions.toml`
+```toml
+[versions]
+pydroid = "<version>"
+
+[libraries]
+pydroid-bootstrap = { group = "com.github.pyamsoft.pydroid", name = "bootstrap", version.ref = "pydroid" }
 ```
 
 ## How to Use

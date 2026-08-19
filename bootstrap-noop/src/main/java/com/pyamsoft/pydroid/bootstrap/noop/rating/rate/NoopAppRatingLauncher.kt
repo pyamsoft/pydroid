@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.noop
+package com.pyamsoft.pydroid.bootstrap.noop.rating.rate
 
-import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+import android.app.Activity
+import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
+import com.pyamsoft.pydroid.util.ResultWrapper
 
-internal object NoopBillingInteractor : BillingConnector {
-
-  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
-    return ConnectedBillingInteractor.NO_OP
+internal object NoopAppRatingLauncher : AppRatingLauncher {
+  override suspend fun rate(activity: Activity): ResultWrapper<Unit> {
+    return ResultWrapper.failure(IllegalStateException("No-op implementation should not be called"))
   }
 }

@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
@@ -56,6 +57,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 import com.pyamsoft.pydroid.util.Logger
 
 @Composable
+@LintIgnoreTooManyFunctions
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     listState: LazyListState,
@@ -205,6 +207,7 @@ private fun SettingsList(
 
       renderAppSettings(
           options = options,
+          activityState = activityState,
           onCheckUpdateClicked = onCheckUpdateClicked,
           onShowChangeLogClicked = onShowChangeLogClicked,
       )
@@ -342,6 +345,7 @@ private fun CheckingUpdateStatus(
 private fun PreviewSettingsScreen(
     loadingState: SettingsViewState.LoadingState,
     isLiveBilling: Boolean,
+    isLiveVersionCheck: Boolean,
 ) {
   val state =
       MutableSettingsViewState().apply {
@@ -358,7 +362,12 @@ private fun PreviewSettingsScreen(
       inAppInteractionViewState = state,
       dangerZoneViewState = state,
       versionCheckingState = VersionCheckingSettingsState.empty(),
-      activityState = PYDroidActivityState(isLiveBilling = isLiveBilling),
+      activityState =
+          PYDroidActivityState(
+              isLiveBilling = isLiveBilling,
+              isLiveVersionCheck = isLiveVersionCheck,
+              isLiveRating = false,
+          ),
       onThemeModeChanged = {},
       onLicensesClicked = {},
       onCheckUpdateClicked = {},
@@ -384,54 +393,120 @@ private fun PreviewSettingsScreen(
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenDefaultWithBilling() {
+private fun PreviewSettingsScreenDefaultWithBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.NONE,
       isLiveBilling = true,
+      isLiveVersionCheck = true,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenDefaultNoBilling() {
+private fun PreviewSettingsScreenDefaultWithBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.NONE,
+      isLiveBilling = true,
+      isLiveVersionCheck = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenDefaultNoBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.NONE,
       isLiveBilling = false,
+      isLiveVersionCheck = true,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoadingWithBilling() {
+private fun PreviewSettingsScreenDefaultNoBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.NONE,
+      isLiveBilling = false,
+      isLiveVersionCheck = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadingWithBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.LOADING,
       isLiveBilling = true,
+      isLiveVersionCheck = true,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoadingNoBilling() {
+private fun PreviewSettingsScreenLoadingWithBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.LOADING,
+      isLiveBilling = true,
+      isLiveVersionCheck = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadingNoBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.LOADING,
       isLiveBilling = false,
+      isLiveVersionCheck = true,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoadedWithBilling() {
+private fun PreviewSettingsScreenLoadingNoBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.LOADING,
+      isLiveBilling = false,
+      isLiveVersionCheck = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadedWithBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.DONE,
       isLiveBilling = true,
+      isLiveVersionCheck = true,
   )
 }
 
 @Preview
 @Composable
-private fun PreviewSettingsScreenLoadedNoBilling() {
+private fun PreviewSettingsScreenLoadedWithBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.DONE,
+      isLiveBilling = true,
+      isLiveVersionCheck = false,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadedNoBillingWithVersion() {
   PreviewSettingsScreen(
       loadingState = SettingsViewState.LoadingState.DONE,
       isLiveBilling = false,
+      isLiveVersionCheck = true,
+  )
+}
+
+@Preview
+@Composable
+private fun PreviewSettingsScreenLoadedNoBillingNoVersion() {
+  PreviewSettingsScreen(
+      loadingState = SettingsViewState.LoadingState.DONE,
+      isLiveBilling = false,
+      isLiveVersionCheck = false,
   )
 }

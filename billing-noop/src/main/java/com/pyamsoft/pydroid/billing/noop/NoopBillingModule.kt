@@ -24,6 +24,6 @@ public class NoopBillingModule(params: Parameters) : BillingModule(params) {
   override fun isLive(): Boolean = false
 
   override fun newConnector(params: Parameters): BillingConnector {
-    return NoopBillingInteractor()
+    return NoopBillingInteractor
   }
 }

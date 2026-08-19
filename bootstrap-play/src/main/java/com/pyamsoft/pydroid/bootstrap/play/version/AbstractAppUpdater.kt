@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.play.version
 
 import androidx.annotation.CheckResult
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -23,6 +23,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer

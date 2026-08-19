@@ -18,36 +18,19 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.fake.FakeAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
-import com.pyamsoft.pydroid.bootstrap.version.play.PlayStoreAppUpdater
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.flow.Flow
 
 /** In-App update module */
-public class VersionModule(params: Parameters) {
+public abstract class VersionModule(params: Parameters) {
 
   private val impl: VersionInteractorImpl
 
   init {
-    val updater =
-        if (params.fakeUpgradeRequest != null) {
-          FakeAppUpdater(
-              enforcer = params.enforcer,
-              context = params.context.applicationContext,
-              version = params.version,
-              dispatchers = params.dispatchers,
-              fakeUpgradeRequest = params.fakeUpgradeRequest,
-          )
-        } else {
-          PlayStoreAppUpdater(
-              enforcer = params.enforcer,
-              context = params.context.applicationContext,
-              dispatchers = params.dispatchers,
-          )
-        }
-
+    val updater = newUpdater(params)
     val network =
         VersionInteractorNetwork(
             updater = updater,
@@ -62,15 +45,20 @@ public class VersionModule(params: Parameters) {
     return impl
   }
 
+  /** Is this a "live" client, or is it no-op */
+  @CheckResult public abstract fun isLive(): Boolean
+
+  @CheckResult protected abstract fun newUpdater(params: Parameters): AppUpdater
+
   /** Module parameters */
   public data class Parameters
   @JvmOverloads
   public constructor(
-      internal val context: Context,
-      internal val version: Int,
-      internal val enforcer: ThreadEnforcer,
-      internal val dispatchers: AppDispatchers,
+      val context: Context,
+      val version: Int,
+      val enforcer: ThreadEnforcer,
+      val dispatchers: AppDispatchers,
       /** If this field is set, the version module will always deliver an update */
-      internal val fakeUpgradeRequest: Flow<FakeUpgradeRequest>? = null,
+      val fakeUpgradeRequest: Flow<FakeUpgradeRequest>? = null,
   )
 }

@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.billing
 
 import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,9 +53,10 @@ public typealias ShowBillingWidget =
     ) -> Unit
 
 /** Handles Billing related work in an Activity */
-public class BillingUpsell
+internal class BillingUpsell
 internal constructor(
     activity: ComponentActivity,
+    private val isLiveModule: Boolean,
     private val disabled: Boolean,
 ) {
 
@@ -65,12 +65,13 @@ internal constructor(
   init {
     if (disabled) {
       Logger.w { "Application has disabled the billing component" }
+    } else if (!isLiveModule) {
+      Logger.w { "Not live billing module." }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
       // correctly set up otherwise we crash.
       activity.doOnCreate {
         ObjectGraph.ActivityScope.retrieve(activity).injector().plusBilling().create().inject(this)
-
         viewModel
             .requireNotNull()
             .bind(
@@ -123,7 +124,7 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(
+  private fun Render(
       modifier: Modifier = Modifier,
       dispatchers: AppDispatchers = AppDispatchers.create(),
       content: ShowBillingWidget,
@@ -131,6 +132,12 @@ internal constructor(
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Application has disabled the Billing component" } }
+      return
+    }
+
+    if (!isLiveModule) {
+      // Log in a LE so that we only log once per lifecycle instead of per-render
+      LaunchedEffect(Unit) { Logger.w { "Not a live billing module" } }
       return
     }
 
@@ -156,7 +163,7 @@ internal constructor(
 
   /** Render into a composable the default version check screen upsell */
   @Composable
-  public fun RenderBillingUpsellWidget(
+  fun RenderBillingUpsellWidget(
       modifier: Modifier = Modifier,
       dispatchers: AppDispatchers = AppDispatchers.create(),
       dialogModifier: Modifier = Modifier,
@@ -171,20 +178,6 @@ internal constructor(
           onShowBilling = onShowBilling,
           onDismiss = onDismiss,
       )
-    }
-  }
-
-  public companion object {
-
-    /** Create a new Billing upsell UI component */
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    public fun create(
-        activity: ComponentActivity,
-        disabled: Boolean = false,
-    ): BillingUpsell {
-      return BillingUpsell(activity, disabled)
     }
   }
 }

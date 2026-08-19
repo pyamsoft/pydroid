@@ -94,6 +94,8 @@ private fun PreviewInAppInteractionSettings(isLiveBilling: Boolean) {
         activityState =
             PYDroidActivityState(
                 isLiveBilling = isLiveBilling,
+                isLiveRating = false,
+                isLiveVersionCheck = false,
             ),
     )
   }

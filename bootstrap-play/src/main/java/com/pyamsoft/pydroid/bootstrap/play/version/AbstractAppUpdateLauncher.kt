@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.play.version
 
 import android.app.Activity
 import androidx.activity.ComponentActivity
@@ -25,6 +25,7 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.util.AppDispatchers
@@ -32,8 +33,8 @@ import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper
 import com.pyamsoft.pydroid.util.ifNotCancellation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 internal abstract class AbstractAppUpdateLauncher
@@ -49,7 +50,7 @@ protected constructor(
 
   @CheckResult
   private suspend fun startUpdateFlow(activity: Activity): ResultWrapper<AppUpdateResultStatus> =
-      suspendCoroutine { cont ->
+      suspendCancellableCoroutine { cont ->
         val options = AppUpdateOptions.defaultOptions(type)
 
         Logger.d { "Prompt the user to begin downloading in-app update" }

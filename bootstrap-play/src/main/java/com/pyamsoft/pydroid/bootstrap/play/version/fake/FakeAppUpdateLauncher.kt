@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.fake
+package com.pyamsoft.pydroid.bootstrap.play.version.fake
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
-import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.play.version.AbstractAppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
+import com.pyamsoft.pydroid.bootstrap.version.fake.FakeUpgradeRequest
 import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.ResultWrapper

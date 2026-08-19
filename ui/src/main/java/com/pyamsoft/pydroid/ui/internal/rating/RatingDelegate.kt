@@ -22,12 +22,14 @@ import com.pyamsoft.pydroid.bootstrap.rating.rate.AppRatingLauncher
 import com.pyamsoft.pydroid.core.requireNotNull
 import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.Logger
+import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.launch
 
 internal class RatingDelegate(
     activity: ComponentActivity,
     viewModel: RatingViewModeler,
+    private val isLiveModule: Boolean,
     private val disabled: Boolean,
 ) {
 
@@ -74,11 +76,18 @@ internal class RatingDelegate(
     }
 
     val act = hostingActivity.requireNotNull()
-    ratingViewModel
-        .requireNotNull()
-        .loadInAppRating(
-            scope = act.lifecycleScope,
-            onLaunchInAppRating = { showRating(act, dispatchers, it) },
-        )
+    act.doOnCreate {
+      if (!isLiveModule) {
+        Logger.w { "Not a live rating module" }
+        return@doOnCreate
+      }
+
+      ratingViewModel
+          .requireNotNull()
+          .loadInAppRating(
+              scope = act.lifecycleScope,
+              onLaunchInAppRating = { showRating(act, dispatchers, it) },
+          )
+    }
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.play.rating
 
 import android.app.Activity
 import com.google.android.play.core.review.ReviewInfo

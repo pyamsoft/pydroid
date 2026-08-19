@@ -25,7 +25,9 @@ import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.datapolicy.DataPolicyModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.core.createThreadEnforcer
@@ -84,6 +86,8 @@ internal interface PYDroidComponent {
         override val logger: PYDroidLogger?,
         override val dispatchers: AppDispatchers,
         override val billing: (params: BillingModule.Parameters) -> BillingModule,
+        override val rating: (params: RatingModule.Parameters) -> RatingModule,
+        override val versionCheck: (params: VersionModule.Parameters) -> VersionModule,
         override val billingMode: BillingMode,
     ) : PYDroid.InternalParameters
   }
@@ -178,6 +182,8 @@ internal interface PYDroidComponent {
           hapticPreferences = preferences,
           dispatchers = params.dispatchers,
           billing = params.billing,
+          rating = params.rating,
+          versionCheck = params.versionCheck,
           billingMode = params.billingMode,
       )
     }

@@ -67,7 +67,7 @@ public interface AppUpdateLauncher {
   public companion object {
 
     /** App updates can only be used once. */
-    internal val APP_UPDATE_INFO_ALREADY_CONSUMED_EXCEPTION: Exception =
+    public val APP_UPDATE_INFO_ALREADY_CONSUMED_EXCEPTION: Exception =
         IllegalStateException("Updates can only be checked a single time.")
 
     /** Create a no-op update launcher */

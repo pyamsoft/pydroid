@@ -37,6 +37,10 @@ include(":billing-play")
 
 include(":bootstrap")
 
+include(":bootstrap-noop")
+
+include(":bootstrap-play")
+
 include(":bus")
 
 include(":core")

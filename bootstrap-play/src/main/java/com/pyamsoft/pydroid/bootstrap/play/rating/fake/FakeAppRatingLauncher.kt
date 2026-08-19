@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.play
+package com.pyamsoft.pydroid.bootstrap.play.rating.fake
 
-import com.google.android.play.core.appupdate.AppUpdateInfo
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.install.model.AppUpdateType
-import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdateLauncher
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.testing.FakeReviewManager
+import com.pyamsoft.pydroid.bootstrap.play.rating.AbstractAppRatingLauncher
 import com.pyamsoft.pydroid.util.AppDispatchers
 
-internal class PlayStoreAppUpdateLauncher
+internal class FakeAppRatingLauncher
 internal constructor(
-    manager: AppUpdateManager,
+    manager: FakeReviewManager,
+    info: ReviewInfo,
     dispatchers: AppDispatchers,
-    info: AppUpdateInfo,
-    @AppUpdateType type: Int,
-) : AbstractAppUpdateLauncher(dispatchers, manager, info, type)
+) : AbstractAppRatingLauncher(manager, info, dispatchers) {
+
+  // NOTE(Peter): Is there any kind of customization we can do here?
+
+}

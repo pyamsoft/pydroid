@@ -117,6 +117,8 @@ internal interface AppComponent {
         internal val enforcer: ThreadEnforcer,
         internal val dispatchers: AppDispatchers,
         internal val billing: (params: BillingModule.Parameters) -> BillingModule,
+        internal val rating: (params: RatingModule.Parameters) -> RatingModule,
+        internal val versionCheck: (params: VersionModule.Parameters) -> VersionModule,
         internal val billingMode: BillingMode,
     )
   }
@@ -148,7 +150,7 @@ internal interface AppComponent {
     // Make this module each time since if it falls out of scope, the in-app rating system
     // will crash
     private val ratingModule =
-        RatingModule(
+        params.rating(
             RatingModule.Parameters(
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
@@ -159,7 +161,7 @@ internal interface AppComponent {
     // Make this module each time since if it falls out of scope, the in-app update system
     // will crash
     private val versionModule =
-        VersionModule(
+        params.versionCheck(
             VersionModule.Parameters(
                 enforcer = params.enforcer,
                 context = params.context.applicationContext,
@@ -272,8 +274,12 @@ internal interface AppComponent {
     @CheckResult
     private fun captureActivityState(): PYDroidActivityState {
       val isLiveBilling = billingModule.isLive()
+      val isLiveRating = ratingModule.isLive()
+      val isLiveVersionCheck = versionModule.isLive()
       return PYDroidActivityState(
           isLiveBilling = isLiveBilling,
+          isLiveRating = isLiveRating,
+          isLiveVersionCheck = isLiveVersionCheck,
       )
     }
 
@@ -290,6 +296,7 @@ internal interface AppComponent {
                       dispatchers = params.dispatchers,
                       interactor = ratingModule.provideInteractor(),
                   ),
+              isLiveModule = activityState.isLiveRating,
               disabled = options.disableRating,
           )
 
@@ -297,14 +304,16 @@ internal interface AppComponent {
       val connectedBilling = connectBilling(activityState, activity)
 
       // Fake force-showing in-app rating
-      activity.doOnCreate {
-        if (params.isDebugMode) {
-          params.debugPreferences.listenTryShowRatingUpsell().also { f ->
-            activity.lifecycleScope.launch(context = params.dispatchers.main) {
-              f.collect { show ->
-                if (show) {
-                  Logger.d { "Try to force-show an In-App Rating" }
-                  rating.loadInAppRating(params.dispatchers)
+      if (activityState.isLiveRating) {
+        activity.doOnCreate {
+          if (params.isDebugMode) {
+            params.debugPreferences.listenTryShowRatingUpsell().also { f ->
+              activity.lifecycleScope.launch(context = params.dispatchers.main) {
+                f.collect { show ->
+                  if (show) {
+                    Logger.d { "Try to force-show an In-App Rating" }
+                    rating.loadInAppRating(params.dispatchers)
+                  }
                 }
               }
             }
@@ -322,18 +331,20 @@ internal interface AppComponent {
                   disabled = options.disableDataPolicy,
               ),
           showUpdateChangeLog =
-              ShowUpdateChangeLog.create(
+              ShowUpdateChangeLog(
                   activity,
                   disabled = options.disableChangeLog,
               ),
           billingUpsell =
-              BillingUpsell.create(
+              BillingUpsell(
                   activity,
+                  isLiveModule = activityState.isLiveBilling,
                   disabled = options.disableBilling,
               ),
           versionUpgrader =
-              VersionUpgradeAvailable.create(
+              VersionUpgradeAvailable(
                   activity,
+                  isLiveModule = activityState.isLiveVersionCheck,
                   disabled = options.disableVersionCheck,
               ),
           dispatchers = params.dispatchers,

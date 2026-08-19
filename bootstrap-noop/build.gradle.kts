@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating.play
+android {
+  namespace = "com.pyamsoft.pydroid.bootstrap.noop"
 
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.pyamsoft.pydroid.bootstrap.rating.AbstractAppRatingLauncher
-import com.pyamsoft.pydroid.util.AppDispatchers
+  testOptions { unitTests { isIncludeAndroidResources = true } }
+}
 
-internal class PlayStoreAppRatingLauncher
-internal constructor(
-    manager: ReviewManager,
-    info: ReviewInfo,
-    dispatchers: AppDispatchers,
-) : AbstractAppRatingLauncher(manager, info, dispatchers)
+dependencies {
+  implementation(libs.androidx.activity)
+
+  // Compose Annotations
+  implementation(libs.compose.runtime.annotation)
+
+  api(project(":bootstrap"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
+}

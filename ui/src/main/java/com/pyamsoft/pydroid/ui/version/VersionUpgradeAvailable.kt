@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.version
 
 import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -80,9 +79,10 @@ private fun handleRestartUpdateFlow(
  * A self contained class which is able to check for updates and prompt the user to install them
  * in-app. Adopts the theme from whichever composable it is rendered into
  */
-public class VersionUpgradeAvailable
+internal class VersionUpgradeAvailable
 internal constructor(
     activity: ComponentActivity,
+    private val isLiveModule: Boolean,
     private val disabled: Boolean,
 ) {
   internal var viewModel: VersionCheckViewModeler? = null
@@ -90,6 +90,8 @@ internal constructor(
   init {
     if (disabled) {
       Logger.w { "Application has disabled the VersionCheck component" }
+    } else if (!isLiveModule) {
+      Logger.w { "Not a live version-check module" }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
       // correctly set up otherwise we crash.
@@ -132,13 +134,19 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(
+  private fun Render(
       dispatchers: AppDispatchers = AppDispatchers.create(),
       content: VersionUpgradeWidget,
   ) {
     if (disabled) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Application has disabled the VersionCheck component" } }
+      return
+    }
+
+    if (!isLiveModule) {
+      // Log in a LE so that we only log once per lifecycle instead of per-render
+      LaunchedEffect(Unit) { Logger.w { "Not a live version-check module" } }
       return
     }
 
@@ -210,7 +218,7 @@ internal constructor(
 
   /** Render into a composable the default version check screen upsell */
   @Composable
-  public fun RenderVersionCheckWidget(
+  fun RenderVersionCheckWidget(
       modifier: Modifier = Modifier,
       dispatchers: AppDispatchers = AppDispatchers.create(),
   ) {
@@ -239,20 +247,6 @@ internal constructor(
           state = state,
           onCompleteUpdate = onUpgradeStarted,
       )
-    }
-  }
-
-  public companion object {
-
-    /** Create a new version upgrade available UI component */
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    public fun create(
-        activity: ComponentActivity,
-        disabled: Boolean = false,
-    ): VersionUpgradeAvailable {
-      return VersionUpgradeAvailable(activity, disabled)
     }
   }
 }

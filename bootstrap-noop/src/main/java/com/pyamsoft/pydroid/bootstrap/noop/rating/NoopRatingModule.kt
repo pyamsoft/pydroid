@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating.fake
+package com.pyamsoft.pydroid.bootstrap.noop.rating
 
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.testing.FakeReviewManager
-import com.pyamsoft.pydroid.bootstrap.rating.AbstractAppRatingLauncher
-import com.pyamsoft.pydroid.util.AppDispatchers
+import com.pyamsoft.pydroid.bootstrap.noop.rating.rate.NoopRateMyApp
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 
-internal class FakeAppRatingLauncher
-internal constructor(
-    manager: FakeReviewManager,
-    info: ReviewInfo,
-    dispatchers: AppDispatchers,
-) : AbstractAppRatingLauncher(manager, info, dispatchers) {
+public class NoopRatingModule(params: Parameters) : RatingModule(params) {
+  override fun isLive(): Boolean = false
 
-  // NOTE(Peter): Is there any kind of customization we can do here?
-
+  override fun newRater(params: Parameters): RateMyApp {
+    return NoopRateMyApp
+  }
 }

@@ -20,6 +20,8 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.BillingMode
 import com.pyamsoft.pydroid.billing.BillingModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.util.AppDispatchers
 import com.pyamsoft.pydroid.util.PYDroidLogger
@@ -73,6 +75,12 @@ internal constructor(
       /** Implementation of billing (play or no-op) * */
       override val billing: (params: BillingModule.Parameters) -> BillingModule,
 
+      /** Implementation of in-app rating (play or no-op) * */
+      override val rating: (params: RatingModule.Parameters) -> RatingModule,
+
+      /** Implementation of in-app updates (play or no-op) * */
+      override val versionCheck: (params: VersionModule.Parameters) -> VersionModule,
+
       /** Logger implementation */
       override val logger: PYDroidLogger? = null,
 
@@ -89,6 +97,8 @@ internal constructor(
     val version: Int
     val dispatchers: AppDispatchers
     val billing: (params: BillingModule.Parameters) -> BillingModule
+    val rating: (params: RatingModule.Parameters) -> RatingModule
+    val versionCheck: (params: VersionModule.Parameters) -> VersionModule
     val logger: PYDroidLogger?
     val billingMode: BillingMode?
   }

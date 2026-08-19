@@ -166,6 +166,8 @@ private fun PreviewChangeLogScreen(
       activityState =
           PYDroidActivityState(
               isLiveBilling = isLiveBilling,
+              isLiveRating = false,
+              isLiveVersionCheck = false,
           ),
       onRateApp = {},
       onClose = {},

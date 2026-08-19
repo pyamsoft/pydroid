@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.noop
+package com.pyamsoft.pydroid.bootstrap.noop.version.update
 
 import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateResultStatus
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.util.ResultWrapper
 
-internal object NoopBillingInteractor : BillingConnector {
+internal object NoopAppUpdateLauncher : AppUpdateLauncher {
+  override fun consumed(): Boolean {
+    return true
+  }
 
-  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
-    return ConnectedBillingInteractor.NO_OP
+  override fun availableUpdateVersion(): Int {
+    return 0
+  }
+
+  override suspend fun launchUpdate(
+      activity: ComponentActivity
+  ): ResultWrapper<AppUpdateResultStatus> {
+    return ResultWrapper.failure(IllegalStateException("No-op implementation should not be called"))
   }
 }

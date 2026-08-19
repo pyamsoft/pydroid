@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.bootstrap.play.version.play
 
-@ConsistentCopyVisibility
-internal data class PYDroidActivityState
+import com.google.android.play.core.appupdate.AppUpdateInfo
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.install.model.AppUpdateType
+import com.pyamsoft.pydroid.bootstrap.play.version.AbstractAppUpdateLauncher
+import com.pyamsoft.pydroid.util.AppDispatchers
+
+internal class PlayStoreAppUpdateLauncher
 internal constructor(
-    val isLiveBilling: Boolean,
-    val isLiveRating: Boolean,
-    val isLiveVersionCheck: Boolean,
-)
+    manager: AppUpdateManager,
+    dispatchers: AppDispatchers,
+    info: AppUpdateInfo,
+    @AppUpdateType type: Int,
+) : AbstractAppUpdateLauncher(dispatchers, manager, info, type)

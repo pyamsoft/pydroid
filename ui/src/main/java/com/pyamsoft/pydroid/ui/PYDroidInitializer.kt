@@ -59,6 +59,8 @@ internal constructor(
                       logger = params.logger,
                       dispatchers = params.dispatchers,
                       billing = params.billing,
+                      rating = params.rating,
+                      versionCheck = params.versionCheck,
                       billingMode = billingMode,
                   ),
               )

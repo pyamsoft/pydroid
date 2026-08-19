@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.play
+package com.pyamsoft.pydroid.bootstrap.play.version.play
 
 import android.content.Context
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.pyamsoft.pydroid.bootstrap.version.AbstractAppUpdater
+import com.pyamsoft.pydroid.bootstrap.play.version.AbstractAppUpdater
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.AppDispatchers

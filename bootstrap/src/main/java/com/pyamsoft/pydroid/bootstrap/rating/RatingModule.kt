@@ -18,33 +18,17 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.rating.fake.FakeRateMyApp
-import com.pyamsoft.pydroid.bootstrap.rating.play.PlayStoreRateMyApp
+import com.pyamsoft.pydroid.bootstrap.rating.rate.RateMyApp
 import com.pyamsoft.pydroid.core.ThreadEnforcer
 import com.pyamsoft.pydroid.util.AppDispatchers
-import com.pyamsoft.pydroid.util.isDebugMode
 
 /** Rating module */
-public class RatingModule(params: Parameters) {
+public abstract class RatingModule(params: Parameters) {
 
   private val impl: RatingInteractor
 
   init {
-    val rateMyApp =
-        if (params.context.isDebugMode()) {
-          FakeRateMyApp(
-              enforcer = params.enforcer,
-              context = params.context.applicationContext,
-              dispatchers = params.dispatchers,
-          )
-        } else {
-          PlayStoreRateMyApp(
-              enforcer = params.enforcer,
-              context = params.context.applicationContext,
-              dispatchers = params.dispatchers,
-          )
-        }
-
+    val rateMyApp = newRater(params)
     impl =
         RatingInteractorImpl(
             rateMyApp = rateMyApp,
@@ -58,10 +42,15 @@ public class RatingModule(params: Parameters) {
     return impl
   }
 
+  /** Is this a "live" client, or is it no-op */
+  @CheckResult public abstract fun isLive(): Boolean
+
+  @CheckResult protected abstract fun newRater(params: Parameters): RateMyApp
+
   /** Module parameters */
   public data class Parameters(
-      internal val context: Context,
-      internal val enforcer: ThreadEnforcer,
-      internal val dispatchers: AppDispatchers,
+      val context: Context,
+      val enforcer: ThreadEnforcer,
+      val dispatchers: AppDispatchers,
   )
 }

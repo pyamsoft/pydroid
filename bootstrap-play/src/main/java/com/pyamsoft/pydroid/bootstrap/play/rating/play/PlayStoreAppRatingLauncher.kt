@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.noop
+package com.pyamsoft.pydroid.bootstrap.play.rating.play
 
-import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.pyamsoft.pydroid.bootstrap.play.rating.AbstractAppRatingLauncher
+import com.pyamsoft.pydroid.util.AppDispatchers
 
-internal object NoopBillingInteractor : BillingConnector {
-
-  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
-    return ConnectedBillingInteractor.NO_OP
-  }
-}
+internal class PlayStoreAppRatingLauncher
+internal constructor(
+    manager: ReviewManager,
+    info: ReviewInfo,
+    dispatchers: AppDispatchers,
+) : AbstractAppRatingLauncher(manager, info, dispatchers)

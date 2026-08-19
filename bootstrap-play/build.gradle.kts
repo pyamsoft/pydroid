@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.noop
+android {
+  namespace = "com.pyamsoft.pydroid.bootstrap.play"
 
-import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+  testOptions { unitTests { isIncludeAndroidResources = true } }
+}
 
-internal object NoopBillingInteractor : BillingConnector {
+dependencies {
+  implementation(libs.androidx.activity)
 
-  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
-    return ConnectedBillingInteractor.NO_OP
-  }
+  implementation(libs.google.inAppUpdate)
+  implementation(libs.google.inAppReview)
+
+  // Compose Annotations
+  implementation(libs.compose.runtime.annotation)
+
+  api(project(":bootstrap"))
+
+  // Testing
+  testImplementation(libs.kotlin.test)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.junit)
+  testImplementation(libs.robolectric)
 }

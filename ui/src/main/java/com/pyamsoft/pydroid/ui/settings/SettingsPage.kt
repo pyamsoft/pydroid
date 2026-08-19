@@ -286,6 +286,7 @@ private fun SettingsContent(
   if (showChangeLogDialog) {
     ChangeLogDialog(
         modifier = dialogModifier,
+        activityState = activityState,
         onDismiss = onDismissChangeLogDialog,
     )
   }

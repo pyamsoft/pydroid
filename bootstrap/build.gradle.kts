@@ -23,9 +23,6 @@ android {
 dependencies {
   implementation(libs.androidx.activity)
 
-  implementation(libs.google.inAppUpdate)
-  implementation(libs.google.inAppReview)
-
   // Compose Annotations
   implementation(libs.compose.runtime.annotation)
 

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.billing.noop
+package com.pyamsoft.pydroid.bootstrap.noop.version
 
-import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.ConnectedBillingInteractor
+import com.pyamsoft.pydroid.bootstrap.noop.version.update.NoopAppUpdater
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 
-internal object NoopBillingInteractor : BillingConnector {
+public class NoopVersionModule(params: Parameters) : VersionModule(params) {
+  override fun isLive(): Boolean = false
 
-  override fun bind(activity: ComponentActivity): ConnectedBillingInteractor {
-    return ConnectedBillingInteractor.NO_OP
+  override fun newUpdater(params: Parameters): AppUpdater {
+    return NoopAppUpdater
   }
 }

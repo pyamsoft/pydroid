@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,7 +56,7 @@ public typealias ShowUpdateChangeLogWidget =
  * A self contained class which is able to check for updates and prompt the user to install them
  * in-app. Adopts the theme from whichever composable it is rendered into
  */
-public class ShowUpdateChangeLog
+internal class ShowUpdateChangeLog
 internal constructor(
     activity: ComponentActivity,
     private val disabled: Boolean,
@@ -164,20 +163,6 @@ internal constructor(
           onShowChangeLog = onShowChangeLog,
           onDismiss = onDismiss,
       )
-    }
-  }
-
-  public companion object {
-
-    /** Create a new show update changelog UI component */
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    public fun create(
-        activity: ComponentActivity,
-        disabled: Boolean = false,
-    ): ShowUpdateChangeLog {
-      return ShowUpdateChangeLog(activity, disabled)
     }
   }
 }

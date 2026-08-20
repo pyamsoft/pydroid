@@ -70,7 +70,6 @@ private fun PreviewAppSettings(
       modifier = Modifier.background(Color.White),
   ) {
     renderAppSettings(
-        options = PYDroidActivityOptions(),
         activityState =
             PYDroidActivityState(
                 isLiveVersionCheck = isLiveVersionCheck,

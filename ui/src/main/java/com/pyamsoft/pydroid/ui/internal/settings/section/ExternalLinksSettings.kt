@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
 import com.pyamsoft.pydroid.ui.settings.BadgeSettingsRowItem
@@ -37,7 +36,6 @@ import com.pyamsoft.pydroid.ui.settings.SimpleSettingsRowItem
 
 internal fun LazyListScope.renderExternalLinksSettings(
     modifier: Modifier = Modifier,
-    options: PYDroidActivityOptions,
     onLicensesClicked: () -> Unit,
     onBugReportClicked: () -> Unit,
     onViewSourceClicked: () -> Unit,
@@ -64,14 +62,12 @@ internal fun LazyListScope.renderExternalLinksSettings(
           badge = { ExternalLinkBadge() },
       )
 
-      if (!options.disableDataPolicy) {
-        SimpleSettingsRowItem(
-            icon = IconPainters.viewDataPolicyDisclosure(),
-            title = stringResource(R.string.view_data_policy_title),
-            description = stringResource(R.string.view_data_policy_summary),
-            onClick = onViewDataPolicyClicked,
-        )
-      }
+      SimpleSettingsRowItem(
+          icon = IconPainters.viewDataPolicyDisclosure(),
+          title = stringResource(R.string.view_data_policy_title),
+          description = stringResource(R.string.view_data_policy_summary),
+          onClick = onViewDataPolicyClicked,
+      )
 
       BadgeSettingsRowItem(
           icon = IconPainters.bugReport(),
@@ -107,7 +103,6 @@ private fun PreviewExternalLinksSettings() {
       modifier = Modifier.background(Color.White),
   ) {
     renderExternalLinksSettings(
-        options = PYDroidActivityOptions(),
         onLicensesClicked = {},
         onBugReportClicked = {},
         onViewSourceClicked = {},

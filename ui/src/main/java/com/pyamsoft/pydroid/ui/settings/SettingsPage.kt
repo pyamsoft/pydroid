@@ -30,7 +30,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.SaveStateDisposableEffect
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingViewState
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogViewState
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
@@ -54,7 +53,6 @@ import com.pyamsoft.pydroid.ui.uri.rememberUriHandler
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewState
 import com.pyamsoft.pydroid.util.AppDispatchers
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.MarketLinker
 
 @Composable
@@ -81,7 +79,6 @@ public fun SettingsPage(
   val context = LocalContext.current
 
   val component = rememberComposableInjector { SettingsInjector() }
-  val options = rememberNotNull(component.options)
   val activityState = rememberNotNull(component.activityState)
 
   val viewModel = rememberNotNull(component.viewModel)
@@ -112,18 +109,13 @@ public fun SettingsPage(
       billingState = billingViewModel,
       changeLogState = changeLogViewModel,
       versionCheckViewState = versionViewModel,
-      options = options,
       activityState = activityState,
       onLicensesClicked = { viewModel.handleOpenAboutDialog() },
       onCheckUpdateClicked = {
-        if (options.disableVersionCheck) {
-          Logger.w { "Application has disabled the VersionCheck component" }
-        } else {
-          versionViewModel.handleCheckForUpdates(
-              scope = lifecycleScope,
-              force = true,
-          )
-        }
+        versionViewModel.handleCheckForUpdates(
+            scope = lifecycleScope,
+            force = true,
+        )
       },
       onShowChangeLogClicked = { changeLogViewModel.handleShowDialog() },
       onResetClicked = { viewModel.handleOpenResetDialog() },
@@ -172,7 +164,6 @@ private fun SettingsContent(
     versionCheckViewState: VersionCheckViewState,
     billingState: BillingViewState,
     changeLogState: ChangeLogViewState,
-    options: PYDroidActivityOptions,
     activityState: PYDroidActivityState,
     onMaterialYouChange: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
@@ -230,7 +221,6 @@ private fun SettingsContent(
       uiViewState = uiViewState,
       inAppInteractionViewState = inAppInteractionViewState,
       dangerZoneViewState = dangerZoneViewState,
-      options = options,
       activityState = activityState,
       onMaterialYouChange = onMaterialYouChange,
       onThemeModeChanged = onThemeModeChanged,

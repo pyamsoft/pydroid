@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.haptics.HapticPreferences
 import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.billing.BillingPreferences
@@ -56,7 +55,6 @@ internal interface SettingsComponent {
         internal val theming: Theming,
         internal val versionModule: VersionModule,
         internal val changeLogModule: ChangeLogModule,
-        internal val options: PYDroidActivityOptions,
         internal val billingPreferences: BillingPreferences,
         internal val hapticPreferences: HapticPreferences,
         internal val billingState: MutableBillingViewState,
@@ -74,7 +72,6 @@ internal interface SettingsComponent {
 
     override fun inject(injector: SettingsInjector) {
       injector.activityState = activityState
-      injector.options = params.options
       injector.viewModel =
           SettingsViewModeler(
               state = params.state,

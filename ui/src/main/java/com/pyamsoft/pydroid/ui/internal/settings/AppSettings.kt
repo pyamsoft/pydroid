@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
@@ -36,7 +35,6 @@ import com.pyamsoft.pydroid.ui.settings.SimpleSettingsRowItem
 
 internal fun LazyListScope.renderAppSettings(
     modifier: Modifier = Modifier,
-    options: PYDroidActivityOptions,
     activityState: PYDroidActivityState,
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
@@ -45,7 +43,7 @@ internal fun LazyListScope.renderAppSettings(
     SettingsCard(
         modifier = modifier.padding(top = MaterialTheme.keylines.content),
     ) {
-      if (!options.disableVersionCheck && activityState.isLiveVersionCheck) {
+      if (activityState.isLiveVersionCheck) {
         SimpleSettingsRowItem(
             icon = IconPainters.checkUpdates(),
             title = stringResource(R.string.check_version_title),
@@ -54,14 +52,12 @@ internal fun LazyListScope.renderAppSettings(
         )
       }
 
-      if (!options.disableChangeLog) {
-        SimpleSettingsRowItem(
-            icon = IconPainters.viewChangelog(),
-            title = stringResource(R.string.upgrade_info_title),
-            description = stringResource(R.string.upgrade_info_summary),
-            onClick = onShowChangeLogClicked,
-        )
-      }
+      SimpleSettingsRowItem(
+          icon = IconPainters.viewChangelog(),
+          title = stringResource(R.string.upgrade_info_title),
+          description = stringResource(R.string.upgrade_info_summary),
+          onClick = onShowChangeLogClicked,
+      )
     }
   }
 }

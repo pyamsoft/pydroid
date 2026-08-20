@@ -26,13 +26,9 @@ import com.pyamsoft.pydroid.ui.internal.pydroid.PYDroidActivityDelegateInternal
 private fun createPYDroidDelegate(
     activity: ComponentActivity,
     provider: ChangeLogProvider,
-    options: PYDroidActivityOptions,
 ): PYDroidActivityDelegateInternal {
   val component =
-      ObjectGraph.ApplicationScope.retrieve(activity.application)
-          .injector()
-          .plusApp()
-          .create(options)
+      ObjectGraph.ApplicationScope.retrieve(activity.application).injector().plusApp().create()
   return PYDroidActivityDelegateInternal(component, provider, activity)
 }
 
@@ -42,13 +38,11 @@ private fun createPYDroidDelegate(
  * Returns a delegate that can optionally be saved or used in the calling Activity level to handle
  * common functions like checking for updates or showing an in-app review dialog
  */
-@JvmOverloads
 public fun ComponentActivity.installPYDroid(
     provider: ChangeLogProvider,
-    options: PYDroidActivityOptions = PYDroidActivityOptions(),
 ): PYDroidActivityDelegate {
   val self = this
-  val internals = createPYDroidDelegate(self, provider, options)
+  val internals = createPYDroidDelegate(self, provider)
   ObjectGraph.ActivityScope.install(self, internals)
   return internals
 }

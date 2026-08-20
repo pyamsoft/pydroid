@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.activity.ComponentActivity
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.inject.ComposableInjector
 import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.billing.BillingViewModeler
@@ -28,7 +27,6 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModeler
 internal class SettingsInjector internal constructor() : ComposableInjector() {
 
   internal var activityState: PYDroidActivityState? = null
-  internal var options: PYDroidActivityOptions? = null
   internal var viewModel: SettingsViewModeler? = null
   internal var versionViewModel: VersionCheckViewModeler? = null
   internal var changeLogViewModel: ChangeLogViewModeler? = null
@@ -48,7 +46,6 @@ internal class SettingsInjector internal constructor() : ComposableInjector() {
 
   override fun onDispose() {
     activityState = null
-    options = null
     viewModel = null
     versionViewModel = null
     changeLogViewModel = null

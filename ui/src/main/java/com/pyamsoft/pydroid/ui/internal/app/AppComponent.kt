@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.ThreadEnforcer
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.billing.BillingUpsell
 import com.pyamsoft.pydroid.ui.changelog.ShowUpdateChangeLog
 import com.pyamsoft.pydroid.ui.datapolicy.ShowDataPolicy
@@ -91,7 +90,7 @@ internal interface AppComponent {
 
   interface Factory {
 
-    @CheckResult fun create(options: PYDroidActivityOptions): AppComponent
+    @CheckResult fun create(): AppComponent
 
     @ConsistentCopyVisibility
     data class Parameters
@@ -126,7 +125,6 @@ internal interface AppComponent {
   class Impl
   private constructor(
       private val params: Factory.Parameters,
-      private val options: PYDroidActivityOptions,
   ) : AppComponent {
 
     // Create these here to share between the Settings and PYDroidActivity screens
@@ -193,7 +191,6 @@ internal interface AppComponent {
 
     private val settingsParams =
         SettingsComponent.Factory.Parameters(
-            options = options,
             versionModule = versionModule,
             bugReportUrl = params.bugReportUrl,
             termsConditionsUrl = params.termsConditionsUrl,
@@ -257,11 +254,6 @@ internal interface AppComponent {
         activityState: PYDroidActivityState,
         activity: ComponentActivity,
     ): ConnectedBillingInteractor {
-      if (options.disableBilling) {
-        Logger.w { "Application has disabled the billing component" }
-        return ConnectedBillingInteractor.NO_OP
-      }
-
       if (!activityState.isLiveBilling) {
         Logger.w { "Not a live billing module" }
         return ConnectedBillingInteractor.NO_OP
@@ -297,7 +289,6 @@ internal interface AppComponent {
                       interactor = ratingModule.provideInteractor(),
                   ),
               isLiveModule = activityState.isLiveRating,
-              disabled = options.disableRating,
           )
 
       // Connect the In-App Billing
@@ -325,27 +316,17 @@ internal interface AppComponent {
           activityState = activityState,
           connectedBilling = connectedBilling,
           rating = rating,
-          dataPolicy =
-              ShowDataPolicy(
-                  activity,
-                  disabled = options.disableDataPolicy,
-              ),
-          showUpdateChangeLog =
-              ShowUpdateChangeLog(
-                  activity,
-                  disabled = options.disableChangeLog,
-              ),
+          dataPolicy = ShowDataPolicy(activity),
+          showUpdateChangeLog = ShowUpdateChangeLog(activity),
           billingUpsell =
               BillingUpsell(
-                  activity,
+                  activity = activity,
                   isLiveModule = activityState.isLiveBilling,
-                  disabled = options.disableBilling,
               ),
           versionUpgrader =
               VersionUpgradeAvailable(
-                  activity,
+                  activity = activity,
                   isLiveModule = activityState.isLiveVersionCheck,
-                  disabled = options.disableVersionCheck,
               ),
           dispatchers = params.dispatchers,
       )
@@ -388,11 +369,9 @@ internal interface AppComponent {
         private val params: Factory.Parameters,
     ) : Factory {
 
-      override fun create(
-          options: PYDroidActivityOptions,
-      ): AppComponent {
+      override fun create(): AppComponent {
         OssLibraries.usingUi = true
-        return Impl(params, options)
+        return Impl(params)
       }
     }
   }

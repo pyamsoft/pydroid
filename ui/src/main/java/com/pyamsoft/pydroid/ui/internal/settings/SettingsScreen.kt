@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:LintIgnoreTooManyFunctions
+
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import androidx.compose.animation.Crossfade
@@ -44,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.settings.section.renderDangerZoneSettings
 import com.pyamsoft.pydroid.ui.internal.settings.section.renderExternalLinksSettings
@@ -57,7 +58,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewState.CheckingState
 import com.pyamsoft.pydroid.util.Logger
 
 @Composable
-@LintIgnoreTooManyFunctions
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     listState: LazyListState,
@@ -66,7 +66,6 @@ internal fun SettingsScreen(
     dangerZoneViewState: SettingsDangerZoneViewState,
     inAppInteractionViewState: SettingsInAppInteractionViewState,
     versionCheckingState: VersionCheckingSettingsState,
-    options: PYDroidActivityOptions,
     activityState: PYDroidActivityState,
     onMaterialYouChange: (Boolean) -> Unit,
     onThemeModeChanged: (Theming.Mode) -> Unit,
@@ -115,7 +114,6 @@ internal fun SettingsScreen(
             dangerZoneViewState = dangerZoneViewState,
             versionCheckingState = versionCheckingState,
             applicationName = applicationName,
-            options = options,
             activityState = activityState,
             onThemeModeChanged = onThemeModeChanged,
             onMaterialYouChanged = onMaterialYouChange,
@@ -168,7 +166,6 @@ private fun SettingsList(
     inAppInteractionViewState: SettingsInAppInteractionViewState,
     dangerZoneViewState: SettingsDangerZoneViewState,
     versionCheckingState: VersionCheckingSettingsState,
-    options: PYDroidActivityOptions,
     activityState: PYDroidActivityState,
     applicationName: String,
     onMaterialYouChanged: (Boolean) -> Unit,
@@ -206,14 +203,12 @@ private fun SettingsList(
       )
 
       renderAppSettings(
-          options = options,
           activityState = activityState,
           onCheckUpdateClicked = onCheckUpdateClicked,
           onShowChangeLogClicked = onShowChangeLogClicked,
       )
 
       renderInAppInteractionSettings(
-          options = options,
           activityState = activityState,
           appName = applicationName,
           state = inAppInteractionViewState,
@@ -223,7 +218,6 @@ private fun SettingsList(
       )
 
       renderExternalLinksSettings(
-          options = options,
           onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
           onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
           onViewDataPolicyClicked = onViewDataPolicyClicked,
@@ -355,7 +349,6 @@ private fun PreviewSettingsScreen(
       }
 
   SettingsScreen(
-      options = PYDroidActivityOptions(),
       state = state,
       listState = rememberLazyListState(),
       uiViewState = state,

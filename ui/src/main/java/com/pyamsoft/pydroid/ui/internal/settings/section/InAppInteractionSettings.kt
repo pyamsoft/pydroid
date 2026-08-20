@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.PYDroidActivityOptions
 import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
@@ -40,7 +39,6 @@ import com.pyamsoft.pydroid.ui.settings.ExternalLinkBadge
 
 internal fun LazyListScope.renderInAppInteractionSettings(
     modifier: Modifier = Modifier,
-    options: PYDroidActivityOptions,
     activityState: PYDroidActivityState,
     appName: String,
     state: SettingsInAppInteractionViewState,
@@ -48,16 +46,17 @@ internal fun LazyListScope.renderInAppInteractionSettings(
     onDonateClicked: () -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
 ) {
-  // Even though it's called "isLiveBilling" what this really means here is
-  // "is this a Google Play build"
-  //
-  // if it is NOT, we hide both of these since ratings are not needed and there is no in-app billing
-  if (activityState.isLiveBilling) {
+  // If we have no billing and no rating, we hide everything
+  if (activityState.isLiveBilling || activityState.isLiveRating) {
     item {
       SettingsCard(
           modifier = modifier.padding(top = MaterialTheme.keylines.content),
       ) {
-        if (!options.disableRating) {
+        // Yeah ok, so this will still work since it's just a link to Google Play
+        // but given our current implementation of play/noop, if you have the play rating
+        // library you are a "play build". Otherwise there is no app store to leave
+        // a review on.
+        if (activityState.isLiveRating) {
           BadgeSettingsRowItem(
               icon = IconPainters.rateApp(),
               title = stringResource(R.string.rating_title, appName),
@@ -67,7 +66,7 @@ internal fun LazyListScope.renderInAppInteractionSettings(
           )
         }
 
-        if (!options.disableBilling) {
+        if (activityState.isLiveBilling) {
           TipJarSettingsItem(
               state = state,
               onDonateClicked = onDonateClicked,
@@ -85,7 +84,6 @@ private fun PreviewInAppInteractionSettings(isLiveBilling: Boolean) {
       modifier = Modifier.background(Color.White),
   ) {
     renderInAppInteractionSettings(
-        options = PYDroidActivityOptions(),
         state = MutableSettingsViewState(),
         appName = "TEST",
         onDonateClicked = {},

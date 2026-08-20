@@ -57,15 +57,12 @@ internal class BillingUpsell
 internal constructor(
     activity: ComponentActivity,
     private val isLiveModule: Boolean,
-    private val disabled: Boolean,
 ) {
 
   internal var viewModel: BillingViewModeler? = null
 
   init {
-    if (disabled) {
-      Logger.w { "Application has disabled the billing component" }
-    } else if (!isLiveModule) {
+    if (!isLiveModule) {
       Logger.w { "Not live billing module." }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
@@ -129,12 +126,6 @@ internal constructor(
       dispatchers: AppDispatchers = AppDispatchers.create(),
       content: ShowBillingWidget,
   ) {
-    if (disabled) {
-      // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w { "Application has disabled the Billing component" } }
-      return
-    }
-
     if (!isLiveModule) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Not a live billing module" } }

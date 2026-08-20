@@ -40,6 +40,6 @@ public fun ShowDataPolicyDialog(
   val dataPolicy = remember(delegate) { delegate.dataPolicy() }
 
   dataPolicy.Render(
-      dialogModifier = dialogModifier,
+      modifier = dialogModifier,
   )
 }

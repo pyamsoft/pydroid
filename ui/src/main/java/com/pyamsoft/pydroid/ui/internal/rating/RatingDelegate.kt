@@ -30,22 +30,20 @@ internal class RatingDelegate(
     activity: ComponentActivity,
     viewModel: RatingViewModeler,
     private val isLiveModule: Boolean,
-    private val disabled: Boolean,
 ) {
 
   private var hostingActivity: ComponentActivity? = activity
   private var ratingViewModel: RatingViewModeler? = viewModel
 
   init {
-    if (disabled) {
-      Logger.w { "Application has disabled the Rating component" }
+    if (!isLiveModule) {
+      Logger.w { "Not a live rating module" }
     } else {
       Logger.d { "In-App Rating is enabled. Awaiting manual call" }
-    }
-
-    activity.doOnDestroy {
-      ratingViewModel = null
-      hostingActivity = null
+      activity.doOnDestroy {
+        ratingViewModel = null
+        hostingActivity = null
+      }
     }
   }
 
@@ -70,11 +68,6 @@ internal class RatingDelegate(
   fun loadInAppRating(
       dispatchers: AppDispatchers,
   ) {
-    if (disabled) {
-      Logger.w { "Application has disabled the Rating component" }
-      return
-    }
-
     if (!isLiveModule) {
       Logger.w { "Not a live rating module" }
       return

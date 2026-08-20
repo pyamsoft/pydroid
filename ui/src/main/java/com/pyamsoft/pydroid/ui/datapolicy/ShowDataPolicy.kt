@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.datapolicy
 
 import androidx.activity.ComponentActivity
-import androidx.annotation.CheckResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,27 +42,18 @@ public typealias OnDismissDataPolicy = () -> Unit
  * A self contained class which is able to check for updates and prompt the user to install them
  * in-app. Adopts the theme from whichever composable it is rendered into
  */
-public class ShowDataPolicy
+internal class ShowDataPolicy
 internal constructor(
     activity: ComponentActivity,
-    private val disabled: Boolean,
 ) {
 
   internal var viewModel: DataPolicyViewModeler? = null
 
   init {
-    if (disabled) {
-      Logger.w { "Application has disabled the DataPolicy component" }
-    } else {
-      // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
-      // correctly set up otherwise we crash.
-      activity.doOnCreate {
-        ObjectGraph.ActivityScope.retrieve(activity)
-            .injector()
-            .plusDataPolicy()
-            .create()
-            .inject(this)
-      }
+    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
+    // correctly set up otherwise we crash.
+    activity.doOnCreate {
+      ObjectGraph.ActivityScope.retrieve(activity).injector().plusDataPolicy().create().inject(this)
     }
 
     activity.doOnDestroy { viewModel = null }
@@ -90,40 +80,20 @@ internal constructor(
 
   /** Render into a composable the data policy dialog */
   @Composable
-  public fun Render(
-      dialogModifier: Modifier = Modifier,
+  fun Render(
+      modifier: Modifier = Modifier,
   ) {
-    if (disabled) {
-      // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w { "Application has disabled the DataPolicy component" } }
-      return
-    }
-
     val vm = viewModel.requireNotNull()
 
     LaunchedEffect(vm) { vm.bind(scope = this) }
     SaveStateDisposableEffect(vm)
 
     RenderContent(
-        modifier = dialogModifier,
+        modifier = modifier,
         state = vm,
         onDismissDialog = {
           Logger.d { "DPD accepted, this will be dismissed once the Preferences update" }
         },
     )
-  }
-
-  public companion object {
-
-    /** Create a new show update changelog UI component */
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    public fun create(
-        activity: ComponentActivity,
-        disabled: Boolean = false,
-    ): ShowDataPolicy {
-      return ShowDataPolicy(activity, disabled)
-    }
   }
 }

@@ -83,14 +83,11 @@ internal class VersionUpgradeAvailable
 internal constructor(
     activity: ComponentActivity,
     private val isLiveModule: Boolean,
-    private val disabled: Boolean,
 ) {
   internal var viewModel: VersionCheckViewModeler? = null
 
   init {
-    if (disabled) {
-      Logger.w { "Application has disabled the VersionCheck component" }
-    } else if (!isLiveModule) {
+    if (!isLiveModule) {
       Logger.w { "Not a live version-check module" }
     } else {
       // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
@@ -138,12 +135,6 @@ internal constructor(
       dispatchers: AppDispatchers = AppDispatchers.create(),
       content: VersionUpgradeWidget,
   ) {
-    if (disabled) {
-      // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w { "Application has disabled the VersionCheck component" } }
-      return
-    }
-
     if (!isLiveModule) {
       // Log in a LE so that we only log once per lifecycle instead of per-render
       LaunchedEffect(Unit) { Logger.w { "Not a live version-check module" } }

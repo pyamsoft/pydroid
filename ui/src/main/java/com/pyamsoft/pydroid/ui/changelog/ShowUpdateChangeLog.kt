@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,7 +32,6 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph
 import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
 import com.pyamsoft.pydroid.ui.util.rememberNotNull
-import com.pyamsoft.pydroid.util.Logger
 import com.pyamsoft.pydroid.util.doOnCreate
 import com.pyamsoft.pydroid.util.doOnDestroy
 
@@ -59,30 +57,21 @@ public typealias ShowUpdateChangeLogWidget =
 internal class ShowUpdateChangeLog
 internal constructor(
     activity: ComponentActivity,
-    private val disabled: Boolean,
 ) {
 
   internal var viewModel: ChangeLogViewModeler? = null
 
   init {
-    if (disabled) {
-      Logger.w { "Application has disabled the ChangeLog component" }
-    } else {
-      // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
-      // correctly set up otherwise we crash.
-      activity.doOnCreate {
-        ObjectGraph.ActivityScope.retrieve(activity)
-            .injector()
-            .plusChangeLog()
-            .create()
-            .inject(this)
+    // Need to wait until after onCreate so that the ObjectGraph.ActivityScope is
+    // correctly set up otherwise we crash.
+    activity.doOnCreate {
+      ObjectGraph.ActivityScope.retrieve(activity).injector().plusChangeLog().create().inject(this)
 
-        viewModel
-            .requireNotNull()
-            .bind(
-                scope = activity.lifecycleScope,
-            )
-      }
+      viewModel
+          .requireNotNull()
+          .bind(
+              scope = activity.lifecycleScope,
+          )
     }
 
     activity.doOnDestroy { viewModel = null }
@@ -115,16 +104,10 @@ internal constructor(
    * Using custom UI
    */
   @Composable
-  public fun Render(
+  private fun Render(
       modifier: Modifier = Modifier,
       content: ShowUpdateChangeLogWidget,
   ) {
-    if (disabled) {
-      // Log in a LE so that we only log once per lifecycle instead of per-render
-      LaunchedEffect(Unit) { Logger.w { "Application has disabled the ChangeLog component" } }
-      return
-    }
-
     val delegate = rememberPYDroidDelegate()
     val activityState = remember(delegate) { delegate.activityState() }
 
@@ -150,7 +133,7 @@ internal constructor(
 
   /** Render into a composable the default version check screen upsell */
   @Composable
-  public fun RenderChangeLogWidget(
+  fun RenderChangeLogWidget(
       modifier: Modifier = Modifier,
       dialogModifier: Modifier = Modifier,
   ) {

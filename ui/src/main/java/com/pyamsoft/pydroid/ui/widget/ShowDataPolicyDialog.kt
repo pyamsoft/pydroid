@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.internal.util.rememberPYDroidDelegate
  */
 @Composable
 public fun ShowDataPolicyDialog(
-    dialogModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
 ) {
   // If isEditMode, we don't render nothing
   if (LocalInspectionMode.current) {
@@ -40,6 +40,6 @@ public fun ShowDataPolicyDialog(
   val dataPolicy = remember(delegate) { delegate.dataPolicy() }
 
   dataPolicy.Render(
-      modifier = dialogModifier,
+      modifier = modifier,
   )
 }

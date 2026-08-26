@@ -29,12 +29,12 @@ _resolve_detekt_version() {
 }
 
 _resolve_kotlin_lang_version() {
-  grep -o 'languageVersion = KotlinVersion.KOTLIN_.*' "${ROOT}/build.gradle" | sed 's/.*KOTLIN_//' | tr '_' '.' || return 1
+  grep -o 'languageVersion = KotlinVersion.KOTLIN_.*' "${ROOT}/build.gradle.kts" | sed 's/.*KOTLIN_//' | tr '_' '.' || return 1
   return 0
 }
 
 _resolve_jvm_target_version() {
-  grep -o 'jvmTarget = JvmTarget.JVM_.*' "${ROOT}/build.gradle" | sed 's/.*JVM_//' || return 1
+  grep -o 'jvmTarget = JvmTarget.JVM_.*' "${ROOT}/build.gradle.kts" | sed 's/.*JVM_//' || return 1
   return 0
 }
 

@@ -168,9 +168,10 @@ allprojects {
   apply(plugin: libs.plugins.detekt.get().pluginId)
 
   repositories {
-    gradlePluginPortal()
+    mavelLocal()
     google()
     mavenCentral()
+    gradlePluginPortal()
 
     // Jitpack
     maven {

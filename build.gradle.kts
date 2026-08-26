@@ -17,8 +17,6 @@
 import com.android.build.api.dsl.LibraryExtension
 import com.deezer.caupain.plugin.DependenciesUpdateTask
 import com.deezer.caupain.policies.StabilityLevelPolicy
-import com.diffplug.gradle.spotless.SpotlessExtension
-import dev.detekt.gradle.extensions.DetektExtension
 import dev.detekt.gradle.extensions.FailOnSeverity
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
@@ -43,7 +41,7 @@ plugins {
 
   // Spotless
   // https://github.com/diffplug/spotless
-  alias(libs.plugins.spotless) apply false
+  alias(libs.plugins.spotless) apply true
 
   // Caupain
   // https://github.com/deezer/caupain/blob/main/gradle-plugin/README.md
@@ -51,7 +49,7 @@ plugins {
 
   // Detekt
   // https://detekt.dev/docs/gettingstarted/gradle
-  alias(libs.plugins.detekt) apply false
+  alias(libs.plugins.detekt) apply true
 }
 
 subprojects {
@@ -110,33 +108,6 @@ subprojects {
     }
   }
 
-  // Java compilation
-  tasks.withType<JavaCompile>().configureEach {
-    // More lint warnings surface
-    options.compilerArgs.add("-Xlint:unchecked")
-    options.compilerArgs.add("-Xlint:deprecation")
-    options.isDeprecation = true
-
-    // Fork for faster performance
-    // https://docs.gradle.org/current/userguide/performance.html#run_compiler_as_separate_process
-    options.isFork = true
-  }
-
-  // Optimize tests
-  tasks.withType<Test>().configureEach {
-    // Run tests in parallel
-    // https://docs.gradle.org/current/userguide/performance.html#run_tests_in_parallel
-    maxParallelForks = maxOf(Runtime.getRuntime().availableProcessors() / 2, 1)
-
-    // Disable report generation, we don't care
-    // https://docs.gradle.org/current/userguide/performance.html#disable_test_reports
-    reports.html.required = false
-    reports.junitXml.required = false
-
-    // More heap for faster tests
-    maxHeapSize = "4g"
-  }
-
   afterEvaluate {
     extensions.configure<PublishingExtension> {
       publications {
@@ -156,55 +127,43 @@ subprojects {
   }
 }
 
-allprojects {
-  // Need to do this instead of applying Spotless in the plugin block
-  // or we get an error about duplicate plugins
-  //
-  // and we can't just apply this toplevel or it won't run on all the subprojects
-  apply(plugin = rootProject.libs.plugins.spotless.get().pluginId)
+detekt {
+  debug = true
+  buildUponDefaultConfig = true
+  parallel = true
+  failOnSeverity = FailOnSeverity.Warning
+  config.setFrom(projectDir.absolutePath + "/tools/detekt/config.yml")
+}
 
-  // Apply Detekt Plugin here
-  apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
+spotless {
+  java {
+    target("**/*.java")
 
-  // Spotless
-  extensions.configure<SpotlessExtension> {
-    java {
-      target("src/**/*.java")
-
-      removeUnusedImports()
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
-    kotlin {
-      target("src/**/*.kt")
-      ktfmt(rootProject.libs.versions.ktfmt.get())
-
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
-    kotlinGradle {
-      target("*.gradle.kts")
-      ktfmt(rootProject.libs.versions.ktfmt.get())
-
-      trimTrailingWhitespace()
-      endWithNewline()
-      leadingTabsToSpaces(2)
-    }
+    removeUnusedImports()
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+  kotlin {
+    target("**/*.kt")
+    ktfmt(libs.versions.ktfmt.get())
 
-  // Detekt
-  extensions.configure<DetektExtension> {
-    debug = true
-    buildUponDefaultConfig = true
-    parallel = true
-    failOnSeverity = FailOnSeverity.Warning
-    config.setFrom(rootProject.projectDir.absolutePath + "/tools/detekt/config.yml")
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+  kotlinGradle {
+    target("*.gradle.kts")
+    ktfmt(libs.versions.ktfmt.get())
 
-  // Caupain Version Strategy
-  tasks.withType<DependenciesUpdateTask>().configureEach {
-    selectIf(StabilityLevelPolicy)
+    trimTrailingWhitespace()
+    endWithNewline()
+    leadingTabsToSpaces(2)
   }
+}
+
+// Caupain Version Strategy
+tasks.withType<DependenciesUpdateTask>().configureEach {
+  // Pick only "stable" versions
+  selectIf(StabilityLevelPolicy)
 }

@@ -166,13 +166,6 @@ allprojects {
   // Apply Detekt Plugin here
   apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
 
-  repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-
   // Spotless
   extensions.configure<SpotlessExtension> {
     java {

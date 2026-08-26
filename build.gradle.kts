@@ -29,7 +29,7 @@ plugins {
 
   // Fix Android build cache
   // https://github.com/gradle/android-cache-fix-gradle-plugin
-  alias(libs.plugins.android.cacheFix) apply false
+  alias(libs.plugins.android.cacheFix) apply true
 
   // Jetpack Compose Compiler
   // https://android-developers.googleblog.com/2024/04/jetpack-compose-compiler-moving-to-kotlin-repository.html
@@ -37,7 +37,7 @@ plugins {
 
   // Dokka
   // https://github.com/Kotlin/dokka
-  alias(libs.plugins.dokka) apply false
+  alias(libs.plugins.dokka) apply true
 
   // Spotless
   // https://github.com/diffplug/spotless
@@ -54,8 +54,6 @@ plugins {
 
 subprojects {
   apply(plugin = rootProject.libs.plugins.android.asProvider().get().pluginId)
-  apply(plugin = rootProject.libs.plugins.android.cacheFix.get().pluginId)
-  apply(plugin = rootProject.libs.plugins.dokka.get().pluginId)
   apply(plugin = "maven-publish")
 
   extensions.configure<LibraryExtension> {

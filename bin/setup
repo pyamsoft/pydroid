@@ -14,18 +14,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+BINDIR="$(realpath "$(dirname "$0")")"
+ROOT="$(realpath "$(dirname "${BINDIR}")")"
+readonly ROOT
+unset BINDIR
 
 main() {
   if ! command -v npm >/dev/null; then
     printf -- 'You must install nodejs and npm\n'
     return 1
   fi
-  
+
+  # Gradle commands must be run from root
+  cd "${ROOT}" || {
+    printf -- 'Failed to cd into gradle root: %s\n' "${ROOT}"
+    return 1
+  }
+
   npm install -E prettier @prettier/plugin-xml npm-check-updates || return 1
   return 0
 }
 
 main "$@" || exit 1
 exit 0
-

@@ -100,7 +100,7 @@ subprojects {
 
   extensions.configure<KotlinAndroidProjectExtension> {
     compilerOptions {
-      languageVersion = KotlinVersion.KOTLIN_2_3
+      languageVersion = KotlinVersion.KOTLIN_2_4
       jvmTarget = JvmTarget.JVM_21
       freeCompilerArgs.add("-Xexplicit-api=strict")
     }

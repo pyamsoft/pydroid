@@ -50,15 +50,21 @@ public object OssLibraries {
 
   /** Using pydroid-billing library */
   public var usingBilling: Boolean = false
+  public var usingBillingGooglePlay: Boolean = false
+
+  /** Using pydroid-bootstrap-play library */
+  public var usingBootstrapGooglePlay: Boolean = false
 
   /** Using pydroid-util library */
   public var usingUtil: Boolean = false
 
   private var addedBus: Boolean = false
   private var addedBilling: Boolean = false
+  private var addedBillingGooglePlay: Boolean = false
   private var addedBuild: Boolean = false
   private var addedCore: Boolean = false
   private var addedBootstrap: Boolean = false
+  private var addedBootstrapGooglePlay: Boolean = false
   private var addedArch: Boolean = false
   private var addedNotify: Boolean = false
   private var addedUi: Boolean = false
@@ -178,6 +184,21 @@ public object OssLibraries {
     )
 
     add(
+        context.getString(R.string.compose_runtime),
+        context.getString(R.string.compose_runtime_url),
+        context.getString(R.string.compose_runtime_description),
+    )
+
+    addUtilLibraries(context)
+  }
+
+  private fun addBootstrapGooglePlayLibraries(context: Context) {
+    if (addedBootstrapGooglePlay) {
+      return
+    }
+    addedBootstrapGooglePlay = true
+
+    add(
         context.getString(R.string.google_play_in_app_updates_library),
         context.getString(R.string.google_play_url),
         context.getString(R.string.google_play_in_app_updates_library_description),
@@ -199,13 +220,7 @@ public object OssLibraries {
             ),
     )
 
-    add(
-        context.getString(R.string.compose_runtime),
-        context.getString(R.string.compose_runtime_url),
-        context.getString(R.string.compose_runtime_description),
-    )
-
-    addUtilLibraries(context)
+    addBootstrapLibraries(context)
   }
 
   @LintIgnoreLongMethod
@@ -364,6 +379,22 @@ public object OssLibraries {
     )
 
     add(
+        context.getString(R.string.compose_runtime),
+        context.getString(R.string.compose_runtime_url),
+        context.getString(R.string.compose_runtime_description),
+    )
+
+    addBusLibraries(context)
+    addUtilLibraries(context)
+  }
+
+  private fun addBillingGooglePlayLibraries(context: Context) {
+    if (addedBillingGooglePlay) {
+      return
+    }
+    addedBillingGooglePlay = true
+
+    add(
         context.getString(R.string.google_play_in_app_billing_library),
         context.getString(R.string.google_play_url),
         context.getString(R.string.google_play_in_app_billing_library_description),
@@ -374,14 +405,7 @@ public object OssLibraries {
             ),
     )
 
-    add(
-        context.getString(R.string.compose_runtime),
-        context.getString(R.string.compose_runtime_url),
-        context.getString(R.string.compose_runtime_description),
-    )
-
-    addBusLibraries(context)
-    addUtilLibraries(context)
+    addBillingLibraries(context)
   }
 
   private fun addNotifyLibraries(context: Context) {
@@ -438,6 +462,10 @@ public object OssLibraries {
     // Since we are in the bootstrap module, this always happens
     addBootstrapLibraries(context)
 
+    if (usingBootstrapGooglePlay) {
+      addBootstrapGooglePlayLibraries(context)
+    }
+
     if (usingUtil) {
       addUtilLibraries(context)
     }
@@ -448,6 +476,10 @@ public object OssLibraries {
 
     if (usingBilling) {
       addBillingLibraries(context)
+    }
+
+    if (usingBillingGooglePlay) {
+      addBillingGooglePlayLibraries(context)
     }
 
     if (usingBus) {
@@ -484,6 +516,9 @@ public object OssLibraries {
     usingBilling = false
     usingUtil = false
 
+    usingBillingGooglePlay = false
+    usingBootstrapGooglePlay = false
+
     addedBus = false
     addedBilling = false
     addedBuild = false
@@ -494,5 +529,8 @@ public object OssLibraries {
     addedUi = false
     addedTheme = false
     addedUtil = false
+
+    addedBillingGooglePlay = false
+    addedBootstrapGooglePlay = false
   }
 }

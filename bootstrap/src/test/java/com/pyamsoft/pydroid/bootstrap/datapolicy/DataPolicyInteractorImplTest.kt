@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.bootstrap.datapolicy
 
-import android.os.Build
 import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +26,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 private class FakeDataPolicyPreferences : DataPolicyPreferences {
   val accepted = MutableStateFlow(false)
@@ -41,11 +39,6 @@ private class FakeDataPolicyPreferences : DataPolicyPreferences {
 }
 
 @RunWith(RobolectricTestRunner::class)
-@Config(
-    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
-    minSdk = Build.VERSION_CODES.O,
-    maxSdk = Build.VERSION_CODES.BAKLAVA,
-)
 public class DataPolicyInteractorImplTest {
 
   private fun newInteractor(preferences: FakeDataPolicyPreferences) =

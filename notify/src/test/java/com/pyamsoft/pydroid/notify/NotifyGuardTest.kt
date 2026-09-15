@@ -39,8 +39,9 @@ public class NotifyGuardTest {
     assertTrue(guard.canPostNotification())
   }
 
+  // Pin to API 36 for now
+  // https://github.com/robolectric/robolectric/issues/11518
   @Config(
-      // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
       minSdk = Build.VERSION_CODES.TIRAMISU,
       maxSdk = Build.VERSION_CODES.BAKLAVA,
   )

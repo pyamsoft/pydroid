@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.core
 
-import android.os.Build
 import kotlin.test.assertFails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestResult
@@ -25,15 +24,9 @@ import kotlinx.coroutines.withContext
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 
 @RunWith(RobolectricTestRunner::class)
-@Config(
-    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
-    minSdk = Build.VERSION_CODES.O,
-    maxSdk = Build.VERSION_CODES.BAKLAVA,
-)
 // Need to set the LooperMode or tests using Dispatcher.Main block forever
 @LooperMode(LooperMode.Mode.INSTRUMENTATION_TEST)
 public class EnforcerTest {

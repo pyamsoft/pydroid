@@ -29,11 +29,6 @@ import org.robolectric.Shadows
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(
-    // Need this here since Robolectric does not yet support API 37 (which is default otherwise)
-    minSdk = Build.VERSION_CODES.O,
-    maxSdk = Build.VERSION_CODES.BAKLAVA,
-)
 public class SettingsInteractorImplTest {
 
   @Test

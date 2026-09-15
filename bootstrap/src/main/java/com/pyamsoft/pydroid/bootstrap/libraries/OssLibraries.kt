@@ -88,19 +88,9 @@ public object OssLibraries {
         context.getString(R.string.dokka_description),
     )
     add(
-        context.getString(R.string.binary_compatibility_validator),
-        context.getString(R.string.binary_compatibility_validator_url),
-        context.getString(R.string.binary_compatibility_validator_description),
-    )
-    add(
         context.getString(R.string.android_cache_fix_plugin),
         context.getString(R.string.android_cache_fix_plugin_url),
         context.getString(R.string.android_cache_fix_plugin_description),
-    )
-    add(
-        context.getString(R.string.gradle_doctor),
-        context.getString(R.string.gradle_doctor_url),
-        context.getString(R.string.gradle_doctor_description),
     )
     add(
         context.getString(R.string.core_library_desugaring),

@@ -31,16 +31,6 @@
 >用於 Kotlin 程式語言的應用成世界面(API)文件引擎</string>
 
     <string
-  name="binary_compatibility_validator"
->Binary Compatibility Validator</string>
-    <string
-  name="binary_compatibility_validator_url"
->https://github.com/Kotlin/binary-compatibility-validator</string>
-    <string
-  name="binary_compatibility_validator_description"
->公共應用程式界面(API)管理工具</string>
-
-    <string
   name="android_cache_fix_plugin"
 >Android Cache Fix Gradle 可接入元件</string>
     <string
@@ -49,14 +39,6 @@
     <string
   name="android_cache_fix_plugin_description"
 >修正 Android 軟體建構快取問題的 Gradle 可接入元件。</string>
-
-    <string name="gradle_doctor">Gradle Doctor</string>
-    <string
-  name="gradle_doctor_url"
->https://runningcode.github.io/gradle-doctor/</string>
-    <string
-  name="gradle_doctor_description"
->您 Gradle 軟體建構的正確處方簽。</string>
 
     <string name="core_library_desugaring">Core Library Desugaring</string>
     <string

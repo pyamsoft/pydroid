@@ -30,16 +30,6 @@
 >API documentation engine for Kotlin</string>
 
     <string
-  name="binary_compatibility_validator"
->Binary Compatibility Validator</string>
-    <string
-  name="binary_compatibility_validator_url"
->https://github.com/Kotlin/binary-compatibility-validator</string>
-    <string
-  name="binary_compatibility_validator_description"
->Public API management tool</string>
-
-    <string
   name="android_cache_fix_plugin"
 >Android Cache Fix Gradle Plugin</string>
     <string
@@ -48,14 +38,6 @@
     <string
   name="android_cache_fix_plugin_description"
 >Gradle plugin that fixes Android build caching problems.</string>
-
-    <string name="gradle_doctor">Gradle Doctor</string>
-    <string
-  name="gradle_doctor_url"
->https://runningcode.github.io/gradle-doctor/</string>
-    <string
-  name="gradle_doctor_description"
->The right prescription for your Gradle build.</string>
 
     <string name="core_library_desugaring">Core Library Desugaring</string>
     <string

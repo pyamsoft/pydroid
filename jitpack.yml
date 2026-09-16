@@ -1,3 +1,9 @@
+# - Force SDKMAN to update to latest
+# - Update SDKMAN known libs
+# - Install Temurin Java 25
+# - Use Temurin Java 25
 before_install:
-  - sdk install java -tem 25
-  - sdk use java 25
+  - sdk selfupdate force
+  - sdk update
+  - sdk install java 25-tem
+  - sdk use java 25-tem

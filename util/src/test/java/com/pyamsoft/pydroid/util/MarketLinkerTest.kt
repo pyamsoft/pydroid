@@ -16,13 +16,11 @@
 
 package com.pyamsoft.pydroid.util
 
-import android.os.Build
 import kotlin.test.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 public class MarketLinkerTest {

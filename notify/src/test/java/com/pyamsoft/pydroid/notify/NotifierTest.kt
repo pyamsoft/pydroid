@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.notify
 
 import android.app.Notification
 import android.app.NotificationManager
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -28,7 +27,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.Config
 
 private data class FakeNotifyData(val text: String) : NotifyData
 

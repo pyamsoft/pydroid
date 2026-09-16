@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.billing
 
-import android.os.Build
 import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.util.AppDispatchers
@@ -33,7 +32,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 private data class TestSku(
     override val id: String = "sku",

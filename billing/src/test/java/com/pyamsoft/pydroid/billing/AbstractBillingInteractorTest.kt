@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.billing
 
-import android.os.Build
 import androidx.activity.ComponentActivity
 import com.pyamsoft.pydroid.billing.RecordingConnectedBillingInteractor.State
 import com.pyamsoft.pydroid.bus.EventBus
@@ -29,7 +28,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 /** Tracks if it has been connected by a test activitiy component */
 private class RecordingConnectedBillingInteractor :

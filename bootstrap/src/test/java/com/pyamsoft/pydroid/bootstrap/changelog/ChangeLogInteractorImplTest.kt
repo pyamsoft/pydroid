@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.bootstrap.changelog
 
-import android.os.Build
 import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -28,7 +27,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 private class FakeChangeLogPreferences : ChangeLogPreferences {
   val showChangelog = MutableStateFlow(false)

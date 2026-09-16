@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.settings
 
 import android.app.ActivityManager
-import android.os.Build
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.Shadows
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 public class SettingsInteractorImplTest {

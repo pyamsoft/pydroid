@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.pm.ApplicationInfo
-import android.os.Build
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -25,7 +24,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
 public class ContextTest {

@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.app.PYDroidActivityState
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsInAppInteractionViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsItems
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.TipJarSettingsItem
 import com.pyamsoft.pydroid.ui.settings.BadgeSettingsRowItem
@@ -48,7 +49,7 @@ internal fun LazyListScope.renderInAppInteractionSettings(
 ) {
   // If we have no billing and no rating, we hide everything
   if (activityState.isLiveBilling || activityState.isLiveRating) {
-    item {
+    item(contentType = SettingsItems.IN_APP_INTERACTION_SETTINGS) {
       SettingsCard(
           modifier = modifier.padding(top = MaterialTheme.keylines.content),
       ) {

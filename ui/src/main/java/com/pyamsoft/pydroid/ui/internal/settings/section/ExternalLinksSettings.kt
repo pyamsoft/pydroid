@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsItems
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
 import com.pyamsoft.pydroid.ui.settings.BadgeSettingsRowItem
 import com.pyamsoft.pydroid.ui.settings.ExternalLinkBadge
@@ -43,7 +44,7 @@ internal fun LazyListScope.renderExternalLinksSettings(
     onViewPrivacyPolicyClicked: () -> Unit,
     onViewTermsOfServiceClicked: () -> Unit,
 ) {
-  item {
+  item(contentType = SettingsItems.EXTERNAL_LINKS_SETTINGS) {
     SettingsCard(
         modifier = modifier.padding(top = MaterialTheme.keylines.content),
     ) {

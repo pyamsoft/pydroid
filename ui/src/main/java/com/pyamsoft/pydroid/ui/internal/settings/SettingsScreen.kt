@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
@@ -87,6 +88,8 @@ internal fun SettingsScreen(
     onHapticsChanged: (Boolean) -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onUpdateCheckComplete: () -> Unit,
+    extraTopContent: LazyListScope.() -> Unit,
+    extraBottomContent: LazyListScope.() -> Unit,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
 
@@ -135,6 +138,10 @@ internal fun SettingsScreen(
             onHapticFeedbackChanged = onHapticsChanged,
             onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
             onUpdateCheckComplete = onUpdateCheckComplete,
+
+            // Extras
+            extraTopContent = extraTopContent,
+            extraBottomContent = extraBottomContent,
         )
       }
     }
@@ -188,6 +195,8 @@ private fun SettingsList(
     onInAppDebuggingChanged: (Boolean) -> Unit,
     onBillingUpsellDisabledChanged: (Boolean) -> Unit,
     onUpdateCheckComplete: () -> Unit,
+    extraTopContent: LazyListScope.() -> Unit,
+    extraBottomContent: LazyListScope.() -> Unit,
 ) {
   Box(
       modifier = modifier,
@@ -195,6 +204,8 @@ private fun SettingsList(
     LazyColumn(
         state = listState,
     ) {
+      extraTopContent()
+
       renderUISettings(
           state = uiViewState,
           onThemeModeChanged = onThemeModeChanged,
@@ -237,6 +248,8 @@ private fun SettingsList(
           onInAppDebuggingClicked = onInAppDebuggingClicked,
           onInAppDebuggingChanged = onInAppDebuggingChanged,
       )
+
+      extraBottomContent()
     }
 
     CheckingUpdateStatus(
@@ -381,6 +394,8 @@ private fun PreviewSettingsScreen(
       onMaterialYouChange = {},
       onBillingUpsellDisabledChanged = {},
       onUpdateCheckComplete = {},
+      extraTopContent = {},
+      extraBottomContent = {},
   )
 }
 

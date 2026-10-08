@@ -39,7 +39,7 @@ internal fun LazyListScope.renderAppSettings(
     onCheckUpdateClicked: () -> Unit,
     onShowChangeLogClicked: () -> Unit,
 ) {
-  item {
+  item(contentType = SettingsItems.APP_SETTINGS) {
     SettingsCard(
         modifier = modifier.padding(top = MaterialTheme.keylines.content),
     ) {

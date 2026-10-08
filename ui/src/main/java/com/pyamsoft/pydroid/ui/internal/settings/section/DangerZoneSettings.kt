@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsDangerZoneViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsItems
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
 import com.pyamsoft.pydroid.ui.settings.SimpleSettingsRowItem
 import com.pyamsoft.pydroid.ui.settings.SwitchSettingsRowItem
@@ -44,7 +45,7 @@ internal fun LazyListScope.renderDangerZoneSettings(
     onInAppDebuggingClicked: () -> Unit,
     onInAppDebuggingChanged: (Boolean) -> Unit,
 ) {
-  item {
+  item(contentType = SettingsItems.DANGER_ZONE_SETTINGS) {
     val isInAppDebuggingEnabled by state.isInAppDebuggingEnabled.collectAsStateWithLifecycle()
 
     SettingsCard(

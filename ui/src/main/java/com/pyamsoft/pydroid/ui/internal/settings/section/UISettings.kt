@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.internal.settings.MutableSettingsViewState
+import com.pyamsoft.pydroid.ui.internal.settings.SettingsItems
 import com.pyamsoft.pydroid.ui.internal.settings.SettingsUIViewState
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.SettingsCard
 import com.pyamsoft.pydroid.ui.internal.settings.section.card.ThemePickerSettingsItem
@@ -46,7 +47,7 @@ internal fun LazyListScope.renderUISettings(
     onMaterialYouChanged: (Boolean) -> Unit,
     onHapticFeedbackChanged: (Boolean) -> Unit,
 ) {
-  item {
+  item(contentType = SettingsItems.UI_SETTINGS) {
     val isHapticFeedbackEnabled by state.isHapticsEnabled.collectAsStateWithLifecycle()
 
     val hapticDescriptionResId =

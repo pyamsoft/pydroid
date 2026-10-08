@@ -70,6 +70,8 @@ public fun SettingsPage(
     dispatchers: AppDispatchers = AppDispatchers.create(),
     listState: LazyListState = rememberLazyListState(),
     extraDebugContent: LazyListScope.() -> Unit = {},
+    extraTopContent: LazyListScope.() -> Unit = {},
+    extraBottomContent: LazyListScope.() -> Unit = {},
 ) {
   // Use the LifecycleOwner.CoroutineScope (Activity usually)
   // so that the scope does not die because of navigation events
@@ -146,7 +148,10 @@ public fun SettingsPage(
       onHapticsChanged = { viewModel.handleHapticsChanged(it) },
       onBillingUpsellDisabledChanged = { viewModel.handleBillingUpsellDisabledChanged(it) },
       onUpdateCheckComplete = { versionViewModel.handleManualUpdateCheckComplete() },
+      // Extra UI
       extraDebugContent = extraDebugContent,
+      extraTopContent = extraTopContent,
+      extraBottomContent = extraBottomContent,
   )
 }
 
@@ -192,6 +197,8 @@ private fun SettingsContent(
     onHapticsChanged: (Boolean) -> Unit,
     onUpdateCheckComplete: () -> Unit,
     extraDebugContent: LazyListScope.() -> Unit,
+    extraTopContent: LazyListScope.() -> Unit,
+    extraBottomContent: LazyListScope.() -> Unit,
 ) {
   val showResetDialog by state.isShowingResetDialog.collectAsStateWithLifecycle()
   val showDataPolicyDialog by state.isShowingDataPolicyDialog.collectAsStateWithLifecycle()
@@ -242,6 +249,9 @@ private fun SettingsContent(
       onHapticsChanged = onHapticsChanged,
       onBillingUpsellDisabledChanged = onBillingUpsellDisabledChanged,
       onUpdateCheckComplete = onUpdateCheckComplete,
+      // Extra UI
+      extraTopContent = extraTopContent,
+      extraBottomContent = extraBottomContent,
   )
 
   if (showDataPolicyDialog) {

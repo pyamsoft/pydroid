@@ -241,7 +241,7 @@ private fun BillingPopup(
            */
           else ->
               throw AssertionError(
-                  "The only reason we can't use a sealed class is because Dokka breaks."
+                  "The only reason we can't use a sealed class is because Dokka breaks.",
               )
         }
 

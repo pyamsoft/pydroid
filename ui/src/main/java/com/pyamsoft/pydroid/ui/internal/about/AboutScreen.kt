@@ -51,7 +51,7 @@ import com.pyamsoft.pydroid.ui.internal.app.DialogToolbar
 import com.pyamsoft.pydroid.ui.util.collectAsStateListWithLifecycle
 
 private enum class AboutScreenContentTypes {
-  LIBRARY
+  LIBRARY,
 }
 
 @Composable

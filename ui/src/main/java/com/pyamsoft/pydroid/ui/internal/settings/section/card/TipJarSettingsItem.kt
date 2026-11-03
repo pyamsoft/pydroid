@@ -68,7 +68,7 @@ internal fun TipJarSettingsItem(
       Text(
           modifier =
               Modifier.padding(
-                  start = ListItemDefaults.LeadingSize + MaterialTheme.keylines.baseline
+                  start = ListItemDefaults.LeadingSize + MaterialTheme.keylines.baseline,
               ),
           text = stringResource(R.string.billing_upsell_disabled_summary),
           style = MaterialTheme.typography.labelSmall,

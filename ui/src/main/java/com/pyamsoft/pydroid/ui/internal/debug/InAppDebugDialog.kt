@@ -574,7 +574,7 @@ private fun PreviewInAppDebugScreenEnabledDummyLog() {
                   IllegalStateException("Hello Error"),
                   Instant.now().minusSeconds(8).toEpochMilli(),
               ),
-          )
+          ),
       )
   InAppDebugScreen(
       state =

@@ -54,7 +54,7 @@ public class NotifierTest {
 
   private fun shadowNotificationManager() =
       shadowOf(
-          RuntimeEnvironment.getApplication().getSystemService(NotificationManager::class.java)
+          RuntimeEnvironment.getApplication().getSystemService(NotificationManager::class.java),
       )
 
   @Test

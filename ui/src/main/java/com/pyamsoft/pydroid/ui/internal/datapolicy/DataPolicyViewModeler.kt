@@ -32,7 +32,7 @@ internal constructor(
 ) : DataPolicyViewState by state, AbstractViewModeler<DataPolicyViewState>(state) {
 
   override fun registerSaveState(
-      registry: SaveableStateRegistry
+      registry: SaveableStateRegistry,
   ): List<SaveableStateRegistry.Entry> =
       mutableListOf<SaveableStateRegistry.Entry>().apply {
         registry.registerProvider(KEY_SHOW_DIALOG) { state.isAccepted.value.name }.also { add(it) }

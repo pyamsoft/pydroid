@@ -129,7 +129,7 @@ internal fun VersionUpgradeAvailableScreen(
           Text(
               text =
                   stringResource(
-                      if (updateError == null) R.string.download else R.string.download_try_again
+                      if (updateError == null) R.string.download else R.string.download_try_again,
                   ),
           )
         }

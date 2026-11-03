@@ -35,7 +35,7 @@ internal constructor(
 ) : BillingViewState by state, AbstractViewModeler<BillingViewState>(state) {
 
   override fun registerSaveState(
-      registry: SaveableStateRegistry
+      registry: SaveableStateRegistry,
   ): List<SaveableStateRegistry.Entry> =
       mutableListOf<SaveableStateRegistry.Entry>().apply {
         val s = state

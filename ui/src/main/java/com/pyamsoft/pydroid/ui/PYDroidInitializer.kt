@@ -73,7 +73,7 @@ internal constructor(
     @JvmStatic
     private fun setStrictMode() {
       StrictMode.setThreadPolicy(
-          StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyFlashScreen().build()
+          StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyFlashScreen().build(),
       )
 
       StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())

@@ -55,7 +55,7 @@ public interface AppUpdateLauncher {
     override fun consumed(): Boolean = appUpdateConsumed.value
 
     final override suspend fun launchUpdate(
-        activity: ComponentActivity
+        activity: ComponentActivity,
     ): ResultWrapper<AppUpdateResultStatus> =
         if (appUpdateConsumed.compareAndSet(expect = false, update = true)) {
           ResultWrapper.success(status)

@@ -23,7 +23,7 @@ import androidx.annotation.CheckResult
 public data class NotifyId
 internal constructor(
     /** Notification ID */
-    val id: Int
+    val id: Int,
 )
 
 /** Converts an Android system Notification ID to a NotifyId */

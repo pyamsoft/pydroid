@@ -31,7 +31,7 @@ internal object NoopAppUpdateLauncher : AppUpdateLauncher {
   }
 
   override suspend fun launchUpdate(
-      activity: ComponentActivity
+      activity: ComponentActivity,
   ): ResultWrapper<AppUpdateResultStatus> {
     return ResultWrapper.failure(IllegalStateException("No-op implementation should not be called"))
   }

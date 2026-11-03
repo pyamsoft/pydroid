@@ -60,7 +60,7 @@ public interface VersionCheckViewState : UiViewState {
     public data class Checking
     internal constructor(
         /** Check initiated by user */
-        val force: Boolean
+        val force: Boolean,
     ) : CheckingState
 
     /** Done checking for updates */
@@ -68,7 +68,7 @@ public interface VersionCheckViewState : UiViewState {
     public data class Done
     internal constructor(
         /** Check initiated by user */
-        val force: Boolean
+        val force: Boolean,
     ) : CheckingState
   }
 }

@@ -89,7 +89,7 @@ public class AbstractBillingInteractorTest {
     }
 
     throw AssertionError(
-        "Condition was not met within $timeout: expect=${awaitState} actual=$myState"
+        "Condition was not met within $timeout: expect=${awaitState} actual=$myState",
     )
   }
 

@@ -23,7 +23,7 @@ import androidx.annotation.CheckResult
 public data class NotifyTag
 internal constructor(
     /** Notification Tag */
-    val tag: String
+    val tag: String,
 )
 
 /** Converts an Android system Notification tag to a NotifyTag */

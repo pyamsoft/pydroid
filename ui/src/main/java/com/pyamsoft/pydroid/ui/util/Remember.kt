@@ -83,7 +83,7 @@ public fun <K : Any, V : Any> Map<K, V>.rememberAsStateMap(): SnapshotStateMap<K
 @Composable
 @CheckResult
 public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(
-    context: CoroutineContext = EmptyCoroutineContext
+    context: CoroutineContext = EmptyCoroutineContext,
 ): List<T> {
   val state by this.collectAsState(context = context)
   return state.rememberAsStateList()
@@ -96,7 +96,7 @@ public fun <T : Any> StateFlow<Collection<T>>.collectAsStateList(
 @Composable
 @CheckResult
 public fun <K : Any, V : Any> StateFlow<Map<K, V>>.collectAsStateMap(
-    context: CoroutineContext = EmptyCoroutineContext
+    context: CoroutineContext = EmptyCoroutineContext,
 ): SnapshotStateMap<K, V> {
   val state by this.collectAsState(context = context)
   return state.rememberAsStateMap()

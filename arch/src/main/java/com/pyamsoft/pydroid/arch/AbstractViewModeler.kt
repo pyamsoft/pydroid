@@ -31,7 +31,7 @@ protected constructor(
   override fun consumeRestoredState(registry: SaveableStateRegistry) {}
 
   override fun registerSaveState(
-      registry: SaveableStateRegistry
+      registry: SaveableStateRegistry,
   ): List<SaveableStateRegistry.Entry> {
     return DEFAULT_EMPTY_REGISTRY_ENTRIES
   }

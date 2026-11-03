@@ -55,7 +55,7 @@ public class PermissionRequester private constructor() {
       onResponse: (Boolean) -> Unit,
   ): ActivityResultLauncher<Array<String>> {
     return activity.registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
+        ActivityResultContracts.RequestMultiplePermissions(),
     ) { results ->
       val ungrantedPermissions = results.filterNot { it.value }.map { it.key }
       val allPermissionsGranted = ungrantedPermissions.isEmpty()

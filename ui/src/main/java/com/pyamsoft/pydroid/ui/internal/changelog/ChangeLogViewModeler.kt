@@ -33,7 +33,7 @@ internal constructor(
 ) : ChangeLogViewState by state, AbstractViewModeler<ChangeLogViewState>(state) {
 
   override fun registerSaveState(
-      registry: SaveableStateRegistry
+      registry: SaveableStateRegistry,
   ): List<SaveableStateRegistry.Entry> =
       mutableListOf<SaveableStateRegistry.Entry>().apply {
         val s = state

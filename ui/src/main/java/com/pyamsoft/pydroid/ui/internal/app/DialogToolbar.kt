@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.app
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -39,7 +38,6 @@ import com.pyamsoft.pydroid.ui.internal.icons.IconPainters
 import com.pyamsoft.pydroid.ui.theme.ZeroElevation
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 internal fun DialogToolbar(
     modifier: Modifier = Modifier,
     @StringRes title: Int,

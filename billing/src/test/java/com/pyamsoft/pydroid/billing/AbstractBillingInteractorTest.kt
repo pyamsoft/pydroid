@@ -39,7 +39,7 @@ private class RecordingConnectedBillingInteractor :
     DISCONNECTED,
   }
 
-  val state = AtomicReference<State>(State.NONE)
+  val state = AtomicReference(State.NONE)
 
   override suspend fun onClientConnect() {
     state.set(State.CONNECTED)

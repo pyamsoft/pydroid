@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Stable
 internal interface DataPolicyDialogViewState : AppViewState {
+  // TODO(Peter): This is never actually set anywhere
   val navigationError: StateFlow<Throwable?>
   val tosUrl: StateFlow<String>
   val privacyPolicyUrl: StateFlow<String>

@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.internal.pydroid.ObjectGraph.ApplicationScope
 import com.pyamsoft.pydroid.util.AppDispatchers
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -52,7 +51,6 @@ internal constructor(
   private val isLoggingEnabled = MutableStateFlow(false)
 
   @CheckResult
-  @OptIn(ExperimentalCoroutinesApi::class)
   private fun scope(): CoroutineScope {
     return CoroutineScope(
         context =

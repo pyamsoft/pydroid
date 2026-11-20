@@ -310,13 +310,7 @@ internal constructor(
     setPreference(
         key = KEY_MATERIAL_YOU,
         fallbackValue = DEFAULT_MATERIAL_YOU,
-        value = {
-          if (canUseMaterialYou()) {
-            enabled
-          } else {
-            false
-          }
-        },
+        value = { canUseMaterialYou() && enabled },
     )
   }
 

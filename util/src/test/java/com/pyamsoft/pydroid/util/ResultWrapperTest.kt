@@ -32,7 +32,7 @@ public class ResultWrapperTest {
   public fun do_not_do_this(): TestResult = runTest {
     try {
       val r = ResultWrapper(data = null, error = null).map { 1 }
-      assertEquals(r.getOrThrow(), 1)
+      assertEquals(1, r.getOrThrow())
       throw AssertionError("Bad Constructor")
     } catch (e: Throwable) {
       assertIsNot<AssertionError>(e)
@@ -43,7 +43,7 @@ public class ResultWrapperTest {
   @Test
   public fun create_success(): TestResult = runTest {
     val r = ResultWrapper.success(0)
-    assertEquals(r.getOrThrow(), 0)
+    assertEquals(0, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
@@ -58,7 +58,7 @@ public class ResultWrapperTest {
   @Test
   public fun map_successOnly(): TestResult = runTest {
     val r = ResultWrapper.success(0).map { 1 }
-    assertEquals(r.getOrThrow(), 1)
+    assertEquals(1, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
@@ -74,14 +74,14 @@ public class ResultWrapperTest {
   public fun map_recoverSuccess(): TestResult = runTest {
     val t = TestException()
     val r = ResultWrapper.failure<Int>(t).recover { 1 }
-    assertEquals(r.getOrThrow(), 1)
+    assertEquals(1, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
   @Test
   public fun map_recoverMapFailureToSuccess(): TestResult = runTest {
     val r = ResultWrapper.success(0).map<Int> { throw TestException() }.recover { 1 }
-    assertEquals(r.getOrThrow(), 1)
+    assertEquals(1, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
@@ -98,7 +98,7 @@ public class ResultWrapperTest {
   public fun recover_recoverOnSuccess(): TestResult = runTest {
     val r = ResultWrapper.success(0).map { 1 }.onSuccess { throw TestException() }.recover { 2 }
 
-    assertEquals(r.getOrThrow(), 2)
+    assertEquals(2, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
@@ -122,7 +122,7 @@ public class ResultWrapperTest {
             .recover { throw tt }
             .recover { 3 }
 
-    assertEquals(r.getOrThrow(), 3)
+    assertEquals(3, r.getOrThrow())
     assertNull(r.exceptionOrNull())
   }
 
@@ -139,11 +139,11 @@ public class ResultWrapperTest {
             .onSuccess { d = it }
             .onFailure { e = 1 }
 
-    assertEquals(r.getOrThrow(), 2)
+    assertEquals(2, r.getOrThrow())
     assertNull(r.exceptionOrNull())
-    assertEquals(c, 1)
-    assertEquals(d, 2)
-    assertEquals(e, 0)
+    assertEquals(1, c)
+    assertEquals(2, d)
+    assertEquals(0, e)
   }
 
   @Test
@@ -155,8 +155,8 @@ public class ResultWrapperTest {
 
     assertEquals(r.exceptionOrThrow(), t)
     assertNull(r.getOrNull())
-    assertEquals(c, 1)
-    assertEquals(s, 0)
+    assertEquals(1, c)
+    assertEquals(0, s)
   }
 
   @Test
@@ -178,17 +178,17 @@ public class ResultWrapperTest {
 
     assertEquals(r1.exceptionOrThrow(), t)
     assertNull(r1.getOrNull())
-    assertEquals(r1f, 1)
-    assertEquals(r1e, 1)
-    assertEquals(r1s, 0)
+    assertEquals(1, r1f)
+    assertEquals(1, r1e)
+    assertEquals(0, r1s)
 
     val r2 =
         ResultWrapper.success(1).onSuccess { r2s = 1 }.onFailure { r2e = 1 }.onFinally { r2f = 1 }
 
-    assertEquals(r2.getOrThrow(), 1)
+    assertEquals(1, r2.getOrThrow())
     assertNull(r2.exceptionOrNull())
-    assertEquals(r2f, 1)
-    assertEquals(r2s, 1)
-    assertEquals(r2e, 0)
+    assertEquals(1, r2f)
+    assertEquals(1, r2s)
+    assertEquals(0, r2e)
   }
 }

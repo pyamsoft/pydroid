@@ -58,6 +58,7 @@ subprojects {
 
   extensions.configure<LibraryExtension> {
     compileSdk = rootProject.libs.versions.compileSdk.get().toInt()
+    compileSdkMinor = rootProject.libs.versions.compileSdkMinor.get().toInt()
 
     defaultConfig {
       minSdk = rootProject.libs.versions.minSdk.get().toInt()
@@ -114,7 +115,7 @@ subprojects {
 
           artifactId = project.name
           groupId = "com.github.pyamsoft.pydroid"
-          version = "30.0.3"
+          version = "30.0.4"
         }
       }
     }

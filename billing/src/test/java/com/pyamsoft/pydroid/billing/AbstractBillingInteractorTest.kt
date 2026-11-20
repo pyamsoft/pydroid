@@ -109,7 +109,7 @@ public class AbstractBillingInteractorTest {
     assertSame(connected, result)
 
     // Starts empty
-    assertSame(connected.state.get(), State.NONE)
+    assertSame(State.NONE, connected.state.get())
 
     // Trigger create event
     controller.create()

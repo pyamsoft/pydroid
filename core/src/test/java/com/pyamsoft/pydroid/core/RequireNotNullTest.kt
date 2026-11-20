@@ -55,7 +55,7 @@ public class RequireNotNullTest {
     } catch (e: Throwable) {
       assertIsNot<AssertionError>(e)
       assertIs<IllegalArgumentException>(e)
-      assertEquals(e.message, "MY MESSAGE")
+      assertEquals("MY MESSAGE", e.message)
     }
   }
 }

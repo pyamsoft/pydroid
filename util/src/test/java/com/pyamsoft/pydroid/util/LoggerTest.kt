@@ -70,9 +70,9 @@ public class LoggerTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.d { "Test D" }
-    assertEquals(t.d, 1)
-    assertEquals(t.w, 0)
-    assertEquals(t.e, 0)
+    assertEquals(1, t.d)
+    assertEquals(0, t.w)
+    assertEquals(0, t.e)
   }
 
   @Test
@@ -80,9 +80,9 @@ public class LoggerTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.w { "Test W" }
-    assertEquals(t.d, 0)
-    assertEquals(t.w, 1)
-    assertEquals(t.e, 0)
+    assertEquals(0, t.d)
+    assertEquals(1, t.w)
+    assertEquals(0, t.e)
   }
 
   @Test
@@ -90,8 +90,8 @@ public class LoggerTest {
     val t = TestLogger()
     Logger.setLogger(t)
     Logger.e(RuntimeException("Test")) { "Test E" }
-    assertEquals(t.d, 0)
-    assertEquals(t.w, 0)
-    assertEquals(t.e, 1)
+    assertEquals(0, t.d)
+    assertEquals(0, t.w)
+    assertEquals(1, t.e)
   }
 }

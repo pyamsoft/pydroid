@@ -56,8 +56,8 @@ public class MarketLinkerTest {
   public fun getStorePageLink_defaultsToContextPackageName() {
     val context = RuntimeEnvironment.getApplication()
     assertEquals(
-      MarketLinker.getStorePageLink(context),
-      MarketLinker.getStorePageLink(context, context.packageName),
+        MarketLinker.getStorePageLink(context),
+        MarketLinker.getStorePageLink(context, context.packageName),
     )
   }
 

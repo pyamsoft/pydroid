@@ -61,6 +61,8 @@ import com.pyamsoft.pydroid.util.Logger
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
+    listModifier: Modifier = Modifier,
+    listItemModifier: Modifier = Modifier,
     listState: LazyListState,
     state: SettingsViewState,
     uiViewState: SettingsUIViewState,
@@ -110,6 +112,8 @@ internal fun SettingsScreen(
 
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
+            listModifier = listModifier,
+            listItemModifier = listItemModifier,
             listState = listState,
             snackbarHost = snackbarHostState,
             uiViewState = uiViewState,
@@ -167,6 +171,8 @@ private fun Loading() {
 @Composable
 private fun SettingsList(
     modifier: Modifier = Modifier,
+    listModifier: Modifier = Modifier,
+    listItemModifier: Modifier = Modifier,
     listState: LazyListState,
     snackbarHost: SnackbarHostState,
     uiViewState: SettingsUIViewState,
@@ -202,11 +208,13 @@ private fun SettingsList(
       modifier = modifier,
   ) {
     LazyColumn(
+        modifier = listModifier,
         state = listState,
     ) {
       extraTopContent()
 
       renderUISettings(
+          modifier = listItemModifier,
           state = uiViewState,
           onThemeModeChanged = onThemeModeChanged,
           onMaterialYouChanged = onMaterialYouChanged,
@@ -214,12 +222,14 @@ private fun SettingsList(
       )
 
       renderAppSettings(
+          modifier = listItemModifier,
           activityState = activityState,
           onCheckUpdateClicked = onCheckUpdateClicked,
           onShowChangeLogClicked = onShowChangeLogClicked,
       )
 
       renderInAppInteractionSettings(
+          modifier = listItemModifier,
           activityState = activityState,
           appName = applicationName,
           state = inAppInteractionViewState,
@@ -229,6 +239,7 @@ private fun SettingsList(
       )
 
       renderExternalLinksSettings(
+          modifier = listItemModifier,
           onViewTermsOfServiceClicked = onViewTermsOfServiceClicked,
           onViewPrivacyPolicyClicked = onViewPrivacyPolicyClicked,
           onViewDataPolicyClicked = onViewDataPolicyClicked,
@@ -238,11 +249,13 @@ private fun SettingsList(
       )
 
       renderPublisherLinksSettings(
+          modifier = listItemModifier,
           onViewBlogClicked = onViewBlogClicked,
           onViewSocialMediaClicked = onViewSocialMediaClicked,
       )
 
       renderDangerZoneSettings(
+          modifier = listItemModifier,
           state = dangerZoneViewState,
           onResetClicked = onResetClicked,
           onInAppDebuggingClicked = onInAppDebuggingClicked,

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.widget
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.CapturedAnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -35,7 +35,7 @@ internal fun InterruptCard(
     visible: Boolean,
     content: @Composable () -> Unit,
 ) {
-  AnimatedVisibility(
+  CapturedAnimatedVisibility(
       visible = visible,
       enter = fadeIn() + scaleIn(),
       exit = scaleOut() + fadeOut(),

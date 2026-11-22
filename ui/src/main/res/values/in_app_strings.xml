@@ -14,10 +14,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="in_app_badge">IN-APP PURCHASE</string>
   <string name="rate_app">Rate App</string>
 
   <!-- TODO(Peter): Need zh-rTW translation -->
-  <string name="external_link_badge">LINK</string>
+  <string
+    name="external_link_badge"
+    tools:ignore="MissingTranslation"
+  >LINK</string>
 </resources>

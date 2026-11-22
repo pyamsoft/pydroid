@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="data_policy">Data Policy Disclosure</string>
   <string name="dpd_accept">I Accept the Data Policy Terms</string>
   <string name="dpd_reject">I Do Not Accept the Data Policy Terms</string>
@@ -28,5 +28,6 @@
 
   <string
     name="disclosure_accepted"
+    tools:ignore="MissingTranslation"
   >By accepting, you agree to the %1$s %2$s and %3$s</string>
 </resources>

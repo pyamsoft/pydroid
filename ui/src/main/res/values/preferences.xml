@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="haptics_title">Enable Haptic Feedback</string>
   <string name="haptics_summary_off">Haptic feedback will not trigger for most
     interactions.</string>
@@ -36,7 +36,10 @@
   <string name="check_version_summary">Always have the fanciest stuff!</string>
 
   <!-- TODO(Peter): Need zh-rTW translation -->
-  <string name="rating_title">Rate %1$s</string>
+  <string
+    name="rating_title"
+    tools:ignore="MissingTranslation"
+  >Rate %1$s</string>
   <string name="rating_summary">Liking the App? Leave a Review!</string>
 
   <string name="donate_title">Tip Jar</string>
@@ -46,6 +49,7 @@
   <!-- TODO(Peter): Need zh-rTW translation -->
   <string
     name="billing_upsell_disabled_summary"
+    tools:ignore="MissingTranslation"
   >Stop showing the tip jar popup</string>
 
   <string name="bugreport_title">Submit a Bug Report</string>

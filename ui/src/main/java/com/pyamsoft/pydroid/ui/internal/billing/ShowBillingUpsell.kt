@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -49,7 +50,11 @@ internal fun ShowBillingUpsell(
 @Composable
 private fun PreviewShowBillingUpsell() {
   ShowBillingUpsell(
-      state = MutableBillingViewState().apply { isShowingUpsell.value = true },
+      state =
+          MutableBillingViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            isShowingUpsell.value = true
+          },
       onDismiss = {},
       onShowBilling = {},
   )

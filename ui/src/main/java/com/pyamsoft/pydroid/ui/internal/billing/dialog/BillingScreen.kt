@@ -18,6 +18,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing.dialog
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -289,9 +290,16 @@ private fun PreviewBillingScreen(
   BillingScreen(
       state =
           MutableBillingDialogViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.name.value = "TEST APPLICATION"
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.connected.value = connected
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.skuList.value = skuList
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.error.value = error
           },
       imageLoader = createNewTestImageLoader(),

@@ -133,7 +133,7 @@ _run_detekt() {
     _inputs="${ROOT}"
   fi
 
-  exec "${BINDIR}/.detekt-cli/${_detekt_version}/bin/detekt-cli" \
+  "${BINDIR}/.detekt-cli/${_detekt_version}/bin/detekt-cli" \
     --build-upon-default-config \
     --config "${_config}" \
     --language-version "$(_resolve_kotlin_lang_version)" \

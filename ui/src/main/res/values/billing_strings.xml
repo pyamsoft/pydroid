@@ -14,11 +14,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string
     name="billing_error_message"
   >Sorry, there was an error connecting to the In-App Billing service. Please try again later.</string>
 
   <!-- TODO(Peter): Need zh-rTW translation -->
-  <string name="billing_thank_you">Thank you for your support!</string>
+  <string
+    name="billing_thank_you"
+    tools:ignore="MissingTranslation"
+  >Thank you for your support!</string>
 </resources>

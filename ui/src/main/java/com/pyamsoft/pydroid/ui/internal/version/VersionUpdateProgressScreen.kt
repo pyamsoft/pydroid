@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -93,7 +94,11 @@ private fun PreviewVersionUpdateProgress(
 @Composable
 private fun PreviewVersionCheckScreenNone() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 0F },
+      state =
+          MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            updateProgressPercent.value = 0F
+          },
   )
 }
 
@@ -101,7 +106,11 @@ private fun PreviewVersionCheckScreenNone() {
 @Composable
 private fun PreviewVersionCheckScreenGuarded() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = Float.NaN },
+      state =
+          MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            updateProgressPercent.value = Float.NaN
+          },
   )
 }
 
@@ -109,7 +118,11 @@ private fun PreviewVersionCheckScreenGuarded() {
 @Composable
 private fun PreviewVersionCheckScreenHalf() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 0.50F },
+      state =
+          MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            updateProgressPercent.value = 0.50F
+          },
   )
 }
 
@@ -117,7 +130,11 @@ private fun PreviewVersionCheckScreenHalf() {
 @Composable
 private fun PreviewVersionCheckFull() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 1.00F },
+      state =
+          MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            updateProgressPercent.value = 1.00F
+          },
   )
 }
 
@@ -125,7 +142,11 @@ private fun PreviewVersionCheckFull() {
 @Composable
 private fun PreviewVersionCheckOverflow() {
   PreviewVersionUpdateProgress(
-      state = MutableVersionCheckViewState().apply { updateProgressPercent.value = 2.00F },
+      state =
+          MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            updateProgressPercent.value = 2.00F
+          },
   )
 }
 
@@ -135,7 +156,10 @@ private fun PreviewVersionCheckReady() {
   PreviewVersionUpdateProgress(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             updateProgressPercent.value = 0.50F
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = true
           },
   )

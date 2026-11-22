@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.debug
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -540,7 +541,10 @@ private fun PreviewInAppDebugScreenEnabledEmptyLog() {
           MutableDebugViewState(
                   logLinesBus = bus,
               )
-              .apply { isInAppDebuggingEnabled.value = true },
+              .apply {
+                @SuppressLint("StateFlowValueCalledInComposition")
+                isInAppDebuggingEnabled.value = true
+              },
       onDismiss = {},
       onCopyLogs = {},
       onToggleShowChangelog = {},
@@ -581,7 +585,10 @@ private fun PreviewInAppDebugScreenEnabledDummyLog() {
           MutableDebugViewState(
                   logLinesBus = bus,
               )
-              .apply { isInAppDebuggingEnabled.value = true },
+              .apply {
+                @SuppressLint("StateFlowValueCalledInComposition")
+                isInAppDebuggingEnabled.value = true
+              },
       onDismiss = {},
       onCopyLogs = {},
       onToggleShowChangelog = {},

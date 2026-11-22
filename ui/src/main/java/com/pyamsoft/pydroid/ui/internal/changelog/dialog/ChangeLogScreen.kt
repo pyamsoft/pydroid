@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -155,8 +156,13 @@ private fun PreviewChangeLogScreen(
   ChangeLogScreen(
       state =
           MutableChangeLogDialogViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.icon.value = 0
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.name.value = "TEST"
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             this.changeLog.value = changeLog
           },
       imageLoader = createNewTestImageLoader(),

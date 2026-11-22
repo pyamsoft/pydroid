@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <string name="logs">Logs</string>
   <string name="not_enabled">In-App Developer Mode is not enabled.</string>
   <string name="copy_logs">Copy Developer Logs</string>
@@ -22,5 +22,8 @@
   <string name="debug_title">Debug Logging</string>
 
   <!-- TODO Need translation zh-rTW -->
-  <string name="empty_logs">No Logs Recorded</string>
+  <string
+    name="empty_logs"
+    tools:ignore="MissingTranslation"
+  >No Logs Recorded</string>
 </resources>

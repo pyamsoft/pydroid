@@ -18,6 +18,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -369,8 +370,13 @@ private fun PreviewSettingsScreen(
 ) {
   val state =
       MutableSettingsViewState().apply {
+        @SuppressLint("StateFlowValueCalledInComposition")
         this.loadingState.value = loadingState
+
+        @SuppressLint("StateFlowValueCalledInComposition")
         applicationName.value = "TEST"
+
+        @SuppressLint("StateFlowValueCalledInComposition")
         themeMode.value = Theming.Mode.LIGHT
       }
 

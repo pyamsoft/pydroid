@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -156,7 +157,10 @@ private fun PreviewVersionCheckScreenAvailable() {
   PreviewVersionUpgradeAvailableScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = AppUpdateLauncher.test(1)
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = false
           },
   )
@@ -168,7 +172,10 @@ private fun PreviewVersionCheckScreenEmpty() {
   PreviewVersionUpgradeAvailableScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = AppUpdateLauncher.empty()
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = false
           },
   )
@@ -180,7 +187,10 @@ private fun PreviewVersionCheckScreenNotAvailable() {
   PreviewVersionUpgradeAvailableScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = null
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = false
           },
   )
@@ -192,8 +202,13 @@ private fun PreviewVersionCheckScreenErrorRecover() {
   PreviewVersionUpgradeAvailableScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = AppUpdateLauncher.test(1)
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = false
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             updateError.value = UPDATE_FAILED_DOWNLOAD_ERROR
           },
   )

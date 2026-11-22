@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -49,7 +50,11 @@ internal fun ShowChangeLogScreen(
 @Composable
 private fun PreviewShowChangeLogScreen() {
   ShowChangeLogScreen(
-      state = MutableChangeLogViewState().apply { isShowUpsell.value = true },
+      state =
+          MutableChangeLogViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            isShowUpsell.value = true
+          },
       onDismiss = {},
       onShowChangeLog = {},
   )

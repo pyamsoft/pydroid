@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.reset
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -180,7 +181,11 @@ private fun Actions(
 @Composable
 private fun PreviewResetScreen(reset: Boolean) {
   ResetScreen(
-      state = MutableResetViewState().apply { this.reset.value = reset },
+      state =
+          MutableResetViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
+            this.reset.value = reset
+          },
       onReset = {},
       onClose = {},
   )

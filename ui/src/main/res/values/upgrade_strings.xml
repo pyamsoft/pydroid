@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!-- Upgrade compelte -->
   <string name="your_upgrade_is_ready">Your upgrade is ready!</string>
   <string
@@ -42,6 +42,10 @@
   <!-- TODO(Peter): Need zh-rTW translation -->
   <string
     name="error_downloading_updated_version"
+    tools:ignore="MissingTranslation"
   >An error occurred while downloading version %1$d</string>
-  <string name="download_try_again">Try Again</string>
+  <string
+    name="download_try_again"
+    tools:ignore="MissingTranslation"
+  >Try Again</string>
 </resources>

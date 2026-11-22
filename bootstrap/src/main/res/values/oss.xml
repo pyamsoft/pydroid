@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="gradle_spotless_plugin">Gradle Spotless Plugin</string>
     <string
   name="gradle_spotless_plugin_url"
@@ -246,9 +246,13 @@
 >Helps with Application initialization</string>
 
     <!-- TODO(Peter): Need zh-rTW translation -->
-    <string name="caupain">Caupain</string>
-    <string name="caupain_url">https://github.com/deezer/caupain</string>
+    <string name="caupain" tools:ignore="MissingTranslation">Caupain</string>
+    <string
+  name="caupain_url"
+  tools:ignore="MissingTranslation"
+>https://github.com/deezer/caupain</string>
     <string
   name="caupain_description"
+  tools:ignore="MissingTranslation"
 >Your best buddy for keeping version catalogs up to date!</string>
 </resources>

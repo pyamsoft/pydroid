@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -125,7 +126,10 @@ private fun PreviewVersionUpgradeCompleteScreen() {
   ThePreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = AppUpdateLauncher.empty()
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = true
           },
   )
@@ -137,7 +141,10 @@ private fun PreviewVersionUpgradeCompleteScreenNoLauncher() {
   ThePreviewVersionUpgradeCompleteScreen(
       state =
           MutableVersionCheckViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             launcher.value = null
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             isUpdateReadyToInstall.value = true
           },
   )

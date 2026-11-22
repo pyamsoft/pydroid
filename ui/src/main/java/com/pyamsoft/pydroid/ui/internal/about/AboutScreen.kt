@@ -147,7 +147,6 @@ private fun AboutList(
 @Composable
 private fun PreviewAboutScreen(
     loading: AboutViewState.LoadingState,
-    error: Throwable?,
 ) {
   val context = LocalContext.current
   AboutScreen(
@@ -170,7 +169,6 @@ private fun PreviewAboutScreen(
 private fun PreviewAboutScreenDefault() {
   PreviewAboutScreen(
       loading = AboutViewState.LoadingState.NONE,
-      error = null,
   )
 }
 
@@ -179,7 +177,6 @@ private fun PreviewAboutScreenDefault() {
 private fun PreviewAboutScreenLoading() {
   PreviewAboutScreen(
       loading = AboutViewState.LoadingState.LOADING,
-      error = null,
   )
 }
 
@@ -188,33 +185,5 @@ private fun PreviewAboutScreenLoading() {
 private fun PreviewAboutScreenLoaded() {
   PreviewAboutScreen(
       loading = AboutViewState.LoadingState.DONE,
-      error = null,
-  )
-}
-
-@Preview
-@Composable
-private fun PreviewAboutScreenDefaultWithError() {
-  PreviewAboutScreen(
-      loading = AboutViewState.LoadingState.NONE,
-      error = RuntimeException("TEST ERROR"),
-  )
-}
-
-@Preview
-@Composable
-private fun PreviewAboutScreenLoadingWithError() {
-  PreviewAboutScreen(
-      loading = AboutViewState.LoadingState.LOADING,
-      error = RuntimeException("TEST ERROR"),
-  )
-}
-
-@Preview
-@Composable
-private fun PreviewAboutScreenLoadedWithError() {
-  PreviewAboutScreen(
-      loading = AboutViewState.LoadingState.DONE,
-      error = RuntimeException("TEST ERROR"),
   )
 }

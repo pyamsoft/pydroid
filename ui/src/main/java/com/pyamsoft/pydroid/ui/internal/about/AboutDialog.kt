@@ -24,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.Dialog
-import com.pyamsoft.pydroid.core.LintIgnoreTooGenericExceptionCaught
 import com.pyamsoft.pydroid.theme.keylines
 import com.pyamsoft.pydroid.ui.app.rememberDialogProperties
 import com.pyamsoft.pydroid.ui.inject.rememberComposableInjector
@@ -51,20 +50,10 @@ internal fun AboutDialog(
 
   val viewModel = rememberNotNull(component.viewModel)
 
-  val handleDismissFailedNavigation by rememberUpdatedState {
-    viewModel.handleDismissFailedNavigation()
-  }
-
   val uriHandler = rememberUriHandler()
 
   val handleOpenPage by rememberUpdatedState { url: String ->
-    handleDismissFailedNavigation()
-
-    try {
-      uriHandler.openUri(url)
-    } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
-      viewModel.handleFailedNavigation(e)
-    }
+    uriHandler.openUri(url)
   }
 
   MountHooks(
@@ -80,7 +69,6 @@ internal fun AboutDialog(
         state = viewModel,
         onViewHomePage = { handleOpenPage(it.libraryUrl) },
         onViewLicense = { handleOpenPage(it.licenseUrl) },
-        onNavigationErrorDismissed = { handleDismissFailedNavigation() },
         onClose = onDismiss,
     )
   }

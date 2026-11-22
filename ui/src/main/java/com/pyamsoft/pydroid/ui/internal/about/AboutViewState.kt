@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 internal interface AboutViewState : UiViewState {
   val loadingState: StateFlow<LoadingState>
   val licenses: StateFlow<List<OssLibrary>>
-  val navigationError: StateFlow<Throwable?>
 
   @Stable
   @Immutable
@@ -41,6 +40,5 @@ internal interface AboutViewState : UiViewState {
 @Stable
 internal class MutableAboutViewState internal constructor() : AboutViewState {
   override val loadingState = MutableStateFlow(AboutViewState.LoadingState.NONE)
-  override val navigationError = MutableStateFlow<Throwable?>(null)
   override val licenses = MutableStateFlow(emptyList<OssLibrary>())
 }

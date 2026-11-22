@@ -45,12 +45,4 @@ internal constructor(
       }
     }
   }
-
-  internal fun handleFailedNavigation(e: Throwable) {
-    state.navigationError.value = e
-  }
-
-  internal fun handleDismissFailedNavigation() {
-    state.navigationError.value = null
-  }
 }

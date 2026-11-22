@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,13 +32,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -58,14 +54,11 @@ private enum class AboutScreenContentTypes {
 internal fun AboutScreen(
     modifier: Modifier = Modifier,
     state: AboutViewState,
-    onNavigationErrorDismissed: () -> Unit,
     onViewHomePage: (library: OssLibrary) -> Unit,
     onViewLicense: (library: OssLibrary) -> Unit,
     onClose: () -> Unit,
 ) {
-  val snackbarHostState = remember { SnackbarHostState() }
   val loadingState by state.loadingState.collectAsStateWithLifecycle()
-  val navigationError by state.navigationError.collectAsStateWithLifecycle()
 
   Column(
       modifier = modifier,
@@ -107,12 +100,6 @@ internal fun AboutScreen(
             }
           }
         }
-
-        NavigationError(
-            snackbarHost = snackbarHostState,
-            error = navigationError,
-            onSnackbarDismissed = onNavigationErrorDismissed,
-        )
       }
     }
   }
@@ -158,31 +145,6 @@ private fun AboutList(
 }
 
 @Composable
-private fun NavigationError(
-    modifier: Modifier = Modifier,
-    snackbarHost: SnackbarHostState,
-    error: Throwable?,
-    onSnackbarDismissed: () -> Unit,
-) {
-  if (error != null) {
-    LaunchedEffect(error) {
-      snackbarHost.showSnackbar(
-          message = error.message ?: "An unexpected error occurred",
-          duration = SnackbarDuration.Long,
-      )
-
-      // We ignore the showSnackbar result because we don't care (no actions)
-      onSnackbarDismissed()
-    }
-  }
-
-  SnackbarHost(
-      modifier = modifier,
-      hostState = snackbarHost,
-  )
-}
-
-@Composable
 private fun PreviewAboutScreen(
     loading: AboutViewState.LoadingState,
     error: Throwable?,
@@ -191,11 +153,12 @@ private fun PreviewAboutScreen(
   AboutScreen(
       state =
           MutableAboutViewState().apply {
+            @SuppressLint("StateFlowValueCalledInComposition")
             loadingState.value = loading
+
+            @SuppressLint("StateFlowValueCalledInComposition")
             licenses.value = OssLibraries.libraries(context).sortedBy { it.name }
-            navigationError.value = error
           },
-      onNavigationErrorDismissed = {},
       onViewLicense = {},
       onViewHomePage = {},
       onClose = {},

@@ -55,8 +55,6 @@ internal fun DataPolicyDisclosureDialog(
   val activity = rememberResolvedActivity()
   val handleRejected by rememberUpdatedState { activity.finishAndRemoveTask() }
 
-  val handleHideNavigationError by rememberUpdatedState { viewModel.handleHideNavigationError() }
-
   MountHooks(
       viewModel = viewModel,
   )
@@ -69,7 +67,6 @@ internal fun DataPolicyDisclosureDialog(
         modifier = modifier.padding(MaterialTheme.keylines.content),
         state = viewModel,
         imageLoader = imageLoader,
-        onNavigationErrorDismissed = { handleHideNavigationError() },
         onAccept = {
           viewModel.handleAccept(
               onAccepted = onDismiss,

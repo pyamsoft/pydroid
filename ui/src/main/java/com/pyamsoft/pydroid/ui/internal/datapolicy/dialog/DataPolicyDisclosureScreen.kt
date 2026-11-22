@@ -16,19 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.internal.datapolicy.dialog
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -59,14 +56,11 @@ internal fun DataPolicyDisclosureScreen(
     modifier: Modifier = Modifier,
     state: DataPolicyDialogViewState,
     imageLoader: ImageLoader,
-    onNavigationErrorDismissed: () -> Unit,
     onAccept: () -> Unit,
     onReject: () -> Unit,
 ) {
-  val snackbarHostState = remember { SnackbarHostState() }
   val icon by state.icon.collectAsStateWithLifecycle()
   val name by state.name.collectAsStateWithLifecycle()
-  val navigationError by state.navigationError.collectAsStateWithLifecycle()
 
   val tosUrl by state.tosUrl.collectAsStateWithLifecycle()
   val privacyPolicyUrl by state.privacyPolicyUrl.collectAsStateWithLifecycle()
@@ -77,13 +71,6 @@ internal fun DataPolicyDisclosureScreen(
       name = name,
       imageLoader = imageLoader,
       afterScroll = {
-        NavigationError(
-            modifier = Modifier.fillMaxWidth(),
-            snackbarHostState = snackbarHostState,
-            error = navigationError,
-            onSnackbarDismissed = onNavigationErrorDismissed,
-        )
-
         Actions(
             modifier = Modifier.fillMaxWidth(),
             appName = name,
@@ -279,31 +266,6 @@ private fun Actions(
   }
 }
 
-@Composable
-private fun NavigationError(
-    modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState,
-    error: Throwable?,
-    onSnackbarDismissed: () -> Unit,
-) {
-  if (error != null) {
-    LaunchedEffect(error) {
-      snackbarHostState.showSnackbar(
-          message = error.message ?: "An unexpected error occurred",
-          duration = SnackbarDuration.Long,
-      )
-
-      // We ignore the showSnackbar result because we don't care (no actions)
-      onSnackbarDismissed()
-    }
-  }
-
-  SnackbarHost(
-      modifier = modifier,
-      hostState = snackbarHostState,
-  )
-}
-
 @Preview
 @Composable
 private fun PreviewDataPolicyDisclosureScreen() {
@@ -314,12 +276,13 @@ private fun PreviewDataPolicyDisclosureScreen() {
                   privacyPolicyUrl = "",
               )
               .apply {
+                @SuppressLint("StateFlowValueCalledInComposition")
                 icon.value = 0
+
+                @SuppressLint("StateFlowValueCalledInComposition")
                 name.value = "TEST"
-                navigationError.value = null
               },
       imageLoader = createNewTestImageLoader(),
-      onNavigationErrorDismissed = {},
       onAccept = {},
       onReject = {},
   )

@@ -50,12 +50,4 @@ internal constructor(
     interactor.rejectPolicy()
     onRejected()
   }
-
-  internal fun handleNavigationFailed(throwable: Throwable) {
-    state.navigationError.value = throwable
-  }
-
-  internal fun handleHideNavigationError() {
-    state.navigationError.value = null
-  }
 }

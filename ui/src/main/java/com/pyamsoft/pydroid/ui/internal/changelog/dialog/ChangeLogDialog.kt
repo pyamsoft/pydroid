@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.window.Dialog
@@ -56,6 +58,10 @@ internal fun ChangeLogDialog(
   val context = LocalContext.current
   val uriHandler = rememberUriHandler()
 
+  val handleOpenPage by rememberUpdatedState { url: String ->
+    uriHandler.openUri(url)
+  }
+
   MountHooks(
       viewModel = viewModel,
   )
@@ -69,7 +75,7 @@ internal fun ChangeLogDialog(
         state = viewModel,
         activityState = activityState,
         imageLoader = imageLoader,
-        onRateApp = { uriHandler.openUri(MarketLinker.getStorePageLink(context)) },
+        onRateApp = { handleOpenPage(MarketLinker.getStorePageLink(context)) },
         onClose = onDismiss,
     )
   }

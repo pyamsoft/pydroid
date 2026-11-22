@@ -73,6 +73,10 @@ internal constructor(
     } catch (@LintIgnoreTooGenericExceptionCaught e: Throwable,) {
       Logger.e(e) { "Error opening external URI: $uri" }
 
+      // TODO(Peter): Right now this is the generic handler for ALL URI error cases
+      //              This is lame because callers would normally expect openUri to throw an exception
+      //              and catch for it there using specific handling.
+
       toasting =
           Toast.makeText(
                   appContext,

@@ -21,10 +21,13 @@ package com.pyamsoft.pydroid.ui.internal.settings
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -44,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pyamsoft.pydroid.core.LintIgnoreTooManyFunctions
 import com.pyamsoft.pydroid.theme.keylines
@@ -62,8 +66,8 @@ import com.pyamsoft.pydroid.util.Logger
 @Composable
 internal fun SettingsScreen(
     modifier: Modifier = Modifier,
-    listModifier: Modifier = Modifier,
-    listItemModifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    contentMaxWidth: Dp = Dp.Unspecified,
     listState: LazyListState,
     state: SettingsViewState,
     uiViewState: SettingsUIViewState,
@@ -113,8 +117,9 @@ internal fun SettingsScreen(
 
       SettingsViewState.LoadingState.DONE -> {
         SettingsList(
-            listModifier = listModifier,
-            listItemModifier = listItemModifier,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = contentPadding,
+            contentMaxWidth = contentMaxWidth,
             listState = listState,
             snackbarHost = snackbarHostState,
             uiViewState = uiViewState,
@@ -172,8 +177,8 @@ private fun Loading() {
 @Composable
 private fun SettingsList(
     modifier: Modifier = Modifier,
-    listModifier: Modifier = Modifier,
-    listItemModifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    contentMaxWidth: Dp = Dp.Unspecified,
     listState: LazyListState,
     snackbarHost: SnackbarHostState,
     uiViewState: SettingsUIViewState,
@@ -205,12 +210,19 @@ private fun SettingsList(
     extraTopContent: LazyListScope.() -> Unit,
     extraBottomContent: LazyListScope.() -> Unit,
 ) {
+  val listItemModifier =
+      remember(contentMaxWidth) {
+        Modifier.widthIn(max = contentMaxWidth).fillMaxWidth()
+      }
+
   Box(
       modifier = modifier,
   ) {
     LazyColumn(
-        modifier = listModifier,
+        modifier = Modifier.fillMaxSize(),
         state = listState,
+        contentPadding = contentPadding,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       extraTopContent()
 

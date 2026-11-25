@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -67,6 +69,8 @@ private fun MountHooks(
 public fun SettingsPage(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    contentMaxWidth: Dp = Dp.Unspecified,
     dispatchers: AppDispatchers = AppDispatchers.create(),
     listState: LazyListState = rememberLazyListState(),
     extraDebugContent: LazyListScope.() -> Unit = {},
@@ -102,6 +106,8 @@ public fun SettingsPage(
   SettingsContent(
       modifier = modifier,
       dialogModifier = dialogModifier,
+      contentPadding = contentPadding,
+      contentMaxWidth = contentMaxWidth,
       dispatchers = dispatchers,
       listState = listState,
       state = viewModel,
@@ -160,6 +166,8 @@ public fun SettingsPage(
 private fun SettingsContent(
     modifier: Modifier = Modifier,
     dialogModifier: Modifier = Modifier,
+    contentPadding: PaddingValues,
+    contentMaxWidth: Dp,
     dispatchers: AppDispatchers,
     listState: LazyListState,
     state: SettingsViewState,
@@ -222,6 +230,8 @@ private fun SettingsContent(
 
   SettingsScreen(
       modifier = modifier,
+      contentPadding = contentPadding,
+      contentMaxWidth = contentMaxWidth,
       versionCheckingState = versionCheckingState,
       listState = listState,
       state = state,
